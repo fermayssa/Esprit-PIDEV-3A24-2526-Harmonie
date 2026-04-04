@@ -1,0 +1,200 @@
+{% extends 'admin/base.html.twig' %}
+{% block title %}Gestion des comptes — Harmony{% endblock %}
+{% block page_title %}👥 Gestion des comptes{% endblock %}
+
+{% block stylesheets %}
+    <style>
+        .toolbar { display: flex; align-items: center; gap: 14px; margin-bottom: 24px; flex-wrap: wrap; }
+        .search-box {
+            flex: 1; min-width: 240px; padding: 10px 16px;
+            border: 1.5px solid var(--border); border-radius: 11px;
+            font-family: var(--font-body); font-size: 14px; color: var(--text);
+            background: var(--white); outline: none; transition: border-color .15s;
+        }
+        .search-box:focus { border-color: var(--purple); }
+        .sort-badge {
+            padding: 8px 16px; background: var(--purple-pale); color: var(--purple);
+            border-radius: 10px; font-size: 12px; font-weight: 600; flex-shrink: 0;
+        }
+        .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 18px; }
+        .user-card {
+            background: var(--white); border: 1px solid var(--border); border-radius: 18px;
+            overflow: hidden; transition: border-color .18s, transform .18s, box-shadow .18s;
+            cursor: pointer; position: relative;
+        }
+        .user-card:hover { border-color: var(--purple-soft); transform: translateY(-3px); box-shadow: 0 10px 32px rgba(106,90,205,.1); }
+        .user-card.suspended { opacity: .65; }
+        .card-header { background: var(--purple-ghost); padding: 20px; text-align: center; border-bottom: 1px solid var(--border); }
+        .card-avatar {
+            width: 64px; height: 64px; border-radius: 50%; margin: 0 auto 10px;
+            background: var(--purple); display: grid; place-items: center;
+            font-family: var(--font-head); font-size: 24px; font-weight: 800; color: #fff;
+            border: 3px solid var(--white);
+        }
+        .card-avatar img { width: 64px; height: 64px; border-radius: 50%; object-fit: cover; }
+        .card-name { font-family: var(--font-head); font-size: 15px; font-weight: 700; color: var(--text); }
+        .card-email { font-size: 12px; color: var(--text-muted); margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; margin-inline: auto; }
+        .card-body { padding: 14px 16px; }
+        .card-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .badge { font-size: 10px; font-weight: 600; padding: 3px 10px; border-radius: 20px; }
+        .badge-active { background: #D1FAE5; color: #065F46; }
+        .badge-suspended { background: #FEE2E2; color: #991B1B; }
+        .suspicion-bar { height: 4px; border-radius: 4px; background: #eee; margin-bottom: 8px; overflow: hidden; }
+        .suspicion-fill { height: 100%; border-radius: 4px; transition: width .4s; }
+        .suspicion-label { font-size: 11px; color: var(--text-muted); }
+        .card-footer {
+            padding: 10px 16px; border-top: 1px solid var(--border);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .card-date { font-size: 11px; color: var(--text-muted); }
+        .card-menu { position: relative; }
+        .card-menu-btn {
+            background: none; border: none; cursor: pointer; padding: 4px 8px;
+            font-size: 18px; color: var(--text-muted); border-radius: 6px; line-height: 1;
+        }
+        .card-menu-btn:hover { background: var(--purple-ghost); color: var(--purple); }
+        .card-dropdown {
+            position: absolute; bottom: 32px; right: 0; width: 160px;
+            background: var(--white); border: 1px solid var(--border); border-radius: 12px;
+            box-shadow: 0 8px 28px rgba(0,0,0,.1); padding: 6px; display: none; z-index: 10;
+        }
+        .card-dropdown.open { display: block; }
+        .card-dropdown a, .card-dropdown button {
+            display: block; width: 100%; text-align: left;
+            padding: 8px 12px; border-radius: 8px;
+            font-size: 13px; font-weight: 500; text-decoration: none;
+            background: none; border: none; cursor: pointer; color: var(--text-mid);
+            transition: background .12s;
+        }
+        .card-dropdown a:hover, .card-dropdown button:hover { background: var(--purple-pale); color: var(--purple); }
+        .card-dropdown .danger:hover { background: #FEE2E2; color: #E05252; }
+        .empty-state { text-align: center; padding: 60px 20px; color: var(--text-muted); }
+        .empty-state .empty-icon { font-size: 48px; margin-bottom: 12px; }
+        .empty-state p { font-size: 14px; }
+        #loadingSpinner { display: none; text-align: center; padding: 20px; color: var(--text-muted); }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="toolbar">
+        <input type="text" id="searchInput" class="search-box"
+               placeholder="🔍  Rechercher par nom, prénom ou email…"
+               value="{{ q }}" autocomplete="off">
+        <div class="sort-badge">⚠ Trié par degré de suspicion</div>
+        <a href="{{ path('admin_users_suspended') }}" style="padding:10px 16px;background:#FEE2E2;color:#E05252;border-radius:10px;font-size:12px;font-weight:600;text-decoration:none;">🔒 Voir suspendus</a>
+    </div>
+
+    <div id="loadingSpinner">⏳ Recherche en cours…</div>
+    <div class="cards-grid" id="usersGrid">
+        {% for user in users %}
+            {% set s = scores[user.userId] %}
+            <div class="user-card {% if not user.isActive %}suspended{% endif %}"
+                 ondblclick="window.location='{{ path('admin_users_show', {id: user.userId}) }}'">
+                <div class="card-header">
+                    <div class="card-avatar">
+                        {% if user.userImagePath %}
+                            <img src="{{ asset(user.userImagePath) }}" alt="Avatar">
+                        {% else %}
+                            {{ user.userPrenom|first|upper }}
+                        {% endif %}
+                    </div>
+                    <div class="card-name">{{ user.userPrenom }} {{ user.userNom }}</div>
+                    <div class="card-email">{{ user.userEmail }}</div>
+                </div>
+                <div class="card-body">
+                    <div class="card-meta">
+                        {% if user.isActive %}
+                            <span class="badge badge-active">✓ Actif</span>
+                        {% else %}
+                            <span class="badge badge-suspended">✗ Suspendu</span>
+                        {% endif %}
+                        <span style="font-size:11px;color:{{ s.color }};font-weight:600;">{{ s.label }}</span>
+                    </div>
+                    <div class="suspicion-bar">
+                        <div class="suspicion-fill" style="width:{{ s.score }}%;background:{{ s.color }};"></div>
+                    </div>
+                    <div class="suspicion-label">Score suspicion : {{ s.score }}/100</div>
+                </div>
+                <div class="card-footer">
+                    <span class="card-date">📅 {{ user.dateInscription }}</span>
+                    <div class="card-menu">
+                        <button class="card-menu-btn" onclick="toggleMenu(event, 'menu-{{ user.userId }}')">⋯</button>
+                        <div class="card-dropdown" id="menu-{{ user.userId }}">
+                            <a href="{{ path('admin_users_show', {id: user.userId}) }}">👁 Voir détail</a>
+                            <a href="{{ path('admin_users_edit', {id: user.userId}) }}">✏ Modifier</a>
+                            <form method="post" action="{{ path('admin_users_toggle', {id: user.userId}) }}" style="margin:0;">
+                                <input type="hidden" name="_token" value="{{ csrf_token('toggle' ~ user.userId) }}">
+                                <button type="submit" class="danger">
+                                    {{ user.isActive ? '🔒 Suspendre' : '✅ Réactiver' }}
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="empty-state" style="grid-column: 1/-1;">
+                <div class="empty-icon">🔍</div>
+                <p>Aucun compte trouvé{% if q %} pour « {{ q }} »{% endif %}.</p>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        function toggleMenu(e, id) {
+            e.stopPropagation();
+            document.querySelectorAll('.card-dropdown').forEach(d => { if (d.id !== id) d.classList.remove('open'); });
+            document.getElementById(id).classList.toggle('open');
+        }
+        document.addEventListener('click', () => {
+            document.querySelectorAll('.card-dropdown').forEach(d => d.classList.remove('open'));
+        });
+
+        // ── Live Search ────────────────────────────────────────────────────────────
+        let timeout = null;
+        const input   = document.getElementById('searchInput');
+        const grid    = document.getElementById('usersGrid');
+        const spinner = document.getElementById('loadingSpinner');
+
+        input.addEventListener('input', function() {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => {
+                const q = this.value.trim();
+                spinner.style.display = 'block';
+                fetch(`{{ path('admin_users_search') }}?q=${encodeURIComponent(q)}`)
+                    .then(r => r.json())
+                    .then(users => {
+                        spinner.style.display = 'none';
+                        if (!users.length) {
+                            grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">🔍</div><p>Aucun résultat pour « ${q} »</p></div>`;
+                            return;
+                        }
+                        grid.innerHTML = users.map(u => `
+                    <div class="user-card ${u.active ? '' : 'suspended'}"
+                         ondblclick="window.location='/admin/users/${u.id}'">
+                        <div class="card-header">
+                            <div class="card-avatar">${u.image ? `<img src="/${u.image}" alt="">` : u.prenom|first.toUpperCase()}</div>
+                            <div class="card-name">${u.prenom} ${u.nom}</div>
+                            <div class="card-email">${u.email}</div>
+                        </div>
+                        <div class="card-body">
+                            <div class="card-meta">
+                                <span class="badge ${u.active ? 'badge-active' : 'badge-suspended'}">${u.active ? '✓ Actif' : '✗ Suspendu'}</span>
+                                <span style="font-size:11px;color:${u.color};font-weight:600;">${u.label}</span>
+                            </div>
+                            <div class="suspicion-bar"><div class="suspicion-fill" style="width:${u.score}%;background:${u.color};"></div></div>
+                            <div class="suspicion-label">Score suspicion : ${u.score}/100</div>
+                        </div>
+                        <div class="card-footer">
+                            <span class="card-date">🔗 <a href="/admin/users/${u.id}" style="color:var(--purple);font-size:12px;font-weight:600;">Voir détail</a></span>
+                            <a href="/admin/users/${u.id}/edit" style="font-size:12px;color:var(--text-mid);font-weight:500;">✏ Modifier</a>
+                        </div>
+                    </div>`).join('');
+                    })
+                    .catch(() => { spinner.style.display = 'none'; });
+            }, 300);
+        });
+    </script>
+{% endblock %}

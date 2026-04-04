@@ -1,0 +1,70 @@
+{% extends 'admin/base.html.twig' %}
+{% block title %}Modifier — {{ user.userPrenom }} {{ user.userNom }}{% endblock %}
+{% block page_title %}✏ Modifier le compte{% endblock %}
+
+{% block stylesheets %}
+    <style>
+        .back-link { display: inline-flex; align-items: center; gap: 6px; color: var(--text-mid); text-decoration: none; font-size: 13px; font-weight: 500; margin-bottom: 20px; }
+        .back-link:hover { color: var(--purple); }
+        .edit-card { background: var(--white); border: 1px solid var(--border); border-radius: 22px; padding: 40px; max-width: 640px; }
+        .edit-card h3 { font-family: var(--font-head); font-size: 18px; font-weight: 700; margin-bottom: 24px; color: var(--text); }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+        .form-group { margin-bottom: 14px; }
+        .form-group label { display: block; font-size: 13px; font-weight: 500; color: var(--text-mid); margin-bottom: 5px; }
+        .form-group input, .form-group select { width: 100%; padding: 10px 13px; border: 1.5px solid var(--border); border-radius: 10px; font-family: var(--font-body); font-size: 14px; color: var(--text); background: var(--purple-ghost); outline: none; transition: border-color .15s; }
+        .form-group input:focus, .form-group select:focus { border-color: var(--purple); background: #fff; }
+        .form-error { color: #E05252; font-size: 12px; margin-top: 4px; }
+        .section-divider { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--text-muted); margin: 20px 0 12px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
+        .btn-submit { padding: 12px 28px; background: var(--purple); color: #fff; border: none; border-radius: 11px; font-family: var(--font-body); font-size: 14px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 18px rgba(106,90,205,.3); transition: background .15s; }
+        .btn-submit:hover { background: var(--purple-dark); }
+        .btn-cancel { padding: 12px 22px; background: var(--purple-ghost); color: var(--text-mid); border: 1.5px solid var(--border); border-radius: 11px; font-family: var(--font-body); font-size: 14px; font-weight: 500; text-decoration: none; margin-left: 10px; }
+        .btn-cancel:hover { border-color: var(--purple-soft); color: var(--purple); }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <a href="{{ path('admin_users_index') }}" class="back-link">← Retour à la liste</a>
+
+    <div class="edit-card">
+        <h3>Modification du compte : <span style="color:var(--purple);">{{ user.userPrenom }} {{ user.userNom }}</span></h3>
+
+        {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+
+        <div class="section-divider">Informations personnelles</div>
+        <div class="form-row">
+            <div class="form-group">{{ form_label(form.userNom) }}{{ form_widget(form.userNom) }}<div class="form-error">{{ form_errors(form.userNom) }}</div></div>
+            <div class="form-group">{{ form_label(form.userPrenom) }}{{ form_widget(form.userPrenom) }}<div class="form-error">{{ form_errors(form.userPrenom) }}</div></div>
+        </div>
+        <div class="form-group">{{ form_label(form.userEmail) }}{{ form_widget(form.userEmail) }}<div class="form-error">{{ form_errors(form.userEmail) }}</div></div>
+        <div class="form-row">
+            <div class="form-group">{{ form_label(form.userDateDeNaissance) }}{{ form_widget(form.userDateDeNaissance, {'attr': {'type': 'date'}}) }}</div>
+            <div class="form-group">{{ form_label(form.userSexe) }}{{ form_widget(form.userSexe) }}</div>
+        </div>
+
+        <div class="section-divider">Physique</div>
+        <div class="form-row">
+            <div class="form-group">{{ form_label(form.userPoids) }}{{ form_widget(form.userPoids) }}</div>
+            <div class="form-group">{{ form_label(form.userTaille) }}{{ form_widget(form.userTaille) }}</div>
+        </div>
+        <div class="form-group">{{ form_label(form.userNiveauActivitePhysique) }}{{ form_widget(form.userNiveauActivitePhysique) }}</div>
+
+        <div class="section-divider">Scolarité</div>
+        <div class="form-row">
+            <div class="form-group">{{ form_label(form.userNiveauScolaire) }}{{ form_widget(form.userNiveauScolaire) }}</div>
+            <div class="form-group">{{ form_label(form.userEtablissementScolaire) }}{{ form_widget(form.userEtablissementScolaire) }}</div>
+        </div>
+
+        <div class="section-divider">Administration</div>
+        <div class="form-row">
+            <div class="form-group">{{ form_label(form.typeUtilisateur) }}{{ form_widget(form.typeUtilisateur) }}</div>
+            <div class="form-group">{{ form_label(form.isActive) }}{{ form_widget(form.isActive) }}</div>
+        </div>
+
+        <div style="margin-top:24px;">
+            <button class="btn-submit" type="submit">💾 Sauvegarder</button>
+            <a href="{{ path('admin_users_index') }}" class="btn-cancel">Annuler</a>
+        </div>
+
+        {{ form_end(form) }}
+    </div>
+{% endblock %}
