@@ -336,7 +336,7 @@ function toggleComments(id, btn) {
     const isOpen  = section.classList.toggle('open');
     btn.classList.toggle('open', isOpen);
     btn.textContent = isOpen
-        ? btn.textContent.replace('💬', '💬').replace('commentaire', 'commentaire')
+        ? btn.textContent.replace(' 💬 ', '💬').replace('commentaire', 'commentaire')
         : btn.textContent;
 }
 
