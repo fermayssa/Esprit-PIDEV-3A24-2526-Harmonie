@@ -253,7 +253,7 @@
 
             {# ── FOOTER : LIKE + COMMENTAIRES ── #}
             <div class="post-footer">
-                <button class="btn-like">👍 {{ post.likes ?? 0 }}</button>
+                <button class="btn-like"> 👍 {{ post.likes ?? 0 }}</button>
                 <button class="btn-comment-toggle"
                         onclick="toggleComments('comments-{{ post.idPost }}', this)">
                     💬 {{ postComments|length }} commentaire(s)
