@@ -304,7 +304,7 @@
                             <div class="comment-body">{{ c.contenu }}</div>
                             <div class="comment-actions">
                                 <a href="{{ path('forum_comment_edit', {id: c.idCommentaire}) }}"
-                                   class="btn-comment-edit">✏️ Modifier</a>
+                                   class="btn-comment-edit"> ✏️ Modifier</a>
                                 <form method="POST"
                                       action="{{ path('forum_comment_delete', {id: c.idCommentaire}) }}"
                                       onsubmit="return confirm('Supprimer ce commentaire ?');"
