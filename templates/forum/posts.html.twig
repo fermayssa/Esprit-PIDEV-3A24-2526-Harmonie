@@ -1,0 +1,163 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ categorie.nomCategorie }} — Forum Harmony{% endblock %}
+
+{% block stylesheets %}
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+        --purple:#6A5ACD; --purple-dark:#4B3B9E; --purple-soft:#8B7FD4;
+        --purple-pale:#EDE8FA; --purple-ghost:#F7F5FD;
+        --text:#1C1733; --text-mid:#4A4570; --text-muted:#9590B8;
+        --border:rgba(106,90,205,.12); --white:#FFFFFF;
+        --font-head:'Syne',sans-serif; --font-body:'Inter',sans-serif;
+    }
+    html,body { font-family:var(--font-body); background:var(--purple-ghost); color:var(--text); }
+
+    .topbar { position:sticky; top:0; z-index:200; background:var(--white);
+        border-bottom:1px solid var(--border); height:62px; display:flex;
+        align-items:center; padding:0 40px; gap:8px; }
+    .topbar-logo { display:flex; align-items:center; gap:10px; text-decoration:none; margin-right:32px; }
+    .logo-mark { width:34px; height:34px; border-radius:10px; object-fit:contain; }
+    .logo-name { font-family:var(--font-head); font-size:18px; font-weight:700; color:var(--text); }
+    .nav-links { display:flex; align-items:center; gap:2px; flex:1; }
+    .nav-link { display:inline-flex; align-items:center; gap:6px; padding:7px 14px;
+        border-radius:9px; font-size:13.5px; font-weight:500; color:var(--text-mid);
+        text-decoration:none; transition:background .15s,color .15s; }
+    .nav-link:hover,.nav-link.active { background:var(--purple-pale); color:var(--purple); font-weight:600; }
+    .topbar-right { display:flex; align-items:center; gap:10px; margin-left:auto; }
+    .logout-btn { padding:7px 16px; border-radius:9px; border:1.5px solid rgba(239,68,68,.2);
+        background:transparent; color:#E05252; font-size:13px; cursor:pointer; }
+    .avatar { width:36px; height:36px; border-radius:50%; background:var(--purple);
+        color:white; font-family:var(--font-head); font-weight:700; font-size:14px;
+        display:grid; place-items:center; }
+
+    .page { max-width:860px; margin:0 auto; padding:48px 40px 80px; }
+
+    /* BREADCRUMB */
+    .breadcrumb { display:flex; align-items:center; gap:8px; font-size:13px;
+        color:var(--text-muted); margin-bottom:24px; }
+    .breadcrumb a { color:var(--purple); text-decoration:none; font-weight:500; }
+    .breadcrumb a:hover { text-decoration:underline; }
+
+    /* CAT HEADER */
+    .cat-header {
+        background: linear-gradient(135deg, var(--purple) 0%, var(--purple-dark) 100%);
+        border-radius:18px; padding:32px 40px; margin-bottom:28px;
+        display:flex; align-items:center; justify-content:space-between;
+    }
+    .cat-header h1 { font-family:var(--font-head); font-size:26px; font-weight:800; color:white; }
+    .cat-header p  { color:rgba(255,255,255,.75); font-size:13px; margin-top:4px; }
+    .btn-new-post {
+        display:inline-flex; align-items:center; gap:8px;
+        padding:10px 20px; background:white; color:var(--purple-dark);
+        border-radius:10px; font-size:13px; font-weight:700;
+        text-decoration:none; border:none; cursor:pointer;
+        transition:opacity .15s;
+    }
+    .btn-new-post:hover { opacity:.9; }
+
+    /* POSTS */
+    .posts-list { display:flex; flex-direction:column; gap:14px; }
+
+    .post-card {
+        background:var(--white); border:1px solid var(--border);
+        border-radius:16px; padding:24px 28px;
+        text-decoration:none; color:inherit; display:block;
+        transition:border-color .18s, transform .18s, box-shadow .18s;
+        position:relative;
+    }
+    .post-card:hover { border-color:var(--purple-soft); transform:translateY(-2px);
+        box-shadow:0 8px 28px rgba(106,90,205,.1); }
+
+    .post-top { display:flex; align-items:flex-start; justify-content:space-between; gap:16px; }
+    .post-title { font-family:var(--font-head); font-size:17px; font-weight:700;
+        color:var(--text); margin-bottom:8px; line-height:1.3; }
+    .post-excerpt { font-size:13.5px; color:var(--text-mid); line-height:1.7;
+        display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+
+    .post-footer { display:flex; align-items:center; gap:16px; margin-top:14px;
+        padding-top:12px; border-top:1px solid var(--purple-ghost); }
+    .post-avatar { width:30px; height:30px; border-radius:50%; background:var(--purple);
+        color:white; font-size:12px; font-weight:700; display:grid; place-items:center;
+        font-family:var(--font-head); flex-shrink:0; }
+    .post-meta { font-size:12px; color:var(--text-muted); }
+    .post-stat { margin-left:auto; display:flex; gap:10px; }
+    .post-stat span { font-size:12px; color:var(--text-muted); background:var(--purple-ghost);
+        padding:3px 10px; border-radius:20px; }
+
+    .empty-state { text-align:center; padding:60px 20px; color:var(--text-muted); }
+    .empty-state p { font-size:15px; margin-top:8px; }
+
+    @keyframes fadeUp { from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);} }
+    .fade { animation:fadeUp .4s ease both; }
+    .d1{animation-delay:.06s;} .d2{animation-delay:.12s;}
+</style>
+{% endblock %}
+
+{% block body %}
+<header class="topbar">
+    <a href="{{ path('homepage') }}" class="topbar-logo">
+        <img src="{{ asset('images/logo.png') }}" class="logo-mark" alt="Harmony">
+        <span class="logo-name">Harmony</span>
+    </a>
+    <nav class="nav-links">
+        <a href="{{ path('activites') }}"  class="nav-link">🏋 Activités</a>
+        <a href="{{ path('forum') }}"      class="nav-link active">💬 Forum</a>
+        <a href="{{ path('taches') }}"     class="nav-link">📚 Tâches</a>
+        <a href="{{ path('evenements') }}" class="nav-link">📅 Événements</a>
+        <a href="{{ path('nutrition') }}"  class="nav-link">🥗 Nutrition</a>
+        <a href="{{ path('meditation') }}" class="nav-link">🧘 Méditation</a>
+        <a href="{{ path('journal') }}"    class="nav-link">📔 Journal</a>
+        <a href="{{ path('library') }}"    class="nav-link">📖 Library</a>
+    </nav>
+    <div class="topbar-right">
+        <button class="logout-btn">🚪 Déconnexion</button>
+        <div class="avatar">E</div>
+    </div>
+</header>
+
+<main class="page">
+
+    <div class="breadcrumb fade">
+        <a href="{{ path('forum') }}">💬 Forum</a>
+        <span>›</span>
+        <span>{{ categorie.nomCategorie }}</span>
+    </div>
+
+    <div class="cat-header fade">
+        <div>
+            <h1>{{ categorie.nomCategorie }}</h1>
+            {% if categorie.description %}
+                <p>{{ categorie.description }}</p>
+            {% endif %}
+        </div>
+        <span style="color:rgba(255,255,255,.8); font-size:13px;">{{ posts|length }} post(s)</span>
+    </div>
+
+    <div class="posts-list">
+        {% for post in posts %}
+        <a href="{{ path('forum_post_detail', {id: post.idPost}) }}" class="post-card fade d1">
+            <div class="post-top">
+                <div>
+                    <div class="post-title">{{ post.titre }}</div>
+                    <div class="post-excerpt">{{ post.contenu }}</div>
+                </div>
+            </div>
+            <div class="post-footer">
+                <div class="post-avatar">U</div>
+                <div class="post-meta">
+                    {{ post.dateCreation ? post.dateCreation|date('d/m/Y') : '' }}
+                </div>
+            </div>
+        </a>
+        {% else %}
+        <div class="empty-state fade">
+            <div style="font-size:48px;">💬</div>
+            <p>Aucun post dans cette catégorie pour l'instant.</p>
+        </div>
+        {% endfor %}
+    </div>
+
+</main>
+{% endblock %}
