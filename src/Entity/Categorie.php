@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Entity;
 
 use Doctrine\DBAL\Types\Types;
@@ -10,61 +9,27 @@ use Doctrine\ORM\Mapping as ORM;
 class Categorie
 {
     #[ORM\Id]
+    #[ORM\GeneratedValue]
     #[ORM\Column(name: "id_categorie", type: "integer")]
     private ?int $idCategorie = null;
 
     #[ORM\Column(name: "nom_categorie", length: 255)]
     private ?string $nomCategorie = null;
 
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
     #[ORM\Column(name: "date_creation", type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $dateCreation = null;
 
-    // GETTERS / SETTERS
+    public function getIdCategorie(): ?int { return $this->idCategorie; }
 
-    public function getIdCategorie(): ?int
-    {
-        return $this->idCategorie;
-    }
+    public function getNomCategorie(): ?string { return $this->nomCategorie; }
+    public function setNomCategorie(string $v): static { $this->nomCategorie = $v; return $this; }
 
-    public function setIdCategorie(int $idCategorie): static
-    {
-        $this->idCategorie = $idCategorie;
-        return $this;
-    }
+    public function getDescription(): ?string { return $this->description; }
+    public function setDescription(?string $v): static { $this->description = $v; return $this; }
 
-    public function getNomCategorie(): ?string
-    {
-        return $this->nomCategorie;
-    }
-
-    public function setNomCategorie(string $nomCategorie): static
-    {
-        $this->nomCategorie = $nomCategorie;
-        return $this;
-    }
-
-    public function getDescription(): ?string
-    {
-        return $this->description;
-    }
-
-    public function setDescription(string $description): static
-    {
-        $this->description = $description;
-        return $this;
-    }
-
-    public function getDateCreation(): ?\DateTimeInterface
-    {
-        return $this->dateCreation;
-    }
-
-    public function setDateCreation(\DateTimeInterface $dateCreation): static
-    {
-        $this->dateCreation = $dateCreation;
-        return $this;
-    }
+    public function getDateCreation(): ?\DateTimeInterface { return $this->dateCreation; }
+    public function setDateCreation(\DateTimeInterface $v): static { $this->dateCreation = $v; return $this; }
 }
