@@ -1,0 +1,545 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ course.title }} – Harmony{% endblock %}
+
+{% block stylesheets %}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('css/course-details.css') }}">
+{% endblock %}
+
+{% block body %}
+    {% set current_route = app.request.attributes.get('_route') %}
+    <header class="topbar">
+        <a href="{{ path('homepage') }}" class="topbar-logo">
+            <img src="{{ asset('images/logo.png') }}" class="logo-mark" alt="Harmony">
+        </a>
+        <nav class="nav-links">
+            <a href="{{ path('activites') }}"   class="nav-link {{ current_route == 'activites'   ? 'active' }}"><span class="nav-emoji">🏋</span> Activités</a>
+            <a href="{{ path('forum') }}"       class="nav-link {{ current_route == 'forum'       ? 'active' }}"><span class="nav-emoji">💬</span> Forum</a>
+            <a href="{{ path('taches') }}"      class="nav-link {{ current_route == 'taches'      ? 'active' }}"><span class="nav-emoji">📚</span> Tâches</a>
+            <a href="{{ path('evenements') }}"  class="nav-link {{ current_route == 'evenements'  ? 'active' }}"><span class="nav-emoji">📅</span> Événements</a>
+            <a href="{{ path('nutrition') }}"   class="nav-link {{ current_route == 'nutrition'   ? 'active' }}"><span class="nav-emoji">🥗</span> Nutrition</a>
+            <a href="{{ path('meditation') }}"  class="nav-link {{ current_route == 'meditation'  ? 'active' }}"><span class="nav-emoji">🧘</span> Méditation</a>
+            <a href="{{ path('journal') }}"     class="nav-link {{ current_route == 'journal'     ? 'active' }}"><span class="nav-emoji">📔</span> Journal</a>
+            <a href="{{ path('library') }}"     class="nav-link {{ current_route == 'library' or current_route starts with 'app_courses' ? 'active' }}"><span class="nav-emoji">📖</span> Library</a>
+        </nav>
+        <div class="topbar-right">
+            <button class="logout-btn">🚪 Déconnexion</button>
+            <div class="profile-wrap">
+                <div class="avatar" id="avatarBtn">
+                    {{ app.user ? app.user.firstName[0]|upper : 'E' }}
+                </div>
+                <div class="profile-dropdown" id="profileDropdown">
+                    <div class="pd-name">{{ app.user ? app.user.firstName ~ ' ' ~ app.user.lastName : 'Étudiant' }}</div>
+                    <div class="pd-email">{{ app.user ? app.user.email : 'email@exemple.com' }}</div>
+                    <div class="pd-divider"></div>
+                    <div class="pd-hint">Double-clic pour modifier</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+
+        {# ── DETAIL HEADER ────────────────────────────────────────────── #}
+        <div class="detail-header">
+            <div class="detail-header-left">
+                <a href="{{ (origin|default('courses')) == 'library' ? path('library') : path('app_courses') }}" class="btn btn-ghost" style="padding:6px 10px;font-size:13px;">
+                    ← Back
+                </a>
+                <div>
+                    {% if isOwner|default(false) %}
+                        <span class="page-title editable-label" id="courseTitleLabel"
+                              title="Double-click to rename" data-value="{{ course.title|e('html_attr') }}">
+                {{ course.title }}
+            </span>
+                    {% else %}
+                        <span class="page-title">{{ course.title }}</span>
+                    {% endif %}
+                    <span style="font-size:var(--text-sm);color:var(--color-text-muted);margin-left:8px;">
+                {% if isOwner|default(false) %}
+                    <span class="editable-label" id="courseSubjectLabel"
+                          title="Double-click to change subject"
+                          data-value="{{ course.subject_name|default('')|e('html_attr') }}">
+                    {{ course.subject_name|default('No subject') }}
+                </span>
+                {% else %}
+                    {{ course.subject_name|default('') }}
+                {% endif %}
+            </span>
+                </div>
+            </div>
+            <div class="detail-header-right">
+                {% if isOwner|default(false) %}
+                    <div class="publish-row">
+                        <label for="publishToggle">Publish</label>
+                        <label class="toggle-switch" title="Publish to Library">
+                            <input type="checkbox" id="publishToggle" {{ course.is_published ? 'checked' }}>
+                            <span class="toggle-track"></span>
+                            <span class="toggle-thumb"></span>
+                        </label>
+                    </div>
+                    <button class="btn btn-secondary" id="createNoteBtn" type="button">✏️ Create note</button>
+                    <button class="btn btn-primary"   id="addFilesBtn"   type="button">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        Add files
+                    </button>
+                {% else %}
+                    <button class="btn {{ (isSaved|default(false)) ? 'btn-primary' : 'btn-secondary' }}" id="saveToLibraryBtn" type="button"
+                            data-saved="{{ (isSaved|default(false)) ? '1' : '0' }}">
+                        {{ (isSaved|default(false)) ? '✔ Saved — click to remove' : '🔖 Save to Library' }}
+                    </button>
+                {% endif %}
+            </div>
+        </div>
+
+        {# ── FILES GRID ───────────────────────────────────────────────── #}
+        <div class="files-grid" id="filesGrid">
+            {% if files is not empty %}
+                {% for file in files %}
+                    <div class="file-card"
+                         data-id="{{ file.id }}"
+                         data-name="{{ file.originalname|e('html_attr') }}"
+                         data-mime="{{ file.mimetype|e('html_attr') }}"
+                         data-preview-url="{{ path('app_courses_detail_file_preview', {id: course.id, fileId: file.id}) }}"
+                         data-download-url="{{ path('app_courses_detail_file_download', {id: course.id, fileId: file.id}) }}"
+                         tabindex="0" role="button" aria-label="Open {{ file.originalname }}">
+                        <div class="file-card-thumb" id="thumb-{{ file.id }}">
+                            {% set lname = file.originalname|lower %}
+                            {% if file.mimetype starts with 'image/' %}
+                                <img src="{{ path('app_courses_detail_file_preview', {id: course.id, fileId: file.id}) }}"
+                                     alt="{{ file.originalname }}" loading="lazy">
+                            {% elseif file.mimetype == 'application/pdf' %}
+                                📄
+                            {% elseif file.mimetype starts with 'text/' or lname ends with '.txt' or lname ends with '.md' %}
+                                📝
+                            {% else %}
+                                📎
+                            {% endif %}
+                        </div>
+                        <div class="file-card-body">
+                            <p class="file-card-name">{{ file.originalname|replace({'.txt': '', '.md': ''}) }}</p>
+                            <p class="file-card-meta">{{ (file.sizebytes / 1024)|round(1) }} KB</p>
+                        </div>
+                        {% if isOwner|default(false) %}
+                            <button class="file-delete-btn" data-action="delete-file"
+                                    data-id="{{ file.id }}" data-name="{{ file.originalname|e('html_attr') }}"
+                                    type="button" aria-label="Delete {{ file.originalname }}">✕</button>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="files-empty">
+                    <div class="empty-icon">📂</div>
+                    <h3>No files yet</h3>
+                    <p>{% if isOwner|default(false) %}Add files or create a note to get started.{% else %}This course has no files.{% endif %}</p>
+                </div>
+            {% endif %}
+        </div>
+
+    </main>
+
+    {# ── FILE PREVIEW MODAL ───────────────────────────────────────── #}
+    <div class="preview-modal-backdrop" id="previewModal" role="dialog" aria-modal="true" aria-labelledby="previewTitle">
+        <div class="preview-modal">
+            <div class="preview-modal-header">
+                <span class="preview-modal-title" id="previewTitle">File</span>
+                <button class="modal-close" id="previewCloseBtn" type="button" aria-label="Close">✕</button>
+            </div>
+            <div class="preview-modal-body" id="previewBody"><!-- content injected --></div>
+            <div class="preview-modal-footer" id="previewFooter">
+                <a id="previewDownloadLink" class="btn btn-secondary" download>⬇ Download</a>
+                {% if isOwner|default(false) %}
+                    <button class="btn btn-secondary" id="previewRenameBtn" type="button">✏️ Rename</button>
+                    <button class="btn btn-danger"    id="previewDeleteBtn" type="button">🗑 Delete</button>
+                {% endif %}
+                <button class="btn btn-primary"   id="previewCloseBtn2" type="button">Close</button>
+            </div>
+        </div>
+    </div>
+
+    {# ── NOTE EDITOR MODAL ────────────────────────────────────────── #}
+    <div class="note-modal-backdrop" id="noteModal" role="dialog" aria-modal="true" aria-labelledby="noteModalTitle">
+        <div class="note-modal">
+            <div class="note-toolbar">
+                <span id="noteModalTitle" class="sr-only">Note editor</span>
+                <input class="note-name-input" type="text" id="noteNameInput" placeholder="Note name" aria-label="Note name">
+                <select id="noteFontSelect" aria-label="Font family" style="max-width:160px;">
+                    <option value="Inter">Inter</option>
+                    <option value="Georgia">Georgia</option>
+                    <option value="Courier New">Courier New</option>
+                    <option value="Arial">Arial</option>
+                    <option value="Times New Roman">Times New Roman</option>
+                </select>
+                <input type="number" id="noteSizeInput" value="14" min="8" max="72" style="width:60px;" aria-label="Font size">
+                <button class="btn btn-ghost" data-align="left"    type="button" title="Align left">⬅</button>
+                <button class="btn btn-ghost" data-align="center"  type="button" title="Center">↔</button>
+                <button class="btn btn-ghost" data-align="right"   type="button" title="Align right">➡</button>
+                <button class="btn btn-ghost" id="noteFindBtn"     type="button">🔍 Find</button>
+            </div>
+            <textarea class="note-editor-area" id="noteEditorArea" {% if not isOwner|default(false) %}readonly{% endif %}
+                  placeholder="Start writing your note…"></textarea>
+            <div class="note-modal-footer">
+                <div class="note-footer-left">
+                    {% if isOwner|default(false) %}
+                        <button class="btn btn-primary"   id="noteSaveBtn"      type="button">💾 Save</button>
+                        <button class="btn btn-secondary" id="noteSaveAsNewBtn" type="button">📋 Save as new</button>
+                    {% endif %}
+                    <a id="noteDownloadPdfBtn" class="btn btn-secondary" style="display:none;">⬇ Download PDF</a>
+                </div>
+                <div class="note-footer-right">
+                    {% if isOwner|default(false) %}
+                        <button class="btn btn-secondary" id="noteRenameBtn" type="button">✏️ Rename</button>
+                        <button class="btn btn-danger"    id="noteDeleteBtn" type="button">🗑 Delete</button>
+                    {% endif %}
+                    <button class="btn btn-ghost" id="noteCloseBtn" type="button">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# ── DELETE CONFIRM MODAL ─────────────────────────────────────── #}
+    <div class="modal-backdrop" id="confirmModal" role="alertdialog" aria-modal="true" aria-labelledby="confirmTitle">
+        <div class="modal" style="max-width:380px;">
+            <div class="modal-header">
+                <h2 class="modal-title" id="confirmTitle">Confirm</h2>
+            </div>
+            <p id="confirmMsg" style="font-size:13.5px;color:var(--color-text-muted);line-height:1.6;margin-bottom:28px;"></p>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="confirmCancelBtn" type="button">Cancel</button>
+                <button class="btn btn-danger"    id="confirmDeleteBtn" type="button">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast-container" id="toastContainer" aria-live="polite" aria-atomic="true"></div>
+    <input type="file" id="addFilesInput" multiple style="display:none;" aria-label="Add files">
+
+    {# subject autocomplete data for JS #}
+    <datalist id="subjectsList">
+        {% for s in subjects|default([]) %}
+        <option value="{{ s.name|e('html_attr') }}">
+            {% endfor %}
+    </datalist>
+
+    <script>
+        (function () {
+            'use strict';
+
+            const COURSE_ID  = {{ course.id }};
+            const IS_OWNER   = {{ (isOwner|default(false)) ? 'true' : 'false' }};
+
+// ── UTILITIES ────────────────────────────────────────────────
+            function toast(msg, type) {
+                const t = document.createElement('div');
+                t.className = 'toast toast-' + (type || 'success');
+                t.textContent = msg;
+                document.getElementById('toastContainer').appendChild(t);
+                setTimeout(() => t.remove(), 3500);
+            }
+            async function post(url, body) {
+                const fd = body instanceof FormData ? body : Object.assign(new FormData(), body && Object.entries(body).forEach(([k,v]) => null));
+                if (!(body instanceof FormData) && body) {
+                    const f2 = new FormData();
+                    Object.entries(body).forEach(([k,v]) => f2.append(k, v));
+                    return fetch(url, { method: 'POST', body: f2, headers: { 'X-Requested-With': 'XMLHttpRequest' }});
+                }
+                return fetch(url, { method: 'POST', body, headers: { 'X-Requested-With': 'XMLHttpRequest' }});
+            }
+
+// ── AVATAR DROPDOWN ──────────────────────────────────────────
+            const avatarBtn  = document.getElementById('avatarBtn');
+            const dropdown   = document.getElementById('profileDropdown');
+            if (avatarBtn) {
+                avatarBtn.addEventListener('click', e => { e.stopPropagation(); const o = dropdown.classList.toggle('open'); avatarBtn.setAttribute('aria-expanded', String(o)); });
+                document.addEventListener('click', () => { dropdown.classList.remove('open'); avatarBtn.setAttribute('aria-expanded','false'); });
+            }
+
+// ── PUBLISH TOGGLE ───────────────────────────────────────────
+            const publishToggle = document.getElementById('publishToggle');
+            if (publishToggle) {
+                publishToggle.addEventListener('change', async () => {
+                    const published = publishToggle.checked ? 1 : 0;
+                    const res = await post(`/courses/${COURSE_ID}/publish`, { published });
+                    const data = await res.json();
+                    if (!res.ok) { toast(data.message || 'Failed to update', 'error'); publishToggle.checked = !publishToggle.checked; }
+                    else toast(published ? 'Course published to Library' : 'Course unpublished', 'success');
+                });
+            }
+
+// ── INLINE EDIT — TITLE ──────────────────────────────────────
+            const titleLabel = document.getElementById('courseTitleLabel');
+            if (titleLabel) {
+                titleLabel.addEventListener('dblclick', () => {
+                    const inp = document.createElement('input');
+                    inp.type = 'text'; inp.className = 'inline-input page-title';
+                    inp.value = titleLabel.textContent.trim();
+                    inp.style.minWidth = '200px';
+                    titleLabel.replaceWith(inp); inp.focus(); inp.select();
+                    async function commit() {
+                        const v = inp.value.trim();
+                        if (!v) { inp.replaceWith(titleLabel); return; }
+                        const res = await post(`/courses/${COURSE_ID}/rename`, { title: v });
+                        const data = await res.json();
+                        if (!res.ok) { toast(data.message || 'Rename failed', 'error'); inp.replaceWith(titleLabel); return; }
+                        titleLabel.textContent = v; titleLabel.dataset.value = v;
+                        inp.replaceWith(titleLabel);
+                    }
+                    inp.addEventListener('keydown', e => { if (e.key === 'Enter') commit(); if (e.key === 'Escape') inp.replaceWith(titleLabel); });
+                    inp.addEventListener('blur', commit);
+                });
+            }
+
+// ── INLINE EDIT — SUBJECT ────────────────────────────────────
+            const subjectLabel = document.getElementById('courseSubjectLabel');
+            if (subjectLabel) {
+                subjectLabel.addEventListener('dblclick', () => {
+                    const inp = document.createElement('input');
+                    inp.type = 'text'; inp.className = 'inline-input';
+                    inp.value = subjectLabel.textContent.trim();
+                    inp.setAttribute('list', 'subjectsList');
+                    inp.style.width = '180px';
+                    subjectLabel.replaceWith(inp); inp.focus(); inp.select();
+                    async function commit() {
+                        const v = inp.value.trim();
+                        if (!v) { inp.replaceWith(subjectLabel); return; }
+                        const res = await post(`/courses/${COURSE_ID}/subject`, { subject: v });
+                        const data = await res.json();
+                        if (!res.ok) { toast(data.message || 'Update failed', 'error'); inp.replaceWith(subjectLabel); return; }
+                        subjectLabel.textContent = v; inp.replaceWith(subjectLabel);
+                    }
+                    inp.addEventListener('keydown', e => { if (e.key === 'Enter') commit(); if (e.key === 'Escape') inp.replaceWith(subjectLabel); });
+                    inp.addEventListener('blur', commit);
+                });
+            }
+
+// ── FILE CARDS — click/keyboard ──────────────────────────────
+            document.querySelectorAll('.file-card').forEach(card => {
+                card.addEventListener('click', e => {
+                    if (e.target.closest('[data-action="delete-file"]')) return;
+                    const mime = card.dataset.mime || '';
+                    const name = card.dataset.name || '';
+                    if (mime.startsWith('text/') || name.endsWith('.txt') || name.endsWith('.md')) {
+                        openNoteEditor({ id: card.dataset.id, name, previewUrl: card.dataset.previewUrl, downloadUrl: card.dataset.downloadUrl });
+                    } else {
+                        openFilePreview({ id: card.dataset.id, name, mime, previewUrl: card.dataset.previewUrl, downloadUrl: card.dataset.downloadUrl });
+                    }
+                });
+                card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); card.click(); } });
+            });
+
+// ── DELETE FILE (from card X button) ─────────────────────────
+            let pendingDeleteFileId = null;
+            document.querySelectorAll('[data-action="delete-file"]').forEach(btn => {
+                btn.addEventListener('click', e => {
+                    e.stopPropagation();
+                    pendingDeleteFileId = btn.dataset.id;
+                    document.getElementById('confirmMsg').textContent = `Delete "${btn.dataset.name}"?`;
+                    openModal('confirmModal');
+                });
+            });
+            document.getElementById('confirmCancelBtn').addEventListener('click', () => closeModal('confirmModal'));
+            document.getElementById('confirmDeleteBtn').addEventListener('click', async () => {
+                if (!pendingDeleteFileId) return;
+                closeModal('confirmModal');
+                const res = await post(`/courses/${COURSE_ID}/file/${pendingDeleteFileId}/delete`);
+                if (res.ok) { document.querySelectorAll(`[data-id="${pendingDeleteFileId}"]`).forEach(el => el.remove()); toast('File deleted', 'success'); }
+                else toast('Delete failed', 'error');
+                pendingDeleteFileId = null;
+            });
+
+// ── ADD FILES ─────────────────────────────────────────────────
+            const addFilesBtn   = document.getElementById('addFilesBtn');
+            const addFilesInput = document.getElementById('addFilesInput');
+            if (addFilesBtn) {
+                addFilesBtn.addEventListener('click', () => addFilesInput.click());
+                addFilesInput.addEventListener('change', async () => {
+                    if (!addFilesInput.files.length) return;
+                    const fd = new FormData();
+                    Array.from(addFilesInput.files).forEach(f => fd.append('files[]', f));
+                    const res = await post(`/courses/${COURSE_ID}/upload`, fd);
+                    const data = await res.json();
+                    if (res.ok) { toast(`${data.uploaded.length} file(s) uploaded`, 'success'); setTimeout(() => location.reload(), 800); }
+                    else toast(data.message || 'Upload failed', 'error');
+                    addFilesInput.value = '';
+                });
+            }
+
+// ── SAVE TO LIBRARY ───────────────────────────────────────────
+            const saveToLibraryBtn = document.getElementById('saveToLibraryBtn');
+            if (saveToLibraryBtn) {
+                saveToLibraryBtn.addEventListener('click', async () => {
+                    const res  = await post(`/courses/${COURSE_ID}/save-to-library`);
+                    const data = await res.json();
+                    if (!res.ok) { toast(data.message || 'Failed', 'error'); return; }
+                    saveToLibraryBtn.textContent = data.saved ? '✔ Saved — click to remove' : '🔖 Save to Library';
+                    saveToLibraryBtn.className   = data.saved ? 'btn btn-primary' : 'btn btn-secondary';
+                    toast(data.saved ? 'Saved to library' : 'Removed from library', 'success');
+                });
+            }
+
+// ── FILE PREVIEW MODAL ────────────────────────────────────────
+            let activeFileId = null;
+            function openFilePreview({ id, name, mime, previewUrl, downloadUrl }) {
+                activeFileId = id;
+                document.getElementById('previewTitle').textContent = name;
+                const body  = document.getElementById('previewBody');
+                const dlBtn = document.getElementById('previewDownloadLink');
+                dlBtn.href  = downloadUrl; dlBtn.download = name;
+
+                // build preview content
+                if (mime && mime.startsWith('image/')) {
+                    body.innerHTML = `<img class="preview-img" src="${previewUrl}" alt="${name}" loading="lazy">`;
+                } else if (mime === 'application/pdf') {
+                    body.innerHTML = `<iframe class="preview-iframe" src="${previewUrl}" title="${name}"></iframe>`;
+                } else {
+                    body.innerHTML = `<div class="preview-no-preview"><span>📎</span><span style="font-size:14px;color:var(--color-text-muted)">No preview — download to open</span></div>`;
+                }
+
+                const rBtn = document.getElementById('previewRenameBtn');
+                const dBtn = document.getElementById('previewDeleteBtn');
+                if (rBtn) rBtn.onclick = () => renameFileAction(id, name);
+                if (dBtn) dBtn.onclick = () => { pendingDeleteFileId = id; document.getElementById('confirmMsg').textContent = `Delete "${name}"?`; closeModal2('previewModal'); openModal('confirmModal'); };
+
+                openModal2('previewModal');
+            }
+            document.getElementById('previewCloseBtn').addEventListener('click',  () => closeModal2('previewModal'));
+            document.getElementById('previewCloseBtn2').addEventListener('click', () => closeModal2('previewModal'));
+
+            function openModal2(id)  { const el = document.getElementById(id); el.classList.add('open'); }
+            function closeModal2(id) { const el = document.getElementById(id); el.classList.remove('open'); document.getElementById('previewBody').innerHTML = ''; }
+
+            async function renameFileAction(fileId, currentName) {
+                const dot  = currentName.lastIndexOf('.');
+                const base = dot > 0 ? currentName.slice(0, dot) : currentName;
+                const ext  = dot > 0 ? currentName.slice(dot)    : '';
+                const n    = prompt('New name:', base);
+                if (n === null || !n.trim()) return;
+                const newName = n.trim() + ext;
+                const res = await post(`/courses/${COURSE_ID}/file/${fileId}/rename`, { name: newName });
+                const data = await res.json();
+                if (res.ok) { toast('Renamed', 'success'); setTimeout(() => location.reload(), 600); }
+                else toast(data.message || 'Rename failed', 'error');
+            }
+
+// ── NOTE EDITOR MODAL ─────────────────────────────────────────
+            let noteFileId  = null;
+            let noteDirty   = false;
+
+            function openNoteEditor({ id, name, previewUrl, downloadUrl }) {
+                noteFileId = id;
+                const nameInp = document.getElementById('noteNameInput');
+                const area    = document.getElementById('noteEditorArea');
+                const dlBtn   = document.getElementById('noteDownloadPdfBtn');
+                const rBtn    = document.getElementById('noteRenameBtn');
+                const dBtn    = document.getElementById('noteDeleteBtn');
+                const sBtn    = document.getElementById('noteSaveBtn');
+                const saBtn   = document.getElementById('noteSaveAsNewBtn');
+
+                // strip extension for display
+                const dot  = name.lastIndexOf('.');
+                nameInp.value = dot > 0 ? name.slice(0, dot) : name;
+                area.value    = 'Loading…';
+                area.style.textAlign = 'left';
+                noteDirty     = false;
+
+                if (dlBtn)  { dlBtn.style.display = 'inline-flex'; dlBtn.href = downloadUrl; dlBtn.download = name; }
+                if (rBtn)   rBtn.onclick = () => renameFileAction(noteFileId, document.getElementById('noteNameInput').value.trim() + '.txt');
+                if (dBtn)   dBtn.onclick = () => { pendingDeleteFileId = noteFileId; document.getElementById('confirmMsg').textContent = `Delete this note?`; closeNoteModal(); openModal('confirmModal'); };
+
+                // load content
+                fetch(previewUrl).then(r => r.text()).then(text => {
+                    area.value = text;
+                    noteDirty  = false;
+                }).catch(() => area.value = '');
+
+                area.addEventListener('input', () => noteDirty = true);
+                openModal2('noteModal');
+            }
+
+            function closeNoteModal() { closeModal2('noteModal'); noteFileId = null; noteDirty = false; }
+
+            document.getElementById('noteCloseBtn').addEventListener('click', () => {
+                if (noteDirty && !confirm('You have unsaved changes. Close anyway?')) return;
+                closeNoteModal();
+            });
+
+// create note
+            const createNoteBtn = document.getElementById('createNoteBtn');
+            if (createNoteBtn) {
+                createNoteBtn.addEventListener('click', async () => {
+                    const name = prompt('Note name:', 'note');
+                    if (!name) return;
+                    const res  = await post(`/courses/${COURSE_ID}/note`, { name, content: '' });
+                    const data = await res.json();
+                    if (!res.ok) { toast(data.message || 'Failed', 'error'); return; }
+                    const previewUrl  = `/courses/${COURSE_ID}/file/${data.id}/preview`;
+                    const downloadUrl = `/courses/${COURSE_ID}/file/${data.id}/download`;
+                    openNoteEditor({ id: String(data.id), name: data.name, previewUrl, downloadUrl });
+                    location.reload(); // refresh grid in background after modal closes
+                });
+            }
+
+// save note
+            const noteSaveBtn = document.getElementById('noteSaveBtn');
+            if (noteSaveBtn) {
+                noteSaveBtn.addEventListener('click', async () => {
+                    const name    = document.getElementById('noteNameInput').value.trim();
+                    const content = document.getElementById('noteEditorArea').value;
+                    if (!name) { toast('Name required', 'error'); return; }
+                    const finalName = name.endsWith('.txt') ? name : name + '.txt';
+                    const fd = new FormData();
+                    fd.append('content', content); fd.append('name', finalName);
+                    const res = await post(`/courses/${COURSE_ID}/note/${noteFileId}/save`, fd);
+                    if (res.ok) { toast('Saved', 'success'); noteDirty = false; }
+                    else toast('Save failed', 'error');
+                });
+            }
+
+// save as new
+            const noteSaveAsNewBtn = document.getElementById('noteSaveAsNewBtn');
+            if (noteSaveAsNewBtn) {
+                noteSaveAsNewBtn.addEventListener('click', async () => {
+                    const n = prompt('New note name:');
+                    if (!n || !n.trim()) return;
+                    const finalName = (n.trim().endsWith('.txt') ? n.trim() : n.trim() + '.txt');
+                    const content   = document.getElementById('noteEditorArea').value;
+                    const res = await post(`/courses/${COURSE_ID}/note`, { name: finalName, content });
+                    const data = await res.json();
+                    if (res.ok) { toast('Saved as new note', 'success'); setTimeout(() => location.reload(), 600); }
+                    else toast(data.message || 'Failed', 'error');
+                });
+            }
+
+// find in note
+            document.getElementById('noteFindBtn').addEventListener('click', () => {
+                const q    = prompt('Find:'); if (!q) return;
+                const area = document.getElementById('noteEditorArea');
+                const idx  = area.value.indexOf(q);
+                if (idx >= 0) { area.focus(); area.setSelectionRange(idx, idx + q.length); }
+                else alert('Not found');
+            });
+
+// alignment
+            document.querySelectorAll('[data-align]').forEach(btn => {
+                btn.addEventListener('click', () => document.getElementById('noteEditorArea').style.textAlign = btn.dataset.align);
+            });
+
+// font / size
+            document.getElementById('noteFontSelect').addEventListener('change', () => {
+                document.getElementById('noteEditorArea').style.fontFamily = document.getElementById('noteFontSelect').value;
+            });
+            document.getElementById('noteSizeInput').addEventListener('change', () => {
+                document.getElementById('noteEditorArea').style.fontSize = document.getElementById('noteSizeInput').value + 'px';
+            });
+
+// ── CONFIRM MODAL HELPERS ─────────────────────────────────────
+            function openModal(id)  { const el = document.getElementById(id); el.classList.add('open'); el._cb = e => { if (e.target === el) closeModal(id); }; el.addEventListener('click', el._cb); }
+            function closeModal(id) { const el = document.getElementById(id); el.classList.remove('open'); if (el._cb) { el.removeEventListener('click', el._cb); el._cb = null; } }
+            document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeModal('confirmModal'); closeModal2('previewModal'); if (noteDirty && !confirm('Unsaved changes — close?')) return; closeNoteModal(); } });
+
+        })();
+    </script>
+{% endblock %}

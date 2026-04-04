@@ -1,0 +1,785 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}My Courses - Harmony{% endblock %}
+
+{% block stylesheets %}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --purple:       #6A5ACD;
+            --purple-dark:  #4B3B9E;
+            --purple-soft:  #8B7FD4;
+            --purple-pale:  #EDE8FA;
+            --purple-ghost: #F7F5FD;
+            --text:         #1C1733;
+            --text-mid:     #4A4570;
+            --text-muted:   #9590B8;
+            --border:       rgba(106,90,205,.12);
+            --white:        #FFFFFF;
+            --font-head:    'Syne', sans-serif;
+            --font-body:    'Inter', sans-serif;
+            --radius-sm: 8px; --radius-md: 12px;
+            --radius-lg: 16px; --radius-xl: 22px;
+            --shadow-sm: 0 2px 8px rgba(106,90,205,.08);
+            --shadow-md: 0 6px 24px rgba(106,90,205,.12);
+            --shadow-lg: 0 16px 48px rgba(106,90,205,.16);
+            --transition: 160ms cubic-bezier(.16,1,.3,1);
+        }
+
+        html, body { height: 100%; font-family: var(--font-body); background: var(--purple-ghost); color: var(--text); }
+
+        /* ── TOPBAR ───────────────────────────────────────────────── */
+        .topbar {
+            position: sticky; top: 0; z-index: 200;
+            background: var(--white);
+            border-bottom: 1px solid var(--border);
+            height: 62px; display: flex; align-items: center;
+            padding: 0 40px; gap: 8px;
+        }
+        .topbar-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; margin-right: 32px; }
+        .logo-mark { width: 34px; height: 34px; border-radius: 10px; object-fit: contain; flex-shrink: 0; }
+        .nav-links { display: flex; align-items: center; gap: 2px; flex: 1; flex-wrap: nowrap; overflow-x: auto; }
+        .nav-link {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 7px 14px; border-radius: 9px;
+            font-size: 13.5px; font-weight: 500;
+            color: var(--text-mid); text-decoration: none; white-space: nowrap;
+            transition: background .15s, color .15s;
+        }
+        .nav-link:hover { background: var(--purple-pale); color: var(--purple); }
+        .nav-link.active { background: var(--purple-pale); color: var(--purple); font-weight: 600; }
+        .nav-link .nav-emoji { font-size: 14px; }
+        .topbar-right { display: flex; align-items: center; gap: 10px; margin-left: auto; flex-shrink: 0; }
+        .logout-btn {
+            padding: 7px 16px; border-radius: 9px;
+            border: 1.5px solid rgba(239,68,68,.2); background: transparent;
+            color: #E05252; font-family: var(--font-body); font-size: 13px; font-weight: 500;
+            cursor: pointer; transition: background .15s, border-color .15s; white-space: nowrap;
+        }
+        .logout-btn:hover { background: #FEF2F2; border-color: #E05252; }
+        .profile-wrap { position: relative; }
+        .avatar {
+            width: 36px; height: 36px; border-radius: 50%;
+            background: var(--purple); color: white;
+            font-family: var(--font-head); font-weight: 700; font-size: 14px;
+            display: grid; place-items: center; cursor: pointer;
+            border: 2px solid var(--purple-pale); transition: box-shadow .15s;
+        }
+        .avatar:hover { box-shadow: 0 0 0 3px rgba(106,90,205,.25); }
+        .profile-dropdown {
+            position: absolute; top: calc(100% + 10px); right: 0; width: 220px;
+            background: var(--white); border: 1px solid var(--border);
+            border-radius: 14px; box-shadow: 0 12px 40px rgba(0,0,0,.1);
+            padding: 16px; display: none; z-index: 500;
+        }
+        .profile-dropdown.open { display: block; }
+        .pd-name  { font-size: 14px; font-weight: 600; color: var(--text); }
+        .pd-email { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+        .pd-divider { height: 1px; background: var(--border); margin: 12px 0; }
+        .pd-hint { font-size: 11px; color: var(--text-muted); font-style: italic; }
+
+        /* ── PAGE SHELL ───────────────────────────────────────────── */
+        .container { max-width: 1200px; margin: 0 auto; padding: 40px 40px 80px; }
+
+        /* ── PAGE HEADER ──────────────────────────────────────────── */
+        .page-header {
+            display: flex; align-items: center; gap: 16px;
+            margin-bottom: 28px;
+        }
+        .page-header-left { display: flex; align-items: center; gap: 12px; flex: 1; }
+        .page-icon {
+            width: 44px; height: 44px; border-radius: var(--radius-md);
+            background: var(--purple-pale);
+            display: grid; place-items: center; font-size: 22px; flex-shrink: 0;
+        }
+        .page-title {
+            font-family: var(--font-head); font-weight: 800;
+            font-size: clamp(1.5rem, 2.5vw, 2rem);
+            color: var(--text); letter-spacing: -.3px;
+        }
+        .page-header-actions { display: flex; align-items: center; gap: 10px; }
+
+        /* ── BUTTONS ──────────────────────────────────────────────── */
+        .btn {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 9px 18px; border-radius: var(--radius-md);
+            font-family: var(--font-body); font-size: 13.5px; font-weight: 500;
+            cursor: pointer; border: none; transition: background var(--transition), box-shadow var(--transition), transform var(--transition);
+            text-decoration: none;
+        }
+        .btn:active { transform: scale(.97); }
+        .btn-primary { background: var(--purple); color: #fff; box-shadow: 0 2px 12px rgba(106,90,205,.3); }
+        .btn-primary:hover { background: var(--purple-dark); box-shadow: 0 4px 18px rgba(106,90,205,.4); }
+        .btn-secondary {
+            background: var(--white); color: var(--text-mid);
+            border: 1px solid var(--border); box-shadow: var(--shadow-sm);
+        }
+        .btn-secondary:hover { background: var(--purple-ghost); color: var(--purple); border-color: rgba(106,90,205,.2); }
+        .btn-ghost { background: none; color: var(--text-muted); border: 1px solid transparent; padding: 7px 12px; }
+        .btn-ghost:hover { background: var(--purple-pale); color: var(--purple); }
+        .btn-danger { background: #FEF2F2; color: #E05252; border: 1px solid rgba(239,68,68,.2); }
+        .btn-danger:hover { background: #FEE2E2; border-color: #E05252; }
+        .btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+
+        /* ── TOOLBAR ──────────────────────────────────────────────── */
+        .toolbar {
+            display: flex; align-items: center; justify-content: flex-end;
+            gap: 8px; margin-bottom: 24px;
+        }
+        .view-toggle-group {
+            display: flex; gap: 2px;
+            background: var(--white); border: 1px solid var(--border);
+            border-radius: var(--radius-md); padding: 3px;
+        }
+        .view-toggle-btn {
+            display: grid; place-items: center;
+            width: 34px; height: 34px;
+            border: none; background: none; cursor: pointer;
+            border-radius: 8px; color: var(--text-muted);
+            transition: background var(--transition), color var(--transition);
+        }
+        .view-toggle-btn:hover { color: var(--purple); background: var(--purple-ghost); }
+        .view-toggle-btn.active { background: var(--purple-pale); color: var(--purple); }
+
+        /* ── GRID VIEW ────────────────────────────────────────────── */
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(min(260px,100%), 1fr));
+            gap: 20px;
+        }
+
+        /* ── COURSE CARD ──────────────────────────────────────────── */
+        .course-card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            cursor: pointer; position: relative;
+            transition: box-shadow var(--transition), transform var(--transition);
+        }
+        .course-card:hover { box-shadow: var(--shadow-md); transform: translateY(-3px); }
+        .course-card:focus-visible { outline: 2px solid var(--purple); outline-offset: 3px; }
+
+        .course-card-image { width: 100%; height: 148px; object-fit: cover; display: block; }
+        .course-card-placeholder {
+            width: 100%; height: 148px;
+            background: var(--purple-ghost);
+            display: grid; place-items: center; font-size: 2.25rem;
+        }
+        .course-card-body { padding: 14px 16px 18px; }
+        .course-title { font-family: var(--font-head); font-size: 14.5px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+        .course-subtitle { font-size: 12px; color: var(--text-muted); font-weight: 400; }
+
+        .course-delete-btn {
+            position: absolute; top: 8px; right: 8px;
+            width: 28px; height: 28px; border-radius: 50%;
+            background: rgba(0,0,0,.45); backdrop-filter: blur(4px);
+            color: #fff; font-size: 12px; line-height: 1;
+            display: grid; place-items: center;
+            border: none; cursor: pointer;
+            opacity: 0; transition: opacity var(--transition), background var(--transition);
+        }
+        .course-card:hover .course-delete-btn { opacity: 1; }
+        .course-delete-btn:hover { background: #E05252; }
+
+        .saved-badge {
+            position: absolute; top: 8px; left: 8px;
+            background: rgba(0,0,0,.45); backdrop-filter: blur(4px);
+            color: #fff; font-size: 11px; font-weight: 500;
+            padding: 3px 10px; border-radius: 20px;
+        }
+
+        /* ── LIST VIEW ────────────────────────────────────────────── */
+        .courses-list { display: flex; flex-direction: column; gap: 8px; }
+        .course-list-item {
+            display: flex; align-items: center; gap: 14px;
+            padding: 12px 16px;
+            background: var(--white); border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            cursor: pointer;
+            transition: box-shadow var(--transition), background var(--transition);
+        }
+        .course-list-item:hover { background: var(--purple-ghost); box-shadow: var(--shadow-sm); }
+        .course-list-item:focus-visible { outline: 2px solid var(--purple); outline-offset: 2px; }
+
+        .course-list-thumb { width: 56px; height: 56px; border-radius: var(--radius-md); object-fit: cover; flex-shrink: 0; }
+        .course-list-placeholder {
+            width: 56px; height: 56px; border-radius: var(--radius-md);
+            background: var(--purple-ghost); display: grid; place-items: center;
+            font-size: 1.375rem; flex-shrink: 0;
+        }
+        .course-list-info { flex: 1; min-width: 0; }
+        .course-list-title { font-family: var(--font-head); font-size: 14px; font-weight: 700; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .course-list-subject { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+        .course-list-actions { flex-shrink: 0; }
+
+        /* ── EMPTY STATE ──────────────────────────────────────────── */
+        .empty-state {
+            grid-column: 1 / -1;
+            display: flex; flex-direction: column; align-items: center;
+            padding: 80px 40px; text-align: center;
+            background: var(--white); border: 1px solid var(--border);
+            border-radius: var(--radius-xl);
+        }
+        .empty-icon { font-size: 3rem; margin-bottom: 20px; }
+        .empty-state h3 { font-family: var(--font-head); font-size: 20px; font-weight: 800; color: var(--text); margin-bottom: 8px; }
+        .empty-state p { font-size: 14px; color: var(--text-muted); max-width: 34ch; margin-bottom: 28px; line-height: 1.6; }
+
+        /* ── MODAL ────────────────────────────────────────────────── */
+        .modal-backdrop {
+            position: fixed; inset: 0; z-index: 400;
+            background: rgba(28,23,51,.45); backdrop-filter: blur(4px);
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; pointer-events: none;
+            transition: opacity var(--transition);
+        }
+        .modal-backdrop.open { opacity: 1; pointer-events: all; }
+        .modal {
+            background: var(--white); border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+            padding: 32px; width: 100%; max-width: 460px; max-height: 90vh; overflow-y: auto;
+            transform: translateY(20px); transition: transform var(--transition);
+        }
+        .modal-backdrop.open .modal { transform: translateY(0); }
+        .modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+        .modal-title { font-family: var(--font-head); font-size: 18px; font-weight: 800; color: var(--text); }
+        .modal-close {
+            width: 32px; height: 32px; border-radius: 8px; border: none; background: none;
+            cursor: pointer; color: var(--text-muted); display: grid; place-items: center;
+            transition: background var(--transition), color var(--transition);
+        }
+        .modal-close:hover { background: var(--purple-pale); color: var(--purple); }
+
+        /* ── FORM ─────────────────────────────────────────────────── */
+        .form-group { margin-bottom: 18px; }
+        .form-label { display: block; font-size: 13px; font-weight: 600; color: var(--text-mid); margin-bottom: 7px; }
+        .form-required { color: #E05252; margin-left: 2px; }
+        .form-control {
+            width: 100%; padding: 9px 13px;
+            background: var(--purple-ghost); border: 1.5px solid var(--border);
+            border-radius: var(--radius-md); font-family: var(--font-body); font-size: 13.5px;
+            color: var(--text); outline: none;
+            transition: border-color var(--transition), box-shadow var(--transition);
+        }
+        .form-control::placeholder { color: var(--text-muted); }
+        .form-control:focus { border-color: var(--purple-soft); box-shadow: 0 0 0 3px rgba(106,90,205,.12); background: var(--white); }
+
+        .form-file-list {
+            min-height: 70px; max-height: 120px; overflow-y: auto;
+            background: var(--purple-ghost); border: 1.5px solid var(--border);
+            border-radius: var(--radius-md); padding: 8px;
+        }
+        .form-file-item {
+            display: flex; align-items: center; justify-content: space-between;
+            gap: 8px; padding: 5px 8px; border-radius: 7px;
+            font-size: 12px; color: var(--text-mid);
+        }
+        .form-file-item:hover { background: var(--purple-pale); }
+        .file-remove { color: var(--text-muted); cursor: pointer; background: none; border: none; font-size: 12px; padding: 2px 4px; }
+        .file-remove:hover { color: #E05252; }
+
+        .image-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        .auto-gen-toggle {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 8px 14px; border-radius: var(--radius-md);
+            border: 1.5px solid var(--border); background: var(--white);
+            font-size: 13px; color: var(--text-muted); cursor: pointer;
+            transition: all var(--transition);
+        }
+        .auto-gen-toggle:hover, .auto-gen-toggle.active { border-color: var(--purple); color: var(--purple); background: var(--purple-ghost); }
+        .image-hint { font-size: 11.5px; color: var(--text-muted); margin-top: 6px; }
+
+        .modal-footer { display: flex; justify-content: flex-end; gap: 10px; margin-top: 28px; }
+
+        /* ── TOAST ────────────────────────────────────────────────── */
+        .toast-container { position: fixed; bottom: 28px; right: 28px; z-index: 600; display: flex; flex-direction: column; gap: 8px; }
+        .toast {
+            padding: 12px 18px; border-radius: var(--radius-md);
+            font-size: 13.5px; font-weight: 500; box-shadow: var(--shadow-md);
+            animation: toastIn .2s ease;
+        }
+        .toast-success { background: #ECFDF5; color: #166534; border: 1px solid #BBF7D0; }
+        .toast-error   { background: #FEF2F2; color: #991B1B; border: 1px solid #FECACA; }
+        @keyframes toastIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+
+        /* ── RESPONSIVE ───────────────────────────────────────────── */
+        @media (max-width: 640px) {
+            .topbar { padding: 0 20px; }
+            .nav-links { display: none; }
+            .container { padding: 24px 20px 60px; }
+            .page-header { flex-wrap: wrap; }
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    {% set current_route = app.request.attributes.get('_route') %}
+
+    {# ── TOPBAR ─────────────────────────────────────────────────────── #}
+    <header class="topbar">
+        <a href="{{ path('homepage') }}" class="topbar-logo">
+            <img src="{{ asset('images/logo.png') }}" class="logo-mark" alt="Harmony">
+        </a>
+        <nav class="nav-links">
+            <a href="{{ path('activites') }}"   class="nav-link {{ current_route == 'activites'   ? 'active' }}"><span class="nav-emoji">🏋</span> Activités</a>
+            <a href="{{ path('forum') }}"       class="nav-link {{ current_route == 'forum'       ? 'active' }}"><span class="nav-emoji">💬</span> Forum</a>
+            <a href="{{ path('taches') }}"      class="nav-link {{ current_route == 'taches'      ? 'active' }}"><span class="nav-emoji">📚</span> Tâches</a>
+            <a href="{{ path('evenements') }}"  class="nav-link {{ current_route == 'evenements'  ? 'active' }}"><span class="nav-emoji">📅</span> Événements</a>
+            <a href="{{ path('nutrition') }}"   class="nav-link {{ current_route == 'nutrition'   ? 'active' }}"><span class="nav-emoji">🥗</span> Nutrition</a>
+            <a href="{{ path('meditation') }}"  class="nav-link {{ current_route == 'meditation'  ? 'active' }}"><span class="nav-emoji">🧘</span> Méditation</a>
+            <a href="{{ path('journal') }}"     class="nav-link {{ current_route == 'journal'     ? 'active' }}"><span class="nav-emoji">📔</span> Journal</a>
+            <a href="{{ path('library') }}"     class="nav-link {{ current_route == 'library' or current_route starts with 'app_courses' ? 'active' }}"><span class="nav-emoji">📖</span> Library</a>
+        </nav>
+        <div class="topbar-right">
+            <button class="logout-btn">🚪 Déconnexion</button>
+            <div class="profile-wrap">
+                <div class="avatar" id="avatarBtn">
+                    {{ app.user ? app.user.firstName[0]|upper : 'E' }}
+                </div>
+                <div class="profile-dropdown" id="profileDropdown">
+                    <div class="pd-name">{{ app.user ? app.user.firstName ~ ' ' ~ app.user.lastName : 'Étudiant' }}</div>
+                    <div class="pd-email">{{ app.user ? app.user.email : 'email@exemple.com' }}</div>
+                    <div class="pd-divider"></div>
+                    <div class="pd-hint">Double-clic pour modifier</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    {# ── PAGE ───────────────────────────────────────────────────────── #}
+    <div class="container">
+
+        {# Page header #}
+        <div class="page-header">
+            <div class="page-header-left">
+                <div class="page-icon">📖</div>
+                <h1 class="page-title">My Courses</h1>
+            </div>
+            <div class="page-header-actions">
+                <button class="btn btn-primary" id="addCourseBtn">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    Add Course
+                </button>
+                <a href="{{ path('library') }}" class="btn btn-secondary">📚 Library</a>
+            </div>
+        </div>
+
+        {# Toolbar — view toggle #}
+        <div class="toolbar">
+            <div class="view-toggle-group" role="group" aria-label="View mode">
+                <button class="view-toggle-btn active" id="gridViewBtn" aria-pressed="true" aria-label="Grid view">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+                        <rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>
+                    </svg>
+                </button>
+                <button class="view-toggle-btn" id="listViewBtn" aria-pressed="false" aria-label="List view">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/>
+                        <line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        {# ── GRID VIEW ──────────────────────────────────────────────── #}
+        <div class="courses-grid" id="gridView">
+            {% if courses is defined and courses|length > 0 %}
+                {% for course in courses %}
+                    <div class="course-card"
+                         data-id="{{ course.id }}"
+                         data-title="{{ course.title }}"
+                         data-subject="{{ course.subjectName ?? '' }}"
+                         tabindex="0" role="button"
+                         aria-label="Open {{ course.title }}">
+
+                        {% if course.coverImagePath %}
+                            <img class="course-card-image"
+                                 src="/covers/{{ course.coverImagePath }}"
+                                 alt="{{ course.title }}"
+                                 width="260" height="148" loading="lazy">
+                        {% else %}
+                            <div class="course-card-placeholder" aria-hidden="true">🎓</div>
+                        {% endif %}
+
+                        <div class="course-card-body">
+                            <p class="course-title">{{ course.title }}</p>
+                            {% if course.subjectName is defined and course.subjectName %}
+                                <p class="course-subtitle">{{ course.subjectName }}</p>
+                            {% endif %}
+                        </div>
+
+                        {% if course.isSaved is defined and course.isSaved %}
+                            <span class="saved-badge">🔖 In Library</span>
+                        {% else %}
+                            <button class="course-delete-btn"
+                                    data-action="delete"
+                                    data-id="{{ course.id }}"
+                                    data-title="{{ course.title }}"
+                                    aria-label="Delete {{ course.title }}">✕</button>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state">
+                    <div class="empty-icon">📚</div>
+                    <h3>No courses yet</h3>
+                    <p>Create your first course and start organising your studies.</p>
+                    <button class="btn btn-primary" id="emptyAddBtn">Add Course</button>
+                </div>
+            {% endif %}
+        </div>
+
+        {# ── LIST VIEW (hidden by default) ──────────────────────────── #}
+        <div class="courses-list" id="listView" style="display:none;">
+            {% if courses is defined and courses|length > 0 %}
+                {% for course in courses %}
+                    <div class="course-list-item"
+                         data-id="{{ course.id }}"
+                         data-title="{{ course.title }}"
+                         data-subject="{{ course.subjectName ?? '' }}"
+                         tabindex="0" role="button"
+                         aria-label="Open {{ course.title }}">
+
+                        {% if course.coverImagePath %}
+                            <img class="course-list-thumb"
+                                 src="/covers/{{ course.coverImagePath }}"
+                                 alt="{{ course.title }}"
+                                 width="56" height="56" loading="lazy">
+                        {% else %}
+                            <div class="course-list-placeholder" aria-hidden="true">🎓</div>
+                        {% endif %}
+
+                        <div class="course-list-info">
+                            <p class="course-list-title">{{ course.title }}</p>
+                            {% if course.subjectName is defined and course.subjectName %}
+                                <p class="course-list-subject">{{ course.subjectName }}</p>
+                            {% endif %}
+                        </div>
+
+                        <div class="course-list-actions">
+                            {% if course.isSaved is defined and course.isSaved %}
+                                <span style="font-size:12px; color:var(--text-muted);">🔖 In Library</span>
+                            {% else %}
+                                <button class="btn btn-ghost"
+                                        data-action="delete"
+                                        data-id="{{ course.id }}"
+                                        data-title="{{ course.title }}"
+                                        aria-label="Delete {{ course.title }}"
+                                        style="font-size:13px;">✕</button>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state" style="grid-column:unset;">
+                    <div class="empty-icon">📚</div>
+                    <h3>No courses yet</h3>
+                    <p>Create your first course and start organising your studies.</p>
+                    <button class="btn btn-primary" id="emptyAddBtnList">Add Course</button>
+                </div>
+            {% endif %}
+        </div>
+
+    </div>{# /container #}
+
+    {# ── ADD COURSE MODAL ───────────────────────────────────────────── #}
+    <div class="modal-backdrop" id="addCourseModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle">Add Course</h2>
+                <button class="modal-close" id="modalCloseBtn" aria-label="Close">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+
+            <form id="addCourseForm" novalidate>
+                <div class="form-group">
+                    <label class="form-label" for="courseNameInput">Course name <span class="form-required">*</span></label>
+                    <input class="form-control" id="courseNameInput" name="title" type="text" placeholder="e.g. Introduction to Algorithms" required autocomplete="off">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="subjectInput">Subject <span class="form-required">*</span></label>
+                    <input class="form-control" id="subjectInput" name="subject" type="text" placeholder="e.g. Computer Science" list="subjectsList" required autocomplete="off">
+                    <datalist id="subjectsList">
+                        {% if subjects is defined %}
+                        {% for subject in subjects %}
+                        <option value="{{ subject.name }}">
+                            {% endfor %}
+                            {% endif %}
+                    </datalist>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Cover image</label>
+                    <div class="image-row">
+                        <label class="btn btn-secondary" for="coverImageInput" style="cursor:pointer;" id="pickImageLabel">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                            Choose image…
+                        </label>
+                        <input type="file" id="coverImageInput" accept="image/png,image/jpeg,image/webp" style="display:none;" aria-label="Cover image">
+                        <button type="button" class="auto-gen-toggle" id="autoGenToggle">✨ Auto generate</button>
+                    </div>
+                    <p class="image-hint" id="imageHint">No image selected</p>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Files</label>
+                    <button type="button" class="btn btn-secondary" id="pickFilesBtn" style="margin-bottom:8px; font-size:13px;">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                        Add files…
+                    </button>
+                    <input type="file" id="filesInput" multiple style="display:none;" aria-label="Course files">
+                    <div class="form-file-list" id="filesList" aria-live="polite"></div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="cancelBtn">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="createBtn" disabled>
+                        <span id="createBtnLabel">Create</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {# ── DELETE CONFIRM MODAL ───────────────────────────────────────── #}
+    <div class="modal-backdrop" id="confirmModal" role="alertdialog" aria-modal="true" aria-labelledby="confirmTitle">
+        <div class="modal" style="max-width:380px;">
+            <div class="modal-header">
+                <h2 class="modal-title" id="confirmTitle">Delete course?</h2>
+            </div>
+            <p id="confirmMsg" style="font-size:13.5px; color:var(--text-muted); line-height:1.6; margin-bottom:28px;"></p>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="confirmCancelBtn">Cancel</button>
+                <button class="btn btn-danger" id="confirmDeleteBtn">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    {# ── TOASTS ─────────────────────────────────────────────────────── #}
+    <div class="toast-container" id="toastContainer" aria-live="polite"></div>
+
+    <script>
+        (function () {
+            /* ── VIEW TOGGLE ────────────────────────────────────────────── */
+            const gridView    = document.getElementById('gridView');
+            const listView    = document.getElementById('listView');
+            const gridViewBtn = document.getElementById('gridViewBtn');
+            const listViewBtn = document.getElementById('listViewBtn');
+
+            function setView(grid) {
+                gridView.style.display = grid ? '' : 'none';
+                listView.style.display = grid ? 'none' : '';
+                gridViewBtn.classList.toggle('active', grid);
+                listViewBtn.classList.toggle('active', !grid);
+                gridViewBtn.setAttribute('aria-pressed', String(grid));
+                listViewBtn.setAttribute('aria-pressed', String(!grid));
+            }
+            gridViewBtn.addEventListener('click', () => setView(true));
+            listViewBtn.addEventListener('click', () => setView(false));
+
+            /* ── CARD / LIST CLICK → OPEN COURSE ───────────────────────── */
+            document.querySelectorAll('.course-card, .course-list-item').forEach(el => {
+                el.addEventListener('click', e => {
+                    if (e.target.closest('[data-action="delete"]')) return;
+                    window.location.href = '/courses/' + el.dataset.id;
+                });
+                el.addEventListener('keydown', e => {
+                    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); el.click(); }
+                });
+            });
+
+            /* ── DELETE ─────────────────────────────────────────────────── */
+            let pendingDeleteId = null;
+
+            document.querySelectorAll('[data-action="delete"]').forEach(btn => {
+                btn.addEventListener('click', e => {
+                    e.stopPropagation();
+                    pendingDeleteId = btn.dataset.id;
+                    document.getElementById('confirmMsg').textContent =
+                        'Delete "' + btn.dataset.title + '"? This will remove the course and all its files.';
+                    openModal('confirmModal');
+                });
+            });
+
+            document.getElementById('confirmCancelBtn').addEventListener('click', () => closeModal('confirmModal'));
+            document.getElementById('confirmDeleteBtn').addEventListener('click', async () => {
+                if (!pendingDeleteId) return;
+                closeModal('confirmModal');
+                try {
+                    const res = await fetch('/courses/' + pendingDeleteId + '/delete', {
+                        method: 'POST',
+                        headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                        body: new URLSearchParams({ _token: getCsrf() })
+                    });
+                    if (!res.ok) throw new Error();
+                    document.querySelectorAll('[data-id="' + pendingDeleteId + '"]').forEach(el => el.remove());
+                    showToast('Course deleted', 'success');
+                } catch { showToast('Failed to delete course', 'error'); }
+                pendingDeleteId = null;
+            });
+
+            /* ── ADD COURSE MODAL ───────────────────────────────────────── */
+            let autoGen = false, coverFile = null, selectedFiles = [];
+
+            const addCourseModal  = document.getElementById('addCourseModal');
+            const addCourseForm   = document.getElementById('addCourseForm');
+            const courseNameInput = document.getElementById('courseNameInput');
+            const subjectInput    = document.getElementById('subjectInput');
+            const imageHint       = document.getElementById('imageHint');
+            const autoGenToggle   = document.getElementById('autoGenToggle');
+            const coverImageInput = document.getElementById('coverImageInput');
+            const filesInput      = document.getElementById('filesInput');
+            const pickFilesBtn    = document.getElementById('pickFilesBtn');
+            const filesListEl     = document.getElementById('filesList');
+            const createBtn       = document.getElementById('createBtn');
+
+            function openAddModal() { openModal('addCourseModal'); setTimeout(() => courseNameInput.focus(), 80); }
+
+            document.getElementById('addCourseBtn').addEventListener('click', openAddModal);
+            const eb  = document.getElementById('emptyAddBtn');
+            const ebl = document.getElementById('emptyAddBtnList');
+            if (eb)  eb.addEventListener('click', openAddModal);
+            if (ebl) ebl.addEventListener('click', openAddModal);
+            document.getElementById('modalCloseBtn').addEventListener('click', () => closeModal('addCourseModal'));
+            document.getElementById('cancelBtn').addEventListener('click', () => closeModal('addCourseModal'));
+
+            /* Validation */
+            function validate() {
+                createBtn.disabled = !courseNameInput.value.trim() || !subjectInput.value.trim();
+            }
+            courseNameInput.addEventListener('input', validate);
+            subjectInput.addEventListener('input', validate);
+
+            /* Auto-gen */
+            autoGenToggle.addEventListener('click', () => {
+                autoGen = !autoGen;
+                autoGenToggle.classList.toggle('active', autoGen);
+                if (autoGen) { imageHint.textContent = 'Will be generated on create'; coverFile = null; coverImageInput.value = ''; }
+                else         { imageHint.textContent = 'No image selected'; }
+            });
+
+            /* Cover image picker */
+            coverImageInput.addEventListener('change', () => {
+                if (coverImageInput.files[0]) {
+                    coverFile = coverImageInput.files[0];
+                    imageHint.textContent = coverFile.name;
+                    autoGen = false;
+                    autoGenToggle.classList.remove('active');
+                }
+            });
+
+            /* Files picker */
+            pickFilesBtn.addEventListener('click', () => filesInput.click());
+            filesInput.addEventListener('change', () => {
+                Array.from(filesInput.files).forEach(f => {
+                    if (!selectedFiles.find(x => x.name === f.name)) selectedFiles.push(f);
+                });
+                renderFiles();
+            });
+
+            function renderFiles() {
+                filesListEl.innerHTML = '';
+                if (!selectedFiles.length) { filesListEl.textContent = 'No files selected'; return; }
+                selectedFiles.forEach((f, i) => {
+                    const row = document.createElement('div');
+                    row.className = 'form-file-item';
+                    row.innerHTML = '<span>' + f.name + '</span><button class="file-remove" type="button" aria-label="Remove">✕</button>';
+                    row.querySelector('button').addEventListener('click', () => { selectedFiles.splice(i, 1); renderFiles(); });
+                    filesListEl.appendChild(row);
+                });
+            }
+
+            /* Submit */
+            addCourseForm.addEventListener('submit', async e => {
+                e.preventDefault();
+                const title   = courseNameInput.value.trim();
+                const subject = subjectInput.value.trim();
+                if (!title || !subject) return;
+
+                createBtn.disabled = true;
+                document.getElementById('createBtnLabel').textContent = autoGen ? 'Generating…' : 'Creating…';
+
+                const fd = new FormData();
+                fd.append('title',   title);
+                fd.append('subject', subject);
+                fd.append('autoGen', autoGen ? '1' : '0');
+                fd.append('_token',  getCsrf());
+                if (coverFile) fd.append('coverImage', coverFile);
+                selectedFiles.forEach(f => fd.append('files[]', f));
+
+                try {
+                    const res  = await fetch('{{ path("app_courses_create") }}', {
+                        method: 'POST', body: fd,
+                        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                    });
+                    const data = await res.json();
+                    if (!res.ok) throw new Error(data.message || 'Failed');
+                    showToast('Course created!', 'success');
+                    closeModal('addCourseModal');
+                    window.location.reload();
+                } catch (err) {
+                    showToast(err.message || 'Failed to create course', 'error');
+                    createBtn.disabled = false;
+                    document.getElementById('createBtnLabel').textContent = 'Create';
+                }
+            });
+
+            function resetForm() {
+                addCourseForm.reset();
+                autoGen = false; coverFile = null; selectedFiles = [];
+                imageHint.textContent = 'No image selected';
+                autoGenToggle.classList.remove('active');
+                renderFiles();
+                validate();
+                document.getElementById('createBtnLabel').textContent = 'Create';
+            }
+
+            /* ── MODAL HELPERS ──────────────────────────────────────────── */
+            function openModal(id) {
+                const el = document.getElementById(id);
+                el.classList.add('open');
+                el._backdropHandler = e => { if (e.target === el) closeModal(id); };
+                el.addEventListener('click', el._backdropHandler);
+            }
+            function closeModal(id) {
+                const el = document.getElementById(id);
+                el.classList.remove('open');
+                if (el._backdropHandler) el.removeEventListener('click', el._backdropHandler);
+                if (id === 'addCourseModal') resetForm();
+            }
+            document.addEventListener('keydown', e => {
+                if (e.key === 'Escape') { closeModal('addCourseModal'); closeModal('confirmModal'); }
+            });
+
+            /* ── TOAST ──────────────────────────────────────────────────── */
+            function showToast(msg, type) {
+                const t = document.createElement('div');
+                t.className = 'toast toast-' + (type || 'success');
+                t.textContent = msg;
+                document.getElementById('toastContainer').appendChild(t);
+                setTimeout(() => t.remove(), 3500);
+            }
+
+            /* ── CSRF ───────────────────────────────────────────────────── */
+            function getCsrf() {
+                return document.querySelector('meta[name="csrf-token"]')?.content ?? '';
+            }
+
+            /* ── PROFILE DROPDOWN (matches homepage) ────────────────────── */
+            const avatarBtn = document.getElementById('avatarBtn');
+            const profileDrop = document.getElementById('profileDropdown');
+            if (avatarBtn && profileDrop) {
+                avatarBtn.addEventListener('click', e => { e.stopPropagation(); profileDrop.classList.toggle('open'); });
+                document.addEventListener('click', () => profileDrop.classList.remove('open'));
+            }
+        })();
+    </script>
+{% endblock %}
