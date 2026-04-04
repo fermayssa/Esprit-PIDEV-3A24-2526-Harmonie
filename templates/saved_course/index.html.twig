@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}SavedCourse index{% endblock %}
+
+{% block content %}
+    <h1>SavedCourse index</h1>
+
+    <table class="table table-bordered table-hover w-100">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>UserId</th>
+                <th>CourseId</th>
+                <th>SavedAt</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for saved_course in saved_courses %}
+            <tr>
+                <td>{{ saved_course.id }}</td>
+                <td>{{ saved_course.userId }}</td>
+                <td>{{ saved_course.courseId }}</td>
+                <td>{{ saved_course.savedAt ? saved_course.savedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_saved_course_show', {'id': saved_course.id}) }}">show</a>
+                    <a href="{{ path('app_saved_course_edit', {'id': saved_course.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_saved_course_new') }}">Create new</a>
+{% endblock %}

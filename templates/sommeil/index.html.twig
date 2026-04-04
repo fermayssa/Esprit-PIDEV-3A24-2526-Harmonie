@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Sommeil index{% endblock %}
+
+{% block content %}
+    <h1>Sommeil index</h1>
+
+    <table class="table table-bordered table-hover w-100">
+        <thead>
+            <tr>
+                <th>IdSommeil</th>
+                <th>DateCoucher</th>
+                <th>DateReveil</th>
+                <th>QualiteSommeil</th>
+                <th>Stress</th>
+                <th>Cafeine</th>
+                <th>Bruit</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for sommeil in sommeils %}
+            <tr>
+                <td>{{ sommeil.idSommeil }}</td>
+                <td>{{ sommeil.dateCoucher ? sommeil.dateCoucher|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ sommeil.dateReveil ? sommeil.dateReveil|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ sommeil.qualiteSommeil }}</td>
+                <td>{{ sommeil.stress ? 'Yes' : 'No' }}</td>
+                <td>{{ sommeil.cafeine ? 'Yes' : 'No' }}</td>
+                <td>{{ sommeil.bruit ? 'Yes' : 'No' }}</td>
+                <td>
+                    <a href="{{ path('app_sommeil_show', {'idSommeil': sommeil.idSommeil}) }}">show</a>
+                    <a href="{{ path('app_sommeil_edit', {'idSommeil': sommeil.idSommeil}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="8">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_sommeil_new') }}">Create new</a>
+{% endblock %}

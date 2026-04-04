@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Conseil index{% endblock %}
+
+{% block content %}
+    <h1>Conseil index</h1>
+
+    <table class="table table-bordered table-hover w-100">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Contenu</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for conseil in conseils %}
+            <tr>
+                <td>{{ conseil.id }}</td>
+                <td>{{ conseil.contenu }}</td>
+                <td>
+                    <a href="{{ path('app_conseil_show', {'id': conseil.id}) }}">show</a>
+                    <a href="{{ path('app_conseil_edit', {'id': conseil.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_conseil_new') }}">Create new</a>
+{% endblock %}

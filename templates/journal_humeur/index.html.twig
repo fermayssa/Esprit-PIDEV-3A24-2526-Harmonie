@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}JournalHumeur index{% endblock %}
+
+{% block content %}
+    <h1>JournalHumeur index</h1>
+
+    <table class="table table-bordered table-hover w-100">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Date</th>
+                <th>Humeur</th>
+                <th>Score</th>
+                <th>Contenu</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for journal_humeur in journal_humeurs %}
+            <tr>
+                <td>{{ journal_humeur.id }}</td>
+                <td>{{ journal_humeur.date ? journal_humeur.date|date('Y-m-d') : '' }}</td>
+                <td>{{ journal_humeur.humeur }}</td>
+                <td>{{ journal_humeur.score }}</td>
+                <td>{{ journal_humeur.contenu }}</td>
+                <td>
+                    <a href="{{ path('app_journal_humeur_show', {'id': journal_humeur.id}) }}">show</a>
+                    <a href="{{ path('app_journal_humeur_edit', {'id': journal_humeur.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_journal_humeur_new') }}">Create new</a>
+{% endblock %}

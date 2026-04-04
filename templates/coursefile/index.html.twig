@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Coursefile index{% endblock %}
+
+{% block content %}
+    <h1>Coursefile index</h1>
+
+    <table class="table table-bordered table-hover w-100">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Originalname</th>
+                <th>Mimetype</th>
+                <th>Sizebytes</th>
+                <th>Filedata</th>
+                <th>UploadedAt</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for coursefile in coursefiles %}
+            <tr>
+                <td>{{ coursefile.id }}</td>
+                <td>{{ coursefile.originalname }}</td>
+                <td>{{ coursefile.mimetype }}</td>
+                <td>{{ coursefile.sizebytes }}</td>
+                <td>{{ coursefile.filedata }}</td>
+                <td>{{ coursefile.uploadedAt ? coursefile.uploadedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_coursefile_show', {'id': coursefile.id}) }}">show</a>
+                    <a href="{{ path('app_coursefile_edit', {'id': coursefile.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_coursefile_new') }}">Create new</a>
+{% endblock %}

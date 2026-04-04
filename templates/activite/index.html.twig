@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Activite index{% endblock %}
+
+{% block content %}
+    <h1>Activite index</h1>
+
+    <table class="table table-bordered table-hover w-100">
+        <thead>
+            <tr>
+                <th>IdActivite</th>
+                <th>DateActivite</th>
+                <th>Exercice</th>
+                <th>User</th>
+                <th>DureeMinutes</th>
+                <th>CaloriesBrulees</th>
+                <th>NbSeries</th>
+                <th>NbRepetitions</th>
+                <th>Poids</th>
+                <th>Notes</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for activite in activites %}
+            <tr>
+                <td>{{ activite.idActivite }}</td>
+                <td>{{ activite.dateActivite ? activite.dateActivite|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ activite.exercice ? activite.exercice.nomExercice : '' }}</td>
+                <td>{{ activite.user ? activite.user.userEmail : '' }}</td>
+                <td>{{ activite.dureeMinutes }}</td>
+                <td>{{ activite.caloriesBrulees }}</td>
+                <td>{{ activite.nbSeries }}</td>
+                <td>{{ activite.nbRepetitions }}</td>
+                <td>{{ activite.poids }}</td>
+                <td>{{ activite.notes }}</td>
+                <td>
+                    <a href="{{ path('app_activite_show', {'idActivite': activite.idActivite}) }}">show</a>
+                    <a href="{{ path('app_activite_edit', {'idActivite': activite.idActivite}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="11">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_activite_new') }}" class="btn btn-primary">Créer</a>
+{% endblock %}

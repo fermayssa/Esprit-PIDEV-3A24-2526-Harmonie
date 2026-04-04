@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Favori{% endblock %}
+
+{% block content %}
+    <h1>Favori</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>IdFavori</th>
+                <td>{{ favori.idFavori }}</td>
+            </tr>
+            <tr>
+                <th>DateAjout</th>
+                <td>{{ favori.dateAjout ? favori.dateAjout|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_favori_index') }}">back to list</a>
+
+    <a href="{{ path('app_favori_edit', {'idFavori': favori.idFavori}) }}">edit</a>
+
+    {{ include('favori/_delete_form.html.twig') }}
+{% endblock %}

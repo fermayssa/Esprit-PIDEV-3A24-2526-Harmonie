@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Consommation index{% endblock %}
+
+{% block content %}
+    <h1>Consommation index</h1>
+
+    <table class="table table-bordered table-hover w-100">
+        <thead>
+            <tr>
+                <th>IdConsommation</th>
+                <th>DateConsommation</th>
+                <th>TypeRepas</th>
+                <th>QuantiteEauMl</th>
+                <th>PoidsGrammes</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for consommation in consommations %}
+            <tr>
+                <td>{{ consommation.idConsommation }}</td>
+                <td>{{ consommation.dateConsommation ? consommation.dateConsommation|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ consommation.typeRepas }}</td>
+                <td>{{ consommation.quantiteEauMl }}</td>
+                <td>{{ consommation.poidsGrammes }}</td>
+                <td>
+                    <a href="{{ path('app_consommation_show', {'idConsommation': consommation.idConsommation}) }}">show</a>
+                    <a href="{{ path('app_consommation_edit', {'idConsommation': consommation.idConsommation}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_consommation_new') }}">Create new</a>
+{% endblock %}

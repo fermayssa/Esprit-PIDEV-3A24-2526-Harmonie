@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Aliment index{% endblock %}
+
+{% block content %}
+    <h1>Aliment index</h1>
+
+    <table class="table table-bordered table-hover w-100">
+        <thead>
+            <tr>
+                <th>IdAliment</th>
+                <th>NomAliment</th>
+                <th>CaloriesPour100g</th>
+                <th>Proteines</th>
+                <th>Glucides</th>
+                <th>Lipides</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for aliment in aliments %}
+            <tr>
+                <td>{{ aliment.idAliment }}</td>
+                <td>{{ aliment.nomAliment }}</td>
+                <td>{{ aliment.caloriesPour100g }}</td>
+                <td>{{ aliment.proteines }}</td>
+                <td>{{ aliment.glucides }}</td>
+                <td>{{ aliment.lipides }}</td>
+                <td>
+                    <a href="{{ path('app_aliment_show', {'idAliment': aliment.idAliment}) }}">show</a>
+                    <a href="{{ path('app_aliment_edit', {'idAliment': aliment.idAliment}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_aliment_new') }}">Create new</a>
+{% endblock %}

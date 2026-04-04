@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Sommeil{% endblock %}
+
+{% block content %}
+    <h1>Create new Sommeil</h1>
+
+    {{ include('sommeil/_form.html.twig') }}
+
+    <a href="{{ path('app_sommeil_index') }}">back to list</a>
+{% endblock %}

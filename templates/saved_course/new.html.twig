@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New SavedCourse{% endblock %}
+
+{% block content %}
+    <h1>Create new SavedCourse</h1>
+
+    {{ include('saved_course/_form.html.twig') }}
+
+    <a href="{{ path('app_saved_course_index') }}">back to list</a>
+{% endblock %}

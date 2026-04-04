@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}JournalHumeur{% endblock %}
+
+{% block content %}
+    <h1>JournalHumeur</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ journal_humeur.id }}</td>
+            </tr>
+            <tr>
+                <th>Date</th>
+                <td>{{ journal_humeur.date ? journal_humeur.date|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Humeur</th>
+                <td>{{ journal_humeur.humeur }}</td>
+            </tr>
+            <tr>
+                <th>Score</th>
+                <td>{{ journal_humeur.score }}</td>
+            </tr>
+            <tr>
+                <th>Contenu</th>
+                <td>{{ journal_humeur.contenu }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_journal_humeur_index') }}">back to list</a>
+
+    <a href="{{ path('app_journal_humeur_edit', {'id': journal_humeur.id}) }}">edit</a>
+
+    {{ include('journal_humeur/_delete_form.html.twig') }}
+{% endblock %}

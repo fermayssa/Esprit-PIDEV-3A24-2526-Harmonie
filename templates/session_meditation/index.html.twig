@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}SessionMeditation index{% endblock %}
+
+{% block content %}
+    <h1>SessionMeditation index</h1>
+
+    <table class="table table-bordered table-hover w-100">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Auteur</th>
+                <th>Duree</th>
+                <th>Theme</th>
+                <th>AudioUrl</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for session_meditation in session_meditations %}
+            <tr>
+                <td>{{ session_meditation.id }}</td>
+                <td>{{ session_meditation.auteur }}</td>
+                <td>{{ session_meditation.duree }}</td>
+                <td>{{ session_meditation.theme }}</td>
+                <td>{{ session_meditation.audioUrl }}</td>
+                <td>
+                    <a href="{{ path('app_session_meditation_show', {'id': session_meditation.id}) }}">show</a>
+                    <a href="{{ path('app_session_meditation_edit', {'id': session_meditation.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_session_meditation_new') }}">Create new</a>
+{% endblock %}

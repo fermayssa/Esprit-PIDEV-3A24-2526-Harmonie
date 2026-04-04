@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Consommation{% endblock %}
+
+{% block content %}
+    <h1>Consommation</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>IdConsommation</th>
+                <td>{{ consommation.idConsommation }}</td>
+            </tr>
+            <tr>
+                <th>DateConsommation</th>
+                <td>{{ consommation.dateConsommation ? consommation.dateConsommation|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>TypeRepas</th>
+                <td>{{ consommation.typeRepas }}</td>
+            </tr>
+            <tr>
+                <th>QuantiteEauMl</th>
+                <td>{{ consommation.quantiteEauMl }}</td>
+            </tr>
+            <tr>
+                <th>PoidsGrammes</th>
+                <td>{{ consommation.poidsGrammes }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_consommation_index') }}">back to list</a>
+
+    <a href="{{ path('app_consommation_edit', {'idConsommation': consommation.idConsommation}) }}">edit</a>
+
+    {{ include('consommation/_delete_form.html.twig') }}
+{% endblock %}

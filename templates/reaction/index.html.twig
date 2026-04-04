@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Reaction index{% endblock %}
+
+{% block content %}
+    <h1>Reaction index</h1>
+
+    <table class="table table-bordered table-hover w-100">
+        <thead>
+            <tr>
+                <th>IdReaction</th>
+                <th>TypeReaction</th>
+                <th>DateReaction</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for reaction in reactions %}
+            <tr>
+                <td>{{ reaction.idReaction }}</td>
+                <td>{{ reaction.typeReaction }}</td>
+                <td>{{ reaction.dateReaction ? reaction.dateReaction|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_reaction_show', {'idReaction': reaction.idReaction}) }}">show</a>
+                    <a href="{{ path('app_reaction_edit', {'idReaction': reaction.idReaction}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_reaction_new') }}">Create new</a>
+{% endblock %}

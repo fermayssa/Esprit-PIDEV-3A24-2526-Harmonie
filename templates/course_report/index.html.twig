@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}CourseReport index{% endblock %}
+
+{% block content %}
+    <h1>CourseReport index</h1>
+
+    <table class="table table-bordered table-hover w-100">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>CourseId</th>
+                <th>ReporterId</th>
+                <th>Reason</th>
+                <th>Details</th>
+                <th>Status</th>
+                <th>CreatedAt</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for course_report in course_reports %}
+            <tr>
+                <td>{{ course_report.id }}</td>
+                <td>{{ course_report.courseId }}</td>
+                <td>{{ course_report.reporterId }}</td>
+                <td>{{ course_report.reason }}</td>
+                <td>{{ course_report.details }}</td>
+                <td>{{ course_report.status }}</td>
+                <td>{{ course_report.createdAt ? course_report.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_course_report_show', {'id': course_report.id}) }}">show</a>
+                    <a href="{{ path('app_course_report_edit', {'id': course_report.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="8">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_course_report_new') }}">Create new</a>
+{% endblock %}

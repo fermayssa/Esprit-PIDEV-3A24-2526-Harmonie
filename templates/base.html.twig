@@ -1,24 +1,101 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
-        {% block stylesheets %}
-        {% endblock %}
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>{% block title %}Harmony Admin{% endblock %}</title>
+    <link href="{{ asset('sb-admin/vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+    <link href="{{ asset('sb-admin/css/sb-admin-2.min.css') }}" rel="stylesheet">
+    {% block stylesheets %}{% endblock %}
+</head>
+<body id="page-top">
+<div id="wrapper">
+    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ path('app_home') }}">
+            <div class="sidebar-brand-icon rotate-n-15"><i class="fas fa-heart"></i></div>
+            <div class="sidebar-brand-text mx-3">Harmony</div>
+        </a>
+        <hr class="sidebar-divider my-0">
+        <li class="nav-item">
+            <a class="nav-link" href="{{ path('app_home') }}"><i class="fas fa-fw fa-tachometer-alt"></i><span>Tableau de bord</span></a>
+        </li>
+        <hr class="sidebar-divider">
+        <div class="sidebar-heading">Compte &amp; social</div>
+        <li class="nav-item"><a class="nav-link py-1" href="{{ path('app_user_index') }}"><i class="fas fa-fw fa-user"></i> user</a></li>
+        <li class="nav-item"><a class="nav-link py-1" href="{{ path('app_etudiant_index') }}"><i class="fas fa-fw fa-user-graduate"></i> etudiant</a></li>
+        <li class="nav-item"><a class="nav-link py-1" href="{{ path('app_sessions_index') }}"><i class="fas fa-fw fa-key"></i> sessions</a></li>
+        <li class="nav-item"><a class="nav-link py-1" href="{{ path('app_password_reset_code_index') }}"><i class="fas fa-fw fa-unlock-alt"></i> password_reset_codes</a></li>
+        <li class="nav-item"><a class="nav-link py-1" href="{{ path('app_notification_index') }}"><i class="fas fa-fw fa-bell"></i> notification</a></li>
+        <li class="nav-item"><a class="nav-link py-1" href="{{ path('app_categorie_index') }}"><i class="fas fa-fw fa-folder"></i> categorie</a></li>
+        <li class="nav-item"><a class="nav-link py-1" href="{{ path('app_post_index') }}"><i class="fas fa-fw fa-newspaper"></i> post</a></li>
+        <li class="nav-item"><a class="nav-link py-1" href="{{ path('app_commentaire_index') }}"><i class="fas fa-fw fa-comments"></i> commentaire</a></li>
+        <li class="nav-item"><a class="nav-link py-1" href="{{ path('app_reaction_index') }}"><i class="fas fa-fw fa-thumbs-up"></i> reaction</a></li>
+        <li class="nav-item"><a class="nav-link py-1" href="{{ path('app_favori_index') }}"><i class="fas fa-fw fa-star"></i> favori</a></li>
+        <hr class="sidebar-divider">
+        <div class="sidebar-heading">Planning</div>
+        <li class="nav-item"><a class="nav-link py-1" href="{{ path('app_calendrier_index') }}"><i class="fas fa-fw fa-calendar-alt"></i> calendrier</a></li>
+        <li class="nav-item"><a class="nav-link py-1" href="{{ path('app_evenement_index') }}"><i class="fas fa-fw fa-calendar-check"></i> evenement</a></li>
+        <li class="nav-item"><a class="nav-link py-1" href="{{ path('app_tache_index') }}"><i class="fas fa-fw fa-tasks"></i> tache</a></li>
+        <li class="nav-item"><a class="nav-link py-1" href="{{ path('app_salle_index') }}"><i class="fas fa-fw fa-door-open"></i> salle</a></li>
+        <li class="nav-item"><a class="nav-link py-1" href="{{ path('app_seance_index') }}"><i class="fas fa-fw fa-chalkboard-teacher"></i> seance</a></li>
+        <hr class="sidebar-divider">
+        <div class="sidebar-heading">Santé &amp; sport</div>
+        <li class="nav-item"><a class="nav-link py-1" href="{{ path('app_aliment_index') }}"><i class="fas fa-fw fa-apple-alt"></i> aliment</a></li>
+        <li class="nav-item"><a class="nav-link py-1" href="{{ path('app_consommation_index') }}"><i class="fas fa-fw fa-utensils"></i> consommation</a></li>
+        <li class="nav-item"><a class="nav-link py-1" href="{{ path('app_exercice_index') }}"><i class="fas fa-fw fa-dumbbell"></i> exercice</a></li>
+        <li class="nav-item"><a class="nav-link py-1" href="{{ path('app_activite_index') }}"><i class="fas fa-fw fa-running"></i> activite</a></li>
+        <li class="nav-item"><a class="nav-link py-1" href="{{ path('app_sommeil_index') }}"><i class="fas fa-fw fa-bed"></i> sommeil</a></li>
+        <li class="nav-item"><a class="nav-link py-1" href="{{ path('app_journal_humeur_index') }}"><i class="fas fa-fw fa-smile"></i> journal_humeur</a></li>
+        <li class="nav-item"><a class="nav-link py-1" href="{{ path('app_session_meditation_index') }}"><i class="fas fa-fw fa-spa"></i> session_meditation</a></li>
+        <li class="nav-item"><a class="nav-link py-1" href="{{ path('app_conseil_index') }}"><i class="fas fa-fw fa-lightbulb"></i> conseil</a></li>
+        <hr class="sidebar-divider">
+        <div class="sidebar-heading">Formations</div>
+        <li class="nav-item"><a class="nav-link py-1" href="{{ path('app_subject_index') }}"><i class="fas fa-fw fa-book"></i> subject</a></li>
+        <li class="nav-item"><a class="nav-link py-1" href="{{ path('app_courses_index') }}"><i class="fas fa-fw fa-graduation-cap"></i> courses</a></li>
+        <li class="nav-item"><a class="nav-link py-1" href="{{ path('app_coursefile_index') }}"><i class="fas fa-fw fa-file"></i> coursefile</a></li>
+        <li class="nav-item"><a class="nav-link py-1" href="{{ path('app_saved_course_index') }}"><i class="fas fa-fw fa-bookmark"></i> saved_courses</a></li>
+        <li class="nav-item"><a class="nav-link py-1" href="{{ path('app_course_report_index') }}"><i class="fas fa-fw fa-flag"></i> course_reports</a></li>
+        <hr class="sidebar-divider d-none d-md-block">
+        <div class="text-center d-none d-md-inline">
+            <button class="rounded-circle border-0" id="sidebarToggle"></button>
+        </div>
+    </ul>
 
-        {% block javascripts %}
-            {% block importmap %}{{ importmap('app') }}{% endblock %}
-        {% endblock %}
+    <div id="content-wrapper" class="d-flex flex-column">
+        <div id="content">
+            <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3"><i class="fa fa-bars"></i></button>
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item"><span class="nav-link text-gray-600 small">Symfony 6.4 · integration-pi2</span></li>
+                </ul>
+            </nav>
+            <div class="container-fluid">
+                {% for label, messages in app.flashes %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ label == 'error' ? 'danger' : label }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+        <footer class="sticky-footer bg-white">
+            <div class="container my-auto">
+                <div class="copyright text-center my-auto"><span>Harmony · SB Admin 2</span></div>
+            </div>
+        </footer>
+    </div>
+</div>
+<a class="scroll-to-top rounded" href="#page-top"><i class="fas fa-angle-up"></i></a>
 
-        {% set frankenphpHotReload = app.request.server.get('FRANKENPHP_HOT_RELOAD') %}
-        {% if frankenphpHotReload %}
-        <meta name="frankenphp-hot-reload:url" content="{{ frankenphpHotReload }}">
-        <script src="https://cdn.jsdelivr.net/npm/idiomorph"></script>
-        <script src="https://cdn.jsdelivr.net/npm/frankenphp-hot-reload/+esm" type="module"></script>
-        {% endif %}
-    </head>
-    <body>
-        {% block body %}{% endblock %}
-    </body>
+<script src="{{ asset('sb-admin/vendor/jquery/jquery.min.js') }}"></script>
+<script src="{{ asset('sb-admin/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+<script src="{{ asset('sb-admin/vendor/jquery-easing/jquery.easing.min.js') }}"></script>
+<script src="{{ asset('sb-admin/js/sb-admin-2.min.js') }}"></script>
+{% block javascripts %}{% endblock %}
+</body>
 </html>

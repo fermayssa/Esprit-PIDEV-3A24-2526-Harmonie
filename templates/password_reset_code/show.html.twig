@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}PasswordResetCode{% endblock %}
+
+{% block content %}
+    <h1>PasswordResetCode</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ password_reset_code.id }}</td>
+            </tr>
+            <tr>
+                <th>Email</th>
+                <td>{{ password_reset_code.email }}</td>
+            </tr>
+            <tr>
+                <th>Code</th>
+                <td>{{ password_reset_code.code }}</td>
+            </tr>
+            <tr>
+                <th>ExpiresAt</th>
+                <td>{{ password_reset_code.expiresAt ? password_reset_code.expiresAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Used</th>
+                <td>{{ password_reset_code.used ? 'Yes' : 'No' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_password_reset_code_index') }}">back to list</a>
+
+    <a href="{{ path('app_password_reset_code_edit', {'id': password_reset_code.id}) }}">edit</a>
+
+    {{ include('password_reset_code/_delete_form.html.twig') }}
+{% endblock %}

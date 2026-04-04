@@ -1,0 +1,65 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}User index{% endblock %}
+
+{% block content %}
+    <h1>User index</h1>
+
+    <table class="table table-bordered table-hover w-100">
+        <thead>
+            <tr>
+                <th>UserId</th>
+                <th>UserNom</th>
+                <th>UserPrenom</th>
+                <th>UserEmail</th>
+                <th>UserPassword</th>
+                <th>UserDateDeNaissance</th>
+                <th>UserSexe</th>
+                <th>UserPoids</th>
+                <th>UserTaille</th>
+                <th>UserNiveauActivitePhysique</th>
+                <th>UserNiveauScolaire</th>
+                <th>UserEtablissementScolaire</th>
+                <th>DateInscription</th>
+                <th>TypeUtilisateur</th>
+                <th>IsActive</th>
+                <th>UserImagePath</th>
+                <th>FaceImagePath</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for user in users %}
+            <tr>
+                <td>{{ user.userId }}</td>
+                <td>{{ user.userNom }}</td>
+                <td>{{ user.userPrenom }}</td>
+                <td>{{ user.userEmail }}</td>
+                <td>{{ user.userPassword }}</td>
+                <td>{{ user.userDateDeNaissance }}</td>
+                <td>{{ user.userSexe }}</td>
+                <td>{{ user.userPoids }}</td>
+                <td>{{ user.userTaille }}</td>
+                <td>{{ user.userNiveauActivitePhysique }}</td>
+                <td>{{ user.userNiveauScolaire }}</td>
+                <td>{{ user.userEtablissementScolaire }}</td>
+                <td>{{ user.dateInscription }}</td>
+                <td>{{ user.typeUtilisateur }}</td>
+                <td>{{ user.isActive ? 'Yes' : 'No' }}</td>
+                <td>{{ user.userImagePath }}</td>
+                <td>{{ user.faceImagePath }}</td>
+                <td>
+                    <a href="{{ path('app_user_show', {'userId': user.userId}) }}">show</a>
+                    <a href="{{ path('app_user_edit', {'userId': user.userId}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="18">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_user_new') }}">Create new</a>
+{% endblock %}

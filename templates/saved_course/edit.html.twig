@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit SavedCourse{% endblock %}
+
+{% block content %}
+    <h1>Edit SavedCourse</h1>
+
+    {{ include('saved_course/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_saved_course_index') }}">back to list</a>
+
+    {{ include('saved_course/_delete_form.html.twig') }}
+{% endblock %}

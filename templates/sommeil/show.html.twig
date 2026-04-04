@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Sommeil{% endblock %}
+
+{% block content %}
+    <h1>Sommeil</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>IdSommeil</th>
+                <td>{{ sommeil.idSommeil }}</td>
+            </tr>
+            <tr>
+                <th>DateCoucher</th>
+                <td>{{ sommeil.dateCoucher ? sommeil.dateCoucher|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>DateReveil</th>
+                <td>{{ sommeil.dateReveil ? sommeil.dateReveil|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>QualiteSommeil</th>
+                <td>{{ sommeil.qualiteSommeil }}</td>
+            </tr>
+            <tr>
+                <th>Stress</th>
+                <td>{{ sommeil.stress ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>Cafeine</th>
+                <td>{{ sommeil.cafeine ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>Bruit</th>
+                <td>{{ sommeil.bruit ? 'Yes' : 'No' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_sommeil_index') }}">back to list</a>
+
+    <a href="{{ path('app_sommeil_edit', {'idSommeil': sommeil.idSommeil}) }}">edit</a>
+
+    {{ include('sommeil/_delete_form.html.twig') }}
+{% endblock %}
