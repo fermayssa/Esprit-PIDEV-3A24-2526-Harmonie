@@ -2,36 +2,27 @@
 
 namespace App\Entity;
 
-use App\Repository\CategorieRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: CategorieRepository::class)]
+#[ORM\Entity]
+#[ORM\Table(name: "categorie")]
 class Categorie
 {
-    #[ORM\Table(name: "categorie")]
     #[ORM\Id]
     #[ORM\Column(name: "id_categorie", type: "integer")]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
-
-    #[ORM\Column]
     private ?int $idCategorie = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(name: "nom_categorie", length: 255)]
     private ?string $nomCategorie = null;
 
     #[ORM\Column(type: Types::TEXT)]
     private ?string $description = null;
 
-    #[ORM\Column]
-    private ?\DateTime $dateCreation = null;
+    #[ORM\Column(name: "date_creation", type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $dateCreation = null;
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
+    // GETTERS / SETTERS
 
     public function getIdCategorie(): ?int
     {
@@ -41,7 +32,6 @@ class Categorie
     public function setIdCategorie(int $idCategorie): static
     {
         $this->idCategorie = $idCategorie;
-
         return $this;
     }
 
@@ -53,7 +43,6 @@ class Categorie
     public function setNomCategorie(string $nomCategorie): static
     {
         $this->nomCategorie = $nomCategorie;
-
         return $this;
     }
 
@@ -65,19 +54,17 @@ class Categorie
     public function setDescription(string $description): static
     {
         $this->description = $description;
-
         return $this;
     }
 
-    public function getDateCreation(): ?\DateTime
+    public function getDateCreation(): ?\DateTimeInterface
     {
         return $this->dateCreation;
     }
 
-    public function setDateCreation(\DateTime $dateCreation): static
+    public function setDateCreation(\DateTimeInterface $dateCreation): static
     {
         $this->dateCreation = $dateCreation;
-
         return $this;
     }
 }
