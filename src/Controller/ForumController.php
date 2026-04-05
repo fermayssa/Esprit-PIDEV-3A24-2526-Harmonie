@@ -178,7 +178,7 @@ class ForumController extends AbstractController
     }
 
     // ── LIKE toggle (AJAX) ──────────────────────────
-    #[Route('/forum/post/{id}/like', name: 'forum_post_like', methods: ['POST'])]
+    #[Route('/forum/post/{id}/like', name: 'forum_post_like', methods: ['POST', 'GET'])]
     public function toggleLike(int $id, EntityManagerInterface $em): JsonResponse
     {
         $post = $em->getRepository(Post::class)->find($id);
