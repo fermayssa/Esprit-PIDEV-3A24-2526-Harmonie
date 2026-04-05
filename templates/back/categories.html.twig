@@ -1,0 +1,113 @@
+{% extends 'back/base_back.html.twig' %}
+{% block title %}Catégories — Back Harmony{% endblock %}
+{% block topbar_icon %}🗂️{% endblock %}
+{% block topbar_title %}Gestion des catégories{% endblock %}
+
+{% block body %}
+<div class="page-hd">
+  <span style="font-size:20px">🗂️</span>
+  <h1>Catégories du Forum</h1>
+  <a href="{{ path('forum_categorie_new') }}" class="btn primary" style="margin-left:auto">➕ Nouvelle catégorie</a>
+</div>
+
+<div class="stats-row col3">
+  <div class="stat-card">
+    <div class="stat-icon purple">🗂️</div>
+    <div>
+      <div class="stat-val">{{ categories|length }}</div>
+      <div class="stat-lbl">Total catégories</div>
+    </div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon green">📝</div>
+    <div>
+      <div class="stat-val">{{ postCounts|reduce((carry, v) => carry + v, 0) }}</div>
+      <div class="stat-lbl">Posts associés</div>
+    </div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon amber">📅</div>
+    <div>
+      <div class="stat-val">
+        {{ categories|filter(c => c.dateCreation is not null and c.dateCreation.format('Y-m') == 'now'|date('Y-m'))|length }}
+      </div>
+      <div class="stat-lbl">Créées ce mois</div>
+    </div>
+  </div>
+</div>
+
+{# Search bar (JS) #}
+<div class="toolbar">
+  <div class="search-box">
+    <span style="font-size:15px;color:var(--text-muted)">🔍</span>
+    <input type="text" id="search-cat" placeholder="Rechercher une catégorie…" oninput="filterTable(this.value,'cat-tbody')">
+  </div>
+</div>
+
+<div class="panel">
+  <div class="panel-head">
+    <h3>🗂️ Toutes les catégories</h3>
+    <span style="font-size:13px;color:var(--text-muted)">{{ categories|length }} catégorie(s)</span>
+  </div>
+
+  {% if categories is empty %}
+    <div style="text-align:center;padding:48px;color:var(--text-muted)">
+      <div style="font-size:40px;margin-bottom:12px">🗂️</div>
+      Aucune catégorie pour l'instant.
+      <a href="{{ path('forum_categorie_new') }}" class="btn primary" style="display:inline-flex;margin-top:16px">➕ Créer la première</a>
+    </div>
+  {% else %}
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Nom</th>
+        <th>Description</th>
+        <th>Posts</th>
+        <th>Créée le</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody id="cat-tbody">
+      {% for cat in categories %}
+      <tr data-search="{{ cat.nomCategorie|lower }} {{ cat.description|lower }}">
+        <td class="td-muted">#{{ cat.idCategorie }}</td>
+        <td><span class="td-name">{{ cat.nomCategorie }}</span></td>
+        <td class="td-desc">{{ cat.description ?: '—' }}</td>
+        <td>
+          <span class="badge cat">{{ postCounts[cat.idCategorie] ?? 0 }} post(s)</span>
+        </td>
+        <td class="td-muted">
+          {{ cat.dateCreation ? cat.dateCreation|date('d/m/Y') : '—' }}
+        </td>
+        <td>
+          <div class="td-actions">
+            <a href="{{ path('forum_posts', {id: cat.idCategorie}) }}" class="btn ghost sm">👁️ Posts</a>
+            <a href="{{ path('forum_categorie_edit', {id: cat.idCategorie}) }}" class="btn ghost sm" style="color:var(--purple)">✏️ Modifier</a>
+            <form class="confirm-form"
+                  method="POST"
+                  action="{{ path('back_categorie_delete', {id: cat.idCategorie}) }}"
+                  onsubmit="return confirm('Supprimer « {{ cat.nomCategorie }} » et tous ses posts ?')">
+              <button type="submit" class="btn danger sm">🗑 Supprimer</button>
+            </form>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+</div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+function filterTable(q, tbodyId) {
+  const tbody = document.getElementById(tbodyId);
+  tbody.querySelectorAll('tr').forEach(row => {
+    const text = row.dataset.search || '';
+    row.style.display = text.includes(q.toLowerCase()) ? '' : 'none';
+  });
+}
+</script>
+{% endblock %}
