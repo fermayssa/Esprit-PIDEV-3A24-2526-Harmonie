@@ -1,31 +1,178 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Tableau de bord · Harmony{% endblock %}
+{% block title %}Accueil — Harmony{% endblock %}
 
 {% block content %}
-<div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">Tableau de bord</h1>
-</div>
-<div class="row">
-    <div class="col-lg-6 mb-4">
-        <div class="card shadow">
-            <div class="card-header py-3"><h6 class="m-0 font-weight-bold text-primary">Bienvenue</h6></div>
-            <div class="card-body">
-                <p>Back-office Symfony aligné sur la base <code>integration-pi2</code> (tables JavaFX / Harmony).</p>
-                <p class="mb-0">Utilisez la barre latérale pour accéder aux listes CRUD.</p>
+    <section class="hero fade">
+        <div>
+            <div class="hero-eyebrow">✦ Tableau de bord</div>
+            <h1 class="hero-title">
+                Bienvenue sur<br><span>Harmony</span>
+            </h1>
+            <p class="hero-sub">
+                Votre espace étudiant centralisé pour gérer vos activités, votre bien-être et rester connecté avec votre communauté universitaire.
+            </p>
+            <div class="hero-actions">
+                <a href="{{ path('app_activite_index') }}" class="btn-primary">🏋 Voir les activités</a>
+                <a href="{{ path('app_post_index') }}" class="btn-ghost">💬 Ouvrir le forum</a>
+            </div>
+        </div>
+        <div class="hero-stats">
+            <div class="stat-pill">
+                <div class="stat-icon">📚</div>
+                <div><div class="stat-val">—</div><div class="stat-lbl">Cours (CRUD)</div></div>
+            </div>
+            <div class="stat-pill">
+                <div class="stat-icon">✅</div>
+                <div><div class="stat-val">Symfony</div><div class="stat-lbl">Back-office</div></div>
+            </div>
+            <div class="stat-pill">
+                <div class="stat-icon">📅</div>
+                <div><div class="stat-val">—</div><div class="stat-lbl">Événements</div></div>
+            </div>
+        </div>
+    </section>
+
+    <div class="sec-header fade d1">
+        <div class="sec-title">Accès rapide</div>
+    </div>
+    <div class="quick-grid fade d1">
+        <a href="{{ path('app_activite_index') }}" class="qa-card">
+            <div class="qa-icon">🏋</div>
+            <div><div class="qa-label">Activités</div><div class="qa-sub">Suivi &amp; entraînements</div></div>
+        </a>
+        <a href="{{ path('app_evenement_index') }}" class="qa-card">
+            <div class="qa-icon" style="background:#E8F4F0;">📅</div>
+            <div><div class="qa-label">Événements</div><div class="qa-sub">Planning</div></div>
+        </a>
+        <a href="{{ path('app_post_index') }}" class="qa-card">
+            <div class="qa-icon" style="background:#FEF3E2;">💬</div>
+            <div><div class="qa-label">Forum</div><div class="qa-sub">Posts &amp; discussions</div></div>
+        </a>
+        <a href="{{ path('app_session_meditation_index') }}" class="qa-card">
+            <div class="qa-icon" style="background:#FDE8EB;">🧘</div>
+            <div><div class="qa-label">Méditation</div><div class="qa-sub">Sessions</div></div>
+        </a>
+        <a href="{{ path('app_consommation_index') }}" class="qa-card">
+            <div class="qa-icon" style="background:#E8F4F0;">🥗</div>
+            <div><div class="qa-label">Nutrition</div><div class="qa-sub">Consommations</div></div>
+        </a>
+        <a href="{{ path('app_journal_humeur_index') }}" class="qa-card">
+            <div class="qa-icon" style="background:#FEF3E2;">📔</div>
+            <div><div class="qa-label">Journal</div><div class="qa-sub">Humeur</div></div>
+        </a>
+        <a href="{{ path('app_tache_index') }}" class="qa-card">
+            <div class="qa-icon" style="background:#EDE8FA;">📚</div>
+            <div><div class="qa-label">Tâches</div><div class="qa-sub">À faire</div></div>
+        </a>
+        <a href="{{ path('app_courses_index') }}" class="qa-card">
+            <div class="qa-icon" style="background:#E8F4F0;">📖</div>
+            <div><div class="qa-label">Library</div><div class="qa-sub">Cours</div></div>
+        </a>
+    </div>
+
+    <div class="two-col fade d2">
+        <div class="widget">
+            <div class="widget-head">
+                <div class="widget-title">📅 Événements <span class="badge">Exemple</span></div>
+                <a href="{{ path('app_evenement_index') }}" class="see-all">Voir tout →</a>
+            </div>
+            <div class="widget-body">
+                {% set evts = [
+                    { day:'07', mon:'Avr', name:'Examen — Algo Avancée',  time:'09:00 – 11:00', color:'#E07D8A' },
+                    { day:'12', mon:'Avr', name:'TD Bases de Données',    time:'14:00 – 16:00', color:'#5CB89E' },
+                    { day:'18', mon:'Avr', name:'Conférence ML & IA',     time:'10:00 – 12:30', color:'#6A5ACD' },
+                    { day:'25', mon:'Avr', name:'Rendu Projet Réseaux',   time:'23:59',          color:'#E5A44B' },
+                ] %}
+                {% for e in evts %}
+                    <div class="ev-row">
+                        <div class="ev-date">
+                            <span class="ev-day">{{ e.day }}</span>
+                            <span class="ev-month">{{ e.mon }}</span>
+                        </div>
+                        <div class="ev-info">
+                            <div class="ev-name">{{ e.name }}</div>
+                            <div class="ev-time">🕐 {{ e.time }}</div>
+                        </div>
+                        <div class="ev-dot" style="background:{{ e.color }};"></div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="widget">
+            <div class="widget-head">
+                <div class="widget-title">💬 Forum <span class="badge">Exemple</span></div>
+                <a href="{{ path('app_post_index') }}" class="see-all">Voir tout →</a>
+            </div>
+            <div class="widget-body">
+                {% set posts = [
+                    { init:'SA', bg:'#6A5ACD', subj:'Tri rapide vs Tri fusion — performances ?', prev:"Quelqu'un peut comparer les complexités ?", time:'1h', rep:8 },
+                    { init:'MK', bg:'#5CB89E', subj:"Ressources pour l'examen BD",               prev:'J\'ai trouvé un super cours en ligne…',     time:'3h', rep:4 },
+                    { init:'RL', bg:'#E5A44B', subj:'Aide — configuration VPN université',        prev:'Impossible d\'accéder au réseau depuis…',  time:'hier',rep:12 },
+                    { init:'AO', bg:'#E07D8A', subj:'Groupe de révision — Jeudi 17h',             prev:'On se retrouve en B204 pour réviser…',     time:'hier',rep:6 },
+                ] %}
+                {% for p in posts %}
+                    <div class="fo-row">
+                        <div class="fo-avatar" style="background:{{ p.bg }};">{{ p.init }}</div>
+                        <div class="fo-info">
+                            <div class="fo-subj">{{ p.subj }}</div>
+                            <div class="fo-prev">{{ p.prev }}</div>
+                        </div>
+                        <div class="fo-meta">
+                            <span class="fo-time">{{ p.time }}</span>
+                            <span class="fo-rep">💬 {{ p.rep }}</span>
+                        </div>
+                    </div>
+                {% endfor %}
             </div>
         </div>
     </div>
-    <div class="col-lg-6 mb-4">
-        <div class="card shadow">
-            <div class="card-header py-3"><h6 class="m-0 font-weight-bold text-primary">Raccourcis</h6></div>
-            <div class="card-body">
-                <a href="{{ path('app_user_index') }}" class="btn btn-primary btn-sm mb-1">user</a>
-                <a href="{{ path('app_post_index') }}" class="btn btn-info btn-sm mb-1">post</a>
-                <a href="{{ path('app_courses_index') }}" class="btn btn-success btn-sm mb-1">courses</a>
-                <a href="{{ path('app_evenement_index') }}" class="btn btn-warning btn-sm mb-1">evenement</a>
-            </div>
+
+    <div class="wellness fade d3">
+        <div class="w-icon">🧠</div>
+        <div class="w-text">
+            <h3>Votre bien-être mental compte</h3>
+            <p>Des exercices de relaxation, des ressources discrètes et un espace d'écoute pour traverser vos études sereinement.</p>
+        </div>
+        <div class="w-btns">
+            <a href="{{ path('app_session_meditation_index') }}" class="btn-w-outline">Explorer</a>
+            <a href="{{ path('app_session_meditation_index') }}" class="btn-w-solid">Commencer ✦</a>
         </div>
     </div>
-</div>
+
+    <div class="sec-header fade d4" id="crud-all">
+        <div class="sec-title">Toutes les entités (CRUD)</div>
+    </div>
+    <p class="text-muted mb-4 fade d4" style="font-size:14px;">Accès direct aux listes générées pour la base <code>integration-pi2</code>.</p>
+    <div class="admin-grid fade d4">
+        <a href="{{ path('app_user_index') }}">Utilisateurs</a>
+        <a href="{{ path('app_etudiant_index') }}">Étudiants</a>
+        <a href="{{ path('app_sessions_index') }}">Sessions</a>
+        <a href="{{ path('app_password_reset_code_index') }}">Codes reset mot de passe</a>
+        <a href="{{ path('app_notification_index') }}">Notifications</a>
+        <a href="{{ path('app_categorie_index') }}">Catégories</a>
+        <a href="{{ path('app_post_index') }}">Posts</a>
+        <a href="{{ path('app_commentaire_index') }}">Commentaires</a>
+        <a href="{{ path('app_reaction_index') }}">Réactions</a>
+        <a href="{{ path('app_favori_index') }}">Favoris</a>
+        <a href="{{ path('app_calendrier_index') }}">Calendrier</a>
+        <a href="{{ path('app_evenement_index') }}">Événements</a>
+        <a href="{{ path('app_tache_index') }}">Tâches</a>
+        <a href="{{ path('app_salle_index') }}">Salles</a>
+        <a href="{{ path('app_seance_index') }}">Séances</a>
+        <a href="{{ path('app_aliment_index') }}">Aliments</a>
+        <a href="{{ path('app_consommation_index') }}">Consommations</a>
+        <a href="{{ path('app_exercice_index') }}">Exercices</a>
+        <a href="{{ path('app_activite_index') }}">Activités</a>
+        <a href="{{ path('app_sommeil_index') }}">Sommeil</a>
+        <a href="{{ path('app_journal_humeur_index') }}">Journal humeur</a>
+        <a href="{{ path('app_session_meditation_index') }}">Sessions méditation</a>
+        <a href="{{ path('app_conseil_index') }}">Conseils</a>
+        <a href="{{ path('app_subject_index') }}">Matières</a>
+        <a href="{{ path('app_courses_index') }}">Cours</a>
+        <a href="{{ path('app_coursefile_index') }}">Fichiers cours</a>
+        <a href="{{ path('app_saved_course_index') }}">Cours sauvegardés</a>
+        <a href="{{ path('app_course_report_index') }}">Signalements cours</a>
+    </div>
 {% endblock %}
