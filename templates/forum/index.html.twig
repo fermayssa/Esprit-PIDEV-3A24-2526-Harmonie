@@ -151,4 +151,19 @@
             </a>
         </div>
     </div>
-    
+ <div class="cat-grid">
+        {% for cat in categories %}
+        <div class="cat-card fade">
+
+            <div class="cat-card-top-bar"></div>
+
+            {# Zone cliquable → posts #}
+            <a href="{{ path('forum_posts', {id: cat.idCategorie}) }}" class="cat-card-body">
+                <div class="cat-icon">💬</div>
+                <div class="cat-name">{{ cat.nomCategorie }}</div>
+                {% if cat.description %}
+                    <div class="cat-desc">{{ cat.description }}</div>
+                {% endif %}
+                <span class="cat-meta">Voir les posts →</span>
+            </a>
+            
