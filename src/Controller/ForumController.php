@@ -150,6 +150,11 @@ class ForumController extends AbstractController
                 ($likesMap[$b->getIdPost()] ?? 0) <=> ($likesMap[$a->getIdPost()] ?? 0)
             );
         }
+        // ── Pagination ──
+        $total     = count($allPosts);
+        $totalPages = max(1, (int) ceil($total / $perPage));
+        $page      = min($page, $totalPages);
+        $posts     = array_slice($allPosts, ($page - 1) * $perPage, $perPage);
 
 
 
