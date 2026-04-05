@@ -40,4 +40,13 @@ class PostRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+    public function findAllWithCategorie(): array
+    {
+        return $this->createQueryBuilder('p')
+            ->leftJoin('p.idCategorie', 'c')
+            ->addSelect('c')
+            ->orderBy('p.dateCreation', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
 }
