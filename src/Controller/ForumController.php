@@ -144,6 +144,13 @@ class ForumController extends AbstractController
             $likedByMe[$pid] = (bool) $em->getRepository(Reaction::class)
                 ->findOneBy(['idPost' => $pid, 'userId' => $this->currentUserId, 'typeReaction' => 'like']);
         }
+        // Tri par popularité (likes)
+        if ($tri === 'likes') {
+            usort($allPosts, fn($a, $b) =>
+                ($likesMap[$b->getIdPost()] ?? 0) <=> ($likesMap[$a->getIdPost()] ?? 0)
+            );
+        }
+
 
 
 
