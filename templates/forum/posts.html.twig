@@ -14,7 +14,6 @@
     }
     html,body{font-family:var(--font-body);background:var(--purple-ghost);color:var(--text);}
 
-    /* TOPBAR */
     .topbar{position:sticky;top:0;z-index:200;background:var(--white);
         border-bottom:1px solid var(--border);height:62px;display:flex;
         align-items:center;padding:0 40px;gap:8px;}
@@ -34,83 +33,94 @@
 
     .page{max-width:860px;margin:0 auto;padding:48px 40px 80px;}
 
-    /* BREADCRUMB */
     .breadcrumb{display:flex;align-items:center;gap:8px;font-size:13px;
         color:var(--text-muted);margin-bottom:24px;}
     .breadcrumb a{color:var(--purple);text-decoration:none;font-weight:500;}
-    .breadcrumb a:hover{text-decoration:underline;}
 
     /* CAT HEADER */
     .cat-header{background:linear-gradient(135deg,var(--purple) 0%,var(--purple-dark) 100%);
-        border-radius:18px;padding:32px 40px;margin-bottom:28px;
+        border-radius:18px;padding:28px 36px;margin-bottom:22px;
         display:flex;align-items:center;justify-content:space-between;}
-    .cat-header h1{font-family:var(--font-head);font-size:26px;font-weight:800;color:white;}
+    .cat-header h1{font-family:var(--font-head);font-size:24px;font-weight:800;color:white;}
     .cat-header p{color:rgba(255,255,255,.75);font-size:13px;margin-top:4px;}
-    .btn-new-post{display:inline-flex;align-items:center;gap:8px;
-        padding:10px 20px;background:white;color:var(--purple-dark);
-        border-radius:10px;font-size:13px;font-weight:700;
-        text-decoration:none;border:none;cursor:pointer;transition:opacity .15s;}
+    .btn-new-post{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;
+        background:white;color:var(--purple-dark);border-radius:10px;font-size:13px;
+        font-weight:700;text-decoration:none;transition:opacity .15s;}
     .btn-new-post:hover{opacity:.9;}
+
+    /* BARRE RECHERCHE + TRI */
+    .toolbar{display:flex;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap;}
+    .search-wrap{flex:1;min-width:200px;position:relative;}
+    .search-input{width:100%;padding:10px 14px 10px 38px;border:1.5px solid var(--border);
+        border-radius:10px;font-family:var(--font-body);font-size:13.5px;color:var(--text);
+        background:var(--white);outline:none;transition:border-color .15s;}
+    .search-input:focus{border-color:var(--purple);box-shadow:0 0 0 3px rgba(106,90,205,.08);}
+    .search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);
+        font-size:14px;pointer-events:none;}
+    .search-btn{padding:10px 18px;background:var(--purple);color:white;border:none;
+        border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;
+        font-family:var(--font-body);transition:background .15s;}
+    .search-btn:hover{background:var(--purple-dark);}
+
+    .tri-group{display:flex;gap:6px;flex-wrap:wrap;}
+    .btn-tri{padding:8px 14px;border:1.5px solid var(--border);border-radius:9px;
+        background:var(--white);color:var(--text-mid);font-size:12px;font-weight:600;
+        cursor:pointer;text-decoration:none;transition:all .15s;white-space:nowrap;}
+    .btn-tri:hover{border-color:var(--purple-soft);color:var(--purple);}
+    .btn-tri.active{background:var(--purple-pale);border-color:var(--purple);color:var(--purple);}
+
+    /* RÉSULTATS */
+    .results-info{font-size:12px;color:var(--text-muted);margin-bottom:14px;}
+    .results-info strong{color:var(--purple);}
 
     /* POST CARD */
     .posts-list{display:flex;flex-direction:column;gap:16px;}
     .post-card{background:var(--white);border:1px solid var(--border);
-        border-radius:16px;overflow:hidden;
-        transition:border-color .18s,box-shadow .18s;}
-    .post-card:hover{border-color:var(--purple-soft);
-        box-shadow:0 8px 28px rgba(106,90,205,.1);}
+        border-radius:16px;overflow:hidden;transition:border-color .18s,box-shadow .18s;}
+    .post-card:hover{border-color:var(--purple-soft);box-shadow:0 8px 28px rgba(106,90,205,.1);}
 
-    /* POST HEADER — auteur */
-    .post-author-row{display:flex;align-items:center;justify-content:space-between;
-        padding:16px 24px 0;}
+    .post-author-row{display:flex;align-items:center;justify-content:space-between;padding:16px 24px 0;}
     .post-author-left{display:flex;align-items:center;gap:10px;}
     .post-avatar{width:34px;height:34px;border-radius:50%;background:var(--purple);
         color:white;font-size:13px;font-weight:700;display:grid;place-items:center;
         font-family:var(--font-head);flex-shrink:0;}
     .post-author-name{font-size:13px;font-weight:600;color:var(--text);}
     .post-author-date{font-size:11px;color:var(--text-muted);}
-
-    /* POST CRUD BTNS */
     .post-actions-top{display:flex;gap:6px;}
     .btn-edit{display:inline-flex;align-items:center;gap:4px;padding:5px 11px;
-        background:var(--purple-pale);color:var(--purple);border:none;
-        border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;
-        text-decoration:none;transition:background .15s;}
+        background:var(--purple-pale);color:var(--purple);border:none;border-radius:8px;
+        font-size:12px;font-weight:600;cursor:pointer;text-decoration:none;transition:background .15s;}
     .btn-edit:hover{background:#ddd6f7;}
     .btn-delete{display:inline-flex;align-items:center;gap:4px;padding:5px 11px;
-        background:#FEF2F2;color:#E05252;border:none;
-        border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;
-        transition:background .15s;}
+        background:#FEF2F2;color:#E05252;border:none;border-radius:8px;
+        font-size:12px;font-weight:600;cursor:pointer;transition:background .15s;}
     .btn-delete:hover{background:#fde8e8;}
 
-    /* POST BODY */
     .post-body{padding:12px 24px 0;}
     .post-title{font-family:var(--font-head);font-size:17px;font-weight:700;
         color:var(--text);margin-bottom:6px;line-height:1.3;}
     .post-excerpt{font-size:13.5px;color:var(--text-mid);line-height:1.7;}
 
-    /* POST FOOTER — like + commentaires */
+    /* FOOTER LIKE + COMMENTAIRE */
     .post-footer{display:flex;align-items:center;gap:10px;
         padding:14px 24px;margin-top:12px;border-top:1px solid var(--purple-ghost);}
-    .btn-like{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;
+    .btn-like{display:inline-flex;align-items:center;gap:6px;padding:6px 16px;
         background:var(--purple-ghost);color:var(--text-muted);border:1px solid var(--border);
         border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;
-        transition:all .15s;font-family:var(--font-body);}
+        transition:all .2s;font-family:var(--font-body);}
     .btn-like:hover{background:var(--purple-pale);color:var(--purple);border-color:var(--purple-soft);}
-    .btn-comment-toggle{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;
+    .btn-like.liked{background:#FEE2E2;color:#E05252;border-color:#fca5a5;}
+    .btn-comment-toggle{display:inline-flex;align-items:center;gap:6px;padding:6px 16px;
         background:var(--purple-ghost);color:var(--text-muted);border:1px solid var(--border);
         border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;
         transition:all .15s;font-family:var(--font-body);}
-    .btn-comment-toggle:hover{background:var(--purple-pale);color:var(--purple);border-color:var(--purple-soft);}
-    .btn-comment-toggle.open{background:var(--purple-pale);color:var(--purple);border-color:var(--purple-soft);}
+    .btn-comment-toggle:hover,.btn-comment-toggle.open{background:var(--purple-pale);
+        color:var(--purple);border-color:var(--purple-soft);}
 
-    /* ── SECTION COMMENTAIRES STYLE REDDIT ── */
+    /* COMMENTAIRES REDDIT */
     .comments-section{display:none;padding:0 24px 20px;border-top:1px solid var(--purple-ghost);}
     .comments-section.open{display:block;}
-
-    /* Formulaire ajout commentaire */
-    .add-comment-form{display:flex;gap:10px;align-items:flex-start;
-        padding:16px 0 12px;}
+    .add-comment-form{display:flex;gap:10px;align-items:flex-start;padding:16px 0 12px;}
     .add-comment-avatar{width:32px;height:32px;border-radius:50%;background:var(--purple-soft);
         color:white;font-size:12px;font-weight:700;display:grid;place-items:center;
         font-family:var(--font-head);flex-shrink:0;margin-top:2px;}
@@ -119,60 +129,45 @@
         border-radius:10px;font-family:var(--font-body);font-size:13.5px;color:var(--text);
         background:var(--purple-ghost);outline:none;resize:none;min-height:60px;
         transition:border-color .15s,background .15s;}
-    .add-comment-input:focus{border-color:var(--purple);background:var(--white);
-        box-shadow:0 0 0 3px rgba(106,90,205,.08);}
+    .add-comment-input:focus{border-color:var(--purple);background:var(--white);}
     .add-comment-input.error{border-color:#E05252;}
     .add-comment-actions{display:flex;justify-content:flex-end;gap:8px;}
-    .btn-cancel-comment{padding:6px 14px;background:transparent;color:var(--text-muted);
-        border:1px solid var(--border);border-radius:8px;font-size:12px;
-        cursor:pointer;font-family:var(--font-body);}
     .btn-send-comment{padding:6px 16px;background:var(--purple);color:white;border:none;
-        border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;
-        font-family:var(--font-body);transition:background .15s;}
-    .btn-send-comment:hover{background:var(--purple-dark);}
-
-    /* Séparateur */
+        border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font-body);}
     .comments-divider{height:1px;background:var(--purple-ghost);margin:4px 0 12px;}
-
-    /* Ligne commentaire — style Reddit */
-    .comment-row{display:flex;gap:10px;padding:10px 0;
-        border-bottom:1px solid var(--purple-ghost);}
+    .comment-row{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--purple-ghost);}
     .comment-row:last-child{border-bottom:none;}
-    .comment-thread-line{width:2px;background:var(--border);border-radius:2px;
-        flex-shrink:0;margin:4px 0;cursor:pointer;transition:background .15s;}
-    .comment-thread-line:hover{background:var(--purple-soft);}
+    .comment-thread-line{width:2px;background:var(--border);border-radius:2px;flex-shrink:0;margin:4px 0;}
     .comment-main{flex:1;}
     .comment-header{display:flex;align-items:center;gap:8px;margin-bottom:5px;}
     .comment-avatar{width:26px;height:26px;border-radius:50%;background:var(--purple-soft);
-        color:white;font-size:10px;font-weight:700;display:grid;place-items:center;
-        font-family:var(--font-head);flex-shrink:0;}
+        color:white;font-size:10px;font-weight:700;display:grid;place-items:center;font-family:var(--font-head);}
     .comment-author{font-size:12px;font-weight:700;color:var(--text);}
     .comment-date{font-size:11px;color:var(--text-muted);}
-    .comment-body{font-size:13.5px;color:var(--text-mid);line-height:1.65;
-        padding-left:2px;margin-bottom:6px;}
+    .comment-body{font-size:13.5px;color:var(--text-mid);line-height:1.65;padding-left:2px;margin-bottom:6px;}
     .comment-actions{display:flex;align-items:center;gap:8px;}
     .btn-comment-edit{display:inline-flex;align-items:center;gap:3px;padding:3px 9px;
-        background:var(--purple-pale);color:var(--purple);border:none;
-        border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;
-        text-decoration:none;transition:background .15s;}
-    .btn-comment-edit:hover{background:#ddd6f7;}
+        background:var(--purple-pale);color:var(--purple);border:none;border-radius:6px;
+        font-size:11px;font-weight:600;cursor:pointer;text-decoration:none;}
     .btn-comment-delete{display:inline-flex;align-items:center;gap:3px;padding:3px 9px;
-        background:#FEF2F2;color:#E05252;border:none;
-        border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;
-        transition:background .15s;}
-    .btn-comment-delete:hover{background:#fde8e8;}
+        background:#FEF2F2;color:#E05252;border:none;border-radius:6px;
+        font-size:11px;font-weight:600;cursor:pointer;}
+    .no-comments{font-size:13px;color:var(--text-muted);text-align:center;padding:20px 0;font-style:italic;}
 
-    /* Empty comments */
-    .no-comments{font-size:13px;color:var(--text-muted);
-        text-align:center;padding:20px 0;font-style:italic;}
+    /* PAGINATION */
+    .pagination{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:32px;}
+    .pag-btn{display:inline-flex;align-items:center;padding:8px 16px;border:1.5px solid var(--border);
+        border-radius:9px;background:var(--white);color:var(--text-mid);font-size:13px;
+        font-weight:500;text-decoration:none;transition:all .15s;}
+    .pag-btn:hover{border-color:var(--purple-soft);color:var(--purple);}
+    .pag-btn.active{background:var(--purple);border-color:var(--purple);color:white;font-weight:700;}
+    .pag-btn.disabled{opacity:.4;pointer-events:none;}
+    .pag-info{font-size:12px;color:var(--text-muted);padding:0 8px;}
 
-    /* EMPTY STATE */
     .empty-state{text-align:center;padding:60px 20px;color:var(--text-muted);}
-    .empty-state p{font-size:15px;margin-top:8px;}
 
     @keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
     .fade{animation:fadeUp .4s ease both;}
-    .d1{animation-delay:.06s;}.d2{animation-delay:.12s;}
 </style>
 {% endblock %}
 
@@ -208,85 +203,111 @@
     <div class="cat-header fade">
         <div>
             <h1>{{ categorie.nomCategorie }}</h1>
-            {% if categorie.description %}
-                <p>{{ categorie.description }}</p>
-            {% endif %}
+            {% if categorie.description %}<p>{{ categorie.description }}</p>{% endif %}
         </div>
         <a href="{{ path('forum_post_new', {idCat: categorie.idCategorie}) }}"
-           class="btn-new-post"> ✏️ Nouveau post </a>
+           class="btn-new-post">✏️ Nouveau post</a>
     </div>
 
+    {# ── BARRE RECHERCHE + TRI ── #}
+    <form method="GET" action="{{ path('forum_posts', {id: categorie.idCategorie}) }}">
+        <div class="toolbar fade">
+            <div class="search-wrap">
+                <span class="search-icon">🔍</span>
+                <input type="text" name="search" class="search-input"
+                       placeholder="Rechercher dans les posts..."
+                       value="{{ search }}">
+            </div>
+            <button type="submit" class="search-btn">Rechercher</button>
+
+            {# Tri — garde le search dans l'URL #}
+            <div class="tri-group">
+                <a href="{{ path('forum_posts', {id: categorie.idCategorie, tri: 'date_desc', search: search}) }}"
+                   class="btn-tri {{ tri == 'date_desc' ? 'active' }}">🕐 Plus récent</a>
+                <a href="{{ path('forum_posts', {id: categorie.idCategorie, tri: 'date_asc', search: search}) }}"
+                   class="btn-tri {{ tri == 'date_asc' ? 'active' }}">🕐 Plus ancien</a>
+                <a href="{{ path('forum_posts', {id: categorie.idCategorie, tri: 'likes', search: search}) }}"
+                   class="btn-tri {{ tri == 'likes' ? 'active' }}">🔥 Populaire</a>
+            </div>
+        </div>
+    </form>
+
+    <div class="results-info">
+        {% if search %}
+            <strong>{{ total }}</strong> résultat(s) pour "<strong>{{ search }}</strong>"
+        {% else %}
+            <strong>{{ total }}</strong> post(s) • Page <strong>{{ page }}</strong>/{{ totalPages }}
+        {% endif %}
+    </div>
+
+    {# ── LISTE POSTS ── #}
     <div class="posts-list">
         {% for post in posts %}
         {% set postComments = commentairesMap[post.idPost] ?? [] %}
+        {% set liked = likedByMe[post.idPost] ?? false %}
+        {% set nbLikes = likesMap[post.idPost] ?? 0 %}
 
-        <div class="post-card fade d1">
+        <div class="post-card fade">
 
-            {# ── AUTEUR + BOUTONS CRUD ── #}
+            {# AUTEUR + CRUD #}
             <div class="post-author-row">
                 <div class="post-author-left">
-                    <div class="post-avatar">U</div>
+                    <div class="post-avatar">{{ post.userId }}</div>
                     <div>
-                        <div class="post-author-name"> Utilisateur #{{ post.userId }}</div>
+                        <div class="post-author-name">Utilisateur #{{ post.userId }}</div>
                         <div class="post-author-date">
                             {{ post.dateCreation ? post.dateCreation|date('d/m/Y à H:i') : '' }}
                         </div>
                     </div>
                 </div>
                 <div class="post-actions-top">
-                    <a href="{{ path('forum_post_edit', {id: post.idPost}) }}"
-                       class="btn-edit"> ✏️ Modifier </a>
-                    <form method="POST"
-                          action="{{ path('forum_post_delete', {id: post.idPost}) }}"
-                          onsubmit="return confirm('Supprimer ce post ?');"
-                          style="display:inline;">
+                    <a href="{{ path('forum_post_edit', {id: post.idPost}) }}" class="btn-edit">✏️ Modifier</a>
+                    <form method="POST" action="{{ path('forum_post_delete', {id: post.idPost}) }}"
+                          onsubmit="return confirm('Supprimer ce post ?');" style="display:inline;">
                         <button type="submit" class="btn-delete">🗑 Supprimer</button>
                     </form>
                 </div>
             </div>
 
-            {# ── TITRE + CONTENU ── #}
+            {# TITRE + CONTENU #}
             <div class="post-body">
                 <div class="post-title">{{ post.titre }}</div>
                 <div class="post-excerpt">{{ post.contenu }}</div>
             </div>
 
-            {# ── FOOTER : LIKE + COMMENTAIRES ── #}
+            {# FOOTER : LIKE + COMMENTAIRES #}
             <div class="post-footer">
-                <button class="btn-like"> 👍 {{ post.likes ?? 0 }}</button>
+                <button class="btn-like {{ liked ? 'liked' }}"
+                        data-post-id="{{ post.idPost }}"
+                        data-liked="{{ liked ? '1' : '0' }}"
+                        onclick="toggleLike(this)">
+                    {{ liked ? '❤️' : '🤍' }} <span class="like-count">{{ nbLikes }}</span>
+                </button>
                 <button class="btn-comment-toggle"
                         onclick="toggleComments('comments-{{ post.idPost }}', this)">
                     💬 {{ postComments|length }} commentaire(s)
                 </button>
             </div>
 
-            {# ── SECTION COMMENTAIRES STYLE REDDIT ── #}
+            {# COMMENTAIRES STYLE REDDIT #}
             <div class="comments-section" id="comments-{{ post.idPost }}">
 
-                {# Formulaire ajout commentaire #}
                 <form method="POST"
                       action="{{ path('forum_comment_new', {idPost: post.idPost}) }}"
                       class="add-comment-form"
                       onsubmit="return validateComment(this)">
                     <div class="add-comment-avatar">U</div>
                     <div class="add-comment-right">
-                        <textarea name="contenu"
-                                  class="add-comment-input"
-                                  placeholder="Rejoindre la conversation..."
-                                  rows="2"></textarea>
+                        <textarea name="contenu" class="add-comment-input"
+                                  placeholder="Rejoindre la conversation..." rows="2"></textarea>
                         <div class="add-comment-actions">
-                            <button type="button" class="btn-cancel-comment"
-                                    onclick="this.closest('textarea') && (this.closest('.add-comment-right').querySelector('textarea').value='')">
-                                Annuler
-                            </button>
-                            <button type="submit" class="btn-send-comment">Commenter</button>
+                            <button type="submit" class="btn-send-comment">💬 Commenter</button>
                         </div>
                     </div>
                 </form>
 
                 <div class="comments-divider"></div>
 
-                {# Liste des commentaires #}
                 {% if postComments is empty %}
                     <div class="no-comments">Aucun commentaire — sois le premier ! 👋</div>
                 {% else %}
@@ -304,42 +325,83 @@
                             <div class="comment-body">{{ c.contenu }}</div>
                             <div class="comment-actions">
                                 <a href="{{ path('forum_comment_edit', {id: c.idCommentaire}) }}"
-                                   class="btn-comment-edit"> ✏️ Modifier</a>
+                                   class="btn-comment-edit">✏️ Modifier</a>
                                 <form method="POST"
                                       action="{{ path('forum_comment_delete', {id: c.idCommentaire}) }}"
-                                      onsubmit="return confirm('Supprimer ce commentaire ?');"
-                                      style="display:inline;">
-                                    <button type="submit" class="btn-comment-delete">🗑 Supprimer</button>
+                                      onsubmit="return confirm('Supprimer ?');" style="display:inline;">
+                                    <button type="submit" class="btn-comment-delete">🗑</button>
                                 </form>
                             </div>
                         </div>
                     </div>
                     {% endfor %}
                 {% endif %}
+            </div>
 
-            </div>{# /comments-section #}
-
-        </div>{# /post-card #}
+        </div>
         {% else %}
         <div class="empty-state fade">
-            <div style="font-size:48px;"> 💬 </div>
-            <p>Aucun post dans cette catégorie pour l'instant.</p>
+            <div style="font-size:48px;">{{ search ? '🔍' : '💬' }}</div>
+            <p>{{ search ? 'Aucun post trouvé pour "' ~ search ~ '"' : 'Aucun post dans cette catégorie.' }}</p>
         </div>
         {% endfor %}
     </div>
 
+    {# ── PAGINATION ── #}
+    {% if totalPages > 1 %}
+    <div class="pagination">
+        {% if page > 1 %}
+            <a href="{{ path('forum_posts', {id: categorie.idCategorie, page: page-1, tri: tri, search: search}) }}"
+               class="pag-btn">← Précédent</a>
+        {% else %}
+            <span class="pag-btn disabled">← Précédent</span>
+        {% endif %}
+
+        {% for p in 1..totalPages %}
+            <a href="{{ path('forum_posts', {id: categorie.idCategorie, page: p, tri: tri, search: search}) }}"
+               class="pag-btn {{ p == page ? 'active' }}">{{ p }}</a>
+        {% endfor %}
+
+        {% if page < totalPages %}
+            <a href="{{ path('forum_posts', {id: categorie.idCategorie, page: page+1, tri: tri, search: search}) }}"
+               class="pag-btn">Suivant →</a>
+        {% else %}
+            <span class="pag-btn disabled">Suivant →</span>
+        {% endif %}
+    </div>
+    {% endif %}
+
 </main>
 
 <script>
+// ── LIKE AJAX ──────────────────────────────────────
+async function toggleLike(btn) {
+    const postId = btn.dataset.postId;
+    try {
+        const res  = await fetch(`/forum/post/${postId}/like`, { method: 'POST',
+            headers: { 'X-Requested-With': 'XMLHttpRequest' } });
+        const data = await res.json();
+        btn.querySelector('.like-count').textContent = data.count;
+        if (data.liked) {
+            btn.classList.add('liked');
+            btn.innerHTML = '❤️ <span class="like-count">' + data.count + '</span>';
+        } else {
+            btn.classList.remove('liked');
+            btn.innerHTML = '🤍 <span class="like-count">' + data.count + '</span>';
+        }
+        btn.dataset.liked = data.liked ? '1' : '0';
+    } catch(e) { console.error('Like error', e); }
+}
+
+// ── TOGGLE COMMENTAIRES ────────────────────────────
 function toggleComments(id, btn) {
     const section = document.getElementById(id);
     const isOpen  = section.classList.toggle('open');
     btn.classList.toggle('open', isOpen);
-    btn.textContent = isOpen
-        ? btn.textContent.replace(' 💬 ', ' 💬').replace('commentaire', 'commentaire')
-        : btn.textContent;
+    
 }
 
+// ── VALIDATION COMMENTAIRE ─────────────────────────
 function validateComment(form) {
     const ta = form.querySelector('textarea');
     if (ta.value.trim().length < 3) {
