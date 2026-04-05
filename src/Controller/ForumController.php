@@ -122,7 +122,7 @@ class ForumController extends AbstractController
             $qb->andWhere('p.titre LIKE :s OR p.contenu LIKE :s')
                ->setParameter('s', '%' . $search . '%');
         }
-        
+
         // Tri
         match($tri) {
             'date_asc'  => $qb->orderBy('p.dateCreation', 'ASC'),
@@ -131,6 +131,20 @@ class ForumController extends AbstractController
         };
 
         $allPosts = $qb->getQuery()->getResult();
+
+         // ── Données likes pour chaque post ──
+        $likesMap   = []; // idPost => count
+        $likedByMe  = []; // idPost => bool
+
+        foreach ($allPosts as $post) {
+            $pid = $post->getIdPost();
+            $reactions = $em->getRepository(Reaction::class)
+                ->findBy(['idPost' => $pid, 'typeReaction' => 'like']);
+            $likesMap[$pid]  = count($reactions);
+            $likedByMe[$pid] = (bool) $em->getRepository(Reaction::class)
+                ->findOneBy(['idPost' => $pid, 'userId' => $this->currentUserId, 'typeReaction' => 'like']);
+        }
+
 
 
     // ════════════════════════════════════════════════
