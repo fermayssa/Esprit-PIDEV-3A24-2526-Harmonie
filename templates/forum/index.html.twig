@@ -166,4 +166,25 @@
                 {% endif %}
                 <span class="cat-meta">Voir les posts →</span>
             </a>
-            
+             {# Boutons CRUD #}
+            <div class="cat-card-actions">
+                <a href="{{ path('forum_categorie_edit', {id: cat.idCategorie}) }}"
+                   class="btn-edit">✏️ Modifier</a>
+                <form method="POST"
+                      action="{{ path('forum_categorie_delete', {id: cat.idCategorie}) }}"
+                      onsubmit="return confirm('Supprimer cette catégorie et tous ses posts ?');"
+                      style="display:inline;">
+                    <button type="submit" class="btn-delete">🗑 Supprimer</button>
+                </form>
+            </div>
+
+        </div>
+        {% else %}
+            <p style="color:var(--text-muted); grid-column:1/-1; text-align:center; padding:40px;">
+                Aucune catégorie pour l'instant.
+            </p>
+        {% endfor %}
+    </div>
+
+</main>
+{% endblock %}
