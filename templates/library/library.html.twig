@@ -211,31 +211,30 @@
     <header class="topbar">
         <a href="{{ path('homepage') }}" class="topbar-logo">
             <img src="{{ asset('images/logo.png') }}" class="logo-mark" alt="Harmony">
-            <span class="logo-name">Harmony</span>
         </a>
 
-        <nav class="nav-links" aria-label="Main navigation">
-            <a href="{{ path('activites') }}"  class="nav-link {{ current_route == 'activites'  ? 'active' }}">🏋 Activités</a>
-            <a href="{{ path('forum') }}"      class="nav-link {{ current_route == 'forum'      ? 'active' }}">💬 Forum</a>
-            <a href="{{ path('taches') }}"     class="nav-link {{ current_route == 'taches'     ? 'active' }}">📚 Tâches</a>
-            <a href="{{ path('evenements') }}" class="nav-link {{ current_route == 'evenements' ? 'active' }}">📅 Événements</a>
-            <a href="{{ path('nutrition') }}"  class="nav-link {{ current_route == 'nutrition'  ? 'active' }}">🥗 Nutrition</a>
-            <a href="{{ path('meditation') }}" class="nav-link {{ current_route == 'meditation' ? 'active' }}">🧘 Méditation</a>
-            <a href="{{ path('journal') }}"    class="nav-link {{ current_route == 'journal'    ? 'active' }}">📔 Journal</a>
-            <a href="{{ path('app_courses') }}" class="nav-link {{ current_route == 'app_courses' or current_route == 'library' ? 'active' }}">📖 Library</a>
+        <nav class="nav-links">
+            <a href="{{ path('activites') }}"   class="nav-link {{ current_route == 'activites'   ? 'active' }}"><span class="nav-emoji">🏋</span> Activités</a>
+            <a href="{{ path('forum') }}"       class="nav-link {{ current_route == 'forum'       ? 'active' }}"><span class="nav-emoji">💬</span> Forum</a>
+            <a href="{{ path('taches') }}"      class="nav-link {{ current_route == 'taches'      ? 'active' }}"><span class="nav-emoji">📚</span> Tâches</a>
+            <a href="{{ path('evenements') }}"  class="nav-link {{ current_route == 'evenements'  ? 'active' }}"><span class="nav-emoji">📅</span> Événements</a>
+            <a href="{{ path('nutrition') }}"   class="nav-link {{ current_route == 'nutrition'   ? 'active' }}"><span class="nav-emoji">🥗</span> Nutrition</a>
+            <a href="{{ path('meditation') }}"  class="nav-link {{ current_route == 'meditation'  ? 'active' }}"><span class="nav-emoji">🧘</span> Méditation</a>
+            <a href="{{ path('journal') }}"     class="nav-link {{ current_route == 'journal'     ? 'active' }}"><span class="nav-emoji">📔</span> Journal</a>
+            <a href="{{ path('app_courses') }}"  class="nav-link {{ current_route starts with 'app_courses' ? 'active' }}"><span class="nav-emoji">📖</span> My Courses</a>
         </nav>
 
         <div class="topbar-right">
-
+            <button class="logout-btn">🚪 Déconnexion</button>
             <div class="profile-wrap">
-                <div class="avatar" id="avatarBtn" aria-haspopup="true" aria-expanded="false">
+                <div class="avatar" id="avatarBtn">
                     {{ app.user ? app.user.firstName[0]|upper : 'E' }}
                 </div>
-                <div class="profile-dropdown" id="profileDropdown" role="menu">
-                    <p class="pd-name">{{ app.user ? app.user.firstName ~ ' ' ~ app.user.lastName : 'Étudiant' }}</p>
-                    <p class="pd-email">{{ app.user ? app.user.email : '' }}</p>
+                <div class="profile-dropdown" id="profileDropdown">
+                    <div class="pd-name">{{ app.user ? app.user.firstName ~ ' ' ~ app.user.lastName : 'Étudiant' }}</div>
+                    <div class="pd-email">{{ app.user ? app.user.email : 'email@exemple.com' }}</div>
                     <div class="pd-divider"></div>
-                    <p class="pd-hint">Double-clic pour modifier</p>
+                    <div class="pd-hint">Double-clic pour modifier</div>
                 </div>
             </div>
         </div>

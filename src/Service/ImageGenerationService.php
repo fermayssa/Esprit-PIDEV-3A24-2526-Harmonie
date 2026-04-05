@@ -4,22 +4,15 @@ namespace App\Service;
 
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
-/**
- * PHP port of services.LibraryServices.ImageGenerationService (Java).
- *
- * Calls HuggingFace FLUX.1-schnell to generate a course cover image.
- * Returns the raw PNG bytes, or null on any failure.
- */
+
 class ImageGenerationService
 {
-    private const API_KEY = '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';
+    private const API_KEY = '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';
     private const API_URL = 'https://router.huggingface.co/hf-inference/models/black-forest-labs/FLUX.1-schnell';
 
     public function __construct(private readonly HttpClientInterface $http) {}
 
-    /**
-     * Mirrors Java generateImage(String prompt).
-     */
+
     public function generateImage(string $prompt): ?string
     {
         try {
@@ -43,10 +36,7 @@ class ImageGenerationService
         return null;
     }
 
-    /**
-     * Mirrors Java generateCourseImage(String courseTitle, String subject).
-     * Exact same prompt as the Java original.
-     */
+
     public function generateCourseImage(string $courseTitle, string $subject): ?string
     {
         $prompt = sprintf(
