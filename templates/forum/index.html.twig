@@ -1,5 +1,4 @@
 {% extends 'base.html.twig' %}
-
 {% block title %}Forum — Harmony{% endblock %}
 
 {% block stylesheets %}
@@ -15,7 +14,6 @@
     }
     html, body { font-family: var(--font-body); background: var(--purple-ghost); color: var(--text); }
 
-    /* TOPBAR */
     .topbar { position: sticky; top: 0; z-index: 200; background: var(--white);
         border-bottom: 1px solid var(--border); height: 62px; display: flex;
         align-items: center; padding: 0 40px; gap: 8px; }
@@ -34,7 +32,6 @@
         color: white; font-family: var(--font-head); font-weight: 700; font-size: 14px;
         display: grid; place-items: center; cursor: pointer; }
 
-    /* PAGE */
     .page { max-width: 1200px; margin: 0 auto; padding: 48px 40px 80px; }
 
     /* HEADER */
@@ -52,35 +49,66 @@
     .fh-left h1 { font-family: var(--font-head); font-size: 32px; font-weight: 800;
         color: white; margin-bottom: 6px; }
     .fh-left p { color: rgba(255,255,255,.75); font-size: 14px; }
-    .fh-badge { background: rgba(255,255,255,.15); color: white; border: 1px solid rgba(255,255,255,.25);
+    .fh-right { display: flex; align-items: center; gap: 12px; position: relative; z-index: 1; }
+    .fh-badge { background: rgba(255,255,255,.15); color: white;
+        border: 1px solid rgba(255,255,255,.25);
         padding: 6px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; }
+    .btn-new-cat {
+        display: inline-flex; align-items: center; gap: 8px;
+        padding: 10px 20px; background: white; color: var(--purple-dark);
+        border-radius: 10px; font-size: 13px; font-weight: 700;
+        text-decoration: none; transition: opacity .15s;
+    }
+    .btn-new-cat:hover { opacity: .9; }
 
     /* GRID */
-    .cat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 18px; }
+    .cat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 18px; }
 
+    /* CARTE catégorie */
     .cat-card {
         background: var(--white); border: 1px solid var(--border);
-        border-radius: 18px; padding: 28px 24px;
-        text-decoration: none; color: inherit;
-        display: flex; flex-direction: column; gap: 10px;
+        border-radius: 18px; overflow: hidden;
+        display: flex; flex-direction: column;
         transition: border-color .18s, transform .18s, box-shadow .18s;
-        cursor: pointer;
-        position: relative; overflow: hidden;
-    }
-    .cat-card::before {
-        content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
-        background: linear-gradient(90deg, var(--purple), var(--purple-soft));
+        position: relative;
     }
     .cat-card:hover { border-color: var(--purple-soft); transform: translateY(-4px);
         box-shadow: 0 12px 36px rgba(106,90,205,.13); }
-
-    .cat-icon { width: 48px; height: 48px; background: var(--purple-pale);
-        border-radius: 13px; display: grid; place-items: center; font-size: 24px; }
-    .cat-name { font-family: var(--font-head); font-size: 16px; font-weight: 700; color: var(--text); }
-    .cat-desc { font-size: 12.5px; color: var(--text-muted); line-height: 1.6; }
+    .cat-card-top-bar {
+        height: 3px;
+        background: linear-gradient(90deg, var(--purple), var(--purple-soft));
+    }
+    .cat-card-body {
+        padding: 22px 20px 14px;
+        flex: 1;
+        display: flex; flex-direction: column; gap: 8px;
+        /* lien cliquable vers les posts */
+        text-decoration: none; color: inherit;
+    }
+    .cat-icon { width: 44px; height: 44px; background: var(--purple-pale);
+        border-radius: 12px; display: grid; place-items: center; font-size: 22px; }
+    .cat-name { font-family: var(--font-head); font-size: 15px; font-weight: 700; color: var(--text); }
+    .cat-desc { font-size: 12px; color: var(--text-muted); line-height: 1.6; flex: 1; }
     .cat-meta { font-size: 11px; color: var(--purple); font-weight: 600;
         background: var(--purple-pale); padding: 3px 10px; border-radius: 20px;
-        display: inline-block; margin-top: 4px; width: fit-content; }
+        display: inline-block; width: fit-content; }
+
+    /* ACTIONS CRUD en bas de la carte */
+    .cat-card-actions {
+        display: flex; gap: 6px;
+        padding: 10px 20px 14px;
+        border-top: 1px solid var(--purple-ghost);
+    }
+    .btn-edit { display: inline-flex; align-items: center; gap: 4px;
+        padding: 5px 12px; background: var(--purple-pale); color: var(--purple);
+        border: none; border-radius: 8px; font-size: 12px; font-weight: 600;
+        cursor: pointer; text-decoration: none; transition: background .15s; }
+    .btn-edit:hover { background: #ddd6f7; }
+    .btn-delete { display: inline-flex; align-items: center; gap: 4px;
+        padding: 5px 12px; background: #FEF2F2; color: #E05252;
+        border: none; border-radius: 8px; font-size: 12px; font-weight: 600;
+        cursor: pointer; transition: background .15s; }
+    .btn-delete:hover { background: #fde8e8; }
 
     @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
     .fade { animation: fadeUp .4s ease both; }
@@ -88,7 +116,6 @@
 {% endblock %}
 
 {% block body %}
-
 <header class="topbar">
     <a href="{{ path('homepage') }}" class="topbar-logo">
         <img src="{{ asset('images/logo.png') }}" class="logo-mark" alt="Harmony">
@@ -109,31 +136,3 @@
         <div class="avatar">E</div>
     </div>
 </header>
-
-<main class="page">
-
-    <div class="forum-header fade">
-        <div class="fh-left">
-            <h1>💬 Forum et Communauté</h1>
-            <p>Explore les discussions, pose tes questions et partage tes connaissances</p>
-        </div>
-        <span class="fh-badge">{{ categories|length }} catégories</span>
-    </div>
-
-    <div class="cat-grid">
-        {% for cat in categories %}
-        <a href="{{ path('forum_posts', {id: cat.idCategorie}) }}" class="cat-card fade">
-            <div class="cat-icon">💬</div>
-            <div class="cat-name">{{ cat.nomCategorie }}</div>
-            {% if cat.description %}
-                <div class="cat-desc">{{ cat.description }}</div>
-            {% endif %}
-            <span class="cat-meta">Voir les posts →</span>
-        </a>
-        {% else %}
-            <p style="color:var(--text-muted)">Aucune catégorie pour l'instant.</p>
-        {% endfor %}
-    </div>
-
-</main>
-{% endblock %}
