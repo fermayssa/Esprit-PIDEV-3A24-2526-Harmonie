@@ -151,7 +151,8 @@
             </a>
         </div>
     </div>
- <div class="cat-grid">
+
+    <div class="cat-grid">
         {% for cat in categories %}
         <div class="cat-card fade">
 
@@ -166,7 +167,8 @@
                 {% endif %}
                 <span class="cat-meta">Voir les posts →</span>
             </a>
-             {# Boutons CRUD #}
+
+            {# Boutons CRUD #}
             <div class="cat-card-actions">
                 <a href="{{ path('forum_categorie_edit', {id: cat.idCategorie}) }}"
                    class="btn-edit">✏️ Modifier</a>
