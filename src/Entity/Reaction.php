@@ -2,94 +2,37 @@
 
 namespace App\Entity;
 
-use App\Repository\ReactionRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: ReactionRepository::class)]
+#[ORM\Entity]
+#[ORM\Table(name: "reaction")]
 class Reaction
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
+    #[ORM\Column(name: "id_reaction", type: "integer")]
+    private ?int $idReaction = null;
 
-    #[ORM\Column]
-    private ?int $id_reaction = null;
+    #[ORM\Column(name: "type_reaction", length: 50)]
+    private ?string $typeReaction = null;
 
-    #[ORM\Column(length: 50)]
-    private ?string $type_reaction = null;
+    #[ORM\Column(name: "date_reaction", type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $dateReaction = null;
 
-    #[ORM\Column]
-    private ?\DateTimeImmutable $date_reaction = null;
+    #[ORM\Column(name: "id_post", type: "integer")]
+    private ?int $idPost = null;
 
-    #[ORM\Column]
-    private ?int $id_post = null;
+    #[ORM\Column(name: "user_id", type: "integer")]
+    private ?int $userId = null;
 
-    #[ORM\Column]
-    private ?int $user_id = null;
-
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
-    public function getIdReaction(): ?int
-    {
-        return $this->id_reaction;
-    }
-
-    public function setIdReaction(int $id_reaction): static
-    {
-        $this->id_reaction = $id_reaction;
-
-        return $this;
-    }
-
-    public function getTypeReaction(): ?string
-    {
-        return $this->type_reaction;
-    }
-
-    public function setTypeReaction(string $type_reaction): static
-    {
-        $this->type_reaction = $type_reaction;
-
-        return $this;
-    }
-
-    public function getDateReaction(): ?\DateTimeImmutable
-    {
-        return $this->date_reaction;
-    }
-
-    public function setDateReaction(\DateTimeImmutable $date_reaction): static
-    {
-        $this->date_reaction = $date_reaction;
-
-        return $this;
-    }
-
-    public function getIdPost(): ?int
-    {
-        return $this->id_post;
-    }
-
-    public function setIdPost(int $id_post): static
-    {
-        $this->id_post = $id_post;
-
-        return $this;
-    }
-
-    public function getUserId(): ?int
-    {
-        return $this->user_id;
-    }
-
-    public function setUserId(int $user_id): static
-    {
-        $this->user_id = $user_id;
-
-        return $this;
-    }
+    public function getIdReaction(): ?int { return $this->idReaction; }
+    public function getTypeReaction(): ?string { return $this->typeReaction; }
+    public function setTypeReaction(string $v): static { $this->typeReaction = $v; return $this; }
+    public function getDateReaction(): ?\DateTimeInterface { return $this->dateReaction; }
+    public function setDateReaction(\DateTimeInterface $v): static { $this->dateReaction = $v; return $this; }
+    public function getIdPost(): ?int { return $this->idPost; }
+    public function setIdPost(int $v): static { $this->idPost = $v; return $this; }
+    public function getUserId(): ?int { return $this->userId; }
+    public function setUserId(int $v): static { $this->userId = $v; return $this; }
 }
