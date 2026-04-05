@@ -378,10 +378,15 @@
 async function toggleLike(btn) {
     const postId = btn.dataset.postId;
     try {
-        const res  = await fetch(`/forum/post/${postId}/like`, { method: 'POST',
-            headers: { 'X-Requested-With': 'XMLHttpRequest' } });
+        const res = await fetch(`/forum/post/${postId}/like`, {
+            method: 'POST',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: '_token='
+        });
         const data = await res.json();
-        btn.querySelector('.like-count').textContent = data.count;
         if (data.liked) {
             btn.classList.add('liked');
             btn.innerHTML = '❤️ <span class="like-count">' + data.count + '</span>';
@@ -398,7 +403,7 @@ function toggleComments(id, btn) {
     const section = document.getElementById(id);
     const isOpen  = section.classList.toggle('open');
     btn.classList.toggle('open', isOpen);
-    
+
 }
 
 // ── VALIDATION COMMENTAIRE ─────────────────────────
