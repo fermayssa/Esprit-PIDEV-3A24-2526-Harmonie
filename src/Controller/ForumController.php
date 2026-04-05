@@ -95,115 +95,34 @@ class ForumController extends AbstractController
     }
 
     // ════════════════════════════════════════════════
-    //  POSTS
+    //  POSTS — avec recherche 
     // ════════════════════════════════════════════════
-
+    
     #[Route('/forum/categorie/{id}', name: 'forum_posts')]
-    public function posts(int $id, EntityManagerInterface $em): Response
+    public function posts(int $id, Request $request, EntityManagerInterface $em): Response
     {
         $categorie = $em->getRepository(Categorie::class)->find($id);
         if (!$categorie) throw $this->createNotFoundException();
 
-        $posts = $em->getRepository(Post::class)
-            ->findBy(['idCategorie' => $id], ['dateCreation' => 'DESC']);
+        // ── Paramètres GET ──
+        $search  = trim($request->query->get('search', ''));
+        $tri     = $request->query->get('tri', 'date_desc'); // date_desc|date_asc|likes
+        $page    = max(1, (int) $request->query->get('page', 1));
+        $perPage = 5;
 
-        // Pour chaque post, on charge ses commentaires
-        $commentairesMap = [];
-        foreach ($posts as $post) {
-            $commentairesMap[$post->getIdPost()] = $em->getRepository(Commentaire::class)
-                ->findBy(['idPost' => $post->getIdPost()], ['dateCommentaire' => 'ASC']);
+        // ── Construction requête ──
+        $qb = $em->createQueryBuilder()
+            ->select('p')
+            ->from(Post::class, 'p')
+            ->where('p.idCategorie = :idCat')
+            ->setParameter('idCat', $id);
+
+        // Recherche
+        if ($search !== '') {
+            $qb->andWhere('p.titre LIKE :s OR p.contenu LIKE :s')
+               ->setParameter('s', '%' . $search . '%');
         }
 
-        return $this->render('forum/posts.html.twig', [
-            'categorie'       => $categorie,
-            'posts'           => $posts,
-            'commentairesMap' => $commentairesMap,
-        ]);
-    }
-
-    #[Route('/forum/categorie/{idCat}/post/new', name: 'forum_post_new', methods: ['GET','POST'])]
-    public function newPost(int $idCat, Request $request, EntityManagerInterface $em): Response
-    {
-        $categorie = $em->getRepository(Categorie::class)->find($idCat);
-        if (!$categorie) throw $this->createNotFoundException();
-
-        $error = null;
-        if ($request->isMethod('POST')) {
-            $titre   = trim($request->request->get('titre', ''));
-            $contenu = trim($request->request->get('contenu', ''));
-
-            if (strlen($titre) < 3) {
-                $error = 'Le titre doit contenir au moins 3 caractères.';
-            } elseif (strlen($titre) > 150) {
-                $error = 'Le titre ne peut pas dépasser 150 caractères.';
-            } elseif (strlen($contenu) < 10) {
-                $error = 'Le contenu doit contenir au moins 10 caractères.';
-            } else {
-                $post = new Post();
-                $post->setTitre($titre);
-                $post->setContenu($contenu);
-                $post->setIdCategorie($idCat);
-                $post->setUserId(1); // remplace par user connecté
-                $post->setDateCreation(new \DateTime());
-                $em->persist($post);
-                $em->flush();
-                return $this->redirectToRoute('forum_posts', ['id' => $idCat]);
-            }
-        }
-        return $this->render('forum/post_form.html.twig', [
-            'error'     => $error,
-            'post'      => null,
-            'categorie' => $categorie,
-            'action'    => $this->generateUrl('forum_post_new', ['idCat' => $idCat]),
-        ]);
-    }
-
-    #[Route('/forum/post/{id}/edit', name: 'forum_post_edit', methods: ['GET','POST'])]
-    public function editPost(int $id, Request $request, EntityManagerInterface $em): Response
-    {
-        $post = $em->getRepository(Post::class)->find($id);
-        if (!$post) throw $this->createNotFoundException();
-
-        $categorie = $em->getRepository(Categorie::class)->find($post->getIdCategorie());
-        $error = null;
-
-        if ($request->isMethod('POST')) {
-            $titre   = trim($request->request->get('titre', ''));
-            $contenu = trim($request->request->get('contenu', ''));
-
-            if (strlen($titre) < 3) {
-                $error = 'Le titre doit contenir au moins 3 caractères.';
-            } elseif (strlen($titre) > 150) {
-                $error = 'Le titre ne peut pas dépasser 150 caractères.';
-            } elseif (strlen($contenu) < 10) {
-                $error = 'Le contenu doit contenir au moins 10 caractères.';
-            } else {
-                $post->setTitre($titre);
-                $post->setContenu($contenu);
-                $em->flush();
-                return $this->redirectToRoute('forum_posts', ['id' => $post->getIdCategorie()]);
-            }
-        }
-        return $this->render('forum/post_form.html.twig', [
-            'error'     => $error,
-            'post'      => $post,
-            'categorie' => $categorie,
-            'action'    => $this->generateUrl('forum_post_edit', ['id' => $id]),
-        ]);
-    }
-
-    #[Route('/forum/post/{id}/delete', name: 'forum_post_delete', methods: ['POST'])]
-    public function deletePost(int $id, EntityManagerInterface $em): Response
-    {
-        $post = $em->getRepository(Post::class)->find($id);
-        if ($post) {
-            $idCat = $post->getIdCategorie();
-            $em->remove($post);
-            $em->flush();
-            return $this->redirectToRoute('forum_posts', ['id' => $idCat]);
-        }
-        return $this->redirectToRoute('forum');
-    }
 
     // ════════════════════════════════════════════════
     //  COMMENTAIRES
