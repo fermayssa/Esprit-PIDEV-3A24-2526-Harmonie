@@ -4,6 +4,8 @@
     {% set dl = tache.deadline %}
     {% set is_overdue = dl and dl|date('Y-m-d') < today|date('Y-m-d') and tache.statutTache != 'TERMINEE' %}
     <li class="kan-card" data-tache-id="{{ tache.id }}">
+        <button type="button" class="kan-card-drag" tabindex="-1" aria-label="Glisser-déposer pour changer de colonne" title="Glisser"></button>
+        <div class="kan-card-inner">
         <h3 class="kan-card-title"><span class="kan-card-title-text">{{ tache.nom }}</span></h3>
         {% if dl %}
             <div class="kan-card-meta{% if is_overdue %} overdue{% endif %}{% if is_overdue and dl|date('Y-m-d') < today|date_modify('-7 days')|date('Y-m-d') %} late{% endif %}">
@@ -19,6 +21,7 @@
         <div class="kan-card-actions">
             <a href="{{ path('app_tache_show', {id: tache.id}) }}">Voir</a>
             <a href="{{ path('app_tache_edit', {id: tache.id}) }}">Modifier</a>
+        </div>
         </div>
     </li>
 {% endmacro %}
@@ -96,16 +99,6 @@
             outline: 2px solid #7c3aed;
             outline-offset: 2px;
         }
-        .kan-col-hint {
-            margin: 10px 6px 2px;
-            text-align: center;
-            font-size: 12px;
-            font-weight: 500;
-            color: var(--text-muted, #9590B8);
-            line-height: 1.35;
-            user-select: none;
-            pointer-events: none;
-        }
         .kan-col-title {
             font-family: var(--font-head, 'Syne', sans-serif); font-weight: 800; font-size: 13px;
             letter-spacing: 0.06em; text-transform: uppercase;
@@ -114,18 +107,41 @@
         .kan-col--doing { min-height: 320px; }
         .kan-col-list {
             list-style: none; margin: 0; padding: 0;
-            flex: 1; min-height: 100px;
+            flex: 1; min-height: 140px;
         }
         .kan-col-list--doing { position: relative; }
         .kan-card {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            gap: 6px;
             background: var(--white, #fff); border-radius: 14px;
-            padding: 14px 14px 12px;
+            padding: 10px 12px 12px 6px;
             box-shadow: 0 4px 14px rgba(0,0,0,.06);
             border: 1px solid rgba(124,58,237,.1);
             margin-bottom: 12px;
-            cursor: grab;
         }
-        .kan-card:active { cursor: grabbing; }
+        .kan-card-inner { flex: 1; min-width: 0; }
+        .kan-card-drag {
+            flex-shrink: 0;
+            width: 22px;
+            min-height: 36px;
+            margin-top: 2px;
+            padding: 0;
+            border: none;
+            border-radius: 8px;
+            background: rgba(124, 58, 237, 0.08);
+            color: #7c3aed;
+            cursor: grab;
+            font-size: 14px;
+            line-height: 1;
+            display: grid;
+            place-items: center;
+            touch-action: none;
+        }
+        .kan-card-drag::before { content: '⋮⋮'; letter-spacing: -2px; font-weight: 700; opacity: 0.75; }
+        .kan-card-drag:hover { background: rgba(124, 58, 237, 0.14); }
+        .kan-card-drag:active { cursor: grabbing; }
         .kan-card-title { font-weight: 700; font-size: 15px; color: var(--text, #1C1733); margin: 0 0 10px; line-height: 1.3; }
         .kan-card-title-text { cursor: pointer; }
         .kan-card-title-text:hover { color: var(--purple, #6A5ACD); }
@@ -163,37 +179,34 @@
     <div class="kan-board" id="kan-board-root">
         <div class="kan-col" data-statut="A_FAIRE">
             <h2 class="kan-col-title">TODO</h2>
-            <div class="kan-col-body js-kan-col-zone" role="button" tabindex="0" aria-label="Ajouter une tâche dans la colonne À faire : cliquez dans la zone vide">
+            <div class="kan-col-body js-kan-col-zone" tabindex="0" aria-label="Colonne À faire — zone vide : ajouter une tâche. Poignée ⋮⋮ sur chaque carte pour déplacer.">
                 <ul class="kan-col-list" data-statut="A_FAIRE" aria-label="À faire">
                     {% for tache in columns.A_FAIRE %}
                         {{ kan.kan_card(tache, today) }}
                     {% endfor %}
                 </ul>
-                <p class="kan-col-hint">✨ Cliquez n’importe où dans cette zone pour créer une tâche</p>
             </div>
         </div>
 
         <div class="kan-col kan-col--doing" data-statut="EN_COURS">
             <h2 class="kan-col-title">DOING</h2>
-            <div class="kan-col-body js-kan-col-zone" role="button" tabindex="0" aria-label="Ajouter une tâche dans la colonne En cours">
+            <div class="kan-col-body js-kan-col-zone" tabindex="0" aria-label="Colonne En cours">
                 <ul class="kan-col-list kan-col-list--doing" data-statut="EN_COURS" aria-label="En cours">
                     {% for tache in columns.EN_COURS %}
                         {{ kan.kan_card(tache, today) }}
                     {% endfor %}
                 </ul>
-                <p class="kan-col-hint">✨ Cliquez n’importe où dans cette zone pour créer une tâche</p>
             </div>
         </div>
 
         <div class="kan-col" data-statut="TERMINEE">
             <h2 class="kan-col-title">DONE</h2>
-            <div class="kan-col-body js-kan-col-zone" role="button" tabindex="0" aria-label="Ajouter une tâche dans la colonne Terminées">
+            <div class="kan-col-body js-kan-col-zone" tabindex="0" aria-label="Colonne Terminées">
                 <ul class="kan-col-list" data-statut="TERMINEE" aria-label="Terminées">
                     {% for tache in columns.TERMINEE %}
                         {{ kan.kan_card(tache, today) }}
                     {% endfor %}
                 </ul>
-                <p class="kan-col-hint">✨ Cliquez n’importe où dans cette zone pour créer une tâche</p>
             </div>
         </div>
     </div>
@@ -364,9 +377,11 @@
                 group: 'taches-kanban',
                 animation: 160,
                 draggable: '.kan-card',
+                handle: '.kan-card-drag',
                 ghostClass: 'sortable-ghost',
                 dragClass: 'sortable-drag',
-                distance: 8,
+                emptyInsertThreshold: 40,
+                fallbackTolerance: 4,
                 onEnd: function (evt) {
                     suppressCardClickUntil = Date.now() + 400;
                     if (evt.from === evt.to) {
@@ -402,16 +417,20 @@
             });
         });
 
+        /* Clic « ajouter » : phase capture pour passer avant Sortable (qui bloquait le click sur la liste). */
         board.querySelectorAll('.js-kan-col-zone').forEach(function (zone) {
             zone.addEventListener('click', function (e) {
+                if (e.target.closest('.kan-card-drag')) return;
                 if (e.target.closest('.kan-card')) return;
-                if (e.target.closest('.kan-card-actions a')) return;
                 if (e.target.closest('a')) return;
                 if (e.target.closest('button')) return;
                 var col = zone.closest('.kan-col');
                 var st = col ? col.getAttribute('data-statut') : null;
-                if (st) openNew(st);
-            });
+                if (st) {
+                    e.stopPropagation();
+                    openNew(st);
+                }
+            }, true);
             zone.addEventListener('keydown', function (e) {
                 if (e.key !== 'Enter' && e.key !== ' ') return;
                 e.preventDefault();
@@ -423,7 +442,7 @@
 
         if (board) {
             board.addEventListener('click', function (e) {
-                if (e.target.closest('.js-kan-col-zone') && !e.target.closest('.kan-card')) return;
+                if (e.target.closest('.kan-card-drag')) return;
                 if (e.target.closest('.kan-card-actions a')) return;
                 var card = e.target.closest('.kan-card');
                 if (!card || Date.now() < suppressCardClickUntil) return;
