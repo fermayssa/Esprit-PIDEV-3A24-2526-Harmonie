@@ -1,0 +1,106 @@
+{% extends 'back/base_back.html.twig' %}
+{% block title %}Commentaires — Back Harmony{% endblock %}
+{% block topbar_icon %}💬{% endblock %}
+{% block topbar_title %}Gestion des commentaires{% endblock %}
+
+{% block body %}
+<div class="page-hd">
+  <span style="font-size:20px">💬</span>
+  <h1>Commentaires du Forum</h1>
+</div>
+
+<div class="stats-row col3" style="grid-template-columns:repeat(2,1fr)">
+  <div class="stat-card">
+    <div class="stat-icon purple">💬</div>
+    <div>
+      <div class="stat-val">{{ commentaires|length }}</div>
+      <div class="stat-lbl">Total commentaires</div>
+    </div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon amber">📅</div>
+    <div>
+      <div class="stat-val">
+        {{ commentaires|filter(c => c.dateCommentaire is not null and c.dateCommentaire.format('Y-m') == 'now'|date('Y-m'))|length }}
+      </div>
+      <div class="stat-lbl">Ce mois-ci</div>
+    </div>
+  </div>
+</div>
+
+<div class="toolbar">
+  <div class="search-box">
+    <span style="font-size:15px;color:var(--text-muted)">🔍</span>
+    <input type="text" placeholder="Rechercher dans les commentaires…" oninput="filterTable(this.value,'com-tbody')">
+  </div>
+</div>
+
+<div class="panel">
+  <div class="panel-head">
+    <h3>💬 Tous les commentaires</h3>
+    <span style="font-size:13px;color:var(--text-muted)">{{ commentaires|length }} commentaire(s)</span>
+  </div>
+
+  {% if commentaires is empty %}
+    <div style="text-align:center;padding:48px;color:var(--text-muted)">
+      <div style="font-size:40px;margin-bottom:12px">💬</div>
+      Aucun commentaire pour l'instant.
+    </div>
+  {% else %}
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Contenu</th>
+        <th>Post associé</th>
+        <th>Auteur (ID)</th>
+        <th>Date</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody id="com-tbody">
+      {% for com in commentaires %}
+      <tr data-search="{{ com.contenu|lower }}">
+        <td class="td-muted">#{{ com.idCommentaire }}</td>
+        <td class="td-desc">{{ com.contenu }}</td>
+        <td>
+          {% if com.idPost %}
+            <a href="{{ path('forum_post_detail', {id: com.idPost.idPost}) }}"
+               style="color:var(--purple);font-size:12.5px;font-weight:600">
+              Post #{{ com.idPost.idPost }}
+            </a>
+          {% else %}
+            <span class="td-muted">—</span>
+          {% endif %}
+        </td>
+        <td class="td-muted">User #{{ com.userId ?? '—' }}</td>
+        <td class="td-muted">{{ com.dateCommentaire ? com.dateCommentaire|date('d/m/Y') : '—' }}</td>
+        <td>
+          <div class="td-actions">
+            <form class="confirm-form"
+                  method="POST"
+                  action="{{ path('back_commentaire_delete', {id: com.idCommentaire}) }}"
+                  onsubmit="return confirm('Supprimer ce commentaire ?')">
+              <button type="submit" class="btn danger sm">🗑 Supprimer</button>
+            </form>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+</div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+function filterTable(q, tbodyId) {
+  document.querySelectorAll('#'+tbodyId+' tr').forEach(row => {
+    const text = row.dataset.search || '';
+    row.style.display = text.includes(q.toLowerCase()) ? '' : 'none';
+  });
+}
+</script>
+{% endblock %}
+
