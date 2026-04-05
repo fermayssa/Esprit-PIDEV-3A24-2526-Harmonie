@@ -113,6 +113,13 @@
 
         syncPresentiel(form);
         updateTypeIcon(form);
+        /* Après rendu (panel AJAX / thème choice) : re-sync pour que Présentiel / zone lieu s’affichent. */
+        requestAnimationFrame(function () {
+            syncPresentiel(form);
+        });
+        setTimeout(function () {
+            syncPresentiel(form);
+        }, 50);
     }
 
     function scan(root) {
