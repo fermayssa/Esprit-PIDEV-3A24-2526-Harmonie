@@ -16,7 +16,7 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 
 class RegistrationController extends AbstractController
 {
-    // ── Étape 1 : Infos de base ────────────────────────────────────────────
+    // ── Étape 1 ───────────────────────────────────────────────────────────────
     #[Route('/register', name: 'app_register')]
     public function register(
         Request $request,
@@ -31,11 +31,10 @@ class RegistrationController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $plain = $form->get('plainPassword')->getData();
+            $plain          = $form->get('plainPassword')->getData();
             $hashedPassword = $hasher->hashPassword($user, $plain);
 
-            $session = $request->getSession();
-            $session->set('reg_step1', [
+            $request->getSession()->set('reg_step1', [
                 'nom'           => $user->getUserNom(),
                 'prenom'        => $user->getUserPrenom(),
                 'email'         => $user->getUserEmail(),
@@ -53,7 +52,7 @@ class RegistrationController extends AbstractController
         ]);
     }
 
-    // ── Étape 2 : Infos complémentaires ───────────────────────────────────
+    // ── Étape 2 ───────────────────────────────────────────────────────────────
     #[Route('/register/step2', name: 'app_register_step2')]
     public function registerStep2(
         Request $request,
@@ -71,6 +70,7 @@ class RegistrationController extends AbstractController
             return $this->redirectToRoute('app_register');
         }
 
+        // ── Construire l'entité avec les données de l'étape 1 ────────────────
         $user = new User();
         $user->setUserNom($step1['nom']);
         $user->setUserPrenom($step1['prenom']);
@@ -86,14 +86,13 @@ class RegistrationController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            // ── Gestion de l'image de profil ──────────────────────────────
+            // ── Upload avatar ─────────────────────────────────────────────────
             $avatarFile = $form->get('avatarFile')->getData();
             if ($avatarFile) {
                 $safeFilename = $slugger->slug($step1['nom']);
                 $newFilename  = $safeFilename . '-' . uniqid() . '.' . $avatarFile->guessExtension();
                 $uploadDir    = $this->getParameter('kernel.project_dir') . '/public/user_images';
 
-                // Créer le dossier s'il n'existe pas
                 if (!is_dir($uploadDir)) {
                     mkdir($uploadDir, 0777, true);
                 }
@@ -102,30 +101,31 @@ class RegistrationController extends AbstractController
                     $avatarFile->move($uploadDir, $newFilename);
                     $user->setUserImagePath('user_images/' . $newFilename);
                 } catch (FileException $e) {
-                    $this->addFlash('error', "Erreur lors de l'upload de l'image : " . $e->getMessage());
+                    $this->addFlash('error', "Erreur upload image : " . $e->getMessage());
                 }
             }
 
-            // ── Persistence avec gestion d'erreur explicite ───────────────
+            // ── Persist + Flush avec gestion d'erreur complète ───────────────
             try {
                 $em->persist($user);
                 $em->flush();
 
-                // Nettoyer la session uniquement si succès
+                // Succès : nettoyer la session et rediriger
                 $session->remove('reg_step1');
-
-                $this->addFlash('success', 'Compte créé avec succès ! Vous pouvez maintenant vous connecter.');
+                $this->addFlash('success', 'Compte créé avec succès ! Vous pouvez vous connecter.');
                 return $this->redirectToRoute('app_login');
 
             } catch (\Doctrine\DBAL\Exception\UniqueConstraintViolationException $e) {
-                $this->addFlash('error', 'Cet email est déjà utilisé. Veuillez en choisir un autre.');
-                // Retour à l'étape 1 pour changer l'email
                 $session->remove('reg_step1');
+                $this->addFlash('error', 'Cet email est déjà utilisé. Veuillez recommencer avec un autre email.');
                 return $this->redirectToRoute('app_register');
 
+            } catch (\Doctrine\DBAL\Exception $e) {
+                // Erreur DBAL — affiche le message exact pour diagnostic
+                $this->addFlash('error', 'Erreur base de données : ' . $e->getMessage());
+
             } catch (\Exception $e) {
-                $this->addFlash('error', 'Erreur lors de la création du compte : ' . $e->getMessage());
-                // Ne pas nettoyer la session → l'utilisateur peut réessayer
+                $this->addFlash('error', 'Erreur inattendue : ' . $e->getMessage());
             }
         }
 
