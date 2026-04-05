@@ -138,7 +138,9 @@
             <details class="cal-export-wrap">
                 <summary class="cal-export-summary">Exporter ▾</summary>
                 <div class="cal-export-menu">
-                    <a href="{{ path('app_evenement_export_csv') }}">Télécharger CSV</a>
+                    <a href="#" class="js-export-pdf" data-type="pdf">Exporter en PDF</a>
+                    <a href="#" class="js-export-excel" data-type="excel">Exporter en Excel</a>
+                    <a href="{{ path('app_evenement_export_csv') }}">Télécharger CSV (legacy)</a>
                 </div>
             </details>
             <div class="cal-nav">
@@ -213,6 +215,7 @@
     {{ parent() }}
     <script src="{{ asset('harmonie/js/cal-tunisia-holidays.js') }}" defer></script>
     <script src="{{ asset('harmonie/js/evenement-form.js') }}"></script>
+    <script src="{{ asset('harmonie/js/export-handler.js') }}"></script>
     <script>
     (function () {
         var root = document.getElementById('evenement-calendar-root');

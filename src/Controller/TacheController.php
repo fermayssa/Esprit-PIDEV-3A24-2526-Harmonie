@@ -7,6 +7,7 @@ use App\Form\TacheType;
 use App\Repository\CalendrierRepository;
 use App\Repository\TacheRepository;
 use App\Service\Domain\PlanningDomainService;
+use App\Service\Export\KanbanExportService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -70,6 +71,26 @@ final class TacheController extends AbstractController
         $response->headers->set('Content-Disposition', 'attachment; filename="taches-harmony.csv"');
 
         return $response;
+    }
+
+    #[Route('/export/pdf', name: 'app_tache_export_pdf', methods: ['POST'])]
+    public function exportPdf(
+        TacheRepository $tacheRepository,
+        KanbanExportService $exportService,
+    ): Response {
+        $tachesByStatus = $tacheRepository->groupedByKanbanStatut();
+
+        return $exportService->exportToPdf($tachesByStatus);
+    }
+
+    #[Route('/export/excel', name: 'app_tache_export_excel', methods: ['POST'])]
+    public function exportExcel(
+        TacheRepository $tacheRepository,
+        KanbanExportService $exportService,
+    ): StreamedResponse {
+        $taches = $tacheRepository->findAllOrderedForKanban();
+
+        return $exportService->exportToExcel($taches);
     }
 
     #[Route('/{id}/statut', name: 'app_tache_update_statut', requirements: ['id' => '\d+'], methods: ['POST'])]

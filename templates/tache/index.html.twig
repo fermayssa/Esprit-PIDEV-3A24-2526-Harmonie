@@ -172,7 +172,9 @@
         <details class="kan-export-wrap">
             <summary class="kan-export-summary">Exporter ▾</summary>
             <div class="kan-export-menu">
-                <a href="{{ path('app_tache_export_csv') }}">Télécharger CSV</a>
+                <a href="#" class="js-kanban-export-pdf" data-type="pdf">Exporter en PDF</a>
+                <a href="#" class="js-kanban-export-excel" data-type="excel">Exporter en Excel</a>
+                <a href="{{ path('app_tache_export_csv') }}">Télécharger CSV (legacy)</a>
             </div>
         </details>
     </div>
@@ -234,6 +236,7 @@
 {% block javascripts %}
     {{ parent() }}
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js" crossorigin="anonymous"></script>
+    <script src="{{ asset('harmonie/js/export-handler.js') }}"></script>
     <script>
     (function () {
         var root = document.getElementById('kanban-root');

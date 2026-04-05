@@ -9,6 +9,7 @@ use App\Repository\CalendrierRepository;
 use App\Repository\EvenementRepository;
 use App\Repository\SalleRepository;
 use App\Service\Domain\PlanningDomainService;
+use App\Service\Export\CalendarExportService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -40,6 +41,34 @@ final class EvenementController extends AbstractController
         }
 
         return new JsonResponse($data);
+    }
+
+    #[Route('/export/pdf', name: 'app_evenement_export_pdf', methods: ['POST'])]
+    public function exportPdf(
+        Request $request,
+        EvenementRepository $evenementRepository,
+        CalendarExportService $exportService,
+    ): Response {
+        $year = (int) $request->request->get('year', date('Y'));
+        $month = (int) $request->request->get('month', date('m'));
+
+        $evenements = $evenementRepository->findWithDateDebutInMonth($year, $month);
+
+        return $exportService->exportToPdf($evenements, $year, $month);
+    }
+
+    #[Route('/export/excel', name: 'app_evenement_export_excel', methods: ['POST'])]
+    public function exportExcel(
+        Request $request,
+        EvenementRepository $evenementRepository,
+        CalendarExportService $exportService,
+    ): StreamedResponse {
+        $year = (int) $request->request->get('year', date('Y'));
+        $month = (int) $request->request->get('month', date('m'));
+
+        $evenements = $evenementRepository->findWithDateDebutInMonth($year, $month);
+
+        return $exportService->exportToExcel($evenements, $year, $month);
     }
 
     #[Route(name: 'app_evenement_index', methods: ['GET'])]
