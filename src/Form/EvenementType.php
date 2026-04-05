@@ -2,7 +2,6 @@
 
 namespace App\Form;
 
-use App\Entity\Calendrier;
 use App\Entity\Evenement;
 use App\Entity\Salle;
 use App\Entity\User;
@@ -139,14 +138,6 @@ class EvenementType extends AbstractType
                 'label' => 'Rappel actif',
                 'required' => false,
                 'row_attr' => ['class' => 'harmony-field--checkbox'],
-            ])
-            ->add('calendrier', EntityType::class, [
-                'class' => Calendrier::class,
-                'choice_label' => static fn (Calendrier $c): string => sprintf('Calendrier n°%d', $c->getId() ?? 0),
-                'label' => 'Calendrier',
-                'required' => false,
-                'attr' => ['class' => 'harmony-select'],
-                'label_attr' => ['class' => 'harmony-label'],
             ]);
 
         if ($options['admin_mode']) {

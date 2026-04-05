@@ -30,7 +30,7 @@ final class TacheController extends AbstractController
 
         $draftTache = new Tache();
         $draftTache->setStatutTache('A_FAIRE');
-        if ($cal = $calendrierRepository->findOneBy([], ['id' => 'ASC'])) {
+        if ($cal = $calendrierRepository->findPrimary()) {
             $draftTache->setCalendrier($cal);
         }
         $tacheFormNew = $this->createForm(TacheType::class, $draftTache);

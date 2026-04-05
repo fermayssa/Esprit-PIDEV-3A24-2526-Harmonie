@@ -15,7 +15,7 @@
         <tbody>
             <tr><th>Statut</th><td>{{ tache.statutTache }}</td></tr>
             <tr><th>Deadline</th><td>{{ tache.deadline ? tache.deadline|date('d/m/Y') : '—' }}</td></tr>
-            <tr><th>Calendrier</th><td>#{{ tache.calendrier ? tache.calendrier.id : '—' }}</td></tr>
+            <tr><th>Calendrier</th><td>Harmony (unique)</td></tr>
             <tr><th>Notes</th><td>{{ tache.notes|nl2br }}</td></tr>
         </tbody>
     </table>

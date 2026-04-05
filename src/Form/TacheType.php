@@ -2,9 +2,7 @@
 
 namespace App\Form;
 
-use App\Entity\Calendrier;
 use App\Entity\Tache;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -61,14 +59,6 @@ class TacheType extends AbstractType
                 'attr' => [
                     'class' => 'harmony-select',
                 ],
-                'label_attr' => ['class' => 'harmony-label'],
-            ])
-            ->add('calendrier', EntityType::class, [
-                'class' => Calendrier::class,
-                'choice_label' => static fn (Calendrier $c): string => sprintf('Calendrier n°%d', $c->getId() ?? 0),
-                'label' => 'Calendrier',
-                'required' => true,
-                'attr' => ['class' => 'harmony-select'],
                 'label_attr' => ['class' => 'harmony-label'],
             ])
             ->add('submit', SubmitType::class, [

@@ -74,6 +74,38 @@
             box-shadow: 0 2px 16px rgba(106,90,205,.06);
             display: flex; flex-direction: column;
         }
+        .kan-col-body {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 200px;
+            margin-top: 4px;
+            padding: 10px 8px 12px;
+            border-radius: 14px;
+            border: 1px dashed rgba(124, 58, 237, 0.22);
+            background: rgba(255, 255, 255, 0.35);
+            transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+            cursor: pointer;
+        }
+        .kan-col-body:hover {
+            border-color: rgba(124, 58, 237, 0.45);
+            background: rgba(255, 255, 255, 0.75);
+            box-shadow: inset 0 0 0 1px rgba(124, 58, 237, 0.08);
+        }
+        .kan-col-body:focus-visible {
+            outline: 2px solid #7c3aed;
+            outline-offset: 2px;
+        }
+        .kan-col-hint {
+            margin: 10px 6px 2px;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-muted, #9590B8);
+            line-height: 1.35;
+            user-select: none;
+            pointer-events: none;
+        }
         .kan-col-title {
             font-family: var(--font-head, 'Syne', sans-serif); font-weight: 800; font-size: 13px;
             letter-spacing: 0.06em; text-transform: uppercase;
@@ -82,7 +114,7 @@
         .kan-col--doing { min-height: 320px; }
         .kan-col-list {
             list-style: none; margin: 0; padding: 0;
-            flex: 1; min-height: 120px;
+            flex: 1; min-height: 100px;
         }
         .kan-col-list--doing { position: relative; }
         .kan-card {
@@ -129,34 +161,40 @@
     </div>
 
     <div class="kan-board" id="kan-board-root">
-        <div class="kan-col">
+        <div class="kan-col" data-statut="A_FAIRE">
             <h2 class="kan-col-title">TODO</h2>
-            <button type="button" class="kan-col-add-hit" data-statut="A_FAIRE" aria-label="Ajouter une tâche dans TODO"></button>
-            <ul class="kan-col-list" data-statut="A_FAIRE" aria-label="À faire">
-                {% for tache in columns.A_FAIRE %}
-                    {{ kan.kan_card(tache, today) }}
-                {% endfor %}
-            </ul>
+            <div class="kan-col-body js-kan-col-zone" role="button" tabindex="0" aria-label="Ajouter une tâche dans la colonne À faire : cliquez dans la zone vide">
+                <ul class="kan-col-list" data-statut="A_FAIRE" aria-label="À faire">
+                    {% for tache in columns.A_FAIRE %}
+                        {{ kan.kan_card(tache, today) }}
+                    {% endfor %}
+                </ul>
+                <p class="kan-col-hint">✨ Cliquez n’importe où dans cette zone pour créer une tâche</p>
+            </div>
         </div>
 
-        <div class="kan-col kan-col--doing">
+        <div class="kan-col kan-col--doing" data-statut="EN_COURS">
             <h2 class="kan-col-title">DOING</h2>
-            <button type="button" class="kan-col-add-hit" data-statut="EN_COURS" aria-label="Ajouter une tâche dans DOING"></button>
-            <ul class="kan-col-list kan-col-list--doing" data-statut="EN_COURS" aria-label="En cours">
-                {% for tache in columns.EN_COURS %}
-                    {{ kan.kan_card(tache, today) }}
-                {% endfor %}
-            </ul>
+            <div class="kan-col-body js-kan-col-zone" role="button" tabindex="0" aria-label="Ajouter une tâche dans la colonne En cours">
+                <ul class="kan-col-list kan-col-list--doing" data-statut="EN_COURS" aria-label="En cours">
+                    {% for tache in columns.EN_COURS %}
+                        {{ kan.kan_card(tache, today) }}
+                    {% endfor %}
+                </ul>
+                <p class="kan-col-hint">✨ Cliquez n’importe où dans cette zone pour créer une tâche</p>
+            </div>
         </div>
 
-        <div class="kan-col">
+        <div class="kan-col" data-statut="TERMINEE">
             <h2 class="kan-col-title">DONE</h2>
-            <button type="button" class="kan-col-add-hit" data-statut="TERMINEE" aria-label="Ajouter une tâche dans DONE"></button>
-            <ul class="kan-col-list" data-statut="TERMINEE" aria-label="Terminées">
-                {% for tache in columns.TERMINEE %}
-                    {{ kan.kan_card(tache, today) }}
-                {% endfor %}
-            </ul>
+            <div class="kan-col-body js-kan-col-zone" role="button" tabindex="0" aria-label="Ajouter une tâche dans la colonne Terminées">
+                <ul class="kan-col-list" data-statut="TERMINEE" aria-label="Terminées">
+                    {% for tache in columns.TERMINEE %}
+                        {{ kan.kan_card(tache, today) }}
+                    {% endfor %}
+                </ul>
+                <p class="kan-col-hint">✨ Cliquez n’importe où dans cette zone pour créer une tâche</p>
+            </div>
         </div>
     </div>
 
@@ -364,14 +402,28 @@
             });
         });
 
+        board.querySelectorAll('.js-kan-col-zone').forEach(function (zone) {
+            zone.addEventListener('click', function (e) {
+                if (e.target.closest('.kan-card')) return;
+                if (e.target.closest('.kan-card-actions a')) return;
+                if (e.target.closest('a')) return;
+                if (e.target.closest('button')) return;
+                var col = zone.closest('.kan-col');
+                var st = col ? col.getAttribute('data-statut') : null;
+                if (st) openNew(st);
+            });
+            zone.addEventListener('keydown', function (e) {
+                if (e.key !== 'Enter' && e.key !== ' ') return;
+                e.preventDefault();
+                var col = zone.closest('.kan-col');
+                var st = col ? col.getAttribute('data-statut') : null;
+                if (st) openNew(st);
+            });
+        });
+
         if (board) {
             board.addEventListener('click', function (e) {
-                var addHit = e.target.closest('.kan-col-add-hit');
-                if (addHit) {
-                    var st = addHit.getAttribute('data-statut');
-                    if (st) openNew(st);
-                    return;
-                }
+                if (e.target.closest('.js-kan-col-zone') && !e.target.closest('.kan-card')) return;
                 if (e.target.closest('.kan-card-actions a')) return;
                 var card = e.target.closest('.kan-card');
                 if (!card || Date.now() < suppressCardClickUntil) return;

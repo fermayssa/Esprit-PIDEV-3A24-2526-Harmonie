@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\Tache;
 use App\Form\TacheType;
-use App\Repository\CalendrierRepository;
 use App\Repository\TacheRepository;
 use App\Service\Domain\PlanningDomainService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -20,28 +19,24 @@ final class AdminTacheController extends AbstractController
     private const LIMIT = 10;
 
     #[Route('', name: 'admin_tache_index', methods: ['GET'])]
-    public function index(Request $request, TacheRepository $tacheRepository, CalendrierRepository $calendrierRepository): Response
+    public function index(Request $request, TacheRepository $tacheRepository): Response
     {
         $page = max(1, (int) $request->query->get('page', 1));
         $statut = $request->query->getString('statut');
         $statutFiltre = '' !== $statut ? $statut : null;
-        $calId = $request->query->get('calendrier');
-        $calendrierId = null !== $calId && '' !== $calId ? (int) $calId : null;
         $search = $request->query->getString('q');
         $search = '' !== $search ? $search : null;
 
-        $total = $tacheRepository->countAdmin($statutFiltre, $calendrierId, $search);
-        $taches = $tacheRepository->findAdminPaginated($page, self::LIMIT, $statutFiltre, $calendrierId, $search);
+        $total = $tacheRepository->countAdmin($statutFiltre, null, $search);
+        $taches = $tacheRepository->findAdminPaginated($page, self::LIMIT, $statutFiltre, null, $search);
         $pages = (int) max(1, (int) ceil($total / self::LIMIT));
 
         return $this->render('admin/tache/index.html.twig', [
             'taches' => $taches,
-            'calendriers' => $calendrierRepository->findBy([], ['id' => 'ASC']),
             'page' => $page,
             'pages' => $pages,
             'total' => $total,
             'statutFiltre' => $statutFiltre ?? '',
-            'calendrierId' => $calendrierId,
             'searchQuery' => $search ?? '',
         ]);
     }

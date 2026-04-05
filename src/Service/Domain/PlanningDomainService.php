@@ -9,6 +9,7 @@ use App\Entity\Salle;
 use App\Entity\Seance;
 use App\Entity\Tache;
 use App\Entity\User;
+use App\Repository\CalendrierRepository;
 use App\Repository\DemandeReservationRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -21,6 +22,7 @@ final class PlanningDomainService
         private readonly EntityManagerInterface $entityManager,
         private readonly ValidatorInterface $validator,
         private readonly DemandeReservationRepository $demandeReservationRepository,
+        private readonly CalendrierRepository $calendrierRepository,
     ) {
     }
 
@@ -54,6 +56,7 @@ final class PlanningDomainService
         if ($debut && $fin && $fin < $debut) {
             throw new \DomainException('La date de fin doit être postérieure à la date de début.');
         }
+        $this->normalizeEvenementCalendrier($evenement);
         $this->syncEvenementChamps($evenement);
         $this->validateEntity($evenement);
         $this->entityManager->persist($evenement);
@@ -108,6 +111,7 @@ final class PlanningDomainService
 
     public function saveTache(Tache $tache): void
     {
+        $this->normalizeTacheCalendrier($tache);
         $this->validateEntity($tache);
         $this->persistAndFlush($tache);
     }
@@ -150,5 +154,22 @@ final class PlanningDomainService
     public function removeSalle(Salle $salle): void
     {
         $this->removeAndFlush($salle);
+    }
+
+    private function normalizeTacheCalendrier(Tache $tache): void
+    {
+        $cal = $this->calendrierRepository->findPrimary();
+        if (null === $cal) {
+            throw new \DomainException('Aucun calendrier n’est configuré. Contactez un administrateur.');
+        }
+        $tache->setCalendrier($cal);
+    }
+
+    private function normalizeEvenementCalendrier(Evenement $evenement): void
+    {
+        $cal = $this->calendrierRepository->findPrimary();
+        if (null !== $cal) {
+            $evenement->setCalendrier($cal);
+        }
     }
 }

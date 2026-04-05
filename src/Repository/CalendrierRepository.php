@@ -15,4 +15,12 @@ class CalendrierRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Calendrier::class);
     }
+
+    /**
+     * Calendrier unique « principal » (le plus petit id) — toute l’app l’utilise implicitement.
+     */
+    public function findPrimary(): ?Calendrier
+    {
+        return $this->findOneBy([], ['id' => 'ASC']);
+    }
 }

@@ -23,12 +23,10 @@
 <div class="admin-toolbar">
     <form class="admin-toolbar__search" method="get" action="{{ path('admin_tache_index') }}" role="search">
         {% if statutFiltre %}<input type="hidden" name="statut" value="{{ statutFiltre }}">{% endif %}
-        {% if calendrierId %}<input type="hidden" name="calendrier" value="{{ calendrierId }}">{% endif %}
         <label class="visually-hidden" for="admin-tache-q">Recherche</label>
         <input id="admin-tache-q" type="search" name="q" value="{{ searchQuery }}" placeholder="Recherche nom, notes…">
     </form>
     {% set t_q_params = { q: searchQuery, page: 1 } %}
-    {% if calendrierId %}{% set t_q_params = t_q_params|merge({ calendrier: calendrierId }) %}{% endif %}
     <div class="admin-pills">
         <a class="admin-pill {{ statutFiltre == '' ? 'is-active' : '' }}" href="{{ path('admin_tache_index', t_q_params) }}">Tous</a>
         <a class="admin-pill {{ statutFiltre == 'A_FAIRE' ? 'is-active' : '' }}" href="{{ path('admin_tache_index', t_q_params|merge({ statut: 'A_FAIRE' })) }}">TODO</a>
@@ -36,20 +34,6 @@
         <a class="admin-pill {{ statutFiltre == 'TERMINEE' ? 'is-active' : '' }}" href="{{ path('admin_tache_index', t_q_params|merge({ statut: 'TERMINEE' })) }}">DONE</a>
     </div>
 </div>
-
-<form class="admin-card admin-toolbar" method="get" action="{{ path('admin_tache_index') }}" style="margin-bottom:20px;">
-    <input type="hidden" name="q" value="{{ searchQuery }}">
-    {% if statutFiltre %}<input type="hidden" name="statut" value="{{ statutFiltre }}">{% endif %}
-    <label>Calendrier
-        <select class="admin-input" name="calendrier">
-            <option value="">Tous</option>
-            {% for c in calendriers %}
-                <option value="{{ c.id }}" {{ calendrierId == c.id ? 'selected' }}>Calendrier #{{ c.id }}</option>
-            {% endfor %}
-        </select>
-    </label>
-    <button type="submit" class="admin-btn admin-btn-primary">Appliquer</button>
-</form>
 
 <div class="admin-cards-grid">
     {% for t in taches %}

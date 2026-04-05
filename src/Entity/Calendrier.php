@@ -64,6 +64,6 @@ class Calendrier
 
     public function __toString(): string
     {
-        return 'Calendrier #'.$this->id;
+        return 'Harmony';
     }
 }

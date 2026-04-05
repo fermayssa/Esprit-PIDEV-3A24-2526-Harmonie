@@ -75,7 +75,7 @@ final class EvenementController extends AbstractController
         $weeks = array_chunk($cells, 7);
 
         $draftEvenement = new Evenement();
-        if ($cal = $calendrierRepository->findOneBy([], ['id' => 'ASC'])) {
+        if ($cal = $calendrierRepository->findPrimary()) {
             $draftEvenement->setCalendrier($cal);
         }
         $evenementFormNew = $this->createForm(EvenementType::class, $draftEvenement);
