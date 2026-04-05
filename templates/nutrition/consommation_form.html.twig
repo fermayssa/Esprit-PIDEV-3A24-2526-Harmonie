@@ -1,0 +1,153 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ mode == 'edit' ? 'Modifier' : 'Ajouter' }} un Repas - Harmony{% endblock %}
+
+{% block stylesheets %}
+<style>
+    body { background: #f5f5f5; font-family: Arial, sans-serif; }
+    .page-wrap { max-width: 600px; margin: 40px auto; padding: 0 20px; }
+    h1 { color: #333; margin-bottom: 25px; }
+    .card { background: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,.08); padding: 30px; }
+    .form-group { margin-bottom: 18px; }
+    label { display: block; font-weight: 600; margin-bottom: 5px; color: #444; font-size: 14px; }
+    input, select {
+        width: 100%; padding: 10px 12px; border: 1px solid #dee2e6; border-radius: 6px;
+        font-size: 14px; outline: none; transition: border-color .2s;
+    }
+    input:focus, select:focus { border-color: #e07b39; box-shadow: 0 0 0 3px rgba(224,123,57,.1); }
+    input.is-invalid, select.is-invalid { border-color: #dc3545; }
+    .invalid-feedback { color: #dc3545; font-size: 12px; margin-top: 4px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .btn { display: inline-flex; align-items: center; gap: 6px; padding: 10px 20px; border-radius: 6px; border: none; cursor: pointer; font-size: 14px; font-weight: 600; text-decoration: none; }
+    .btn-primary   { background: #e07b39; color: #fff; }
+    .btn-secondary { background: #6c757d; color: #fff; }
+    .btn:hover { opacity: .85; }
+    .actions { display: flex; gap: 12px; margin-top: 24px; }
+    .kcal-box {
+        background: #fff3e0; border: 1px solid #ffe0b2; border-radius: 6px;
+        padding: 12px; text-align: center; margin-bottom: 16px; display: none;
+    }
+    .kcal-box strong { font-size: 22px; color: #e07b39; }
+    .kcal-box span { font-size: 13px; color: #888; }
+</style>
+{% endblock %}
+
+{% block body %}
+<header class="topbar">
+    <a href="{{ path('homepage') }}" class="topbar-logo">
+        <img src="{{ asset('images/logo.png') }}" class="logo-mark" alt="Harmony">
+    </a>
+    <nav class="nav-links">
+        <a href="{{ path('activites') }}"  class="nav-link"><span class="nav-emoji">🏋</span> Activités</a>
+        <a href="{{ path('forum') }}"      class="nav-link"><span class="nav-emoji">💬</span> Forum</a>
+        <a href="{{ path('taches') }}"     class="nav-link"><span class="nav-emoji">📚</span> Tâches</a>
+        <a href="{{ path('evenements') }}" class="nav-link"><span class="nav-emoji">📅</span> Événements</a>
+        <a href="{{ path('nutrition') }}"  class="nav-link active"><span class="nav-emoji">🥗</span> Nutrition</a>
+        <a href="{{ path('meditation') }}" class="nav-link"><span class="nav-emoji">🧘</span> Méditation</a>
+        <a href="{{ path('journal') }}"    class="nav-link"><span class="nav-emoji">📔</span> Journal</a>
+        <a href="{{ path('library') }}"    class="nav-link"><span class="nav-emoji">📖</span> Library</a>
+    </nav>
+    <div class="topbar-right">
+        <button class="logout-btn">🚪 Déconnexion</button>
+        <div class="profile-wrap"><div class="avatar">E</div></div>
+    </div>
+</header>
+
+<div class="page-wrap">
+    <h1>{{ mode == 'edit' ? '✏️ Modifier le repas' : '🍽️ Ajouter un Repas' }}</h1>
+
+    <div class="card">
+        <form method="post" novalidate id="consoForm">
+
+            <div class="form-group">
+                <label for="typeRepas">Type de repas *</label>
+                <select id="typeRepas" name="typeRepas"
+                        class="{{ errors.typeRepas is defined ? 'is-invalid' : '' }}" required>
+                    <option value="">-- Choisir --</option>
+                    <option value="petit-dejeuner" {{ consommation.typeRepas == 'petit-dejeuner' ? 'selected' }}>☀️ Petit-déjeuner</option>
+                    <option value="dejeuner"       {{ consommation.typeRepas == 'dejeuner'       ? 'selected' }}>🌤️ Déjeuner</option>
+                    <option value="diner"          {{ consommation.typeRepas == 'diner'          ? 'selected' }}>🌙 Dîner</option>
+                    <option value="snack"          {{ consommation.typeRepas == 'snack'          ? 'selected' }}>🍎 Snack</option>
+                </select>
+                {% if errors.typeRepas is defined %}
+                    <div class="invalid-feedback">{{ errors.typeRepas }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="alimentId">Aliment *</label>
+                <select id="alimentId" name="alimentId"
+                        class="{{ errors.aliment is defined ? 'is-invalid' : '' }}"
+                        onchange="updateKcal()" required>
+                    <option value="">-- Choisir un aliment --</option>
+                    {% for a in aliments %}
+                        <option value="{{ a.id }}"
+                                data-kcal="{{ a.caloriesPour100g }}"
+                                {{ consommation.aliment and consommation.aliment.id == a.id ? 'selected' }}>
+                            {{ a.nomAliment }} ({{ a.caloriesPour100g }} kcal/100g)
+                        </option>
+                    {% endfor %}
+                </select>
+                {% if errors.aliment is defined %}
+                    <div class="invalid-feedback">{{ errors.aliment }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="poidsGrammes">Quantité (grammes) *</label>
+                <input type="number" id="poidsGrammes" name="poidsGrammes"
+                       value="{{ consommation.poidsGrammes }}"
+                       class="{{ errors.poidsGrammes is defined ? 'is-invalid' : '' }}"
+                       placeholder="Ex: 150"
+                       min="1" max="2000" oninput="updateKcal()" required>
+                {% if errors.poidsGrammes is defined %}
+                    <div class="invalid-feedback">{{ errors.poidsGrammes }}</div>
+                {% endif %}
+            </div>
+
+            <!-- Aperçu calories -->
+            <div class="kcal-box" id="kcalBox">
+                <strong id="kcalVal">0</strong> kcal<br>
+                <span>calculé automatiquement</span>
+            </div>
+
+            <div class="form-group">
+                <label for="quantiteEauMl">Eau consommée (ml) — facultatif</label>
+                <input type="number" id="quantiteEauMl" name="quantiteEauMl"
+                       value="{{ consommation.quantiteEauMl }}"
+                       class="{{ errors.quantiteEauMl is defined ? 'is-invalid' : '' }}"
+                       placeholder="Ex: 250"
+                       min="0" max="5000">
+                {% if errors.quantiteEauMl is defined %}
+                    <div class="invalid-feedback">{{ errors.quantiteEauMl }}</div>
+                {% endif %}
+            </div>
+
+            <div class="actions">
+                <button type="submit" class="btn btn-primary">
+                    {{ mode == 'edit' ? '💾 Sauvegarder' : '✅ Enregistrer le repas' }}
+                </button>
+                <a href="{{ path('nutrition') }}" class="btn btn-secondary">❌ Annuler</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function updateKcal() {
+        const sel   = document.getElementById('alimentId');
+        const opt   = sel.options[sel.selectedIndex];
+        const kcal100 = parseFloat(opt?.dataset.kcal || 0);
+        const poids   = parseFloat(document.getElementById('poidsGrammes').value) || 0;
+        const box     = document.getElementById('kcalBox');
+
+        if (kcal100 > 0 && poids > 0) {
+            const total = ((kcal100 * poids) / 100).toFixed(0);
+            document.getElementById('kcalVal').textContent = total;
+            box.style.display = 'block';
+        } else {
+            box.style.display = 'none';
+        }
+    }
+    updateKcal();
+</script>
+{% endblock %}

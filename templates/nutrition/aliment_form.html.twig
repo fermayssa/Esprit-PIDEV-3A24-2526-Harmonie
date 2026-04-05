@@ -1,0 +1,156 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ mode == 'edit' ? 'Modifier' : 'Ajouter' }} un Aliment - Harmony{% endblock %}
+
+{% block stylesheets %}
+<style>
+    body { background: #f5f5f5; font-family: Arial, sans-serif; }
+    .page-wrap { max-width: 600px; margin: 40px auto; padding: 0 20px; }
+    h1 { color: #333; margin-bottom: 25px; }
+    .card { background: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,.08); padding: 30px; }
+    .form-group { margin-bottom: 18px; }
+    label { display: block; font-weight: 600; margin-bottom: 5px; color: #444; font-size: 14px; }
+    input, select {
+        width: 100%; padding: 10px 12px; border: 1px solid #dee2e6; border-radius: 6px;
+        font-size: 14px; outline: none; transition: border-color .2s;
+    }
+    input:focus, select:focus { border-color: #e07b39; box-shadow: 0 0 0 3px rgba(224,123,57,.1); }
+    input.is-invalid, select.is-invalid { border-color: #dc3545; }
+    .invalid-feedback { color: #dc3545; font-size: 12px; margin-top: 4px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .btn { display: inline-flex; align-items: center; gap: 6px; padding: 10px 20px; border-radius: 6px; border: none; cursor: pointer; font-size: 14px; font-weight: 600; text-decoration: none; }
+    .btn-primary   { background: #e07b39; color: #fff; }
+    .btn-secondary { background: #6c757d; color: #fff; }
+    .btn:hover { opacity: .85; }
+    .actions { display: flex; gap: 12px; margin-top: 24px; }
+    .alert { padding: 10px 14px; border-radius: 6px; margin-bottom: 20px; background: #fff3cd; border: 1px solid #ffeeba; color: #856404; }
+</style>
+{% endblock %}
+
+{% block body %}
+{% set current_route = app.request.attributes.get('_route') %}
+<header class="topbar">
+    <a href="{{ path('homepage') }}" class="topbar-logo">
+        <img src="{{ asset('images/logo.png') }}" class="logo-mark" alt="Harmony">
+    </a>
+    <nav class="nav-links">
+        <a href="{{ path('activites') }}" class="nav-link"><span class="nav-emoji">🏋</span> Activités</a>
+        <a href="{{ path('forum') }}"     class="nav-link"><span class="nav-emoji">💬</span> Forum</a>
+        <a href="{{ path('taches') }}"    class="nav-link"><span class="nav-emoji">📚</span> Tâches</a>
+        <a href="{{ path('evenements') }}" class="nav-link"><span class="nav-emoji">📅</span> Événements</a>
+        <a href="{{ path('nutrition') }}" class="nav-link active"><span class="nav-emoji">🥗</span> Nutrition</a>
+        <a href="{{ path('meditation') }}" class="nav-link"><span class="nav-emoji">🧘</span> Méditation</a>
+        <a href="{{ path('journal') }}"   class="nav-link"><span class="nav-emoji">📔</span> Journal</a>
+        <a href="{{ path('library') }}"   class="nav-link"><span class="nav-emoji">📖</span> Library</a>
+    </nav>
+    <div class="topbar-right">
+        <button class="logout-btn">🚪 Déconnexion</button>
+        <div class="profile-wrap"><div class="avatar">E</div></div>
+    </div>
+</header>
+
+<div class="page-wrap">
+    <h1>{{ mode == 'edit' ? '✏️ Modifier l\'aliment' : '🥑 Nouvel Aliment' }}</h1>
+
+    <div class="card">
+        <form method="post" novalidate>
+            <div class="form-group">
+                <label for="nomAliment">Nom de l'aliment *</label>
+                <input type="text" id="nomAliment" name="nomAliment"
+                       value="{{ aliment.nomAliment }}"
+                       class="{{ errors.nomAliment is defined ? 'is-invalid' : '' }}"
+                       placeholder="Ex: Poulet grillé"
+                       maxlength="255" required>
+                {% if errors.nomAliment is defined %}
+                    <div class="invalid-feedback">{{ errors.nomAliment }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="caloriesPour100g">Calories pour 100g *</label>
+                <input type="number" id="caloriesPour100g" name="caloriesPour100g"
+                       value="{{ aliment.caloriesPour100g }}"
+                       class="{{ errors.caloriesPour100g is defined ? 'is-invalid' : '' }}"
+                       placeholder="Ex: 165"
+                       min="0" max="9000" required>
+                {% if errors.caloriesPour100g is defined %}
+                    <div class="invalid-feedback">{{ errors.caloriesPour100g }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="proteines">Protéines (g/100g) *</label>
+                    <input type="number" id="proteines" name="proteines"
+                           value="{{ aliment.proteines }}"
+                           class="{{ errors.proteines is defined ? 'is-invalid' : '' }}"
+                           placeholder="Ex: 31" step="0.1" min="0" max="100" required>
+                    {% if errors.proteines is defined %}
+                        <div class="invalid-feedback">{{ errors.proteines }}</div>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="glucides">Glucides (g/100g) *</label>
+                    <input type="number" id="glucides" name="glucides"
+                           value="{{ aliment.glucides }}"
+                           class="{{ errors.glucides is defined ? 'is-invalid' : '' }}"
+                           placeholder="Ex: 0" step="0.1" min="0" max="100" required>
+                    {% if errors.glucides is defined %}
+                        <div class="invalid-feedback">{{ errors.glucides }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="lipides">Lipides (g/100g) *</label>
+                <input type="number" id="lipides" name="lipides"
+                       value="{{ aliment.lipides }}"
+                       class="{{ errors.lipides is defined ? 'is-invalid' : '' }}"
+                       placeholder="Ex: 3.6" step="0.1" min="0" max="100" required>
+                {% if errors.lipides is defined %}
+                    <div class="invalid-feedback">{{ errors.lipides }}</div>
+                {% endif %}
+            </div>
+
+            <!-- Aperçu -->
+            <div id="preview" style="display:none; background:#fff3e0; border-radius:6px; padding:12px; margin-bottom:12px; font-size:13px; color:#555;">
+                📊 Aperçu : <strong id="prev-nom">—</strong> — <strong id="prev-kcal">0</strong> kcal/100g
+                | P:<strong id="prev-prot">0</strong>g G:<strong id="prev-gluc">0</strong>g L:<strong id="prev-lip">0</strong>g
+            </div>
+
+            <div class="actions">
+                <button type="submit" class="btn btn-primary">
+                    {{ mode == 'edit' ? '💾 Sauvegarder' : '✅ Créer l\'aliment' }}
+                </button>
+                <a href="{{ path('nutrition') }}" class="btn btn-secondary">❌ Annuler</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    const fields = ['nomAliment','caloriesPour100g','proteines','glucides','lipides'];
+    fields.forEach(id => {
+        document.getElementById(id)?.addEventListener('input', updatePreview);
+    });
+
+    function updatePreview() {
+        const nom  = document.getElementById('nomAliment').value;
+        const kcal = document.getElementById('caloriesPour100g').value;
+        const prot = document.getElementById('proteines').value;
+        const gluc = document.getElementById('glucides').value;
+        const lip  = document.getElementById('lipides').value;
+        const prev = document.getElementById('preview');
+        if (nom || kcal) {
+            prev.style.display = 'block';
+            document.getElementById('prev-nom').textContent  = nom  || '—';
+            document.getElementById('prev-kcal').textContent = kcal || '0';
+            document.getElementById('prev-prot').textContent = prot || '0';
+            document.getElementById('prev-gluc').textContent = gluc || '0';
+            document.getElementById('prev-lip').textContent  = lip  || '0';
+        } else {
+            prev.style.display = 'none';
+        }
+    }
+    updatePreview();
+</script>
+{% endblock %}

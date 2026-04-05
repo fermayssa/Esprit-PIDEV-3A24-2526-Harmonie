@@ -1,0 +1,336 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Journal Alimentaire - Harmony{% endblock %}
+
+{% block stylesheets %}
+<style>
+    body { background:#f5f5f5; font-family: Arial, sans-serif; }
+    .page-wrap { max-width: 1100px; margin: 30px auto; padding: 0 20px; }
+    h1 { color: #333; margin-bottom: 5px; }
+    .subtitle { color: #777; margin-bottom: 25px; }
+
+    /* Alerts */
+    .alert { padding: 12px 16px; border-radius: 6px; margin-bottom: 16px; }
+    .alert-success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+    .alert-danger  { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+
+    /* Stats bar */
+    .stats-bar {
+        display: flex; gap: 16px; margin-bottom: 24px; flex-wrap: wrap;
+    }
+    .stat-card {
+        background: #fff; border-radius: 8px; padding: 16px 24px;
+        border-left: 4px solid #e07b39; box-shadow: 0 2px 8px rgba(0,0,0,.08);
+        flex: 1; min-width: 140px; text-align: center;
+    }
+    .stat-card.green  { border-left-color: #28a745; }
+    .stat-card.blue   { border-left-color: #007bff; }
+    .stat-card.orange { border-left-color: #fd7e14; }
+    .stat-val { font-size: 26px; font-weight: bold; color: #333; }
+    .stat-lbl { font-size: 12px; color: #888; text-transform: uppercase; }
+
+    /* Nav tabs */
+    .tabs { display: flex; gap: 0; margin-bottom: 24px; border-bottom: 2px solid #dee2e6; }
+    .tab-btn {
+        padding: 10px 24px; background: none; border: none; border-bottom: 3px solid transparent;
+        margin-bottom: -2px; cursor: pointer; font-size: 15px; color: #555; font-weight: 500;
+        transition: all .2s;
+    }
+    .tab-btn.active { border-bottom-color: #e07b39; color: #e07b39; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* Table */
+    .card { background: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,.08); overflow: hidden; margin-bottom: 24px; }
+    .card-header { padding: 16px 20px; border-bottom: 1px solid #eee; display: flex; align-items: center; justify-content: space-between; }
+    .card-header h2 { margin: 0; font-size: 18px; color: #333; }
+    .card-body { padding: 20px; }
+
+    table { width: 100%; border-collapse: collapse; }
+    th { background: #f8f9fa; padding: 10px 14px; text-align: left; font-size: 12px; text-transform: uppercase; color: #666; border-bottom: 1px solid #dee2e6; }
+    td { padding: 12px 14px; border-bottom: 1px solid #f0f0f0; font-size: 14px; vertical-align: middle; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #fafafa; }
+
+    /* Buttons */
+    .btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 6px; border: none; cursor: pointer; font-size: 14px; font-weight: 500; text-decoration: none; transition: opacity .15s; }
+    .btn:hover { opacity: .85; }
+    .btn-primary   { background: #e07b39; color: #fff; }
+    .btn-success   { background: #28a745; color: #fff; }
+    .btn-warning   { background: #ffc107; color: #333; }
+    .btn-danger    { background: #dc3545; color: #fff; }
+    .btn-secondary { background: #6c757d; color: #fff; }
+    .btn-sm { padding: 5px 10px; font-size: 12px; }
+
+    /* Search bar */
+    .search-bar { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+    .search-bar input, .search-bar select {
+        padding: 8px 12px; border: 1px solid #dee2e6; border-radius: 6px; font-size: 14px; outline: none;
+    }
+    .search-bar input:focus, .search-bar select:focus { border-color: #e07b39; }
+    .search-bar input { flex: 1; min-width: 200px; }
+
+    /* Meal groups */
+    .meal-group { margin-bottom: 20px; }
+    .meal-group-label {
+        font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+        color: #888; margin-bottom: 8px; padding-bottom: 6px; border-bottom: 1px dashed #ddd;
+    }
+    .meal-row {
+        display: flex; align-items: center; gap: 12px; padding: 10px 14px;
+        background: #fff; border: 1px solid #eee; border-radius: 6px; margin-bottom: 6px;
+    }
+    .meal-name { flex: 1; font-weight: 600; color: #333; }
+    .meal-meta { font-size: 13px; color: #888; }
+    .meal-kcal { font-weight: 700; color: #e07b39; min-width: 80px; text-align: right; }
+    .meal-actions { display: flex; gap: 6px; }
+
+    .empty-msg { text-align: center; padding: 30px; color: #aaa; font-size: 14px; }
+
+    /* Badge */
+    .badge { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 600; }
+    .badge-orange { background: #fff0e6; color: #e07b39; }
+    .badge-green  { background: #e6f4ea; color: #28a745; }
+    .badge-blue   { background: #e6f0ff; color: #0056b3; }
+    .badge-purple { background: #f0e6ff; color: #6f42c1; }
+</style>
+{% endblock %}
+
+{% block body %}
+{% set current_route = app.request.attributes.get('_route') %}
+
+<!-- NAVBAR intacte -->
+<header class="topbar">
+    <a href="{{ path('homepage') }}" class="topbar-logo">
+        <img src="{{ asset('images/logo.png') }}" class="logo-mark" alt="Harmony">
+    </a>
+    <nav class="nav-links">
+        <a href="{{ path('activites') }}" class="nav-link {{ current_route starts with 'activite' ? 'active' }}"><span class="nav-emoji">🏋</span> Activités</a>
+        <a href="{{ path('forum') }}"     class="nav-link {{ current_route == 'forum'      ? 'active' }}"><span class="nav-emoji">💬</span> Forum</a>
+        <a href="{{ path('taches') }}"    class="nav-link {{ current_route == 'taches'     ? 'active' }}"><span class="nav-emoji">📚</span> Tâches</a>
+        <a href="{{ path('evenements') }}" class="nav-link {{ current_route == 'evenements' ? 'active' }}"><span class="nav-emoji">📅</span> Événements</a>
+        <a href="{{ path('nutrition') }}" class="nav-link {{ current_route starts with 'nutrition' or current_route starts with 'aliment' or current_route starts with 'consommation' ? 'active' }}"><span class="nav-emoji">🥗</span> Nutrition</a>
+        <a href="{{ path('meditation') }}" class="nav-link {{ current_route == 'meditation' ? 'active' }}"><span class="nav-emoji">🧘</span> Méditation</a>
+        <a href="{{ path('journal') }}"   class="nav-link {{ current_route == 'journal'    ? 'active' }}"><span class="nav-emoji">📔</span> Journal</a>
+        <a href="{{ path('library') }}"   class="nav-link {{ current_route == 'library'    ? 'active' }}"><span class="nav-emoji">📖</span> Library</a>
+    </nav>
+    <div class="topbar-right">
+        <button class="logout-btn">🚪 Déconnexion</button>
+        <div class="profile-wrap">
+            <div class="avatar" id="avatarBtn">E</div>
+            <div class="profile-dropdown" id="profileDropdown">
+                <div class="pd-name">Étudiant</div>
+                <div class="pd-email">email@exemple.com</div>
+                <div class="pd-divider"></div>
+                <div class="pd-hint">Double-clic pour modifier</div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="page-wrap">
+    <h1>🥗 Journal Alimentaire</h1>
+    <p class="subtitle">Gérez vos repas et votre catalogue d'aliments</p>
+
+    <!-- Flash messages -->
+    {% for msg in app.flashes('success') %}
+        <div class="alert alert-success">✅ {{ msg }}</div>
+    {% endfor %}
+    {% for msg in app.flashes('error') %}
+        <div class="alert alert-danger">❌ {{ msg }}</div>
+    {% endfor %}
+
+    <!-- Stats -->
+    <div class="stats-bar">
+        <div class="stat-card orange">
+            <div class="stat-val">{{ totalKcal }}</div>
+            <div class="stat-lbl">kcal aujourd'hui</div>
+        </div>
+        <div class="stat-card green">
+            <div class="stat-val">{{ totalProteines }}g</div>
+            <div class="stat-lbl">Protéines</div>
+        </div>
+        <div class="stat-card blue">
+            <div class="stat-val">{{ totalGlucides }}g</div>
+            <div class="stat-lbl">Glucides</div>
+        </div>
+        <div class="stat-card orange">
+            <div class="stat-val">{{ totalLipides }}g</div>
+            <div class="stat-lbl">Lipides</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-val">{{ consommations|length }}</div>
+            <div class="stat-lbl">Repas enregistrés</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-val">{{ aliments|length }}</div>
+            <div class="stat-lbl">Aliments en base</div>
+        </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('journal', this)">🍽️ Journal du Jour</button>
+        <button class="tab-btn" onclick="switchTab('catalogue', this)">📋 Catalogue Aliments</button>
+    </div>
+
+    <!-- ══ TAB JOURNAL ══ -->
+    <div class="tab-content active" id="tab-journal">
+        <div class="card">
+            <div class="card-header">
+                <h2>Repas d'aujourd'hui</h2>
+                <a href="{{ path('consommation_new') }}" class="btn btn-primary">+ Ajouter un repas</a>
+            </div>
+            <div class="card-body">
+                {% set repasTypes = [
+                    {key: 'petit-dejeuner', label: '☀️ Petit-déjeuner'},
+                    {key: 'dejeuner',       label: '🌤️ Déjeuner'},
+                    {key: 'diner',          label: '🌙 Dîner'},
+                    {key: 'snack',          label: '🍎 Snack'}
+                ] %}
+
+                {% set hasAny = false %}
+                {% for repas in repasTypes %}
+                    {% set items = [] %}
+                    {% for c in consommations %}
+                        {% if c.typeRepas == repas.key %}
+                            {% set items = items|merge([c]) %}
+                            {% set hasAny = true %}
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if items|length > 0 %}
+                        <div class="meal-group">
+                            <div class="meal-group-label">{{ repas.label }}</div>
+                            {% for c in items %}
+                                <div class="meal-row">
+                                    <div class="meal-name">{{ c.aliment.nomAliment }}</div>
+                                    <div class="meal-meta">{{ c.poidsGrammes }}g</div>
+                                    <div class="meal-meta">{{ c.dateConsommation|date('H:i') }}</div>
+                                    <div class="meal-kcal">{{ c.calories }} kcal</div>
+                                    <div class="meal-actions">
+                                        <a href="{{ path('consommation_edit', {id: c.id}) }}" class="btn btn-warning btn-sm">✏️ Modifier</a>
+                                        <a href="{{ path('consommation_delete', {id: c.id}) }}" class="btn btn-danger btn-sm"
+                                           onclick="return confirm('Supprimer ce repas ?')">🗑️ Supprimer</a>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+
+                {% if not hasAny %}
+                    <div class="empty-msg">
+                        Aucun repas enregistré aujourd'hui.<br>
+                        <a href="{{ path('consommation_new') }}" class="btn btn-primary" style="margin-top:12px;">+ Ajouter le premier repas</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- ══ TAB CATALOGUE ══ -->
+    <div class="tab-content" id="tab-catalogue">
+        <div class="card">
+            <div class="card-header">
+                <h2>📋 Catalogue des Aliments</h2>
+                <a href="{{ path('aliment_new') }}" class="btn btn-success">+ Nouvel Aliment</a>
+            </div>
+            <div class="card-body">
+                <!-- Search & sort -->
+                <div class="search-bar">
+                    <input type="text" id="searchAliment" placeholder="🔍 Rechercher un aliment..." oninput="filterTable()">
+                    <select id="sortAliment" onchange="filterTable()">
+                        <option value="">Trier par…</option>
+                        <option value="name-asc">Nom A→Z</option>
+                        <option value="name-desc">Nom Z→A</option>
+                        <option value="kcal-desc">Calories ↓</option>
+                        <option value="kcal-asc">Calories ↑</option>
+                        <option value="prot-desc">Protéines ↓</option>
+                    </select>
+                </div>
+
+                {% if aliments|length > 0 %}
+                <table id="alimentTable">
+                    <thead>
+                        <tr>
+                            <th>Nom</th>
+                            <th>Calories/100g</th>
+                            <th>Protéines</th>
+                            <th>Glucides</th>
+                            <th>Lipides</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="alimentBody">
+                        {% for a in aliments %}
+                        <tr data-name="{{ a.nomAliment|lower }}"
+                            data-kcal="{{ a.caloriesPour100g }}"
+                            data-prot="{{ a.proteines }}">
+                            <td><strong>{{ a.nomAliment }}</strong></td>
+                            <td><span class="badge badge-orange">{{ a.caloriesPour100g }} kcal</span></td>
+                            <td>{{ a.proteines }}g</td>
+                            <td>{{ a.glucides }}g</td>
+                            <td>{{ a.lipides }}g</td>
+                            <td>
+                                <a href="{{ path('aliment_edit', {id: a.id}) }}" class="btn btn-warning btn-sm">✏️ Modifier</a>
+                                <a href="{{ path('aliment_delete', {id: a.id}) }}" class="btn btn-danger btn-sm"
+                                   onclick="return confirm('Supprimer « {{ a.nomAliment }} » ?')">🗑️ Supprimer</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                    <div class="empty-msg">
+                        Aucun aliment enregistré.<br>
+                        <a href="{{ path('aliment_new') }}" class="btn btn-success" style="margin-top:12px;">+ Créer le premier aliment</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Tabs
+    function switchTab(id, btn) {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('tab-' + id).classList.add('active');
+    }
+
+    // Search + sort aliments
+    function filterTable() {
+        const q    = document.getElementById('searchAliment').value.toLowerCase();
+        const sort = document.getElementById('sortAliment').value;
+        const tbody = document.getElementById('alimentBody');
+        if (!tbody) return;
+        const rows = Array.from(tbody.querySelectorAll('tr'));
+
+        rows.forEach(r => {
+            r.style.display = r.dataset.name.includes(q) ? '' : 'none';
+        });
+
+        if (sort) {
+            const visible = rows.filter(r => r.style.display !== 'none');
+            visible.sort((a, b) => {
+                if (sort === 'name-asc')  return a.dataset.name.localeCompare(b.dataset.name);
+                if (sort === 'name-desc') return b.dataset.name.localeCompare(a.dataset.name);
+                if (sort === 'kcal-desc') return parseFloat(b.dataset.kcal) - parseFloat(a.dataset.kcal);
+                if (sort === 'kcal-asc')  return parseFloat(a.dataset.kcal) - parseFloat(b.dataset.kcal);
+                if (sort === 'prot-desc') return parseFloat(b.dataset.prot) - parseFloat(a.dataset.prot);
+                return 0;
+            });
+            visible.forEach(r => tbody.appendChild(r));
+        }
+    }
+
+    // Profile dropdown
+    const ab = document.getElementById('avatarBtn');
+    const pd = document.getElementById('profileDropdown');
+    if (ab) ab.addEventListener('click', e => { e.stopPropagation(); pd.classList.toggle('open'); });
+    document.addEventListener('click', () => pd && pd.classList.remove('open'));
+</script>
+{% endblock %}

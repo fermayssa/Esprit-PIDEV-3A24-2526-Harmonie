@@ -1,0 +1,386 @@
+{% extends 'base.html.twig' %}
+{% block title %}Journal d'Exercices - Harmony{% endblock %}
+
+{% block stylesheets %}
+<style>
+    body { background: #f5f5f5; font-family: Arial, sans-serif; }
+    .page-wrap { max-width: 1100px; margin: 30px auto; padding: 0 20px; }
+    h1 { color: #333; margin-bottom: 5px; }
+    .subtitle { color: #777; margin-bottom: 25px; }
+
+    .alert { padding: 12px 16px; border-radius: 6px; margin-bottom: 16px; }
+    .alert-success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+    .alert-danger  { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+
+    .stats-bar { display: flex; gap: 16px; margin-bottom: 24px; flex-wrap: wrap; }
+    .stat-card {
+        background: #fff; border-radius: 8px; padding: 16px 24px;
+        border-left: 4px solid #dc3545; box-shadow: 0 2px 8px rgba(0,0,0,.08);
+        flex: 1; min-width: 140px; text-align: center;
+    }
+    .stat-card.amber { border-left-color: #ffc107; }
+    .stat-card.teal  { border-left-color: #20c997; }
+    .stat-card.blue  { border-left-color: #007bff; }
+    .stat-val { font-size: 26px; font-weight: bold; color: #333; }
+    .stat-lbl { font-size: 12px; color: #888; text-transform: uppercase; }
+
+    .tabs { display: flex; gap: 0; margin-bottom: 24px; border-bottom: 2px solid #dee2e6; }
+    .tab-btn {
+        padding: 10px 24px; background: none; border: none; border-bottom: 3px solid transparent;
+        margin-bottom: -2px; cursor: pointer; font-size: 15px; color: #555; font-weight: 500;
+    }
+    .tab-btn.active { border-bottom-color: #dc3545; color: #dc3545; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    .card { background: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,.08); overflow: hidden; margin-bottom: 24px; }
+    .card-header { padding: 16px 20px; border-bottom: 1px solid #eee; display: flex; align-items: center; justify-content: space-between; }
+    .card-header h2 { margin: 0; font-size: 18px; color: #333; }
+    .card-body { padding: 0; }
+
+    table { width: 100%; border-collapse: collapse; }
+    th { background: #f8f9fa; padding: 10px 16px; text-align: left; font-size: 12px; text-transform: uppercase; color: #666; border-bottom: 1px solid #dee2e6; }
+    td { padding: 12px 16px; border-bottom: 1px solid #f0f0f0; font-size: 14px; vertical-align: middle; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #fafafa; }
+
+    .btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 6px; border: none; cursor: pointer; font-size: 14px; font-weight: 500; text-decoration: none; transition: opacity .15s; }
+    .btn:hover { opacity: .85; }
+    .btn-primary   { background: #dc3545; color: #fff; }
+    .btn-success   { background: #28a745; color: #fff; }
+    .btn-warning   { background: #ffc107; color: #333; }
+    .btn-danger    { background: #dc3545; color: #fff; }
+    .btn-secondary { background: #6c757d; color: #fff; }
+    .btn-sm { padding: 5px 10px; font-size: 12px; }
+
+    .search-bar { display: flex; gap: 10px; padding: 14px 20px; border-bottom: 1px solid #eee; flex-wrap: wrap; }
+    .search-bar input, .search-bar select {
+        padding: 8px 12px; border: 1px solid #dee2e6; border-radius: 6px; font-size: 14px; outline: none;
+    }
+    .search-bar input:focus, .search-bar select:focus { border-color: #dc3545; }
+    .search-bar input { flex: 1; min-width: 200px; }
+
+    .badge { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 600; }
+    .badge-red    { background: #fde8e8; color: #dc3545; }
+    .badge-amber  { background: #fff8e1; color: #e07b00; }
+    .badge-teal   { background: #e0f7f4; color: #20c997; }
+    .badge-blue   { background: #e6f0ff; color: #0056b3; }
+    .badge-purple { background: #f3e8ff; color: #6f42c1; }
+    .badge-gray   { background: #f0f0f0; color: #555; }
+
+    .video-link { color: #dc3545; text-decoration: none; font-size: 12px; }
+    .video-link:hover { text-decoration: underline; }
+
+    .empty-msg { text-align: center; padding: 40px; color: #aaa; font-size: 14px; }
+</style>
+{% endblock %}
+
+{% block body %}
+{% set current_route = app.request.attributes.get('_route') %}
+
+<header class="topbar">
+    <a href="{{ path('homepage') }}" class="topbar-logo">
+        <img src="{{ asset('images/logo.png') }}" class="logo-mark" alt="Harmony">
+    </a>
+    <nav class="nav-links">
+        <a href="{{ path('activites') }}" class="nav-link {{ current_route starts with 'activite' or current_route starts with 'exercice' ? 'active' }}"><span class="nav-emoji">🏋</span> Activités</a>
+        <a href="{{ path('forum') }}"     class="nav-link {{ current_route == 'forum'      ? 'active' }}"><span class="nav-emoji">💬</span> Forum</a>
+        <a href="{{ path('taches') }}"    class="nav-link {{ current_route == 'taches'     ? 'active' }}"><span class="nav-emoji">📚</span> Tâches</a>
+        <a href="{{ path('evenements') }}" class="nav-link {{ current_route == 'evenements' ? 'active' }}"><span class="nav-emoji">📅</span> Événements</a>
+        <a href="{{ path('nutrition') }}" class="nav-link {{ current_route starts with 'nutrition' or current_route starts with 'aliment' or current_route starts with 'consommation' ? 'active' }}"><span class="nav-emoji">🥗</span> Nutrition</a>
+        <a href="{{ path('meditation') }}" class="nav-link {{ current_route == 'meditation' ? 'active' }}"><span class="nav-emoji">🧘</span> Méditation</a>
+        <a href="{{ path('journal') }}"   class="nav-link {{ current_route == 'journal'    ? 'active' }}"><span class="nav-emoji">📔</span> Journal</a>
+        <a href="{{ path('library') }}"   class="nav-link {{ current_route == 'library'    ? 'active' }}"><span class="nav-emoji">📖</span> Library</a>
+    </nav>
+    <div class="topbar-right">
+        <button class="logout-btn">🚪 Déconnexion</button>
+        <div class="profile-wrap">
+            <div class="avatar" id="avatarBtn">E</div>
+            <div class="profile-dropdown" id="profileDropdown">
+                <div class="pd-name">Étudiant</div>
+                <div class="pd-email">email@exemple.com</div>
+                <div class="pd-divider"></div>
+                <div class="pd-hint">Double-clic pour modifier</div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="page-wrap">
+    <h1>🏋️ Journal d'Exercices</h1>
+    <p class="subtitle">Suivez vos séances et gérez votre bibliothèque d'exercices</p>
+
+    {% for msg in app.flashes('success') %}
+        <div class="alert alert-success">✅ {{ msg }}</div>
+    {% endfor %}
+    {% for msg in app.flashes('error') %}
+        <div class="alert alert-danger">❌ {{ msg }}</div>
+    {% endfor %}
+
+    <!-- Stats -->
+    <div class="stats-bar">
+        <div class="stat-card">
+            <div class="stat-val">{{ totalCaloriesBrulees }}</div>
+            <div class="stat-lbl">kcal brûlées</div>
+        </div>
+        <div class="stat-card amber">
+            <div class="stat-val">{{ totalMinutes }}</div>
+            <div class="stat-lbl">minutes d'effort</div>
+        </div>
+        <div class="stat-card teal">
+            <div class="stat-val">{{ activites|length }}</div>
+            <div class="stat-lbl">séances totales</div>
+        </div>
+        <div class="stat-card blue">
+            <div class="stat-val">{{ exercices|length }}</div>
+            <div class="stat-lbl">exercices en base</div>
+        </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('seances', this)">🏃 Historique Séances</button>
+        <button class="tab-btn" onclick="switchTab('exercices', this)">📚 Bibliothèque Exercices</button>
+    </div>
+
+    <!-- ══ TAB SÉANCES ══ -->
+    <div class="tab-content active" id="tab-seances">
+        <div class="card">
+            <div class="card-header">
+                <h2>Historique des Séances</h2>
+                <a href="{{ path('activite_new') }}" class="btn btn-primary">+ Nouvelle Séance</a>
+            </div>
+
+            <div class="search-bar">
+                <input type="text" id="searchSeance" placeholder="🔍 Rechercher..." oninput="filterSeances()">
+                <select id="sortSeance" onchange="filterSeances()">
+                    <option value="">Trier par…</option>
+                    <option value="date-desc">Date récente</option>
+                    <option value="date-asc">Date ancienne</option>
+                    <option value="kcal-desc">Calories ↓</option>
+                    <option value="time-desc">Durée ↓</option>
+                </select>
+                <select id="filterType" onchange="filterSeances()">
+                    <option value="">Tous types</option>
+                    <option value="cardio">Cardio</option>
+                    <option value="musculation">Musculation</option>
+                    <option value="yoga">Yoga</option>
+                    <option value="sport">Sport</option>
+                    <option value="autre">Autre</option>
+                </select>
+            </div>
+
+            <div class="card-body">
+                {% if activites|length > 0 %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Exercice</th>
+                            <th>Type</th>
+                            <th>Durée</th>
+                            <th>Calories</th>
+                            <th>Séries × Rép.</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="seancesBody">
+                        {% for a in activites %}
+                        <tr data-name="{{ a.exercice.nomExercice|lower }}"
+                            data-type="{{ a.exercice.typeExercice|lower }}"
+                            data-kcal="{{ a.caloriesBrulees }}"
+                            data-time="{{ a.dureeMinutes }}"
+                            data-date="{{ a.dateActivite|date('Y-m-d') }}">
+                            <td>{{ loop.index }}</td>
+                            <td><strong>{{ a.exercice.nomExercice }}</strong></td>
+                            <td>
+                                {% set typeClass = {
+                                    'Cardio': 'badge-red',
+                                    'Musculation': 'badge-amber',
+                                    'Yoga': 'badge-teal',
+                                    'Sport': 'badge-blue',
+                                    'Autre': 'badge-gray'
+                                } %}
+                                <span class="badge {{ typeClass[a.exercice.typeExercice] ?? 'badge-gray' }}">
+                                    {{ a.exercice.typeExercice }}
+                                </span>
+                            </td>
+                            <td>⏱ {{ a.dureeMinutes }} min</td>
+                            <td><strong style="color:#dc3545;">{{ a.caloriesBrulees }} kcal</strong></td>
+                            <td>
+                                {% if a.nbSeries %}
+                                    {{ a.nbSeries }} × {{ a.nbRepetitions ?? '?' }}
+                                {% else %}
+                                    <span style="color:#ccc;">—</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ a.dateActivite|date('d/m/Y') }}</td>
+                            <td>
+                                <a href="{{ path('activite_edit', {id: a.id}) }}" class="btn btn-warning btn-sm">✏️</a>
+                                <a href="{{ path('activite_delete', {id: a.id}) }}" class="btn btn-danger btn-sm"
+                                   onclick="return confirm('Supprimer cette séance ?')">🗑️</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                    <div class="empty-msg">
+                        Aucune séance enregistrée.<br>
+                        <a href="{{ path('activite_new') }}" class="btn btn-primary" style="margin-top:12px;">+ Créer ma première séance</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- ══ TAB EXERCICES ══ -->
+    <div class="tab-content" id="tab-exercices">
+        <div class="card">
+            <div class="card-header">
+                <h2>📚 Bibliothèque d'Exercices</h2>
+                <a href="{{ path('exercice_new') }}" class="btn btn-success">+ Ajouter un Exercice</a>
+            </div>
+
+            <div class="search-bar">
+                <input type="text" id="searchEx" placeholder="🔍 Rechercher..." oninput="filterExercices()">
+                <select id="sortEx" onchange="filterExercices()">
+                    <option value="">Trier par…</option>
+                    <option value="name-asc">Nom A→Z</option>
+                    <option value="name-desc">Nom Z→A</option>
+                    <option value="type">Par type</option>
+                </select>
+                <select id="filterExType" onchange="filterExercices()">
+                    <option value="">Tous types</option>
+                    <option value="cardio">Cardio</option>
+                    <option value="musculation">Musculation</option>
+                    <option value="yoga">Yoga</option>
+                    <option value="sport">Sport</option>
+                    <option value="autre">Autre</option>
+                </select>
+            </div>
+
+            <div class="card-body">
+                {% if exercices|length > 0 %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Nom</th>
+                            <th>Type</th>
+                            <th>Vidéo</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="exercicesBody">
+                        {% for e in exercices %}
+                        <tr data-name="{{ e.nomExercice|lower }}" data-type="{{ e.typeExercice|lower }}">
+                            <td>{{ loop.index }}</td>
+                            <td><strong>{{ e.nomExercice }}</strong></td>
+                            <td>
+                                {% set typeClass = {
+                                    'Cardio': 'badge-red',
+                                    'Musculation': 'badge-amber',
+                                    'Yoga': 'badge-teal',
+                                    'Sport': 'badge-blue',
+                                    'Autre': 'badge-gray'
+                                } %}
+                                <span class="badge {{ typeClass[e.typeExercice] ?? 'badge-gray' }}">
+                                    {{ e.typeExercice }}
+                                </span>
+                            </td>
+                            <td>
+                                {% if e.videoExercice %}
+                                    <a href="{{ e.videoExercice }}" target="_blank" class="video-link">▶ Voir la vidéo</a>
+                                {% else %}
+                                    <span style="color:#ccc;">—</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="{{ path('exercice_edit', {id: e.id}) }}" class="btn btn-warning btn-sm">✏️ Modifier</a>
+                                <a href="{{ path('exercice_delete', {id: e.id}) }}" class="btn btn-danger btn-sm"
+                                   onclick="return confirm('Supprimer « {{ e.nomExercice }} » ?')">🗑️ Supprimer</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                    <div class="empty-msg">
+                        Aucun exercice enregistré.<br>
+                        <a href="{{ path('exercice_new') }}" class="btn btn-success" style="margin-top:12px;">+ Créer le premier exercice</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function switchTab(id, btn) {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('tab-' + id).classList.add('active');
+    }
+
+    function filterSeances() {
+        const q    = document.getElementById('searchSeance').value.toLowerCase();
+        const sort = document.getElementById('sortSeance').value;
+        const type = document.getElementById('filterType').value.toLowerCase();
+        const tbody = document.getElementById('seancesBody');
+        if (!tbody) return;
+        const rows = Array.from(tbody.querySelectorAll('tr'));
+
+        rows.forEach(r => {
+            const nm = r.dataset.name.includes(q);
+            const tp = !type || r.dataset.type.includes(type);
+            r.style.display = (nm && tp) ? '' : 'none';
+        });
+
+        if (sort) {
+            const visible = rows.filter(r => r.style.display !== 'none');
+            visible.sort((a, b) => {
+                if (sort === 'date-desc') return b.dataset.date.localeCompare(a.dataset.date);
+                if (sort === 'date-asc')  return a.dataset.date.localeCompare(b.dataset.date);
+                if (sort === 'kcal-desc') return parseFloat(b.dataset.kcal) - parseFloat(a.dataset.kcal);
+                if (sort === 'time-desc') return parseFloat(b.dataset.time) - parseFloat(a.dataset.time);
+                return 0;
+            });
+            visible.forEach(r => tbody.appendChild(r));
+        }
+    }
+
+    function filterExercices() {
+        const q    = document.getElementById('searchEx').value.toLowerCase();
+        const sort = document.getElementById('sortEx').value;
+        const type = document.getElementById('filterExType').value.toLowerCase();
+        const tbody = document.getElementById('exercicesBody');
+        if (!tbody) return;
+        const rows = Array.from(tbody.querySelectorAll('tr'));
+
+        rows.forEach(r => {
+            const nm = r.dataset.name.includes(q);
+            const tp = !type || r.dataset.type.includes(type);
+            r.style.display = (nm && tp) ? '' : 'none';
+        });
+
+        if (sort) {
+            const visible = rows.filter(r => r.style.display !== 'none');
+            visible.sort((a, b) => {
+                if (sort === 'name-asc')  return a.dataset.name.localeCompare(b.dataset.name);
+                if (sort === 'name-desc') return b.dataset.name.localeCompare(a.dataset.name);
+                if (sort === 'type')      return a.dataset.type.localeCompare(b.dataset.type);
+                return 0;
+            });
+            visible.forEach(r => tbody.appendChild(r));
+        }
+    }
+
+    const ab = document.getElementById('avatarBtn');
+    const pd = document.getElementById('profileDropdown');
+    if (ab) ab.addEventListener('click', e => { e.stopPropagation(); pd.classList.toggle('open'); });
+    document.addEventListener('click', () => pd && pd.classList.remove('open'));
+</script>
+{% endblock %}
