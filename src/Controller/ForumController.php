@@ -97,7 +97,7 @@ class ForumController extends AbstractController
     // ════════════════════════════════════════════════
     //  POSTS — avec recherche 
     // ════════════════════════════════════════════════
-    
+
     #[Route('/forum/categorie/{id}', name: 'forum_posts')]
     public function posts(int $id, Request $request, EntityManagerInterface $em): Response
     {
@@ -122,6 +122,15 @@ class ForumController extends AbstractController
             $qb->andWhere('p.titre LIKE :s OR p.contenu LIKE :s')
                ->setParameter('s', '%' . $search . '%');
         }
+        
+        // Tri
+        match($tri) {
+            'date_asc'  => $qb->orderBy('p.dateCreation', 'ASC'),
+            'likes'     => $qb->orderBy('p.dateCreation', 'DESC'), // likes géré après
+            default     => $qb->orderBy('p.dateCreation', 'DESC'),
+        };
+
+        $allPosts = $qb->getQuery()->getResult();
 
 
     // ════════════════════════════════════════════════
