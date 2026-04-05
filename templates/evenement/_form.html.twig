@@ -1,43 +1,94 @@
-{% form_theme form 'form/evenement_choice_layout.html.twig' 'form_div_layout.html.twig' %}
+{% form_theme form 'form_div_layout.html.twig' %}
 
-{% macro harmony_field(field) %}
-    <div class="harmony-field{% if field.vars.errors|length %} has-error{% endif %}">
-        {{ form_label(field) }}
-        {{ form_widget(field) }}
-        {{ form_errors(field) }}
+<form method="POST" class="evenement-form" data-api-salles="{{ path('app_evenement_salles_api') }}">
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+
+    <div class="mb-3">
+        {{ form_label(form.titre) }}
+        {{ form_widget(form.titre) }}
+        {{ form_errors(form.titre) }}
     </div>
-{% endmacro %}
-{% import _self as hf %}
 
-{{ form_start(form, { attr: { class: 'harmony-form' } }) }}
+    <div class="mb-3">
+        {{ form_label(form.dateDebut) }}
+        {{ form_widget(form.dateDebut) }}
+        {{ form_errors(form.dateDebut) }}
+    </div>
+
+    <div class="mb-3">
+        {{ form_label(form.dateFin) }}
+        {{ form_widget(form.dateFin) }}
+        {{ form_errors(form.dateFin) }}
+    </div>
+
+    <div class="mb-3">
+        {{ form_label(form.eventType) }}
+        {{ form_widget(form.eventType) }}
+        {{ form_errors(form.eventType) }}
+    </div>
+
+    <!-- Conteneur pour les boutons Présentiel/En ligne : apparaît si Cours ou Réunion -->
+    <div class="js-lieu-buttons-container" style="display: none;">
+        <div class="mb-3">
+            <label class="form-label">Mode</label>
+            <div class="btn-group" role="group">
+                {% set lieuTypeValue = form.lieuType.vars.data %}
+                <input type="radio" class="btn-check js-lieu-button" id="lieu_presentiel" name="evenement[lieuType]" value="presentiel" {% if lieuTypeValue == 'presentiel' %}checked{% endif %}>
+                <label class="btn btn-outline-primary" for="lieu_presentiel">Présentiel</label>
+
+                <input type="radio" class="btn-check js-lieu-button" id="lieu_enligne" name="evenement[lieuType]" value="en_ligne" {% if lieuTypeValue == 'en_ligne' %}checked{% endif %}>
+                <label class="btn btn-outline-primary" for="lieu_enligne">En ligne</label>
+            </div>
+        </div>
+        {{ form_errors(form.lieuType) }}
+    </div>
+
+    <!-- Conteneur pour le champ "Où ?" libre : apparaît si Loisir ou Autre -->
+    <div class="js-lieu-free-container" style="display: none;">
+        <div class="mb-3">
+            {{ form_label(form.lieuAdresse) }}
+            {{ form_widget(form.lieuAdresse) }}
+            {{ form_errors(form.lieuAdresse) }}
+        </div>
+    </div>
+
+    <!-- Conteneur pour le champ "Où ?" et le select salle : apparaît si Cours/Réunion + Présentiel -->
+    <div class="js-lieu-presentiel-container" style="display: none;">
+        <div class="mb-3">
+            <label class="form-label">Où ?</label>
+            <input 
+                type="text" 
+                class="form-control js-lieu-adresse" 
+                name="evenement[lieuAdresse]" 
+                placeholder="Adresse, campus, ou tapez &quot;esprit&quot; pour les salles…"
+                data-toggle-salles="true"
+            >
+        </div>
+
+        <!-- Select des salles : apparaît si l'input contient "esprit" -->
+        <div class="js-salle-select-container" style="display: none;">
+            <div class="mb-3">
+                {{ form_label(form.salle) }}
+                {{ form_widget(form.salle) }}
+                {{ form_errors(form.salle) }}
+            </div>
+        </div>
+    </div>
+
     {{ form_errors(form) }}
 
-    <div class="harmony-form-section">
-        <h2 class="harmony-form-section-title">Informations principales</h2>
-        {{ hf.harmony_field(form.titre) }}
-        {{ hf.harmony_field(form.description) }}
-        {{ hf.harmony_field(form.dateDebut) }}
-        {{ hf.harmony_field(form.dateFin) }}
-        {{ hf.harmony_field(form.eventType) }}
-        <div class="harmony-event-type-icon-wrap" aria-hidden="true">
-            <span class="js-event-type-icon harmony-type-icon" style="font-size:1.75rem;display:block;margin:-4px 0 12px;"></span>
-        </div>
-        {{ hf.harmony_field(form.lieuType) }}
-        <div class="js-evenement-presentiel-zone harmony-presentiel-zone" aria-hidden="true">
-            {{ hf.harmony_field(form.lieuAdresse) }}
-            {{ hf.harmony_field(form.salle) }}
-        </div>
+    <div class="d-grid gap-2">
+        {{ form_widget(form.submit, {'attr': {'class': 'btn btn-primary btn-lg'}}) }}
     </div>
 
-    <details class="harmony-form-details">
-        <summary>Options complémentaires</summary>
-        <div class="harmony-form-section-inner">
-            {{ hf.harmony_field(form.priorite) }}
-            {{ form_row(form.rappelActif) }}
-        </div>
-    </details>
+    <!-- Champs restants non rendus (lieuType, etc.) -->
+    {% for child in form %}
+        {% if not child.rendered and child.vars.name != 'submit' %}
+            <input type="hidden" name="{{ child.vars.name }}" value="{{ child.vars.data }}">
+        {% endif %}
+    {% endfor %}
 
-    {{ form_row(form.submit) }}
-{{ form_end(form) }}
+    {{ form_end(form) }}
+</form>
 
-<script src="{{ asset('harmonie/js/evenement-lieu.js') }}"></script>
+<script src="{{ asset('harmonie/js/evenement-form.js') }}"></script>

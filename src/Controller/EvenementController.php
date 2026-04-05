@@ -7,6 +7,7 @@ use App\Entity\User;
 use App\Form\EvenementType;
 use App\Repository\CalendrierRepository;
 use App\Repository\EvenementRepository;
+use App\Repository\SalleRepository;
 use App\Service\Domain\PlanningDomainService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -22,6 +23,23 @@ final class EvenementController extends AbstractController
     public function __construct(
         private readonly HttpClientInterface $httpClient,
     ) {
+    }
+
+    #[Route('/salles-api', name: 'app_evenement_salles_api', methods: ['GET'])]
+    public function sallesApi(SalleRepository $salleRepository): JsonResponse
+    {
+        $salles = $salleRepository->findBy(['disponible' => true], ['nom' => 'ASC']);
+        $data = [];
+        foreach ($salles as $salle) {
+            $data[] = [
+                'id' => $salle->getId(),
+                'nom' => $salle->getNom(),
+                'capacite' => $salle->getCapacite(),
+                'label' => $salle->getNom().' · '.$salle->getCapacite().' pers.',
+            ];
+        }
+
+        return new JsonResponse($data);
     }
 
     #[Route(name: 'app_evenement_index', methods: ['GET'])]
