@@ -156,6 +156,27 @@ class ForumController extends AbstractController
         $page      = min($page, $totalPages);
         $posts     = array_slice($allPosts, ($page - 1) * $perPage, $perPage);
 
+         // ── Commentaires pour les posts affichés ──
+        $commentairesMap = [];
+        foreach ($posts as $post) {
+            $commentairesMap[$post->getIdPost()] = $em->getRepository(Commentaire::class)
+                ->findBy(['idPost' => $post->getIdPost()], ['dateCommentaire' => 'ASC']);
+        }
+
+        return $this->render('forum/posts.html.twig', [
+            'categorie'       => $categorie,
+            'posts'           => $posts,
+            'commentairesMap' => $commentairesMap,
+            'likesMap'        => $likesMap,
+            'likedByMe'       => $likedByMe,
+            'search'          => $search,
+            'tri'             => $tri,
+            'page'            => $page,
+            'totalPages'      => $totalPages,
+            'total'           => $total,
+        ]);
+    }
+
 
 
 
