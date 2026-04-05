@@ -123,6 +123,16 @@
             <a href="{{ path('admin_meditation_index') }}" class="sidebar-link {% if 'admin_meditation' in app.request.attributes.get('_route') or 'admin_conseil' in app.request.attributes.get('_route') %}active{% endif %}">
                 <span class="s-icon">🧘</span> Sessions
             </a>
+            <div class="sidebar-section" style="margin-top:8px;">Forum</div>
+            <a href="{{ path('back_dashboard') }}"
+             class="sidebar-link {{ app.request.attributes.get('_route') == 'back_dashboard' ? 'active' }}">
+                <span class="s-icon">🏠</span> Back Forum
+            </a>
+            <a href="{{ path('back_categories') }}"
+                class="sidebar-link {{ app.request.attributes.get('_route') starts with 'back_categor' ? 'active' }}">
+                <span class="s-icon">🗂️</span> Catégories
+            </a>
+           
         </nav>
 
         <div class="sidebar-bottom">
