@@ -3,10 +3,13 @@
 namespace App\Service\Domain;
 
 use App\Entity\Calendrier;
+use App\Entity\DemandeReservation;
 use App\Entity\Evenement;
 use App\Entity\Salle;
 use App\Entity\Seance;
 use App\Entity\Tache;
+use App\Entity\User;
+use App\Repository\DemandeReservationRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -17,6 +20,7 @@ final class PlanningDomainService
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly ValidatorInterface $validator,
+        private readonly DemandeReservationRepository $demandeReservationRepository,
     ) {
     }
 
@@ -43,15 +47,63 @@ final class PlanningDomainService
         $this->persistAndFlush($seance);
     }
 
-    public function saveEvenement(Evenement $evenement): void
+    public function saveEvenement(Evenement $evenement, ?User $demandeur = null): void
     {
         $debut = $evenement->getDateDebut();
         $fin = $evenement->getDateFin();
         if ($debut && $fin && $fin < $debut) {
             throw new \DomainException('La date de fin doit être postérieure à la date de début.');
         }
+        $this->syncEvenementChamps($evenement);
         $this->validateEntity($evenement);
-        $this->persistAndFlush($evenement);
+        $this->entityManager->persist($evenement);
+        $this->entityManager->flush();
+
+        $reserver = $demandeur ?? $evenement->getProprietaire();
+        if ($reserver instanceof User
+            && 'presentiel' === $evenement->getLieuType()
+            && $evenement->getSalle()
+        ) {
+            $pending = $this->demandeReservationRepository->countPendingForEvenementAndSalle(
+                $evenement,
+                $evenement->getSalle(),
+            );
+            if (0 === $pending) {
+                $d = new DemandeReservation();
+                $d->setEvenement($evenement);
+                $d->setSalle($evenement->getSalle());
+                $d->setUtilisateur($reserver);
+                $d->setStatut(DemandeReservation::STATUT_EN_ATTENTE);
+                $d->setDateDemande(new \DateTimeImmutable());
+                $evenement->addDemandeReservation($d);
+                $evenement->setStatutDemandeSalle('EN_ATTENTE');
+                $this->entityManager->persist($d);
+                $this->entityManager->flush();
+            }
+        }
+    }
+
+    private function syncEvenementChamps(Evenement $e): void
+    {
+        $map = ['cours' => 'COURS', 'reunion' => 'REUNION', 'loisir' => 'LOISIR', 'autre' => 'AUTRE'];
+        $et = $e->getEventType();
+        if ($et && isset($map[$et])) {
+            $e->setTypeEvenement($map[$et]);
+        }
+        if ('en_ligne' === $e->getLieuType()) {
+            $e->setSalle(null);
+            $e->setLieuAdresse(null);
+            $e->setLieu('En ligne');
+
+            return;
+        }
+        if ('presentiel' === $e->getLieuType()) {
+            if ($e->getSalle()) {
+                $e->setLieu($e->getSalle()->getNom());
+            } elseif ($e->getLieuAdresse()) {
+                $e->setLieu($e->getLieuAdresse());
+            }
+        }
     }
 
     public function saveTache(Tache $tache): void

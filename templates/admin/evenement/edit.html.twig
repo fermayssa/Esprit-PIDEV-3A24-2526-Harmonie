@@ -1,0 +1,20 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Modifier événement — Admin{% endblock %}
+
+{% block stylesheets %}
+    <link href="{{ asset('harmonie/css/harmony-forms.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+<div class="admin-topbar">
+    <h1 class="admin-page-title">Modifier l’événement</h1>
+    <a href="{{ path('admin_evenement_index') }}" class="admin-btn admin-btn-ghost">Retour</a>
+</div>
+<div class="admin-card">
+    {{ form_start(form, { attr: { class: 'harmony-form' } }) }}
+        {{ form_widget(form) }}
+    {{ form_end(form) }}
+</div>
+<script src="{{ asset('harmonie/js/evenement-lieu.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,84 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Tâches — Admin{% endblock %}
+
+{% block stylesheets %}
+    <link href="{{ asset('harmonie/css/harmony-forms.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+<div class="admin-topbar">
+    <h1 class="admin-page-title">Tâches</h1>
+    <a href="{{ path('admin_tache_new') }}" class="admin-btn admin-btn-primary">Ajouter une tâche</a>
+</div>
+
+<div class="admin-card">
+    <form class="admin-filters" method="get" action="{{ path('admin_tache_index') }}">
+        <label>Statut
+            <select name="statut">
+                <option value="">Tous</option>
+                <option value="A_FAIRE" {{ statutFiltre == 'A_FAIRE' ? 'selected' }}>TODO</option>
+                <option value="EN_COURS" {{ statutFiltre == 'EN_COURS' ? 'selected' }}>DOING</option>
+                <option value="TERMINEE" {{ statutFiltre == 'TERMINEE' ? 'selected' }}>DONE</option>
+            </select>
+        </label>
+        <label>Calendrier
+            <select name="calendrier">
+                <option value="">Tous</option>
+                {% for c in calendriers %}
+                    <option value="{{ c.id }}" {{ calendrierId == c.id ? 'selected' }}>Calendrier #{{ c.id }}</option>
+                {% endfor %}
+            </select>
+        </label>
+        <button type="submit" class="admin-btn admin-btn-primary">Filtrer</button>
+    </form>
+
+    <div class="admin-table-wrap">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Statut</th>
+                    <th>Deadline</th>
+                    <th>Assigné</th>
+                    <th>Notes</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for t in taches %}
+                    <tr>
+                        <td>{{ t.nom }}</td>
+                        <td>{{ t.statutTache }}</td>
+                        <td>{{ t.deadline ? t.deadline|date('d/m/Y') : '—' }}</td>
+                        <td>—</td>
+                        <td>{{ t.notes|slice(0, 80) }}{% if t.notes|length > 80 %}…{% endif %}</td>
+                        <td class="admin-actions">
+                            <a href="{{ path('admin_tache_show', {id: t.id}) }}" class="admin-btn admin-btn-ghost">Voir</a>
+                            <a href="{{ path('admin_tache_edit', {id: t.id}) }}" class="admin-btn admin-btn-ghost">Modifier</a>
+                            <form class="inline-form" method="post" action="{{ path('admin_tache_delete', {id: t.id}) }}" onsubmit="return confirm('Supprimer ?');">
+                                <input type="hidden" name="_token" value="{{ csrf_token('admin_delete_tache' ~ t.id) }}">
+                                <button type="submit" class="admin-btn admin-btn-danger">Supprimer</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr><td colspan="6">Aucune tâche.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% if pages > 1 %}
+        <nav class="admin-pagination">
+            {% if page > 1 %}
+                <a href="{{ path('admin_tache_index', app.request.query.all|merge({page: page - 1})) }}">← Précédent</a>
+            {% endif %}
+            <span>Page {{ page }} / {{ pages }} ({{ total }})</span>
+            {% if page < pages %}
+                <a href="{{ path('admin_tache_index', app.request.query.all|merge({page: page + 1})) }}">Suivant →</a>
+            {% endif %}
+        </nav>
+    {% endif %}
+</div>
+{% endblock %}

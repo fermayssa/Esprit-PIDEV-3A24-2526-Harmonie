@@ -1,0 +1,347 @@
+/* ── Pages formulaire Harmony (Tâche, Événement) ─────────────────── */
+
+.harmony-form-page {
+    min-height: calc(100vh - 120px);
+    padding: 32px 20px 56px;
+    background: linear-gradient(165deg, #f5f5fb 0%, #eef2ff 42%, #f5f5fb 100%);
+}
+
+.harmony-form-card {
+    max-width: 600px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 20px;
+    box-shadow:
+        0 4px 6px -1px rgba(124, 58, 237, 0.06),
+        0 20px 40px -12px rgba(15, 23, 42, 0.12);
+    padding: 32px 36px 36px;
+    border: 1px solid rgba(124, 58, 237, 0.08);
+}
+
+@media (max-width: 640px) {
+    .harmony-form-page {
+        padding: 20px 14px 40px;
+    }
+    .harmony-form-card {
+        padding: 24px 20px 28px;
+        border-radius: 16px;
+    }
+}
+
+.harmony-form-card > h1 {
+    font-family: var(--font-head, 'Syne', sans-serif);
+    font-size: 1.65rem;
+    font-weight: 800;
+    color: var(--text, #1C1733);
+    letter-spacing: -0.02em;
+    margin: 0 0 8px;
+    line-height: 1.2;
+}
+
+.harmony-form-lead {
+    font-size: 14px;
+    color: var(--text-muted, #9590B8);
+    margin: 0 0 28px;
+    line-height: 1.5;
+}
+
+/* ── Formulaire ─────────────────────────────────────────────────── */
+
+.harmony-form {
+    margin: 0;
+}
+
+.harmony-form > ul {
+    list-style: none;
+    margin: 0 0 20px;
+    padding: 12px 14px;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 12px;
+    color: #991b1b;
+    font-size: 14px;
+}
+
+.harmony-form > ul li {
+    margin: 0;
+}
+
+.harmony-form-section {
+    margin-bottom: 28px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid rgba(124, 58, 237, 0.1);
+}
+
+.harmony-form-section:last-of-type {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.harmony-form-section-title {
+    font-family: var(--font-head, 'Syne', sans-serif);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #7c3aed;
+    margin: 0 0 16px;
+}
+
+.harmony-field {
+    margin-bottom: 20px;
+}
+
+.harmony-field:last-child {
+    margin-bottom: 0;
+}
+
+.harmony-field label,
+.harmony-form label.required,
+.harmony-form > div > label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-mid, #4A4570);
+    margin-bottom: 8px;
+}
+
+.harmony-form input[type="text"],
+.harmony-form input[type="number"],
+.harmony-form input[type="date"],
+.harmony-form input[type="datetime-local"],
+.harmony-form select,
+.harmony-form textarea {
+    width: 100%;
+    max-width: 100%;
+    padding: 12px 14px;
+    font-family: var(--font-body, 'Inter', sans-serif);
+    font-size: 15px;
+    line-height: 1.4;
+    color: var(--text, #1C1733);
+    background: #fafafa;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+    box-sizing: border-box;
+}
+
+.harmony-form input::placeholder,
+.harmony-form textarea::placeholder {
+    color: #9ca3af;
+}
+
+.harmony-form select {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%237c3aed' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 40px;
+}
+
+.harmony-form textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.harmony-form input:hover,
+.harmony-form select:hover,
+.harmony-form textarea:hover {
+    border-color: #d1d5db;
+    background: #fff;
+}
+
+.harmony-form input:focus,
+.harmony-form select:focus,
+.harmony-form textarea:focus {
+    outline: none;
+    border-color: #7c3aed;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.22);
+}
+
+.harmony-form input:invalid:not(:placeholder-shown):not(:focus),
+.harmony-form textarea:invalid:not(:placeholder-shown):not(:focus),
+.harmony-form select:invalid:not(:focus) {
+    border-color: #f87171;
+}
+
+.harmony-form .harmony-field--checkbox {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+.harmony-form .harmony-field--checkbox input[type="checkbox"] {
+    order: 0;
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    accent-color: #7c3aed;
+    cursor: pointer;
+}
+
+.harmony-form .harmony-field--checkbox label {
+    order: 1;
+    margin-bottom: 0;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+/* Erreurs Symfony */
+.harmony-form ul,
+.harmony-form .form-error-message,
+.harmony-field-errors {
+    list-style: none;
+    margin: 8px 0 0;
+    padding: 0;
+    font-size: 13px;
+    color: #dc2626;
+    font-weight: 500;
+}
+
+.harmony-form ul li {
+    margin: 2px 0 0;
+}
+
+.harmony-form .harmony-field.has-error input,
+.harmony-form .harmony-field.has-error select,
+.harmony-form .harmony-field.has-error textarea {
+    border-color: #f87171;
+    background: #fff7f7;
+}
+
+/* Bouton submit */
+.harmony-form-row-submit {
+    margin-top: 28px;
+    margin-bottom: 0 !important;
+}
+
+.harmony-form-row-submit label {
+    display: none !important;
+}
+
+.harmony-btn-submit {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 14px 20px;
+    font-family: var(--font-body, 'Inter', sans-serif);
+    font-size: 15px;
+    font-weight: 700;
+    color: #fff !important;
+    background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+    border: none;
+    border-radius: 14px;
+    cursor: pointer;
+    box-shadow: 0 8px 24px rgba(124, 58, 237, 0.35);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+}
+
+.harmony-btn-submit:hover {
+    filter: brightness(1.05);
+    box-shadow: 0 10px 28px rgba(124, 58, 237, 0.42);
+}
+
+.harmony-btn-submit:active {
+    transform: scale(0.99);
+}
+
+.harmony-btn-submit .harmony-btn-icon {
+    font-size: 1.1em;
+    line-height: 1;
+}
+
+/* Retour */
+.harmony-form-back {
+    display: block;
+    text-align: center;
+    margin-top: 22px;
+    font-size: 14px;
+    color: var(--text-muted, #9590B8);
+    text-decoration: none;
+    transition: color 0.15s ease;
+}
+
+.harmony-form-back:hover {
+    color: #7c3aed;
+}
+
+/* Suppression (édition) */
+.harmony-form-delete-wrap {
+    max-width: 600px;
+    margin: 20px auto 0;
+    text-align: center;
+}
+
+.harmony-form-delete-wrap form {
+    display: inline-block;
+}
+
+.harmony-btn-delete {
+    padding: 10px 18px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #b91c1c;
+    background: transparent;
+    border: 1px solid rgba(185, 28, 28, 0.35);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.harmony-btn-delete:hover {
+    background: #fef2f2;
+    border-color: #b91c1c;
+}
+
+/* Détails repliables (événement) */
+.harmony-form-details {
+    margin-top: 8px;
+    margin-bottom: 28px;
+}
+
+.harmony-form-details summary {
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    color: #7c3aed;
+    padding: 10px 0;
+    list-style: none;
+}
+
+.harmony-form-details summary::-webkit-details-marker {
+    display: none;
+}
+
+.harmony-form-details summary::before {
+    content: '▸ ';
+    display: inline-block;
+    transition: transform 0.2s ease;
+}
+
+.harmony-form-details[open] summary::before {
+    transform: rotate(90deg);
+}
+
+.harmony-form-details .harmony-form-section-inner {
+    padding-top: 8px;
+}
+
+.harmony-lieu-type-radios .form-group > div,
+.harmony-lieu-type-radios > div > div {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: center;
+}
+
+.harmony-event-type-icon-wrap .harmony-type-icon {
+    font-size: 1.75rem;
+    line-height: 1.2;
+}

@@ -1,0 +1,88 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Demandes de réservation — Admin{% endblock %}
+
+{% block body %}
+<div class="admin-topbar">
+    <h1 class="admin-page-title">Demandes de réservation</h1>
+</div>
+
+<div class="admin-card">
+    <form class="admin-filters" method="get" action="{{ path('admin_demande_index') }}">
+        <label>Statut
+            <select name="statut">
+                <option value="">Tous</option>
+                <option value="EN_ATTENTE" {{ statutFiltre == 'EN_ATTENTE' ? 'selected' }}>En attente</option>
+                <option value="ACCEPTEE" {{ statutFiltre == 'ACCEPTEE' ? 'selected' }}>Acceptée</option>
+                <option value="REFUSEE" {{ statutFiltre == 'REFUSEE' ? 'selected' }}>Refusée</option>
+            </select>
+        </label>
+        <button type="submit" class="admin-btn admin-btn-primary">Filtrer</button>
+    </form>
+
+    <div class="admin-table-wrap">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Utilisateur</th>
+                    <th>Événement</th>
+                    <th>Salle</th>
+                    <th>Date demande</th>
+                    <th>Statut</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for d in demandes %}
+                    <tr>
+                        <td>{{ d.utilisateur ? (d.utilisateur.userPrenom ~ ' ' ~ d.utilisateur.userNom) : '—' }}</td>
+                        <td>{{ d.evenement ? (d.evenement.titre ?? 'Sans titre') : '—' }}</td>
+                        <td>{{ d.salle ? d.salle.nom : '—' }}</td>
+                        <td>{{ d.dateDemande|date('d/m/Y H:i') }}</td>
+                        <td>
+                            {% if d.statut == 'EN_ATTENTE' %}
+                                <span class="admin-badge admin-badge--wait">En attente</span>
+                            {% elseif d.statut == 'ACCEPTEE' %}
+                                <span class="admin-badge admin-badge--ok">Acceptée</span>
+                            {% else %}
+                                <span class="admin-badge admin-badge--no">Refusée</span>
+                            {% endif %}
+                        </td>
+                        <td class="admin-actions">
+                            {% if d.statut == 'EN_ATTENTE' %}
+                                <form class="inline-form" method="post" action="{{ path('admin_demande_accepter', {id: d.id}) }}">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('admin_demande_action' ~ d.id) }}">
+                                    <button type="submit" class="admin-btn admin-btn-success">Accepter</button>
+                                </form>
+                                <form class="inline-form" method="post" action="{{ path('admin_demande_refuser', {id: d.id}) }}" style="margin-top:8px;">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('admin_demande_action' ~ d.id) }}">
+                                    <input type="text" name="commentaire_admin" class="admin-input" placeholder="Motif (optionnel)" style="margin-bottom:6px;width:100%;max-width:220px;">
+                                    <button type="submit" class="admin-btn admin-btn-danger">Refuser</button>
+                                </form>
+                            {% else %}
+                                {% if d.commentaireAdmin %}
+                                    <small style="color:var(--admin-muted);">{{ d.commentaireAdmin }}</small>
+                                {% else %}—{% endif %}
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr><td colspan="6">Aucune demande.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% if pages > 1 %}
+        <nav class="admin-pagination">
+            {% if page > 1 %}
+                <a href="{{ path('admin_demande_index', app.request.query.all|merge({page: page - 1})) }}">← Précédent</a>
+            {% endif %}
+            <span>Page {{ page }} / {{ pages }} ({{ total }})</span>
+            {% if page < pages %}
+                <a href="{{ path('admin_demande_index', app.request.query.all|merge({page: page + 1})) }}">Suivant →</a>
+            {% endif %}
+        </nav>
+    {% endif %}
+</div>
+{% endblock %}

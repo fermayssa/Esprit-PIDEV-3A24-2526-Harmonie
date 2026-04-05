@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Admin — Harmony{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="{{ asset('harmonie/css/admin-harmony.css') }}" rel="stylesheet">
+    {% block stylesheets %}{% endblock %}
+</head>
+<body class="admin-body">
+<div class="admin-layout">
+    <aside class="admin-sidebar">
+        <div class="admin-sidebar-brand">Harmony <span>Admin</span></div>
+        <nav class="admin-nav" aria-label="Administration">
+            <a href="{{ path('admin_dashboard') }}" class="{{ app.request.attributes.get('_route') == 'admin_dashboard' ? 'active' : '' }}">Tableau de bord</a>
+            <a href="{{ path('admin_evenement_index') }}" class="{{ app.request.attributes.get('_route') starts with 'admin_evenement' ? 'active' : '' }}">Événements</a>
+            <a href="{{ path('admin_tache_index') }}" class="{{ app.request.attributes.get('_route') starts with 'admin_tache' ? 'active' : '' }}">Tâches</a>
+            <a href="{{ path('admin_salle_index') }}" class="{{ app.request.attributes.get('_route') starts with 'admin_salle' ? 'active' : '' }}">Salles</a>
+            <a href="{{ path('admin_demande_index') }}" class="{{ app.request.attributes.get('_route') starts with 'admin_demande' ? 'active' : '' }}">Demandes de réservation</a>
+            <a href="{{ path('app_home') }}">← Site public</a>
+            <a href="{{ path('app_logout') }}">Déconnexion</a>
+        </nav>
+    </aside>
+    <main class="admin-main">
+        {% for label, messages in app.flashes %}
+            {% for message in messages %}
+                {% set flash_class = label == 'success' ? 'ok' : 'warn' %}
+                <div class="admin-alert admin-alert--{{ flash_class }}" role="alert">{{ message }}</div>
+            {% endfor %}
+        {% endfor %}
+        {% block body %}{% endblock %}
+    </main>
+</div>
+{% block javascripts %}{% endblock %}
+</body>
+</html>

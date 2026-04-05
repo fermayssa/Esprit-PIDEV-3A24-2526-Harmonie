@@ -15,4 +15,105 @@ class EvenementRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Evenement::class);
     }
+
+    /**
+     * Événements dont la date de début tombe dans le mois donné (calendrier agenda).
+     *
+     * @return list<Evenement>
+     */
+    public function findWithDateDebutInMonth(int $year, int $month): array
+    {
+        $start = new \DateTimeImmutable(sprintf('%04d-%02d-01 00:00:00', $year, $month));
+        $end = $start->modify('first day of next month');
+
+        return $this->createQueryBuilder('e')
+            ->andWhere('e.dateDebut IS NOT NULL')
+            ->andWhere('e.dateDebut >= :start')
+            ->andWhere('e.dateDebut < :end')
+            ->setParameter('start', $start)
+            ->setParameter('end', $end)
+            ->orderBy('e.dateDebut', 'ASC')
+            ->addOrderBy('e.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @return list<Evenement>
+     */
+    public function findAllWithDateDebutOrdered(): array
+    {
+        return $this->createQueryBuilder('e')
+            ->andWhere('e.dateDebut IS NOT NULL')
+            ->orderBy('e.dateDebut', 'ASC')
+            ->addOrderBy('e.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function countAll(): int
+    {
+        return (int) $this->createQueryBuilder('e')->select('COUNT(e.id)')->getQuery()->getSingleScalarResult();
+    }
+
+    /**
+     * @return list<Evenement>
+     */
+    public function findAdminPaginated(
+        int $page,
+        int $limit,
+        ?string $typeFiltre,
+        ?int $proprietaireId,
+        ?\DateTimeInterface $dateDebut,
+        ?\DateTimeInterface $dateFin,
+    ): array {
+        $qb = $this->createQueryBuilder('e')
+            ->leftJoin('e.salle', 's')->addSelect('s')
+            ->leftJoin('e.proprietaire', 'p')->addSelect('p')
+            ->orderBy('e.dateDebut', 'DESC')
+            ->addOrderBy('e.id', 'DESC');
+
+        if (null !== $typeFiltre && '' !== $typeFiltre) {
+            $qb->andWhere('e.eventType = :tp')->setParameter('tp', $typeFiltre);
+        }
+        if (null !== $proprietaireId) {
+            $qb->andWhere('p.userId = :uid')->setParameter('uid', $proprietaireId);
+        }
+        if ($dateDebut instanceof \DateTimeInterface) {
+            $qb->andWhere('e.dateDebut >= :d0')->setParameter('d0', $dateDebut);
+        }
+        if ($dateFin instanceof \DateTimeInterface) {
+            $qb->andWhere('e.dateDebut <= :d1')->setParameter('d1', $dateFin);
+        }
+
+        return $qb->setFirstResult(max(0, ($page - 1) * $limit))
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function countAdmin(
+        ?string $typeFiltre,
+        ?int $proprietaireId,
+        ?\DateTimeInterface $dateDebut,
+        ?\DateTimeInterface $dateFin,
+    ): int {
+        $qb = $this->createQueryBuilder('e')->select('COUNT(e.id)')
+            ->leftJoin('e.proprietaire', 'p');
+
+        if (null !== $typeFiltre && '' !== $typeFiltre) {
+            $qb->andWhere('e.eventType = :tp')->setParameter('tp', $typeFiltre);
+        }
+        if (null !== $proprietaireId) {
+            $qb->andWhere('p.userId = :uid')->setParameter('uid', $proprietaireId);
+        }
+        if ($dateDebut instanceof \DateTimeInterface) {
+            $qb->andWhere('e.dateDebut >= :d0')->setParameter('d0', $dateDebut);
+        }
+        if ($dateFin instanceof \DateTimeInterface) {
+            $qb->andWhere('e.dateDebut <= :d1')->setParameter('d1', $dateFin);
+        }
+
+        return (int) $qb->getQuery()->getSingleScalarResult();
+    }
 }

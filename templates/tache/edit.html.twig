@@ -1,13 +1,21 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Tache{% endblock %}
+{% block title %}Modifier la tâche — Harmony{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('harmonie/css/harmony-forms.css') }}" rel="stylesheet">
+{% endblock %}
 
 {% block content %}
-    <h1>Edit Tache</h1>
-
-    {{ include('tache/_form.html.twig', {'button_label': 'Update'}) }}
-
-    <a href="{{ path('app_tache_index') }}">back to list</a>
-
-    {{ include('tache/_delete_form.html.twig') }}
+<div class="harmony-form-page">
+    <div class="harmony-form-card">
+        <h1>Modifier la tâche</h1>
+        {{ include('tache/_form.html.twig') }}
+        <a href="{{ path('app_tache_index') }}" class="harmony-form-back">← Retour au tableau Kanban</a>
+    </div>
+    <div class="harmony-form-delete-wrap">
+        {{ include('tache/_delete_form.html.twig') }}
+    </div>
+</div>
 {% endblock %}

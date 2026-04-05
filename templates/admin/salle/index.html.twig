@@ -1,0 +1,65 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Salles — Admin{% endblock %}
+
+{% block body %}
+<div class="admin-topbar">
+    <h1 class="admin-page-title">Salles</h1>
+    <a href="{{ path('admin_salle_new') }}" class="admin-btn admin-btn-primary">Ajouter une salle</a>
+</div>
+
+<div class="admin-card">
+    <div class="admin-table-wrap">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Capacité</th>
+                    <th>Disponibilité</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for s in salles %}
+                    <tr>
+                        <td>{{ s.nom }}</td>
+                        <td>{{ s.capacite }}</td>
+                        <td>
+                            {% if s.disponible %}
+                                <span class="admin-badge admin-badge--ok">Disponible</span>
+                            {% else %}
+                                <span class="admin-badge admin-badge--no">Indisponible</span>
+                            {% endif %}
+                            <form class="inline-form" method="post" action="{{ path('admin_salle_toggle', {id: s.id}) }}" style="margin-left:8px;">
+                                <input type="hidden" name="_token" value="{{ csrf_token('admin_toggle_salle' ~ s.id) }}">
+                                <button type="submit" class="admin-btn admin-btn-ghost">{{ s.disponible ? 'Désactiver' : 'Activer' }}</button>
+                            </form>
+                        </td>
+                        <td class="admin-actions">
+                            <a href="{{ path('admin_salle_edit', {id: s.id}) }}" class="admin-btn admin-btn-ghost">Modifier</a>
+                            <form class="inline-form" method="post" action="{{ path('admin_salle_delete', {id: s.id}) }}" onsubmit="return confirm('Supprimer cette salle ?');">
+                                <input type="hidden" name="_token" value="{{ csrf_token('admin_delete_salle' ~ s.id) }}">
+                                <button type="submit" class="admin-btn admin-btn-danger">Supprimer</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr><td colspan="4">Aucune salle.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% if pages > 1 %}
+        <nav class="admin-pagination">
+            {% if page > 1 %}
+                <a href="{{ path('admin_salle_index', {page: page - 1}) }}">← Précédent</a>
+            {% endif %}
+            <span>Page {{ page }} / {{ pages }} ({{ total }})</span>
+            {% if page < pages %}
+                <a href="{{ path('admin_salle_index', {page: page + 1}) }}">Suivant →</a>
+            {% endif %}
+        </nav>
+    {% endif %}
+</div>
+{% endblock %}

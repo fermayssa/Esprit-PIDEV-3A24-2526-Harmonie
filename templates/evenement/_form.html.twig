@@ -1,4 +1,42 @@
-{{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+{% form_theme form 'form_div_layout.html.twig' %}
+
+{% macro harmony_field(field) %}
+    <div class="harmony-field{% if field.vars.errors|length %} has-error{% endif %}">
+        {{ form_label(field) }}
+        {{ form_widget(field) }}
+        {{ form_errors(field) }}
+    </div>
+{% endmacro %}
+{% import _self as hf %}
+
+{{ form_start(form, { attr: { class: 'harmony-form' } }) }}
+    {{ form_errors(form) }}
+
+    <div class="harmony-form-section">
+        <h2 class="harmony-form-section-title">Informations principales</h2>
+        {{ hf.harmony_field(form.titre) }}
+        {{ hf.harmony_field(form.description) }}
+        {{ hf.harmony_field(form.dateDebut) }}
+        {{ hf.harmony_field(form.dateFin) }}
+        {{ hf.harmony_field(form.eventType) }}
+        <div class="harmony-event-type-icon-wrap" aria-hidden="true">
+            <span class="js-event-type-icon harmony-type-icon" style="font-size:1.75rem;display:block;margin:-4px 0 12px;"></span>
+        </div>
+        {{ hf.harmony_field(form.lieuType) }}
+        {{ hf.harmony_field(form.lieuAdresse) }}
+        {{ hf.harmony_field(form.salle) }}
+    </div>
+
+    <details class="harmony-form-details">
+        <summary>Options complémentaires</summary>
+        <div class="harmony-form-section-inner">
+            {{ hf.harmony_field(form.priorite) }}
+            {{ form_row(form.rappelActif) }}
+            {{ hf.harmony_field(form.calendrier) }}
+        </div>
+    </details>
+
+    {{ form_row(form.submit) }}
 {{ form_end(form) }}
+
+<script src="{{ asset('harmonie/js/evenement-lieu.js') }}"></script>

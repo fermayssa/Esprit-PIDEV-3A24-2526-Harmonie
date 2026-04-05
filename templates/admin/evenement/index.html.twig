@@ -1,0 +1,100 @@
+{% extends 'admin/base.html.twig' %}
+
+{% macro type_label(v) %}
+    {% set map = { cours: 'Cours', reunion: 'Réunion', loisir: 'Loisir', autre: 'Autre' } %}
+    {{- v ? map[v]|default(v) : '—' -}}
+{% endmacro %}
+
+{% block title %}Événements — Admin{% endblock %}
+
+{% block body %}
+<div class="admin-topbar">
+    <h1 class="admin-page-title">Événements</h1>
+    <a href="{{ path('admin_evenement_new') }}" class="admin-btn admin-btn-primary">Ajouter un événement</a>
+</div>
+
+<div class="admin-card">
+    <form class="admin-filters" method="get" action="{{ path('admin_evenement_index') }}">
+        <label>Type
+            <select name="type">
+                <option value="">Tous</option>
+                <option value="cours" {{ typeFiltre == 'cours' ? 'selected' }}>Cours</option>
+                <option value="reunion" {{ typeFiltre == 'reunion' ? 'selected' }}>Réunion</option>
+                <option value="loisir" {{ typeFiltre == 'loisir' ? 'selected' }}>Loisir</option>
+                <option value="autre" {{ typeFiltre == 'autre' ? 'selected' }}>Autre</option>
+            </select>
+        </label>
+        <label>Utilisateur
+            <select name="user">
+                <option value="">Tous</option>
+                {% for u in users %}
+                    <option value="{{ u.userId }}" {{ proprietaireId == u.userId ? 'selected' }}>{{ u.userPrenom }} {{ u.userNom }}</option>
+                {% endfor %}
+            </select>
+        </label>
+        <label>Date début ≥
+            <input class="admin-input" type="date" name="date_debut" value="{{ dateDebut }}">
+        </label>
+        <label>Date début ≤
+            <input class="admin-input" type="date" name="date_fin" value="{{ dateFin }}">
+        </label>
+        <button type="submit" class="admin-btn admin-btn-primary">Filtrer</button>
+    </form>
+
+    <div class="admin-table-wrap">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Titre</th>
+                    <th>Type</th>
+                    <th>Lieu</th>
+                    <th>Salle</th>
+                    <th>Utilisateur</th>
+                    <th>Date début</th>
+                    <th>Statut</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for e in evenements %}
+                    <tr>
+                        <td>{{ e.titre ?? '—' }}</td>
+                        <td>{{ _self.type_label(e.eventType) }}</td>
+                        <td>
+                            {% if e.lieuType == 'en_ligne' %}En ligne
+                            {% elseif e.lieuAdresse %}{{ e.lieuAdresse }}
+                            {% else %}{{ e.lieu ?? '—' }}{% endif %}
+                        </td>
+                        <td>{{ e.salle ? e.salle.nom : '—' }}</td>
+                        <td>{{ e.proprietaire ? (e.proprietaire.userPrenom ~ ' ' ~ e.proprietaire.userNom) : '—' }}</td>
+                        <td>{{ e.dateDebut ? e.dateDebut|date('d/m/Y H:i') : '—' }}</td>
+                        <td>{{ e.approuve ? 'Approuvé' : 'Non approuvé' }}{% if e.statutDemandeSalle %} · {{ e.statutDemandeSalle }}{% endif %}</td>
+                        <td class="admin-actions">
+                            <a href="{{ path('admin_evenement_show', {id: e.id}) }}" class="admin-btn admin-btn-ghost">Voir</a>
+                            <a href="{{ path('admin_evenement_edit', {id: e.id}) }}" class="admin-btn admin-btn-ghost">Modifier</a>
+                            <form class="inline-form" method="post" action="{{ path('admin_evenement_delete', {id: e.id}) }}" onsubmit="return confirm('Supprimer cet événement ?');">
+                                <input type="hidden" name="_token" value="{{ csrf_token('admin_delete_evenement' ~ e.id) }}">
+                                <button type="submit" class="admin-btn admin-btn-danger">Supprimer</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr><td colspan="8">Aucun événement.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% if pages > 1 %}
+        <nav class="admin-pagination">
+            {% if page > 1 %}
+                <a href="{{ path('admin_evenement_index', app.request.query.all|merge({page: page - 1})) }}">← Précédent</a>
+            {% endif %}
+            <span>Page {{ page }} / {{ pages }} ({{ total }} résultats)</span>
+            {% if page < pages %}
+                <a href="{{ path('admin_evenement_index', app.request.query.all|merge({page: page + 1})) }}">Suivant →</a>
+            {% endif %}
+        </nav>
+    {% endif %}
+</div>
+{% endblock %}

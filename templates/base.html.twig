@@ -31,7 +31,14 @@
     </nav>
 
     <div class="topbar-right">
-        <button type="button" class="logout-btn" title="Déconnexion (à brancher sur la sécurité)">🚪 Déconnexion</button>
+        {% if is_granted('ROLE_ADMIN') %}
+            <a href="{{ path('admin_dashboard') }}" class="nav-link" style="margin-right:8px;font-size:14px;">Admin</a>
+        {% endif %}
+        {% if app.user %}
+            <a href="{{ path('app_logout') }}" class="logout-btn" title="Déconnexion">🚪 Déconnexion</a>
+        {% else %}
+            <a href="{{ path('app_login') }}" class="logout-btn" title="Connexion">🔑 Connexion</a>
+        {% endif %}
         <div class="profile-wrap">
             <div class="avatar" id="avatarBtn" role="button" tabindex="0" aria-label="Profil">
                 {% if app.user and app.user.userPrenom is defined %}

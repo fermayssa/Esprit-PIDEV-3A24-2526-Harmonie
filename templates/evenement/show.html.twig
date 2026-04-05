@@ -1,9 +1,9 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Evenement{% endblock %}
+{% block title %}{{ evenement.titre ?? 'Événement' }}{% endblock %}
 
 {% block content %}
-    <h1>Evenement</h1>
+    <h1>{{ evenement.titre ?? 'Événement' }}</h1>
 
     <table class="table">
         <tbody>
@@ -16,47 +16,58 @@
                 <td>{{ evenement.titre }}</td>
             </tr>
             <tr>
+                <th>Type</th>
+                <td>{{ evenement.eventType ?? evenement.typeEvenement ?? '—' }}</td>
+            </tr>
+            <tr>
+                <th>Mode lieu</th>
+                <td>{{ evenement.lieuType ?? '—' }}</td>
+            </tr>
+            <tr>
+                <th>Détail lieu</th>
+                <td>{{ evenement.lieuAdresse ?? '—' }}</td>
+            </tr>
+            <tr>
+                <th>Salle</th>
+                <td>{{ evenement.salle ? evenement.salle.nom : '—' }}</td>
+            </tr>
+            <tr>
+                <th>Lieu (affichage)</th>
+                <td>{{ evenement.lieu }}</td>
+            </tr>
+            <tr>
                 <th>Description</th>
                 <td>{{ evenement.description }}</td>
             </tr>
             <tr>
-                <th>DateDebut</th>
+                <th>Date début</th>
                 <td>{{ evenement.dateDebut ? evenement.dateDebut|date('Y-m-d H:i:s') : '' }}</td>
             </tr>
             <tr>
-                <th>DateFin</th>
+                <th>Date fin</th>
                 <td>{{ evenement.dateFin ? evenement.dateFin|date('Y-m-d H:i:s') : '' }}</td>
             </tr>
             <tr>
-                <th>Lieu</th>
-                <td>{{ evenement.lieu }}</td>
-            </tr>
-            <tr>
-                <th>Priorite</th>
+                <th>Priorité</th>
                 <td>{{ evenement.priorite }}</td>
             </tr>
             <tr>
-                <th>RappelActif</th>
-                <td>{{ evenement.rappelActif ? 'Yes' : 'No' }}</td>
+                <th>Rappel actif</th>
+                <td>{{ evenement.rappelActif ? 'Oui' : 'Non' }}</td>
             </tr>
             <tr>
-                <th>TypeEvenement</th>
-                <td>{{ evenement.typeEvenement }}</td>
+                <th>Approuvé</th>
+                <td>{{ evenement.approuve ? 'Oui' : 'Non' }}</td>
             </tr>
             <tr>
-                <th>Approuve</th>
-                <td>{{ evenement.approuve ? 'Yes' : 'No' }}</td>
-            </tr>
-            <tr>
-                <th>StatutDemandeSalle</th>
-                <td>{{ evenement.statutDemandeSalle }}</td>
+                <th>Statut demande salle</th>
+                <td>{{ evenement.statutDemandeSalle ?? '—' }}</td>
             </tr>
         </tbody>
     </table>
 
-    <a href="{{ path('app_evenement_index') }}">back to list</a>
-
-    <a href="{{ path('app_evenement_edit', {'id': evenement.id}) }}">edit</a>
+    <p><a href="{{ path('app_evenement_index') }}">← Calendrier</a></p>
+    <p><a href="{{ path('app_evenement_edit', {'id': evenement.id}) }}">Modifier</a></p>
 
     {{ include('evenement/_delete_form.html.twig') }}
 {% endblock %}

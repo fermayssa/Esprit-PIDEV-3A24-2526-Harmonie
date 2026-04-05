@@ -1,0 +1,20 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Modifier salle — Admin{% endblock %}
+
+{% block body %}
+<div class="admin-topbar">
+    <h1 class="admin-page-title">{{ salle.nom }}</h1>
+    <a href="{{ path('admin_salle_index') }}" class="admin-btn admin-btn-ghost">Retour</a>
+</div>
+<div class="admin-card">
+    {{ form_start(form) }}
+        {{ form_row(form.nom) }}
+        {{ form_row(form.capacite) }}
+        {{ form_row(form.disponible) }}
+        {{ form_row(form.description) }}
+        {{ form_row(form.equipements) }}
+        {{ form_row(form.submit) }}
+    {{ form_end(form) }}
+</div>
+{% endblock %}

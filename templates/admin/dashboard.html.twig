@@ -1,0 +1,42 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Tableau de bord — Admin{% endblock %}
+
+{% block body %}
+<div class="admin-topbar">
+    <h1 class="admin-page-title">Tableau de bord</h1>
+</div>
+
+{% if countDemandesEnAttente > 0 %}
+<div class="admin-alert admin-alert--warn">
+    <strong>{{ countDemandesEnAttente }}</strong> demande(s) de salle en attente de traitement.
+    <a href="{{ path('admin_demande_index', { statut: 'EN_ATTENTE' }) }}">Voir les demandes</a>
+</div>
+{% endif %}
+
+<div class="admin-stats">
+    <div class="admin-stat-card">
+        <strong>{{ countEvenements }}</strong>
+        <span>Événements</span>
+    </div>
+    <div class="admin-stat-card">
+        <strong>{{ countTaches }}</strong>
+        <span>Tâches</span>
+    </div>
+    <div class="admin-stat-card">
+        <strong>{{ countSalles }}</strong>
+        <span>Salles</span>
+    </div>
+    <div class="admin-stat-card">
+        <strong>{{ countDemandesEnAttente }}</strong>
+        <span>Demandes en attente</span>
+    </div>
+</div>
+
+<div class="admin-card">
+    <p style="margin:0;color:var(--admin-muted);font-size:14px;line-height:1.6;">
+        Utilisez le menu à gauche pour gérer les événements, les tâches Kanban, les salles et les demandes de réservation.
+        Les tableaux sont paginés par tranches de 10 entrées.
+    </p>
+</div>
+{% endblock %}

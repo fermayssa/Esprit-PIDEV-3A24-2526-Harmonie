@@ -3,8 +3,12 @@
 namespace App\Entity;
 
 use App\Repository\EvenementRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 #[ORM\Entity(repositoryClass: EvenementRepository::class)]
 #[ORM\Table(name: 'evenement')]
@@ -52,6 +56,32 @@ class Evenement
 
     #[ORM\Column(name: 'statut_demande_salle', length: 20, nullable: true)]
     private ?string $statutDemandeSalle = null;
+
+    /** Type normalisé : cours, reunion, loisir, autre (colonne event_type). */
+    #[Assert\NotBlank(message: 'Choisissez un type d’événement.')]
+    #[ORM\Column(name: 'event_type', length: 20, nullable: true)]
+    private ?string $eventType = null;
+
+    /** presentiel | en_ligne */
+    #[Assert\NotBlank(message: 'Indiquez le mode de lieu.')]
+    #[ORM\Column(name: 'lieu_type', length: 20, nullable: true)]
+    private ?string $lieuType = 'en_ligne';
+
+    #[ORM\Column(name: 'lieu_adresse', length: 255, nullable: true)]
+    private ?string $lieuAdresse = null;
+
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(name: 'proprietaire_id', referencedColumnName: 'user_id', nullable: true, onDelete: 'SET NULL')]
+    private ?User $proprietaire = null;
+
+    /** @var Collection<int, DemandeReservation> */
+    #[ORM\OneToMany(targetEntity: DemandeReservation::class, mappedBy: 'evenement', orphanRemoval: true, cascade: ['persist'])]
+    private Collection $demandeReservations;
+
+    public function __construct()
+    {
+        $this->demandeReservations = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -200,5 +230,90 @@ class Evenement
         $this->statutDemandeSalle = $statutDemandeSalle;
 
         return $this;
+    }
+
+    public function getEventType(): ?string
+    {
+        return $this->eventType;
+    }
+
+    public function setEventType(?string $eventType): static
+    {
+        $this->eventType = $eventType;
+
+        return $this;
+    }
+
+    public function getLieuType(): ?string
+    {
+        return $this->lieuType;
+    }
+
+    public function setLieuType(?string $lieuType): static
+    {
+        $this->lieuType = $lieuType;
+
+        return $this;
+    }
+
+    public function getLieuAdresse(): ?string
+    {
+        return $this->lieuAdresse;
+    }
+
+    public function setLieuAdresse(?string $lieuAdresse): static
+    {
+        $this->lieuAdresse = $lieuAdresse;
+
+        return $this;
+    }
+
+    public function getProprietaire(): ?User
+    {
+        return $this->proprietaire;
+    }
+
+    public function setProprietaire(?User $proprietaire): static
+    {
+        $this->proprietaire = $proprietaire;
+
+        return $this;
+    }
+
+    /** @return Collection<int, DemandeReservation> */
+    public function getDemandeReservations(): Collection
+    {
+        return $this->demandeReservations;
+    }
+
+    public function addDemandeReservation(DemandeReservation $demandeReservation): static
+    {
+        if (!$this->demandeReservations->contains($demandeReservation)) {
+            $this->demandeReservations->add($demandeReservation);
+            $demandeReservation->setEvenement($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDemandeReservation(DemandeReservation $demandeReservation): static
+    {
+        $this->demandeReservations->removeElement($demandeReservation);
+
+        return $this;
+    }
+
+    #[Assert\Callback]
+    public function validatePresentiel(ExecutionContextInterface $context): void
+    {
+        if ('presentiel' !== $this->lieuType) {
+            return;
+        }
+        $addr = $this->lieuAdresse ? trim($this->lieuAdresse) : '';
+        if ('' === $addr && null === $this->salle) {
+            $context->buildViolation('En présentiel, indiquez où se déroule l’événement ou choisissez une salle Esprit.')
+                ->atPath('lieuAdresse')
+                ->addViolation();
+        }
     }
 }

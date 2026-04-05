@@ -1,11 +1,18 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Evenement{% endblock %}
+{% block title %}Nouvel événement — Harmony{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('harmonie/css/harmony-forms.css') }}" rel="stylesheet">
+{% endblock %}
 
 {% block content %}
-    <h1>Create new Evenement</h1>
-
-    {{ include('evenement/_form.html.twig') }}
-
-    <a href="{{ path('app_evenement_index') }}">back to list</a>
+<div class="harmony-form-page">
+    <div class="harmony-form-card">
+        <h1>Nouvel événement</h1>
+        {{ include('evenement/_form.html.twig') }}
+        <a href="{{ path('app_evenement_index') }}" class="harmony-form-back">← Retour au calendrier</a>
+    </div>
+</div>
 {% endblock %}

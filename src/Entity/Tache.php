@@ -16,7 +16,7 @@ class Tache
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private string $nom;
+    private string $nom = '';
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $deadline = null;
