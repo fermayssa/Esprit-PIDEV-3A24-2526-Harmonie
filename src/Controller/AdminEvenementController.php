@@ -31,9 +31,11 @@ final class AdminEvenementController extends AbstractController
         $dateFin = $request->query->get('date_fin');
         $d0 = \is_string($dateDebut) && preg_match('/^\d{4}-\d{2}-\d{2}$/', $dateDebut) ? new \DateTime($dateDebut.' 00:00:00') : null;
         $d1 = \is_string($dateFin) && preg_match('/^\d{4}-\d{2}-\d{2}$/', $dateFin) ? new \DateTime($dateFin.' 23:59:59') : null;
+        $search = $request->query->getString('q');
+        $search = '' !== $search ? $search : null;
 
-        $total = $evenementRepository->countAdmin($typeFiltre, $proprietaireId, $d0, $d1);
-        $evenements = $evenementRepository->findAdminPaginated($page, self::LIMIT, $typeFiltre, $proprietaireId, $d0, $d1);
+        $total = $evenementRepository->countAdmin($typeFiltre, $proprietaireId, $d0, $d1, $search);
+        $evenements = $evenementRepository->findAdminPaginated($page, self::LIMIT, $typeFiltre, $proprietaireId, $d0, $d1, $search);
         $pages = (int) max(1, (int) ceil($total / self::LIMIT));
 
         return $this->render('admin/evenement/index.html.twig', [
@@ -46,6 +48,7 @@ final class AdminEvenementController extends AbstractController
             'proprietaireId' => $proprietaireId,
             'dateDebut' => $dateDebut,
             'dateFin' => $dateFin,
+            'searchQuery' => $search ?? '',
         ]);
     }
 
@@ -108,7 +111,8 @@ final class AdminEvenementController extends AbstractController
     #[Route('/{id}', name: 'admin_evenement_delete', requirements: ['id' => '\d+'], methods: ['POST'])]
     public function delete(Request $request, Evenement $evenement, PlanningDomainService $domainService): Response
     {
-        if ($this->isCsrfTokenValid('admin_delete_evenement'.$evenement->getId(), $request->getPayload()->getString('_token'))) {
+        $token = $request->request->getString('_token') ?: $request->getPayload()->getString('_token');
+        if ($this->isCsrfTokenValid('admin_delete_evenement'.$evenement->getId(), $token)) {
             try {
                 $domainService->removeEvenement($evenement);
                 $this->addFlash('success', 'Événement supprimé.');

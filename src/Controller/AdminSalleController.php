@@ -7,6 +7,7 @@ use App\Form\AdminSalleType;
 use App\Repository\SalleRepository;
 use App\Service\Domain\PlanningDomainService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -22,8 +23,10 @@ final class AdminSalleController extends AbstractController
     public function index(Request $request, SalleRepository $salleRepository): Response
     {
         $page = max(1, (int) $request->query->get('page', 1));
-        $total = $salleRepository->countAll();
-        $salles = $salleRepository->findAdminPaginated($page, self::LIMIT);
+        $search = $request->query->getString('q');
+        $search = '' !== $search ? $search : null;
+        $total = $salleRepository->countAdminFiltered($search);
+        $salles = $salleRepository->findAdminPaginated($page, self::LIMIT, $search);
         $pages = (int) max(1, (int) ceil($total / self::LIMIT));
 
         return $this->render('admin/salle/index.html.twig', [
@@ -31,6 +34,7 @@ final class AdminSalleController extends AbstractController
             'page' => $page,
             'pages' => $pages,
             'total' => $total,
+            'searchQuery' => $search ?? '',
         ]);
     }
 
@@ -83,14 +87,30 @@ final class AdminSalleController extends AbstractController
     #[Route('/{id}/toggle', name: 'admin_salle_toggle', requirements: ['id' => '\d+'], methods: ['POST'])]
     public function toggle(Request $request, Salle $salle, PlanningDomainService $domainService): Response
     {
-        if ($this->isCsrfTokenValid('admin_toggle_salle'.$salle->getId(), $request->getPayload()->getString('_token'))) {
-            try {
-                $salle->setDisponible(!$salle->isDisponible());
-                $domainService->saveSalle($salle);
-                $this->addFlash('success', $salle->isDisponible() ? 'Salle marquée disponible.' : 'Salle marquée indisponible.');
-            } catch (\DomainException $e) {
-                $this->addFlash('danger', $e->getMessage());
+        $token = $request->request->getString('_token') ?: $request->getPayload()->getString('_token');
+        if (!$this->isCsrfTokenValid('admin_toggle_salle'.$salle->getId(), $token)) {
+            if ($request->isXmlHttpRequest()) {
+                return new JsonResponse(['ok' => false, 'error' => 'CSRF'], Response::HTTP_FORBIDDEN);
             }
+
+            return $this->redirectToRoute('admin_salle_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        try {
+            $salle->setDisponible(!$salle->isDisponible());
+            $domainService->saveSalle($salle);
+            if ($request->isXmlHttpRequest()) {
+                return new JsonResponse([
+                    'ok' => true,
+                    'disponible' => $salle->isDisponible(),
+                ]);
+            }
+            $this->addFlash('success', $salle->isDisponible() ? 'Salle marquée disponible.' : 'Salle marquée indisponible.');
+        } catch (\DomainException $e) {
+            if ($request->isXmlHttpRequest()) {
+                return new JsonResponse(['ok' => false, 'error' => $e->getMessage()], Response::HTTP_UNPROCESSABLE_ENTITY);
+            }
+            $this->addFlash('danger', $e->getMessage());
         }
 
         return $this->redirectToRoute('admin_salle_index', [], Response::HTTP_SEE_OTHER);
@@ -99,7 +119,8 @@ final class AdminSalleController extends AbstractController
     #[Route('/{id}', name: 'admin_salle_delete', requirements: ['id' => '\d+'], methods: ['POST'])]
     public function delete(Request $request, Salle $salle, PlanningDomainService $domainService): Response
     {
-        if ($this->isCsrfTokenValid('admin_delete_salle'.$salle->getId(), $request->getPayload()->getString('_token'))) {
+        $token = $request->request->getString('_token') ?: $request->getPayload()->getString('_token');
+        if ($this->isCsrfTokenValid('admin_delete_salle'.$salle->getId(), $token)) {
             try {
                 $domainService->removeSalle($salle);
                 $this->addFlash('success', 'Salle supprimée.');

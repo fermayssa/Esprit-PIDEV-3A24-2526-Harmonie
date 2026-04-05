@@ -66,6 +66,7 @@ class EvenementRepository extends ServiceEntityRepository
         ?int $proprietaireId,
         ?\DateTimeInterface $dateDebut,
         ?\DateTimeInterface $dateFin,
+        ?string $search,
     ): array {
         $qb = $this->createQueryBuilder('e')
             ->leftJoin('e.salle', 's')->addSelect('s')
@@ -85,6 +86,11 @@ class EvenementRepository extends ServiceEntityRepository
         if ($dateFin instanceof \DateTimeInterface) {
             $qb->andWhere('e.dateDebut <= :d1')->setParameter('d1', $dateFin);
         }
+        if (null !== $search && '' !== trim($search)) {
+            $qb->andWhere(
+                'e.titre LIKE :q OR e.description LIKE :q OR e.lieu LIKE :q OR e.lieuAdresse LIKE :q',
+            )->setParameter('q', '%'.trim($search).'%');
+        }
 
         return $qb->setFirstResult(max(0, ($page - 1) * $limit))
             ->setMaxResults($limit)
@@ -97,6 +103,7 @@ class EvenementRepository extends ServiceEntityRepository
         ?int $proprietaireId,
         ?\DateTimeInterface $dateDebut,
         ?\DateTimeInterface $dateFin,
+        ?string $search,
     ): int {
         $qb = $this->createQueryBuilder('e')->select('COUNT(e.id)')
             ->leftJoin('e.proprietaire', 'p');
@@ -113,7 +120,27 @@ class EvenementRepository extends ServiceEntityRepository
         if ($dateFin instanceof \DateTimeInterface) {
             $qb->andWhere('e.dateDebut <= :d1')->setParameter('d1', $dateFin);
         }
+        if (null !== $search && '' !== trim($search)) {
+            $qb->andWhere(
+                'e.titre LIKE :q OR e.description LIKE :q OR e.lieu LIKE :q OR e.lieuAdresse LIKE :q',
+            )->setParameter('q', '%'.trim($search).'%');
+        }
 
         return (int) $qb->getQuery()->getSingleScalarResult();
+    }
+
+    /**
+     * @return list<Evenement>
+     */
+    public function findRecentForDashboard(int $limit = 3): array
+    {
+        return $this->createQueryBuilder('e')
+            ->leftJoin('e.proprietaire', 'p')->addSelect('p')
+            ->leftJoin('e.salle', 's')->addSelect('s')
+            ->orderBy('e.dateDebut', 'DESC')
+            ->addOrderBy('e.id', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
     }
 }

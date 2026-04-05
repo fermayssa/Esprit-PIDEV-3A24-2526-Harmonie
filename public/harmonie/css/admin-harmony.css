@@ -252,6 +252,12 @@
     color: #065f46;
 }
 
+.admin-alert--danger {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #991b1b;
+}
+
 .admin-filters {
     display: flex;
     flex-wrap: wrap;

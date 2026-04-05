@@ -1,5 +1,6 @@
 /**
- * Lieu présentiel / en ligne, détection « esprit » pour afficher le choix de salle, icône type.
+ * Lieu : segmented Présentiel / En ligne, zone présentiel avec fade-in,
+ * mode « esprit » → masque l’input texte, affiche le select salles.
  */
 (function () {
     var TYPE_ICONS = {
@@ -9,12 +10,12 @@
         autre: '📌'
     };
 
-    function closestForm(el) {
-        return el && el.closest ? el.closest('form') : null;
+    function isPresentiel(form) {
+        var on = form.querySelector('input[name="evenement[lieuType]"]:checked');
+        return on && on.value === 'presentiel';
     }
 
     function updateTypeIcon(form) {
-        if (!form) return;
         var sel = form.querySelector('.js-evenement-event-type');
         var iconEl = form.querySelector('.js-event-type-icon');
         if (!iconEl) return;
@@ -22,38 +23,58 @@
         iconEl.textContent = TYPE_ICONS[v] || '✨';
     }
 
-    function isPresentiel(form) {
-        var on = form.querySelector('input[name="evenement[lieuType]"]:checked');
-        return on && on.value === 'presentiel';
-    }
-
-    function togglePresentielBlock(form) {
-        var blocks = form.querySelectorAll('.js-evenement-lieu-presentiel, .js-evenement-salle-row');
-        var show = isPresentiel(form);
-        blocks.forEach(function (b) {
-            b.style.display = show ? '' : 'none';
-        });
-        if (!show) {
+    function setPresentielZoneVisible(form, visible) {
+        var zone = form.querySelector('.js-evenement-presentiel-zone');
+        if (!zone) return;
+        if (visible) {
+            zone.style.display = '';
+            zone.setAttribute('aria-hidden', 'false');
+            requestAnimationFrame(function () {
+                zone.classList.add('is-visible');
+            });
+        } else {
+            zone.classList.remove('is-visible');
+            zone.setAttribute('aria-hidden', 'true');
             var addr = form.querySelector('.js-evenement-lieu-adresse');
             var salle = form.querySelector('.js-evenement-salle-select');
             if (addr) addr.value = '';
             if (salle) salle.selectedIndex = 0;
-        } else {
-            updateEspritSalle(form);
+            setTimeout(function () {
+                if (!isPresentiel(form)) zone.style.display = 'none';
+            }, 200);
         }
     }
 
-    function updateEspritSalle(form) {
+    function updateEspritMode(form) {
         if (!isPresentiel(form)) return;
+        var addrRow = form.querySelector('.js-evenement-lieu-adresse-row');
+        var salleRow = form.querySelector('.js-evenement-salle-row');
         var addr = form.querySelector('.js-evenement-lieu-adresse');
-        var row = form.querySelector('.js-evenement-salle-row');
-        if (!addr || !row) return;
-        var v = (addr.value || '').toLowerCase().trim();
+        var salle = form.querySelector('.js-evenement-salle-select');
+        if (!addrRow || !salleRow || !addr) return;
+        var v = (addr.value || '').toLowerCase();
         var isEsprit = v.indexOf('esprit') !== -1;
-        row.style.display = isEsprit ? '' : 'none';
-        if (!isEsprit) {
-            var salle = form.querySelector('.js-evenement-salle-select');
-            if (salle) salle.selectedIndex = 0;
+        var hasSalle = !!(salle && salle.value);
+        if (hasSalle) {
+            addrRow.style.display = 'none';
+            salleRow.style.display = '';
+            return;
+        }
+        if (isEsprit) {
+            addrRow.style.display = 'none';
+            salleRow.style.display = '';
+            return;
+        }
+        addrRow.style.display = '';
+        salleRow.style.display = 'none';
+        if (salle) salle.selectedIndex = 0;
+    }
+
+    function syncPresentiel(form) {
+        var show = isPresentiel(form);
+        setPresentielZoneVisible(form, show);
+        if (show) {
+            updateEspritMode(form);
         }
     }
 
@@ -63,17 +84,23 @@
 
         form.querySelectorAll('input[name="evenement[lieuType]"]').forEach(function (r) {
             r.addEventListener('change', function () {
-                togglePresentielBlock(form);
+                syncPresentiel(form);
             });
         });
 
         var addr = form.querySelector('.js-evenement-lieu-adresse');
         if (addr) {
             addr.addEventListener('input', function () {
-                updateEspritSalle(form);
+                updateEspritMode(form);
             });
             addr.addEventListener('change', function () {
-                updateEspritSalle(form);
+                updateEspritMode(form);
+            });
+        }
+        var salleSel = form.querySelector('.js-evenement-salle-select');
+        if (salleSel) {
+            salleSel.addEventListener('change', function () {
+                updateEspritMode(form);
             });
         }
 
@@ -84,14 +111,13 @@
             });
         }
 
-        togglePresentielBlock(form);
-        updateEspritSalle(form);
+        syncPresentiel(form);
         updateTypeIcon(form);
     }
 
     function scan(root) {
         (root || document).querySelectorAll('form').forEach(function (form) {
-            if (form.querySelector('.js-evenement-event-type')) {
+            if (form.querySelector('.js-evenement-presentiel-zone')) {
                 bindForm(form);
             }
         });

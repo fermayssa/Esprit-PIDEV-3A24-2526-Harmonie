@@ -72,7 +72,7 @@ class TacheType extends AbstractType
                 'label_attr' => ['class' => 'harmony-label'],
             ])
             ->add('submit', SubmitType::class, [
-                'label' => '✓ Enregistrer',
+                'label' => 'Enregistrer',
                 'attr' => ['class' => 'harmony-btn-submit'],
                 'row_attr' => ['class' => 'harmony-form-row-submit'],
             ]);

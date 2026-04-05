@@ -27,9 +27,11 @@ final class AdminTacheController extends AbstractController
         $statutFiltre = '' !== $statut ? $statut : null;
         $calId = $request->query->get('calendrier');
         $calendrierId = null !== $calId && '' !== $calId ? (int) $calId : null;
+        $search = $request->query->getString('q');
+        $search = '' !== $search ? $search : null;
 
-        $total = $tacheRepository->countAdmin($statutFiltre, $calendrierId);
-        $taches = $tacheRepository->findAdminPaginated($page, self::LIMIT, $statutFiltre, $calendrierId);
+        $total = $tacheRepository->countAdmin($statutFiltre, $calendrierId, $search);
+        $taches = $tacheRepository->findAdminPaginated($page, self::LIMIT, $statutFiltre, $calendrierId, $search);
         $pages = (int) max(1, (int) ceil($total / self::LIMIT));
 
         return $this->render('admin/tache/index.html.twig', [
@@ -40,6 +42,7 @@ final class AdminTacheController extends AbstractController
             'total' => $total,
             'statutFiltre' => $statutFiltre ?? '',
             'calendrierId' => $calendrierId,
+            'searchQuery' => $search ?? '',
         ]);
     }
 
@@ -100,7 +103,8 @@ final class AdminTacheController extends AbstractController
     #[Route('/{id}', name: 'admin_tache_delete', requirements: ['id' => '\d+'], methods: ['POST'])]
     public function delete(Request $request, Tache $tache, PlanningDomainService $domainService): Response
     {
-        if ($this->isCsrfTokenValid('admin_delete_tache'.$tache->getId(), $request->getPayload()->getString('_token'))) {
+        $token = $request->request->getString('_token') ?: $request->getPayload()->getString('_token');
+        if ($this->isCsrfTokenValid('admin_delete_tache'.$tache->getId(), $token)) {
             try {
                 $domainService->removeTache($tache);
                 $this->addFlash('success', 'Tâche supprimée.');

@@ -19,29 +19,37 @@ final class AdminSalleType extends AbstractType
         $builder
             ->add('nom', TextType::class, [
                 'label' => 'Nom',
-                'attr' => ['class' => 'admin-input'],
+                'attr' => ['class' => 'harmony-input', 'placeholder' => 'Ex. Amphi 1, Salle A101'],
+                'label_attr' => ['class' => 'harmony-label'],
             ])
             ->add('capacite', IntegerType::class, [
                 'label' => 'Capacité',
-                'attr' => ['class' => 'admin-input', 'min' => 1],
+                'attr' => ['class' => 'harmony-input', 'min' => 1],
+                'label_attr' => ['class' => 'harmony-label'],
             ])
             ->add('disponible', CheckboxType::class, [
                 'label' => 'Disponible',
                 'required' => false,
+                'attr' => ['class' => 'harmony-toggle-input'],
+                'label_attr' => ['class' => 'harmony-toggle-ui'],
+                'row_attr' => ['class' => 'harmony-field harmony-toggle-field'],
             ])
             ->add('description', TextareaType::class, [
                 'label' => 'Description',
                 'required' => false,
-                'attr' => ['class' => 'admin-textarea', 'rows' => 3],
+                'attr' => ['class' => 'harmony-textarea', 'rows' => 4],
+                'label_attr' => ['class' => 'harmony-label'],
             ])
             ->add('equipements', TextareaType::class, [
                 'label' => 'Équipements',
                 'required' => false,
-                'attr' => ['class' => 'admin-textarea', 'rows' => 2],
+                'attr' => ['class' => 'harmony-textarea', 'rows' => 3],
+                'label_attr' => ['class' => 'harmony-label'],
             ])
             ->add('submit', SubmitType::class, [
                 'label' => 'Enregistrer',
-                'attr' => ['class' => 'admin-btn-primary'],
+                'attr' => ['class' => 'harmony-btn-submit'],
+                'row_attr' => ['class' => 'harmony-form-row-submit'],
             ]);
     }
 

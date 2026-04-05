@@ -90,7 +90,7 @@ class EvenementType extends AbstractType
                 'expanded' => true,
                 'label_attr' => ['class' => 'harmony-label'],
                 'row_attr' => [
-                    'class' => 'harmony-field harmony-field-lieu-type harmony-lieu-type-radios js-evenement-lieu-type',
+                    'class' => 'harmony-field harmony-field-lieu-type harmony-lieu-segmented js-evenement-lieu-type-row',
                 ],
             ])
             ->add('lieuAdresse', TextType::class, [
@@ -98,25 +98,25 @@ class EvenementType extends AbstractType
                 'required' => false,
                 'attr' => [
                     'class' => 'harmony-input js-evenement-lieu-adresse',
-                    'placeholder' => 'Adresse, campus, ou « esprit » pour choisir une salle',
+                    'placeholder' => 'Adresse, campus, ou tapez esprit pour choisir une salle…',
                     'maxlength' => 255,
                     'autocomplete' => 'off',
                 ],
                 'label_attr' => ['class' => 'harmony-label'],
-                'row_attr' => ['class' => 'harmony-field harmony-field-lieu-presentiel js-evenement-lieu-presentiel'],
+                'row_attr' => ['class' => 'harmony-field js-evenement-lieu-adresse-row'],
             ])
             ->add('salle', EntityType::class, [
                 'class' => Salle::class,
                 'label' => 'Choisir une salle',
                 'required' => false,
                 'placeholder' => '— Sélectionner une salle —',
+                'choice_label' => static fn (Salle $s): string => $s->getNom().' · '.$s->getCapacite().' pers.',
                 'attr' => [
                     'class' => 'harmony-select js-evenement-salle-select',
                 ],
                 'label_attr' => ['class' => 'harmony-label'],
                 'row_attr' => [
-                    'class' => 'harmony-field harmony-field-salle-esprit js-evenement-salle-row',
-                    'style' => 'display:none;',
+                    'class' => 'harmony-field js-evenement-salle-row',
                 ],
                 'query_builder' => static function (SalleRepository $r) {
                     return $r->createQueryBuilder('s')
@@ -168,7 +168,7 @@ class EvenementType extends AbstractType
         }
 
         $builder->add('submit', SubmitType::class, [
-            'label' => '✓ Enregistrer',
+            'label' => 'Enregistrer',
             'attr' => ['class' => 'harmony-btn-submit'],
             'row_attr' => ['class' => 'harmony-form-row-submit'],
         ]);
@@ -180,6 +180,8 @@ class EvenementType extends AbstractType
             }
             if (($data['lieuType'] ?? '') === 'en_ligne') {
                 $data['salle'] = null;
+                $data['lieuAdresse'] = null;
+            } elseif (($data['lieuType'] ?? '') === 'presentiel' && !empty($data['salle'])) {
                 $data['lieuAdresse'] = null;
             }
             $event->setData($data);

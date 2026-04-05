@@ -22,6 +22,7 @@
 
 {% block stylesheets %}
     {{ parent() }}
+    <link href="{{ asset('harmonie/css/harmony-forms.css') }}" rel="stylesheet">
     <link href="{{ asset('harmonie/css/harmony-panel.css') }}" rel="stylesheet">
     <style>
         .cal-page { max-width: 1100px; margin: 0 auto; }
@@ -104,6 +105,17 @@
         }
         .cal-ev-title { display: block; font-weight: 600; }
         .cal-ev-time { display: block; font-size: 10px; opacity: 0.85; font-weight: 500; margin-top: 2px; }
+        .cal-cell--holiday {
+            background: linear-gradient(180deg, #fffbeb 0%, #fef3c7 100%) !important;
+            border-color: #fcd34d;
+        }
+        .cal-holiday-name {
+            font-size: 10px;
+            font-weight: 600;
+            color: #92400e;
+            line-height: 1.2;
+            margin-bottom: 2px;
+        }
         @media (max-width: 900px) {
             .cal-head-row { grid-template-columns: 1fr; }
             .cal-nav { grid-column: 1; grid-row: auto; }
@@ -116,6 +128,7 @@
 {% block content %}
 <div id="evenement-calendar-root"
      class="harmony-split-root cal-page"
+     data-calendar-year="{{ year }}"
      data-edit-url-template="{{ path('app_evenement_edit', { id: 888888888 })|e('html_attr') }}">
     <div class="harmony-split-main">
         <div class="cal-head-row">
@@ -198,6 +211,7 @@
 
 {% block javascripts %}
     {{ parent() }}
+    <script src="{{ asset('harmonie/js/cal-tunisia-holidays.js') }}" defer></script>
     <script src="{{ asset('harmonie/js/evenement-lieu.js') }}"></script>
     <script>
     (function () {

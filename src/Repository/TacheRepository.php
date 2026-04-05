@@ -60,7 +60,7 @@ class TacheRepository extends ServiceEntityRepository
     /**
      * @return list<Tache>
      */
-    public function findAdminPaginated(int $page, int $limit, ?string $statutFiltre, ?int $calendrierId): array
+    public function findAdminPaginated(int $page, int $limit, ?string $statutFiltre, ?int $calendrierId, ?string $search): array
     {
         $qb = $this->createQueryBuilder('t')
             ->leftJoin('t.calendrier', 'c')->addSelect('c')
@@ -73,6 +73,10 @@ class TacheRepository extends ServiceEntityRepository
         if (null !== $calendrierId) {
             $qb->andWhere('c.id = :cid')->setParameter('cid', $calendrierId);
         }
+        if (null !== $search && '' !== trim($search)) {
+            $qb->andWhere('t.nom LIKE :q OR t.notes LIKE :q')
+                ->setParameter('q', '%'.trim($search).'%');
+        }
 
         return $qb->setFirstResult(max(0, ($page - 1) * $limit))
             ->setMaxResults($limit)
@@ -80,7 +84,7 @@ class TacheRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function countAdmin(?string $statutFiltre, ?int $calendrierId): int
+    public function countAdmin(?string $statutFiltre, ?int $calendrierId, ?string $search): int
     {
         $qb = $this->createQueryBuilder('t')->select('COUNT(t.id)')
             ->leftJoin('t.calendrier', 'c');
@@ -91,7 +95,24 @@ class TacheRepository extends ServiceEntityRepository
         if (null !== $calendrierId) {
             $qb->andWhere('c.id = :cid')->setParameter('cid', $calendrierId);
         }
+        if (null !== $search && '' !== trim($search)) {
+            $qb->andWhere('t.nom LIKE :q OR t.notes LIKE :q')
+                ->setParameter('q', '%'.trim($search).'%');
+        }
 
         return (int) $qb->getQuery()->getSingleScalarResult();
+    }
+
+    /**
+     * @return list<Tache>
+     */
+    public function findRecentForDashboard(int $limit = 3): array
+    {
+        return $this->createQueryBuilder('t')
+            ->leftJoin('t.calendrier', 'c')->addSelect('c')
+            ->orderBy('t.id', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
     }
 }

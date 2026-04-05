@@ -23,8 +23,10 @@
             <span class="js-event-type-icon harmony-type-icon" style="font-size:1.75rem;display:block;margin:-4px 0 12px;"></span>
         </div>
         {{ hf.harmony_field(form.lieuType) }}
-        {{ hf.harmony_field(form.lieuAdresse) }}
-        {{ hf.harmony_field(form.salle) }}
+        <div class="js-evenement-presentiel-zone harmony-presentiel-zone" aria-hidden="true">
+            {{ hf.harmony_field(form.lieuAdresse) }}
+            {{ hf.harmony_field(form.salle) }}
+        </div>
     </div>
 
     <details class="harmony-form-details">

@@ -3,17 +3,16 @@
 {% block title %}Modifier tâche — Admin{% endblock %}
 
 {% block stylesheets %}
+    {{ parent() }}
     <link href="{{ asset('harmonie/css/harmony-forms.css') }}" rel="stylesheet">
 {% endblock %}
 
 {% block body %}
-<div class="admin-topbar">
-    <h1 class="admin-page-title">Modifier la tâche</h1>
-    <a href="{{ path('admin_tache_index') }}" class="admin-btn admin-btn-ghost">Retour</a>
-</div>
-<div class="admin-card">
-    {{ form_start(form, { attr: { class: 'harmony-form' } }) }}
-        {{ form_widget(form) }}
-    {{ form_end(form) }}
+<div class="admin-harmony-form-shell">
+    <div class="harmony-form-card">
+        <h1>Modifier la tâche</h1>
+        {{ include('tache/_form.html.twig') }}
+        <a href="{{ path('admin_tache_index') }}" class="harmony-form-back">← Retour à la liste</a>
+    </div>
 </div>
 {% endblock %}

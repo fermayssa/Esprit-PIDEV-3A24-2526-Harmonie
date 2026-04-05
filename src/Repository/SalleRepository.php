@@ -32,11 +32,17 @@ class SalleRepository extends ServiceEntityRepository
     /**
      * @return list<Salle>
      */
-    public function findAdminPaginated(int $page, int $limit): array
+    public function findAdminPaginated(int $page, int $limit, ?string $search): array
     {
-        return $this->createQueryBuilder('s')
-            ->orderBy('s.nom', 'ASC')
-            ->setFirstResult(max(0, ($page - 1) * $limit))
+        $qb = $this->createQueryBuilder('s')
+            ->orderBy('s.nom', 'ASC');
+
+        if (null !== $search && '' !== trim($search)) {
+            $qb->andWhere('s.nom LIKE :q OR s.description LIKE :q OR s.equipements LIKE :q')
+                ->setParameter('q', '%'.trim($search).'%');
+        }
+
+        return $qb->setFirstResult(max(0, ($page - 1) * $limit))
             ->setMaxResults($limit)
             ->getQuery()
             ->getResult();
@@ -45,5 +51,16 @@ class SalleRepository extends ServiceEntityRepository
     public function countAll(): int
     {
         return (int) $this->createQueryBuilder('s')->select('COUNT(s.id)')->getQuery()->getSingleScalarResult();
+    }
+
+    public function countAdminFiltered(?string $search): int
+    {
+        $qb = $this->createQueryBuilder('s')->select('COUNT(s.id)');
+        if (null !== $search && '' !== trim($search)) {
+            $qb->andWhere('s.nom LIKE :q OR s.description LIKE :q OR s.equipements LIKE :q')
+                ->setParameter('q', '%'.trim($search).'%');
+        }
+
+        return (int) $qb->getQuery()->getSingleScalarResult();
     }
 }

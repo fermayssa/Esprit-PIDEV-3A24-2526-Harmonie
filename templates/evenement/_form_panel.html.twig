@@ -24,8 +24,10 @@
             <span class="js-event-type-icon harmony-type-icon harmony-panel-type-icon"></span>
         </div>
         {{ form_row(form.lieuType) }}
-        {{ form_row(form.lieuAdresse) }}
-        {{ form_row(form.salle) }}
+        <div class="js-evenement-presentiel-zone harmony-presentiel-zone" aria-hidden="true">
+            {{ form_row(form.lieuAdresse) }}
+            {{ form_row(form.salle) }}
+        </div>
     </div>
 
     <div class="harmony-panel-sr-hidden" aria-hidden="true">
