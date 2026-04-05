@@ -24,17 +24,19 @@ class AdminUserController extends AbstractController
         private readonly SuspicionScoreService   $suspicion,
     ) {}
 
-    // ── Liste des comptes ──────────────────────────────────────────────────
     #[Route('', name: 'admin_users_index', methods: ['GET'])]
     public function index(Request $request): Response
     {
-        $q = $request->query->get('q', '');
+        $q    = $request->query->get('q', '');
+        $sort = $request->query->get('sort', 'suspicion'); // 'suspicion' ou 'normal'
 
         $users = $q
             ? $this->repo->searchByName($q)
             : $this->repo->findAllStudents();
 
-        $users = $this->suspicion->sortBySuspicion($users);
+        if ($sort === 'suspicion') {
+            $users = $this->suspicion->sortBySuspicion($users);
+        }
 
         $scores = [];
         foreach ($users as $u) {
@@ -43,18 +45,24 @@ class AdminUserController extends AbstractController
                 'score' => $s,
                 'label' => $this->suspicion->getLabel($s),
                 'color' => $this->suspicion->getColor($s),
+                'border'=> $this->suspicion->getBorderColor($s),
             ];
         }
 
-        return $this->render('admin/users/index.html.twig', compact('users', 'scores', 'q'));
+        return $this->render('admin/users/index.html.twig', compact('users', 'scores', 'q', 'sort'));
     }
 
-    // ── Live search JSON ───────────────────────────────────────────────────
     #[Route('/search', name: 'admin_users_search', methods: ['GET'])]
     public function search(Request $request): JsonResponse
     {
-        $q     = $request->query->get('q', '');
+        $q    = $request->query->get('q', '');
+        $sort = $request->query->get('sort', 'suspicion');
+
         $users = $q ? $this->repo->searchByName($q) : $this->repo->findAllStudents();
+
+        if ($sort === 'suspicion') {
+            $users = $this->suspicion->sortBySuspicion($users);
+        }
 
         $data = array_map(fn(User $u) => [
             'id'     => $u->getUserId(),
@@ -65,13 +73,15 @@ class AdminUserController extends AbstractController
             'score'  => $this->suspicion->compute($u),
             'label'  => $this->suspicion->getLabel($this->suspicion->compute($u)),
             'color'  => $this->suspicion->getColor($this->suspicion->compute($u)),
+            'border' => $this->suspicion->getBorderColor($this->suspicion->compute($u)),
             'image'  => $u->getUserImagePath(),
+            'date'   => $u->getDateInscription(),
         ], $users);
 
         return new JsonResponse($data);
     }
 
-    // ── Comptes suspendus — DOIT être avant /{id} ──────────────────────────
+    // ── Comptes suspendus — AVANT /{id} ───────────────────────────────────
     #[Route('/suspended', name: 'admin_users_suspended', methods: ['GET'])]
     public function suspended(): Response
     {
@@ -79,7 +89,6 @@ class AdminUserController extends AbstractController
         return $this->render('admin/users/suspended.html.twig', compact('users'));
     }
 
-    // ── Détail d'un compte ─────────────────────────────────────────────────
     #[Route('/{id}', name: 'admin_users_show', methods: ['GET'], requirements: ['id' => '\d+'])]
     public function show(User $user): Response
     {
@@ -89,10 +98,10 @@ class AdminUserController extends AbstractController
             'score'      => $score,
             'scoreLabel' => $this->suspicion->getLabel($score),
             'scoreColor' => $this->suspicion->getColor($score),
+            'breakdown'  => $this->suspicion->getBreakdown($user),
         ]);
     }
 
-    // ── Modifier un compte ─────────────────────────────────────────────────
     #[Route('/{id}/edit', name: 'admin_users_edit', methods: ['GET', 'POST'])]
     public function edit(User $user, Request $request): Response
     {
@@ -111,7 +120,6 @@ class AdminUserController extends AbstractController
         ]);
     }
 
-    // ── Suspendre / Réactiver ──────────────────────────────────────────────
     #[Route('/{id}/toggle', name: 'admin_users_toggle', methods: ['POST'])]
     public function toggle(User $user, Request $request): Response
     {
@@ -121,7 +129,19 @@ class AdminUserController extends AbstractController
             $action = $user->isActive() ? 'réactivé' : 'suspendu';
             $this->addFlash('success', "Compte {$action} avec succès.");
         }
-
         return $this->redirectToRoute('admin_users_index');
+    }
+
+    // ── Détail suspicion JSON ──────────────────────────────────────────────
+    #[Route('/{id}/suspicion', name: 'admin_users_suspicion', methods: ['GET'], requirements: ['id' => '\d+'])]
+    public function suspicionDetail(User $user): JsonResponse
+    {
+        $score = $this->suspicion->compute($user);
+        return new JsonResponse([
+            'score'     => $score,
+            'label'     => $this->suspicion->getLabel($score),
+            'color'     => $this->suspicion->getColor($score),
+            'breakdown' => $this->suspicion->getBreakdown($user),
+        ]);
     }
 }

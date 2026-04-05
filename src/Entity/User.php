@@ -21,26 +21,26 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $userId = null;
 
     #[ORM\Column(name: 'user_nom', type: Types::STRING, length: 50)]
-    #[Assert\NotBlank(message: 'Le nom est obligatoire.')]
-    #[Assert\Length(min: 2, max: 50)]
+    #[Assert\NotBlank(message: 'Le nom est obligatoire.', groups: ['Default', 'step1'])]
+    #[Assert\Length(min: 2, max: 50, groups: ['Default', 'step1'])]
     private string $userNom = '';
 
     #[ORM\Column(name: 'user_prenom', type: Types::STRING, length: 50)]
-    #[Assert\NotBlank(message: 'Le prénom est obligatoire.')]
-    #[Assert\Length(min: 2, max: 50)]
+    #[Assert\NotBlank(message: 'Le prénom est obligatoire.', groups: ['Default', 'step1'])]
+    #[Assert\Length(min: 2, max: 50, groups: ['Default', 'step1'])]
     private string $userPrenom = '';
 
     #[ORM\Column(name: 'user_email', type: Types::STRING, length: 100, unique: true)]
-    #[Assert\NotBlank(message: "L'email est obligatoire.")]
-    #[Assert\Email(message: "Format d'email invalide.")]
+    #[Assert\NotBlank(message: "L'email est obligatoire.", groups: ['Default', 'step1'])]
+    #[Assert\Email(message: "Format d'email invalide.", groups: ['Default', 'step1'])]
     private string $userEmail = '';
 
     #[ORM\Column(name: 'user_password', type: Types::STRING, length: 255)]
     private string $userPassword = '';
 
     #[ORM\Column(name: 'user_date_de_naissance', type: Types::STRING, length: 10)]
-    #[Assert\NotBlank(message: 'La date de naissance est obligatoire.')]
-    #[Assert\Regex(pattern: '/^\d{4}-\d{2}-\d{2}$/', message: 'Format de date invalide (YYYY-MM-DD).')]
+    #[Assert\NotBlank(message: 'La date de naissance est obligatoire.', groups: ['Default', 'step1'])]
+    #[Assert\Regex(pattern: '/^\d{4}-\d{2}-\d{2}$/', message: 'Format de date invalide (YYYY-MM-DD).', groups: ['Default', 'step1'])]
     private string $userDateDeNaissance = '';
 
     #[ORM\Column(
@@ -59,8 +59,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         nullable: true,
         options: ['default' => null]
     )]
-    #[Assert\PositiveOrZero(message: 'Le poids doit être positif.')]
-    #[Assert\LessThanOrEqual(value: 300, message: 'Poids irréaliste.')]
+    #[Assert\PositiveOrZero(message: 'Le poids doit être positif.', groups: ['Default', 'step2'])]
+    #[Assert\LessThanOrEqual(value: 300, message: 'Poids irréaliste.', groups: ['Default', 'step2'])]
     private ?string $userPoids = null;
 
     #[ORM\Column(
@@ -69,8 +69,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         nullable: true,
         options: ['default' => null]
     )]
-    #[Assert\PositiveOrZero]
-    #[Assert\LessThanOrEqual(value: 300)]
+    #[Assert\PositiveOrZero(groups: ['Default', 'step2'])]
+    #[Assert\LessThanOrEqual(value: 300, groups: ['Default', 'step2'])]
     private ?int $userTaille = null;
 
     #[ORM\Column(
