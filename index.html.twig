@@ -1,0 +1,1203 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Activités — Harmony{% endblock %}
+
+{% block stylesheets %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --pu:       #6A5ACD;
+  --pu-dk:    #4B3B9E;
+  --pu-lt:    #8B7FD4;
+  --pu-pale:  #EDE8FA;
+  --pu-ghost: #F7F5FD;
+  --pu-deep:  #2D2060;
+  --tx:       #1C1733;
+  --tx-mid:   #4A4570;
+  --tx-muted: #9590B8;
+  --border:   rgba(106,90,205,.12);
+  --white:    #FFFFFF;
+  --glass:    rgba(255,255,255,.72);
+  --glass-border: rgba(255,255,255,.4);
+  --shadow:   0 8px 32px rgba(106,90,205,.14);
+  --green:    #22C55E;
+  --orange:   #F59E0B;
+  --red:      #EF4444;
+  --card-r:   18px;
+  --font-h:   'Syne', sans-serif;
+  --font-b:   'DM Sans', sans-serif;
+  --font-m:   'JetBrains Mono', monospace;
+}
+
+html,body{font-family:var(--font-b);background:var(--pu-ghost);color:var(--tx);overflow-x:hidden}
+
+/* ─── TOPBAR ─── */
+.topbar{
+  position:sticky;top:0;z-index:300;
+  background:var(--white);
+  border-bottom:1px solid var(--border);
+  height:62px;display:flex;align-items:center;
+  padding:0 36px;gap:6px;
+}
+.topbar-logo{display:flex;align-items:center;gap:10px;text-decoration:none;margin-right:28px}
+.logo-mark{width:34px;height:34px;border-radius:10px;object-fit:contain;flex-shrink:0}
+.nav-links{display:flex;align-items:center;gap:2px;flex:1;flex-wrap:nowrap;overflow-x:auto}
+.nav-link{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:7px 14px;border-radius:9px;
+  font-size:13px;font-weight:500;
+  color:var(--tx-mid);text-decoration:none;
+  white-space:nowrap;transition:background .15s,color .15s;
+}
+.nav-link:hover{background:var(--pu-pale);color:var(--pu)}
+.nav-link.active{background:var(--pu-pale);color:var(--pu);font-weight:600}
+.topbar-right{display:flex;align-items:center;gap:10px;margin-left:auto;flex-shrink:0}
+.logout-btn{
+  padding:7px 16px;border-radius:9px;
+  border:1.5px solid rgba(239,68,68,.2);
+  background:transparent;color:#E05252;
+  font-family:var(--font-b);font-size:13px;font-weight:500;
+  cursor:pointer;transition:background .15s,border-color .15s;white-space:nowrap;
+}
+.logout-btn:hover{background:#FEF2F2;border-color:#E05252}
+.profile-wrap{position:relative}
+.avatar{
+  width:36px;height:36px;border-radius:50%;
+  background:var(--pu);color:white;
+  font-family:var(--font-h);font-weight:700;font-size:14px;
+  display:grid;place-items:center;cursor:pointer;
+  border:2px solid var(--pu-pale);transition:box-shadow .15s;
+}
+.avatar:hover{box-shadow:0 0 0 3px rgba(106,90,205,.25)}
+.profile-dropdown{
+  position:absolute;top:calc(100% + 10px);right:0;
+  width:220px;background:var(--white);
+  border:1px solid var(--border);border-radius:14px;
+  box-shadow:0 12px 40px rgba(0,0,0,.1);
+  padding:16px;display:none;z-index:500;
+}
+.profile-dropdown.open{display:block}
+.pd-name{font-size:14px;font-weight:600;color:var(--tx)}
+.pd-email{font-size:12px;color:var(--tx-muted);margin-top:2px}
+.pd-divider{height:1px;background:var(--border);margin:12px 0}
+.pd-hint{font-size:11px;color:var(--tx-muted);font-style:italic}
+
+/* ─── HERO BANNER ─── */
+.hero-banner{
+  background:linear-gradient(135deg,var(--pu-deep) 0%,var(--pu) 60%,#9B8CE8 100%);
+  padding:36px 40px;
+  display:flex;align-items:center;justify-content:space-between;gap:24px;
+  position:relative;overflow:hidden;
+}
+.hero-banner::before{
+  content:'';position:absolute;top:-60px;right:-60px;
+  width:280px;height:280px;border-radius:50%;
+  background:rgba(255,255,255,.06);pointer-events:none;
+}
+.hero-banner::after{
+  content:'';position:absolute;bottom:-40px;left:30%;
+  width:180px;height:180px;border-radius:50%;
+  background:rgba(255,255,255,.04);pointer-events:none;
+}
+.hero-left h1{
+  font-family:var(--font-h);font-size:28px;font-weight:800;
+  color:white;letter-spacing:-.4px;margin-bottom:6px;
+}
+.hero-left p{font-size:14px;color:rgba(255,255,255,.72);font-weight:300}
+.hero-stats{display:flex;gap:14px;flex-shrink:0}
+.hstat{
+  background:rgba(255,255,255,.12);backdrop-filter:blur(8px);
+  border:1px solid rgba(255,255,255,.2);
+  border-radius:14px;padding:14px 20px;text-align:center;min-width:90px;
+}
+.hstat-val{font-family:var(--font-h);font-size:22px;font-weight:800;color:white}
+.hstat-lbl{font-size:10px;color:rgba(255,255,255,.65);margin-top:2px;text-transform:uppercase;letter-spacing:.5px}
+
+/* ─── LAYOUT ─── */
+.page{max-width:1280px;margin:0 auto;padding:32px 36px 80px;display:grid;grid-template-columns:1fr 360px;gap:24px;align-items:start}
+.main-col{display:flex;flex-direction:column;gap:22px}
+.side-col{display:flex;flex-direction:column;gap:20px;position:sticky;top:78px}
+
+/* ─── CARDS ─── */
+.card{
+  background:var(--white);border:1px solid var(--border);
+  border-radius:var(--card-r);overflow:hidden;
+}
+.card-head{
+  padding:18px 22px 14px;
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.card-title{
+  font-family:var(--font-h);font-size:15px;font-weight:700;color:var(--tx);
+  display:flex;align-items:center;gap:8px;
+}
+.card-body{padding:20px 22px}
+
+/* ─── DATE + FILTER ROW ─── */
+.toolbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.date-input{
+  padding:9px 14px;border:1.5px solid var(--border);border-radius:10px;
+  font-family:var(--font-b);font-size:13px;color:var(--tx);
+  background:var(--white);cursor:pointer;outline:none;
+  transition:border-color .15s;
+}
+.date-input:focus{border-color:var(--pu)}
+.cat-filters{display:flex;gap:8px;flex-wrap:wrap;flex:1}
+.cat-btn{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:8px 14px;border-radius:20px;border:1.5px solid var(--border);
+  background:var(--white);font-family:var(--font-b);font-size:12.5px;font-weight:500;
+  color:var(--tx-mid);cursor:pointer;transition:all .15s;white-space:nowrap;
+}
+.cat-btn:hover{border-color:var(--pu-lt);color:var(--pu);background:var(--pu-ghost)}
+.cat-btn.active{background:var(--pu);border-color:var(--pu);color:white}
+
+/* ─── EXERCISE GRID ─── */
+.ex-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px}
+.ex-card{
+  background:var(--white);border:1.5px solid var(--border);
+  border-radius:16px;overflow:hidden;cursor:pointer;
+  transition:border-color .18s,transform .18s,box-shadow .18s;
+  position:relative;
+}
+.ex-card:hover{border-color:var(--pu-lt);transform:translateY(-3px);box-shadow:var(--shadow)}
+.ex-card.selected{border-color:var(--pu);box-shadow:0 0 0 3px rgba(106,90,205,.15)}
+.ex-thumb{
+  height:110px;background:var(--pu-ghost);
+  display:flex;align-items:center;justify-content:center;
+  font-size:42px;position:relative;overflow:hidden;
+}
+.ex-thumb-bg{
+  position:absolute;inset:0;opacity:.06;
+  background:radial-gradient(circle at 50% 50%,var(--pu) 0%,transparent 70%);
+}
+.ex-badge{
+  position:absolute;top:8px;right:8px;
+  font-size:10px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;
+  padding:3px 8px;border-radius:20px;
+}
+.ex-badge.cardio{background:#FEE2E2;color:#DC2626}
+.ex-badge.muscu{background:#DBEAFE;color:#1D4ED8}
+.ex-badge.yoga{background:#D1FAE5;color:#065F46}
+.ex-badge.hiit{background:#FEF3C7;color:#B45309}
+.ex-badge.pilates{background:#EDE9FE;color:#6D28D9}
+.ex-body{padding:12px 14px}
+.ex-name{font-family:var(--font-h);font-size:13.5px;font-weight:700;color:var(--tx);margin-bottom:4px}
+.ex-cal{font-size:11.5px;color:var(--tx-muted);display:flex;align-items:center;gap:4px}
+.ex-actions{
+  display:flex;gap:6px;padding:0 14px 12px;
+}
+.btn-xs{
+  flex:1;padding:6px;border-radius:8px;border:none;
+  font-family:var(--font-b);font-size:11px;font-weight:600;
+  cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:4px;
+}
+.btn-xs.v{background:var(--pu-pale);color:var(--pu)}
+.btn-xs.v:hover{background:var(--pu);color:white}
+.btn-xs.q{background:#F3F4F6;color:var(--tx-mid)}
+.btn-xs.q:hover{background:var(--tx-mid);color:white}
+
+/* ─── LOG FORM ─── */
+.log-form{display:flex;flex-direction:column;gap:14px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-group{display:flex;flex-direction:column;gap:5px}
+.form-group.full{grid-column:1/-1}
+label{font-size:12px;font-weight:600;color:var(--tx-mid);text-transform:uppercase;letter-spacing:.4px}
+input,select,textarea{
+  padding:10px 14px;border:1.5px solid var(--border);border-radius:10px;
+  font-family:var(--font-b);font-size:13.5px;color:var(--tx);
+  background:var(--white);outline:none;transition:border-color .15s;width:100%;
+}
+input:focus,select:focus,textarea:focus{border-color:var(--pu)}
+input.error,select.error{border-color:var(--red)}
+.err-msg{font-size:11px;color:var(--red);margin-top:2px;display:none}
+.err-msg.show{display:block}
+textarea{resize:vertical;min-height:72px;line-height:1.5}
+.btn-submit{
+  width:100%;padding:13px;border-radius:11px;border:none;
+  background:var(--pu);color:white;
+  font-family:var(--font-h);font-size:15px;font-weight:700;
+  cursor:pointer;transition:background .15s,transform .15s;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.btn-submit:hover{background:var(--pu-dk);transform:translateY(-1px)}
+.btn-submit:active{transform:none}
+.selected-exercise-info{
+  background:var(--pu-ghost);border:1.5px solid var(--pu-pale);
+  border-radius:10px;padding:12px 14px;
+  display:flex;align-items:center;gap:12px;
+  display:none;
+}
+.selected-exercise-info.show{display:flex}
+.sei-icon{font-size:24px}
+.sei-name{font-family:var(--font-h);font-size:14px;font-weight:700;color:var(--pu)}
+.sei-type{font-size:11px;color:var(--tx-muted)}
+
+/* ─── SESSION HISTORY ─── */
+.hist-list{display:flex;flex-direction:column;gap:10px}
+.hist-item{
+  background:var(--white);border:1px solid var(--border);
+  border-radius:14px;padding:14px 18px;
+  display:flex;align-items:center;gap:14px;
+  transition:border-color .15s;
+}
+.hist-item:hover{border-color:var(--pu-lt)}
+.hist-icon{
+  width:42px;height:42px;border-radius:11px;
+  background:var(--pu-pale);display:grid;place-items:center;
+  font-size:20px;flex-shrink:0;
+}
+.hist-info{flex:1;min-width:0}
+.hist-name{font-family:var(--font-h);font-size:14px;font-weight:700;color:var(--tx)}
+.hist-meta{display:flex;gap:12px;margin-top:4px;flex-wrap:wrap}
+.hist-tag{
+  font-size:11px;font-weight:500;color:var(--tx-muted);
+  display:flex;align-items:center;gap:3px;
+}
+.hist-actions{display:flex;gap:6px;flex-shrink:0}
+.btn-icon{
+  width:32px;height:32px;border-radius:8px;border:1px solid var(--border);
+  background:transparent;cursor:pointer;display:grid;place-items:center;
+  font-size:14px;transition:all .15s;
+}
+.btn-icon:hover.edit{border-color:var(--pu);background:var(--pu-pale)}
+.btn-icon:hover.del{border-color:var(--red);background:#FEE2E2}
+
+/* ─── AI COACH ─── */
+.ai-chat{
+  background:linear-gradient(135deg,var(--pu-deep),#3D2A8A);
+  border-radius:var(--card-r);overflow:hidden;
+}
+.ai-head{
+  padding:16px 20px;display:flex;align-items:center;gap:12px;
+  border-bottom:1px solid rgba(255,255,255,.12);
+}
+.ai-avatar{
+  width:38px;height:38px;border-radius:50%;
+  background:rgba(255,255,255,.15);display:grid;place-items:center;
+  font-size:20px;
+}
+.ai-name{font-family:var(--font-h);font-size:14px;font-weight:700;color:white}
+.ai-status{display:flex;align-items:center;gap:5px;font-size:11px;color:rgba(255,255,255,.6)}
+.ai-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:blink 1.8s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.ai-messages{padding:16px;height:220px;overflow-y:auto;display:flex;flex-direction:column;gap:10px}
+.ai-messages::-webkit-scrollbar{width:4px}
+.ai-messages::-webkit-scrollbar-thumb{background:rgba(255,255,255,.2);border-radius:4px}
+.ai-bubble{
+  max-width:85%;border-radius:14px;padding:10px 14px;
+  font-size:12.5px;line-height:1.55;
+}
+.ai-bubble.bot{
+  background:rgba(255,255,255,.12);color:rgba(255,255,255,.92);
+  border-bottom-left-radius:4px;align-self:flex-start;
+}
+.ai-bubble.user{
+  background:rgba(255,255,255,.22);color:white;font-weight:500;
+  border-bottom-right-radius:4px;align-self:flex-end;
+}
+.ai-input-area{padding:12px 16px;border-top:1px solid rgba(255,255,255,.12);display:flex;gap:8px}
+.ai-input{
+  flex:1;padding:10px 14px;border-radius:10px;border:1px solid rgba(255,255,255,.2);
+  background:rgba(255,255,255,.1);color:white;
+  font-family:var(--font-b);font-size:13px;outline:none;
+}
+.ai-input::placeholder{color:rgba(255,255,255,.4)}
+.ai-input:focus{border-color:rgba(255,255,255,.45)}
+.ai-send{
+  width:38px;height:38px;border-radius:10px;border:none;
+  background:rgba(255,255,255,.2);color:white;cursor:pointer;
+  display:grid;place-items:center;font-size:16px;transition:background .15s;
+}
+.ai-send:hover{background:rgba(255,255,255,.35)}
+.ai-thinking{
+  display:flex;gap:4px;align-items:center;padding:8px 14px;
+  background:rgba(255,255,255,.12);border-radius:14px;border-bottom-left-radius:4px;
+  align-self:flex-start;display:none;
+}
+.ai-thinking.show{display:flex}
+.think-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.6)}
+.think-dot:nth-child(1){animation:bounce .8s .0s infinite}
+.think-dot:nth-child(2){animation:bounce .8s .15s infinite}
+.think-dot:nth-child(3){animation:bounce .8s .3s infinite}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+
+/* ─── QUICK STATS SIDEBAR ─── */
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stat-box{
+  background:var(--pu-ghost);border:1px solid var(--border);
+  border-radius:12px;padding:14px 16px;text-align:center;
+}
+.stat-box-val{font-family:var(--font-h);font-size:20px;font-weight:800;color:var(--pu)}
+.stat-box-lbl{font-size:11px;color:var(--tx-muted);margin-top:2px}
+
+/* ─── PROGRESS BAR ─── */
+.prog-item{margin-bottom:14px}
+.prog-label{display:flex;justify-content:space-between;margin-bottom:5px}
+.prog-name{font-size:12.5px;font-weight:500;color:var(--tx-mid)}
+.prog-pct{font-family:var(--font-m);font-size:12px;color:var(--pu);font-weight:600}
+.prog-track{height:6px;background:var(--pu-ghost);border-radius:6px;overflow:hidden}
+.prog-fill{height:100%;border-radius:6px;background:linear-gradient(90deg,var(--pu-lt),var(--pu));transition:width .6s ease}
+
+/* ─── MODALS ─── */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(20,15,50,.6);
+  backdrop-filter:blur(6px);z-index:1000;
+  display:none;align-items:center;justify-content:center;padding:20px;
+}
+.modal-overlay.open{display:flex}
+.modal{
+  background:var(--white);border-radius:22px;
+  width:100%;max-width:560px;overflow:hidden;
+  animation:slideUp .3s ease;
+}
+@keyframes slideUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+.modal-head{
+  padding:20px 24px 16px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.modal-title{font-family:var(--font-h);font-size:17px;font-weight:700;color:var(--tx)}
+.modal-close{
+  width:30px;height:30px;border-radius:8px;border:none;
+  background:var(--pu-ghost);cursor:pointer;font-size:16px;
+  display:grid;place-items:center;color:var(--tx-muted);
+  transition:background .15s;
+}
+.modal-close:hover{background:var(--pu-pale);color:var(--pu)}
+.modal-body{padding:24px}
+.video-wrap{
+  width:100%;padding-top:56.25%;border-radius:12px;
+  background:var(--tx);position:relative;overflow:hidden;
+}
+.video-wrap iframe{position:absolute;inset:0;width:100%;height:100%;border:none}
+.qr-center{display:flex;flex-direction:column;align-items:center;gap:16px;padding:16px 0}
+.qr-code{width:180px;height:180px;background:var(--pu-ghost);border-radius:16px;display:grid;place-items:center}
+.qr-label{font-size:13px;color:var(--tx-muted);text-align:center}
+
+/* ─── EDIT MODAL ─── */
+.edit-form{display:flex;flex-direction:column;gap:14px}
+.edit-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+/* ─── NOTIFICATIONS ─── */
+.toast{
+  position:fixed;bottom:28px;right:28px;z-index:2000;
+  padding:13px 20px;border-radius:12px;
+  font-family:var(--font-b);font-size:13.5px;font-weight:500;
+  display:flex;align-items:center;gap:10px;
+  transform:translateY(80px);opacity:0;
+  transition:transform .3s,opacity .3s;
+  max-width:340px;
+}
+.toast.show{transform:translateY(0);opacity:1}
+.toast.success{background:#ECFDF5;color:#065F46;border:1px solid #A7F3D0}
+.toast.error{background:#FEF2F2;color:#991B1B;border:1px solid #FCA5A5}
+.toast.info{background:var(--pu-pale);color:var(--pu-dk);border:1px solid rgba(106,90,205,.25)}
+
+/* ─── EMPTY STATE ─── */
+.empty{
+  text-align:center;padding:40px 20px;
+  color:var(--tx-muted);
+}
+.empty-icon{font-size:40px;margin-bottom:10px;opacity:.5}
+.empty-text{font-size:13.5px}
+
+/* ─── ANIMATIONS ─── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.fade{animation:fadeUp .4s ease both}
+.d1{animation-delay:.06s}.d2{animation-delay:.12s}.d3{animation-delay:.18s}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:1024px){
+  .page{grid-template-columns:1fr;padding:24px 20px 60px}
+  .side-col{position:static}
+}
+@media(max-width:640px){
+  .topbar{padding:0 16px}
+  .nav-links{display:none}
+  .hero-banner{flex-direction:column;align-items:flex-start;padding:24px 20px}
+  .hero-stats{flex-wrap:wrap}
+  .form-row,.edit-row{grid-template-columns:1fr}
+  .ex-grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
+}
+
+/* ─── BODY VISUALIZER BUTTON ─── */
+.body-viz-btn{
+  width:100%;padding:12px;border-radius:11px;border:none;
+  background:linear-gradient(135deg,#1a0533,#3d1466);
+  color:white;font-family:var(--font-h);font-size:13px;font-weight:700;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;
+  transition:opacity .15s;letter-spacing:.3px;
+}
+.body-viz-btn:hover{opacity:.88}
+</style>
+{% endblock %}
+
+{% block body %}
+{% set current_route = app.request.attributes.get('_route') %}
+
+<!-- ═══ TOPBAR ═══ -->
+<header class="topbar">
+  <a href="{{ path('homepage') }}" class="topbar-logo">
+    <img src="{{ asset('images/logo.png') }}" class="logo-mark" alt="Harmony">
+  </a>
+  <nav class="nav-links">
+    <a href="{{ path('activites') }}"  class="nav-link {{ current_route == 'activites' ? 'active' }}"><span>🏋</span> Activités</a>
+    <a href="{{ path('forum') }}"      class="nav-link {{ current_route == 'forum' ? 'active' }}"><span>💬</span> Forum</a>
+    <a href="{{ path('taches') }}"     class="nav-link {{ current_route == 'taches' ? 'active' }}"><span>📚</span> Tâches</a>
+    <a href="{{ path('evenements') }}" class="nav-link {{ current_route == 'evenements' ? 'active' }}"><span>📅</span> Événements</a>
+    <a href="{{ path('nutrition') }}"  class="nav-link {{ current_route == 'nutrition' ? 'active' }}"><span>🥗</span> Nutrition</a>
+    <a href="{{ path('meditation') }}" class="nav-link {{ current_route == 'meditation' ? 'active' }}"><span>🧘</span> Méditation</a>
+    <a href="{{ path('journal') }}"    class="nav-link {{ current_route == 'journal' ? 'active' }}"><span>📔</span> Journal</a>
+    <a href="{{ path('library') }}"    class="nav-link {{ current_route == 'library' ? 'active' }}"><span>📖</span> Library</a>
+  </nav>
+  <div class="topbar-right">
+    <button class="logout-btn">🚪 Déconnexion</button>
+    <div class="profile-wrap">
+      <div class="avatar" id="avatarBtn">{{ app.user ? app.user.firstName[0]|upper : 'E' }}</div>
+      <div class="profile-dropdown" id="profileDropdown">
+        <div class="pd-name">{{ app.user ? app.user.firstName ~ ' ' ~ app.user.lastName : 'Étudiant' }}</div>
+        <div class="pd-email">{{ app.user ? app.user.email : 'email@exemple.com' }}</div>
+        <div class="pd-divider"></div>
+        <div class="pd-hint">Votre espace bien-être</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ═══ HERO ═══ -->
+<div class="hero-banner">
+  <div class="hero-left">
+    <h1>🏋 Journal d'Exercices</h1>
+    <p>Planifiez, suivez et progressez — votre coach IA vous accompagne.</p>
+  </div>
+  <div class="hero-stats">
+    <div class="hstat"><div class="hstat-val" id="statSeances">0</div><div class="hstat-lbl">Séances</div></div>
+    <div class="hstat"><div class="hstat-val" id="statMinutes">0</div><div class="hstat-lbl">Minutes</div></div>
+    <div class="hstat"><div class="hstat-val" id="statCalories">0</div><div class="hstat-lbl">Calories</div></div>
+  </div>
+</div>
+
+<!-- ═══ PAGE ═══ -->
+<div class="page">
+
+  <!-- MAIN COLUMN -->
+  <div class="main-col">
+
+    <!-- DATE + CATEGORY FILTER -->
+    <div class="card fade">
+      <div class="card-body" style="padding:16px 22px">
+        <div class="toolbar">
+          <input type="date" class="date-input" id="sessionDate" value="">
+          <div class="cat-filters">
+            <button class="cat-btn active" data-cat="all">🌟 Tous</button>
+            <button class="cat-btn" data-cat="Cardio">🔴 Cardio</button>
+            <button class="cat-btn" data-cat="Musculation">💪 Muscu</button>
+            <button class="cat-btn" data-cat="Yoga">🌿 Yoga</button>
+            <button class="cat-btn" data-cat="HIIT">⚡ HIIT</button>
+            <button class="cat-btn" data-cat="Pilates">🌸 Pilates</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EXERCISE LIBRARY -->
+    <div class="card fade d1">
+      <div class="card-head">
+        <div class="card-title">📚 Bibliothèque d'Exercices</div>
+        <span style="font-size:12px;color:var(--tx-muted)">Cliquez pour sélectionner</span>
+      </div>
+      <div class="card-body">
+        <div class="ex-grid" id="exerciseGrid"></div>
+      </div>
+    </div>
+
+    <!-- LOG FORM -->
+    <div class="card fade d2">
+      <div class="card-head">
+        <div class="card-title">✏️ Enregistrer une Séance</div>
+      </div>
+      <div class="card-body">
+        <div class="selected-exercise-info" id="selectedInfo">
+          <div class="sei-icon" id="selectedIcon">🏃</div>
+          <div>
+            <div class="sei-name" id="selectedName">Aucun exercice sélectionné</div>
+            <div class="sei-type" id="selectedType">—</div>
+          </div>
+        </div>
+        <form class="log-form" id="logForm" novalidate>
+          <input type="hidden" id="exerciseId" value="">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Durée (minutes) *</label>
+              <input type="number" id="duree" placeholder="Ex: 30" min="1" max="300">
+              <span class="err-msg" id="err-duree">Durée requise (1–300 min)</span>
+            </div>
+            <div class="form-group">
+              <label>Calories brûlées</label>
+              <input type="number" id="calories" placeholder="Estimées" min="0">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Séries</label>
+              <input type="number" id="series" placeholder="Ex: 4" min="0">
+            </div>
+            <div class="form-group">
+              <label>Répétitions</label>
+              <input type="number" id="reps" placeholder="Ex: 12" min="0">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Poids (kg)</label>
+              <input type="number" id="poids" placeholder="Ex: 60" min="0" step="0.5">
+            </div>
+            <div class="form-group">
+              <label>Date de séance *</label>
+              <input type="date" id="dateSeance">
+              <span class="err-msg" id="err-date">Date requise</span>
+            </div>
+          </div>
+          <div class="form-group full">
+            <label>Notes</label>
+            <textarea id="notes" placeholder="Observations, sensations, objectifs..."></textarea>
+          </div>
+          <button type="submit" class="btn-submit" id="submitBtn">
+            <span>💾</span> Enregistrer la séance
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- SESSION HISTORY -->
+    <div class="card fade d3">
+      <div class="card-head">
+        <div class="card-title">📊 Historique des Séances</div>
+        <span style="font-size:12px;color:var(--tx-muted)" id="histCount">0 séances</span>
+      </div>
+      <div class="card-body" style="padding:14px 22px">
+        <div class="hist-list" id="histList">
+          <div class="empty"><div class="empty-icon">📋</div><div class="empty-text">Aucune séance enregistrée</div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- SIDE COLUMN -->
+  <div class="side-col">
+
+    <!-- STATS -->
+    <div class="card fade">
+      <div class="card-head"><div class="card-title">📈 Mes Stats</div></div>
+      <div class="card-body" style="padding:16px 20px">
+        <div class="stats-grid" style="margin-bottom:18px">
+          <div class="stat-box"><div class="stat-box-val" id="sideSeances">0</div><div class="stat-box-lbl">Séances</div></div>
+          <div class="stat-box"><div class="stat-box-val" id="sideMin">0</div><div class="stat-box-lbl">Minutes</div></div>
+          <div class="stat-box"><div class="stat-box-val" id="sideCal">0</div><div class="stat-box-lbl">Calories</div></div>
+          <div class="stat-box"><div class="stat-box-val" id="sideStreak">0🔥</div><div class="stat-box-lbl">Jours consec.</div></div>
+        </div>
+        <div id="categoryProgress"></div>
+      </div>
+    </div>
+
+    <!-- 3D BODY VISUALIZER -->
+    <div class="card fade d1">
+      <div class="card-head"><div class="card-title">🫀 Muscles Ciblés</div></div>
+      <div class="card-body" style="padding:16px 20px">
+        <div style="text-align:center;margin-bottom:14px">
+          <div id="bodyViz" style="font-size:90px;line-height:1;cursor:pointer;transition:transform .2s" title="Cliquez pour animer">🧍</div>
+          <div style="font-size:12px;color:var(--tx-muted);margin-top:6px" id="muscleLabel">Sélectionnez un exercice</div>
+        </div>
+        <button class="body-viz-btn" onclick="openBodyModal()">🫁 Vue Anatomique Complète</button>
+      </div>
+    </div>
+
+    <!-- AI COACH -->
+    <div class="ai-chat fade d2">
+      <div class="ai-head">
+        <div class="ai-avatar">🤖</div>
+        <div>
+          <div class="ai-name">Coach Gemini</div>
+          <div class="ai-status"><span class="ai-dot"></span> En ligne — Prêt à vous aider</div>
+        </div>
+      </div>
+      <div class="ai-messages" id="aiMessages">
+        <div class="ai-bubble bot">👋 Bonjour ! Je suis votre coach IA. Posez-moi une question sur votre entraînement, la nutrition sportive, ou la récupération !</div>
+        <div class="ai-thinking" id="aiThinking"><div class="think-dot"></div><div class="think-dot"></div><div class="think-dot"></div></div>
+      </div>
+      <div class="ai-input-area">
+        <input class="ai-input" id="aiInput" placeholder="Demandez un conseil..." onkeydown="if(event.key==='Enter')sendAI()">
+        <button class="ai-send" onclick="sendAI()">➤</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══ MODALS ═══ -->
+
+<!-- Video Modal -->
+<div class="modal-overlay" id="videoModal">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title" id="videoTitle">Démonstration</div>
+      <button class="modal-close" onclick="closeModal('videoModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="video-wrap" id="videoWrap">
+        <iframe id="videoFrame" src="" allowfullscreen></iframe>
+      </div>
+      <p style="font-size:12px;color:var(--tx-muted);margin-top:12px;text-align:center">Regardez bien la démonstration avant d'effectuer l'exercice.</p>
+    </div>
+  </div>
+</div>
+
+<!-- QR Modal -->
+<div class="modal-overlay" id="qrModal">
+  <div class="modal" style="max-width:380px">
+    <div class="modal-head">
+      <div class="modal-title">📱 QR Code — Mobile</div>
+      <button class="modal-close" onclick="closeModal('qrModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="qr-center">
+        <div class="qr-code" id="qrDisplay">
+          <svg width="140" height="140" viewBox="0 0 140 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="140" height="140" rx="12" fill="#F7F5FD"/>
+            <rect x="10" y="10" width="50" height="50" rx="4" fill="none" stroke="#6A5ACD" stroke-width="6"/>
+            <rect x="20" y="20" width="30" height="30" rx="2" fill="#6A5ACD"/>
+            <rect x="80" y="10" width="50" height="50" rx="4" fill="none" stroke="#6A5ACD" stroke-width="6"/>
+            <rect x="90" y="20" width="30" height="30" rx="2" fill="#6A5ACD"/>
+            <rect x="10" y="80" width="50" height="50" rx="4" fill="none" stroke="#6A5ACD" stroke-width="6"/>
+            <rect x="20" y="90" width="30" height="30" rx="2" fill="#6A5ACD"/>
+            <rect x="80" y="80" width="10" height="10" fill="#6A5ACD"/>
+            <rect x="95" y="80" width="10" height="10" fill="#6A5ACD"/>
+            <rect x="110" y="80" width="10" height="10" fill="#6A5ACD"/>
+            <rect x="80" y="95" width="10" height="10" fill="#6A5ACD"/>
+            <rect x="110" y="95" width="10" height="10" fill="#6A5ACD"/>
+            <rect x="80" y="110" width="10" height="10" fill="#6A5ACD"/>
+            <rect x="95" y="110" width="25" height="10" fill="#6A5ACD"/>
+          </svg>
+        </div>
+        <div class="qr-label" id="qrLabel">Scannez pour accéder à la vidéo sur mobile</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Modal -->
+<div class="modal-overlay" id="editModal">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title">✏️ Modifier la Séance</div>
+      <button class="modal-close" onclick="closeModal('editModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <form class="edit-form" id="editForm" novalidate>
+        <input type="hidden" id="editId">
+        <div class="edit-row">
+          <div class="form-group">
+            <label>Durée (min) *</label>
+            <input type="number" id="editDuree" min="1" max="300">
+            <span class="err-msg" id="err-edit-duree">Durée requise (1–300)</span>
+          </div>
+          <div class="form-group">
+            <label>Calories</label>
+            <input type="number" id="editCalories" min="0">
+          </div>
+        </div>
+        <div class="edit-row">
+          <div class="form-group">
+            <label>Séries</label>
+            <input type="number" id="editSeries" min="0">
+          </div>
+          <div class="form-group">
+            <label>Répétitions</label>
+            <input type="number" id="editReps" min="0">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Notes</label>
+          <textarea id="editNotes" style="min-height:60px"></textarea>
+        </div>
+        <button type="submit" class="btn-submit"><span>💾</span> Sauvegarder</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Body Modal -->
+<div class="modal-overlay" id="bodyModal">
+  <div class="modal" style="max-width:500px">
+    <div class="modal-head">
+      <div class="modal-title">🫀 Visualiseur Anatomique</div>
+      <button class="modal-close" onclick="closeModal('bodyModal')">✕</button>
+    </div>
+    <div class="modal-body" style="text-align:center">
+      <div style="font-size:110px;margin-bottom:12px;animation:pulse 2s ease infinite">🫁</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px">
+        <div style="background:var(--pu-ghost);border-radius:10px;padding:10px;font-size:12px;color:var(--tx-mid)">💪 Biceps</div>
+        <div style="background:var(--pu-ghost);border-radius:10px;padding:10px;font-size:12px;color:var(--tx-mid)">🦵 Quadriceps</div>
+        <div style="background:var(--pu-ghost);border-radius:10px;padding:10px;font-size:12px;color:var(--tx-mid)">🫀 Cardio</div>
+        <div style="background:var(--pu-ghost);border-radius:10px;padding:10px;font-size:12px;color:var(--tx-mid)">🏋 Épaules</div>
+        <div style="background:var(--pu-ghost);border-radius:10px;padding:10px;font-size:12px;color:var(--tx-mid)">🔥 Core</div>
+        <div style="background:var(--pu-ghost);border-radius:10px;padding:10px;font-size:12px;color:var(--tx-mid)">🦴 Dos</div>
+      </div>
+      <p style="font-size:11.5px;color:var(--tx-muted);margin-top:14px">Sélectionnez un exercice pour visualiser les zones musculaires ciblées.</p>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<style>
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+</style>
+
+<script>
+// ═══════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════
+const EXERCISES = [
+  { id:1, name:'Course à pied',    type:'Cardio',     icon:'🏃', cal:400, video:'dQw4w9WgXcQ', muscles:'Jambes, Cardio' },
+  { id:2, name:'Vélo stationnaire',type:'Cardio',     icon:'🚴', cal:350, video:'dQw4w9WgXcQ', muscles:'Quadriceps, Cardio' },
+  { id:3, name:'Corde à sauter',   type:'HIIT',       icon:'⚡', cal:500, video:'dQw4w9WgXcQ', muscles:'Full body, Cardio' },
+  { id:4, name:'Squat',            type:'Musculation',icon:'🦵', cal:200, video:'dQw4w9WgXcQ', muscles:'Quadriceps, Fessiers' },
+  { id:5, name:'Développé couché', type:'Musculation',icon:'💪', cal:180, video:'dQw4w9WgXcQ', muscles:'Pectoraux, Triceps' },
+  { id:6, name:'Tractions',        type:'Musculation',icon:'🏋', cal:150, video:'dQw4w9WgXcQ', muscles:'Dos, Biceps' },
+  { id:7, name:'Yoga Soleil',      type:'Yoga',       icon:'🌅', cal:120, video:'dQw4w9WgXcQ', muscles:'Flexibilité, Core' },
+  { id:8, name:'Planche',          type:'Pilates',    icon:'🧘', cal:80,  video:'dQw4w9WgXcQ', muscles:'Core, Épaules' },
+  { id:9, name:'Burpees',          type:'HIIT',       icon:'🔥', cal:450, video:'dQw4w9WgXcQ', muscles:'Full body' },
+  { id:10,name:'Rowing',           type:'Musculation',icon:'🚣', cal:220, video:'dQw4w9WgXcQ', muscles:'Dos, Biceps, Core' },
+  { id:11,name:'Natation',         type:'Cardio',     icon:'🏊', cal:380, video:'dQw4w9WgXcQ', muscles:'Full body' },
+  { id:12,name:'Pilates Mat',      type:'Pilates',    icon:'🌸', cal:140, video:'dQw4w9WgXcQ', muscles:'Core, Dos, Hanches' },
+];
+
+const CAT_COLORS = { Cardio:'cardio', Musculation:'muscu', Yoga:'yoga', HIIT:'hiit', Pilates:'pilates' };
+
+let sessions = JSON.parse(localStorage.getItem('harmony_sessions') || '[]');
+let selectedExercise = null;
+let currentFilter = 'all';
+let editingId = null;
+
+const AI_RESPONSES = {
+  default: [
+    "Pour progresser en musculation, concentrez-vous sur la surcharge progressive : augmentez le poids ou les répétitions chaque semaine. 💪",
+    "La récupération est aussi importante que l'entraînement ! Dormez 7-9h par nuit et reposez-vous 48h entre deux séances du même groupe musculaire.",
+    "Pour perdre du poids efficacement, combinez HIIT (20-30 min) 3x/semaine avec une alimentation légèrement déficitaire en calories.",
+    "L'hydratation est cruciale : buvez 500ml d'eau avant l'entraînement, et 150-250ml toutes les 15-20 minutes pendant l'effort.",
+    "Pour le cardio, maintenez une fréquence cardiaque entre 60-80% de votre max. Formule : 220 - votre âge. 🏃",
+  ],
+  squat:  "Le squat est roi ! Pour la technique : pieds écartés largeur d'épaules, dos droit, genoux dans l'axe des pieds. Descendez jusqu'à 90° minimum. 🦵",
+  cardio: "Pour maximiser vos séances cardio, alternez HIIT (intervalles courts et intenses) avec du cardio modéré (Zone 2). Le Zone 2 améliore l'endurance de base. ❤️",
+  nutrition: "Avant l'entraînement : glucides complexes 1-2h avant. Après : protéines + glucides dans les 30 minutes pour optimiser la récupération. 🥗",
+  repos: "Le repos actif est parfait les jours de récupération : marche légère, stretching ou yoga. Évitez l'inactivité totale et les séances intenses 2 jours consécutifs.",
+  motivation: "La constance bat l'intensité ! Une séance modérée 5x/semaine > une séance intense 1x/semaine. Fixez-vous de petits objectifs hebdomadaires. 🎯",
+};
+
+// ═══════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('sessionDate').value = today();
+  document.getElementById('dateSeance').value = today();
+  renderExercises('all');
+  renderHistory();
+  updateStats();
+  animateBodyViz();
+
+  // Category filter buttons
+  document.querySelectorAll('.cat-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentFilter = btn.dataset.cat;
+      renderExercises(currentFilter);
+    });
+  });
+
+  // Log form submit
+  document.getElementById('logForm').addEventListener('submit', handleLogSubmit);
+
+  // Edit form submit
+  document.getElementById('editForm').addEventListener('submit', handleEditSubmit);
+
+  // Avatar dropdown
+  const avatarBtn = document.getElementById('avatarBtn');
+  const profileDropdown = document.getElementById('profileDropdown');
+  avatarBtn.addEventListener('click', e => { e.stopPropagation(); profileDropdown.classList.toggle('open'); });
+  document.addEventListener('click', () => profileDropdown.classList.remove('open'));
+
+  // Close modals on overlay click
+  document.querySelectorAll('.modal-overlay').forEach(overlay => {
+    overlay.addEventListener('click', e => { if(e.target === overlay) closeModal(overlay.id); });
+  });
+});
+
+function today() {
+  return new Date().toISOString().split('T')[0];
+}
+
+// ═══════════════════════════════════════
+// EXERCISES RENDER
+// ═══════════════════════════════════════
+function renderExercises(filter) {
+  const grid = document.getElementById('exerciseGrid');
+  const list = filter === 'all' ? EXERCISES : EXERCISES.filter(e => e.type === filter);
+  if (!list.length) { grid.innerHTML = '<div class="empty"><div class="empty-icon">🔍</div><div class="empty-text">Aucun exercice dans cette catégorie</div></div>'; return; }
+
+  grid.innerHTML = list.map(ex => `
+    <div class="ex-card ${selectedExercise?.id === ex.id ? 'selected' : ''}" data-id="${ex.id}" onclick="selectExercise(${ex.id})">
+      <div class="ex-thumb">
+        <div class="ex-thumb-bg"></div>
+        <span style="position:relative;z-index:1">${ex.icon}</span>
+        <span class="ex-badge ${CAT_COLORS[ex.type] || ''}">${ex.type}</span>
+      </div>
+      <div class="ex-body">
+        <div class="ex-name">${ex.name}</div>
+        <div class="ex-cal">🔥 ~${ex.cal} kcal/h</div>
+      </div>
+      <div class="ex-actions">
+        <button class="btn-xs v" onclick="event.stopPropagation();openVideo(${ex.id})">▶ Vidéo</button>
+        <button class="btn-xs q" onclick="event.stopPropagation();openQR(${ex.id})">📱 QR</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function selectExercise(id) {
+  selectedExercise = EXERCISES.find(e => e.id === id);
+  document.getElementById('exerciseId').value = id;
+
+  const info = document.getElementById('selectedInfo');
+  info.classList.add('show');
+  document.getElementById('selectedIcon').textContent = selectedExercise.icon;
+  document.getElementById('selectedName').textContent = selectedExercise.name;
+  document.getElementById('selectedType').textContent = selectedExercise.type + ' · ' + selectedExercise.muscles;
+
+  // Update body viz
+  document.getElementById('bodyViz').textContent = selectedExercise.icon;
+  document.getElementById('muscleLabel').textContent = '🎯 ' + selectedExercise.muscles;
+
+  // Auto-fill calories estimate
+  const duree = parseInt(document.getElementById('duree').value) || 0;
+  if (duree > 0) {
+    document.getElementById('calories').value = Math.round(selectedExercise.cal * duree / 60);
+  }
+
+  renderExercises(currentFilter);
+  showToast('info', selectedExercise.icon + ' ' + selectedExercise.name + ' sélectionné');
+}
+
+// ═══════════════════════════════════════
+// CRUD — LOG
+// ═══════════════════════════════════════
+function handleLogSubmit(e) {
+  e.preventDefault();
+  let valid = true;
+
+  const exerciseId = parseInt(document.getElementById('exerciseId').value);
+  if (!exerciseId) { showToast('error', 'Veuillez sélectionner un exercice !'); return; }
+
+  const duree = parseInt(document.getElementById('duree').value);
+  const dureeField = document.getElementById('duree');
+  const errDuree = document.getElementById('err-duree');
+  if (!duree || duree < 1 || duree > 300) {
+    dureeField.classList.add('error'); errDuree.classList.add('show'); valid = false;
+  } else {
+    dureeField.classList.remove('error'); errDuree.classList.remove('show');
+  }
+
+  const dateSeance = document.getElementById('dateSeance').value;
+  const dateField = document.getElementById('dateSeance');
+  const errDate = document.getElementById('err-date');
+  if (!dateSeance) {
+    dateField.classList.add('error'); errDate.classList.add('show'); valid = false;
+  } else {
+    dateField.classList.remove('error'); errDate.classList.remove('show');
+  }
+
+  if (!valid) { showToast('error', 'Veuillez corriger les erreurs.'); return; }
+
+  const ex = EXERCISES.find(e => e.id === exerciseId);
+  const session = {
+    id: Date.now(),
+    exerciseId,
+    exerciseName: ex.name,
+    exerciseIcon: ex.icon,
+    exerciseType: ex.type,
+    duree,
+    calories: parseInt(document.getElementById('calories').value) || Math.round(ex.cal * duree / 60),
+    series: parseInt(document.getElementById('series').value) || null,
+    reps: parseInt(document.getElementById('reps').value) || null,
+    poids: parseFloat(document.getElementById('poids').value) || null,
+    notes: document.getElementById('notes').value.trim(),
+    date: dateSeance,
+  };
+
+  sessions.unshift(session);
+  saveAndRefresh();
+
+  // Reset
+  document.getElementById('logForm').reset();
+  document.getElementById('dateSeance').value = today();
+  document.getElementById('exerciseId').value = '';
+  document.getElementById('selectedInfo').classList.remove('show');
+  selectedExercise = null;
+  renderExercises(currentFilter);
+
+  showToast('success', '✅ Séance enregistrée avec succès !');
+}
+
+// ═══════════════════════════════════════
+// CRUD — EDIT
+// ═══════════════════════════════════════
+function openEdit(id) {
+  const s = sessions.find(s => s.id === id);
+  if (!s) return;
+  editingId = id;
+  document.getElementById('editId').value = id;
+  document.getElementById('editDuree').value = s.duree;
+  document.getElementById('editCalories').value = s.calories || '';
+  document.getElementById('editSeries').value = s.series || '';
+  document.getElementById('editReps').value = s.reps || '';
+  document.getElementById('editNotes').value = s.notes || '';
+  openModal('editModal');
+}
+
+function handleEditSubmit(e) {
+  e.preventDefault();
+  const duree = parseInt(document.getElementById('editDuree').value);
+  const errDuree = document.getElementById('err-edit-duree');
+  if (!duree || duree < 1 || duree > 300) {
+    document.getElementById('editDuree').classList.add('error');
+    errDuree.classList.add('show'); return;
+  }
+  document.getElementById('editDuree').classList.remove('error');
+  errDuree.classList.remove('show');
+
+  const idx = sessions.findIndex(s => s.id === editingId);
+  if (idx === -1) return;
+  sessions[idx] = {
+    ...sessions[idx],
+    duree,
+    calories: parseInt(document.getElementById('editCalories').value) || sessions[idx].calories,
+    series: parseInt(document.getElementById('editSeries').value) || null,
+    reps: parseInt(document.getElementById('editReps').value) || null,
+    notes: document.getElementById('editNotes').value.trim(),
+  };
+
+  saveAndRefresh();
+  closeModal('editModal');
+  showToast('success', '✏️ Séance modifiée !');
+}
+
+// ═══════════════════════════════════════
+// CRUD — DELETE
+// ═══════════════════════════════════════
+function deleteSession(id) {
+  if (!confirm('Supprimer cette séance ?')) return;
+  sessions = sessions.filter(s => s.id !== id);
+  saveAndRefresh();
+  showToast('error', '🗑 Séance supprimée');
+}
+
+// ═══════════════════════════════════════
+// RENDER HISTORY
+// ═══════════════════════════════════════
+function renderHistory() {
+  const list = document.getElementById('histList');
+  document.getElementById('histCount').textContent = sessions.length + ' séance' + (sessions.length !== 1 ? 's' : '');
+
+  if (!sessions.length) {
+    list.innerHTML = '<div class="empty"><div class="empty-icon">📋</div><div class="empty-text">Aucune séance enregistrée.<br>Commencez dès maintenant !</div></div>';
+    return;
+  }
+
+  list.innerHTML = sessions.map(s => `
+    <div class="hist-item" style="animation:fadeUp .35s ease both">
+      <div class="hist-icon">${s.exerciseIcon}</div>
+      <div class="hist-info">
+        <div class="hist-name">${s.exerciseName}</div>
+        <div class="hist-meta">
+          <span class="hist-tag">⏱ ${s.duree} min</span>
+          ${s.calories ? `<span class="hist-tag">🔥 ${s.calories} kcal</span>` : ''}
+          ${s.series ? `<span class="hist-tag">✖ ${s.series} × ${s.reps || '?'}</span>` : ''}
+          ${s.poids ? `<span class="hist-tag">⚖ ${s.poids} kg</span>` : ''}
+          <span class="hist-tag">📅 ${formatDate(s.date)}</span>
+        </div>
+        ${s.notes ? `<div style="font-size:11.5px;color:var(--tx-muted);margin-top:4px;font-style:italic">"${s.notes}"</div>` : ''}
+      </div>
+      <div class="hist-actions">
+        <button class="btn-icon edit" onclick="openEdit(${s.id})" title="Modifier">✏️</button>
+        <button class="btn-icon del" onclick="deleteSession(${s.id})" title="Supprimer">🗑</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ═══════════════════════════════════════
+// STATS
+// ═══════════════════════════════════════
+function updateStats() {
+  const total = sessions.length;
+  const minutes = sessions.reduce((a, s) => a + (s.duree || 0), 0);
+  const calories = sessions.reduce((a, s) => a + (s.calories || 0), 0);
+
+  // Streak
+  const dates = [...new Set(sessions.map(s => s.date))].sort().reverse();
+  let streak = 0;
+  let cur = new Date(today());
+  for (const d of dates) {
+    const diff = Math.round((cur - new Date(d)) / 86400000);
+    if (diff <= 1) { streak++; cur = new Date(d); } else break;
+  }
+
+  // Hero stats
+  document.getElementById('statSeances').textContent = total;
+  document.getElementById('statMinutes').textContent = minutes;
+  document.getElementById('statCalories').textContent = calories;
+
+  // Side stats
+  document.getElementById('sideSeances').textContent = total;
+  document.getElementById('sideMin').textContent = minutes;
+  document.getElementById('sideCal').textContent = calories;
+  document.getElementById('sideStreak').textContent = streak + '🔥';
+
+  // Category progress
+  const cats = { Cardio:0, Musculation:0, HIIT:0, Yoga:0, Pilates:0 };
+  sessions.forEach(s => { if (cats[s.exerciseType] !== undefined) cats[s.exerciseType]++; });
+  const max = Math.max(...Object.values(cats), 1);
+  const catDiv = document.getElementById('categoryProgress');
+  catDiv.innerHTML = Object.entries(cats).map(([cat, count]) => `
+    <div class="prog-item">
+      <div class="prog-label">
+        <span class="prog-name">${catIcons[cat] || ''} ${cat}</span>
+        <span class="prog-pct">${count}</span>
+      </div>
+      <div class="prog-track"><div class="prog-fill" style="width:${Math.round(count/max*100)}%"></div></div>
+    </div>
+  `).join('');
+}
+
+const catIcons = { Cardio:'🔴', Musculation:'💪', HIIT:'⚡', Yoga:'🌿', Pilates:'🌸' };
+
+function saveAndRefresh() {
+  localStorage.setItem('harmony_sessions', JSON.stringify(sessions));
+  renderHistory();
+  updateStats();
+}
+
+// ═══════════════════════════════════════
+// MODALS
+// ═══════════════════════════════════════
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+  if (id === 'videoModal') { document.getElementById('videoFrame').src = ''; }
+}
+
+function openVideo(exId) {
+  const ex = EXERCISES.find(e => e.id === exId);
+  document.getElementById('videoTitle').textContent = '▶ ' + ex.name;
+  document.getElementById('videoFrame').src = 'https://www.youtube.com/embed/' + ex.video + '?autoplay=1';
+  openModal('videoModal');
+}
+
+function openQR(exId) {
+  const ex = EXERCISES.find(e => e.id === exId);
+  document.getElementById('qrLabel').textContent = 'Scannez pour voir la démonstration de ' + ex.name;
+  openModal('qrModal');
+}
+
+function openBodyModal() { openModal('bodyModal'); }
+
+// ═══════════════════════════════════════
+// AI COACH
+// ═══════════════════════════════════════
+const aiResponses = [
+  ...AI_RESPONSES.default,
+  AI_RESPONSES.squat, AI_RESPONSES.cardio,
+  AI_RESPONSES.nutrition, AI_RESPONSES.repos, AI_RESPONSES.motivation,
+];
+
+function sendAI() {
+  const input = document.getElementById('aiInput');
+  const msg = input.value.trim();
+  if (!msg) return;
+
+  const msgs = document.getElementById('aiMessages');
+  const thinking = document.getElementById('aiThinking');
+
+  // User bubble
+  const userBubble = document.createElement('div');
+  userBubble.className = 'ai-bubble user';
+  userBubble.textContent = msg;
+  msgs.insertBefore(userBubble, thinking);
+  input.value = '';
+
+  // Show thinking
+  thinking.classList.add('show');
+  msgs.scrollTop = msgs.scrollHeight;
+
+  // Find best response
+  const lower = msg.toLowerCase();
+  let response;
+  if (lower.includes('squat')) response = AI_RESPONSES.squat;
+  else if (lower.includes('cardio') || lower.includes('courir')) response = AI_RESPONSES.cardio;
+  else if (lower.includes('nutri') || lower.includes('manger') || lower.includes('protéine')) response = AI_RESPONSES.nutrition;
+  else if (lower.includes('repos') || lower.includes('récup') || lower.includes('douleur')) response = AI_RESPONSES.repos;
+  else if (lower.includes('motiv') || lower.includes('conseil')) response = AI_RESPONSES.motivation;
+  else response = aiResponses[Math.floor(Math.random() * AI_RESPONSES.default.length)];
+
+  setTimeout(() => {
+    thinking.classList.remove('show');
+    const botBubble = document.createElement('div');
+    botBubble.className = 'ai-bubble bot';
+    botBubble.textContent = response;
+    msgs.insertBefore(botBubble, thinking);
+    msgs.scrollTop = msgs.scrollHeight;
+  }, 1200 + Math.random() * 800);
+}
+
+// ═══════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════
+function formatDate(dateStr) {
+  if (!dateStr) return '';
+  const d = new Date(dateStr);
+  return d.toLocaleDateString('fr-FR', { day:'numeric', month:'short', year:'2-digit' });
+}
+
+function showToast(type, msg) {
+  const t = document.getElementById('toast');
+  t.className = 'toast ' + type;
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3200);
+}
+
+function animateBodyViz() {
+  const viz = document.getElementById('bodyViz');
+  viz.addEventListener('click', () => {
+    viz.style.transform = 'scale(1.15) rotate(-5deg)';
+    setTimeout(() => viz.style.transform = '', 300);
+  });
+}
+
+// Auto-calc calories on duration change
+document.addEventListener('input', e => {
+  if (e.target.id === 'duree' && selectedExercise) {
+    const duree = parseInt(e.target.value) || 0;
+    document.getElementById('calories').value = duree > 0 ? Math.round(selectedExercise.cal * duree / 60) : '';
+  }
+});
+</script>
+{% endblock %}
