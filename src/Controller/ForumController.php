@@ -176,6 +176,38 @@ class ForumController extends AbstractController
             'total'           => $total,
         ]);
     }
+     // ── LIKE toggle (AJAX) ──────────────────────────
+    #[Route('/forum/post/{id}/like', name: 'forum_post_like', methods: ['POST'])]
+    public function toggleLike(int $id, EntityManagerInterface $em): JsonResponse
+    {
+        $post = $em->getRepository(Post::class)->find($id);
+        if (!$post) return new JsonResponse(['error' => 'Post introuvable'], 404);
+
+        $existing = $em->getRepository(Reaction::class)->findOneBy([
+            'idPost'       => $id,
+            'userId'       => $this->currentUserId,
+            'typeReaction' => 'like',
+        ]);
+
+        if ($existing) {
+            $em->remove($existing);
+            $liked = false;
+        } else {
+            $r = new Reaction();
+            $r->setIdPost($id);
+            $r->setUserId($this->currentUserId);
+            $r->setTypeReaction('like');
+            $r->setDateReaction(new \DateTime());
+            $em->persist($r);
+            $liked = true;
+        }
+        $em->flush();
+
+        $count = count($em->getRepository(Reaction::class)
+            ->findBy(['idPost' => $id, 'typeReaction' => 'like']));
+
+        return new JsonResponse(['liked' => $liked, 'count' => $count]);
+    }
 
 
 
