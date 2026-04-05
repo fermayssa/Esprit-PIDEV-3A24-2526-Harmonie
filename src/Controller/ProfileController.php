@@ -29,17 +29,22 @@ class ProfileController extends AbstractController
         EntityManagerInterface $em,
         SluggerInterface $slugger
     ): Response {
+        /** @var \App\Entity\User $user */
         $user = $this->getUser();
         $form = $this->createForm(ProfileFormType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Handle avatar upload
+            // ── Gestion de l'avatar ────────────────────────────────────────
             $avatarFile = $form->get('avatarFile')->getData();
             if ($avatarFile) {
                 $safeFilename = $slugger->slug($user->getUserNom());
                 $newFilename  = $safeFilename . '-' . uniqid() . '.' . $avatarFile->guessExtension();
                 $uploadDir    = $this->getParameter('kernel.project_dir') . '/public/user_images';
+
+                if (!is_dir($uploadDir)) {
+                    mkdir($uploadDir, 0777, true);
+                }
 
                 try {
                     $avatarFile->move($uploadDir, $newFilename);
@@ -51,6 +56,13 @@ class ProfileController extends AbstractController
 
             $em->flush();
             $this->addFlash('success', 'Profil mis à jour avec succès.');
+
+            // ── Redirection selon le rôle ──────────────────────────────────
+            // Un admin qui modifie son profil est renvoyé vers le dashboard admin
+            if ($this->isGranted('ROLE_ADMIN')) {
+                return $this->redirectToRoute('admin_dashboard');
+            }
+
             return $this->redirectToRoute('app_profile');
         }
 

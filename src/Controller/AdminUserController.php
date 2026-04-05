@@ -8,11 +8,13 @@ use App\Repository\UserRepository;
 use App\Service\SuspicionScoreService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 #[IsGranted('ROLE_ADMIN')]
 #[Route('/admin/users')]
@@ -28,7 +30,7 @@ class AdminUserController extends AbstractController
     public function index(Request $request): Response
     {
         $q    = $request->query->get('q', '');
-        $sort = $request->query->get('sort', 'suspicion'); // 'suspicion' ou 'normal'
+        $sort = $request->query->get('sort', 'suspicion');
 
         $users = $q
             ? $this->repo->searchByName($q)
@@ -81,7 +83,6 @@ class AdminUserController extends AbstractController
         return new JsonResponse($data);
     }
 
-    // ── Comptes suspendus — AVANT /{id} ───────────────────────────────────
     #[Route('/suspended', name: 'admin_users_suspended', methods: ['GET'])]
     public function suspended(): Response
     {
@@ -102,13 +103,36 @@ class AdminUserController extends AbstractController
         ]);
     }
 
+    /**
+     * Edit user — inclut l'upload d'image de profil
+     */
     #[Route('/{id}/edit', name: 'admin_users_edit', methods: ['GET', 'POST'])]
-    public function edit(User $user, Request $request): Response
+    public function edit(User $user, Request $request, SluggerInterface $slugger): Response
     {
         $form = $this->createForm(AdminEditUserFormType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            // ── Gestion de l'avatar ────────────────────────────────────────
+            $avatarFile = $form->get('avatarFile')->getData();
+            if ($avatarFile) {
+                $safeFilename = $slugger->slug($user->getUserNom());
+                $newFilename  = $safeFilename . '-' . uniqid() . '.' . $avatarFile->guessExtension();
+                $uploadDir    = $this->getParameter('kernel.project_dir') . '/public/user_images';
+
+                if (!is_dir($uploadDir)) {
+                    mkdir($uploadDir, 0777, true);
+                }
+
+                try {
+                    $avatarFile->move($uploadDir, $newFilename);
+                    $user->setUserImagePath('user_images/' . $newFilename);
+                } catch (FileException $e) {
+                    $this->addFlash('error', "Erreur lors de l'upload de l'image.");
+                }
+            }
+
             $this->em->flush();
             $this->addFlash('success', 'Compte mis à jour.');
             return $this->redirectToRoute('admin_users_index');
@@ -132,7 +156,6 @@ class AdminUserController extends AbstractController
         return $this->redirectToRoute('admin_users_index');
     }
 
-    // ── Détail suspicion JSON ──────────────────────────────────────────────
     #[Route('/{id}/suspicion', name: 'admin_users_suspicion', methods: ['GET'], requirements: ['id' => '\d+'])]
     public function suspicionDetail(User $user): JsonResponse
     {

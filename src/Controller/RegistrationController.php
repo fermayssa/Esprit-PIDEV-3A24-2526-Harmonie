@@ -67,14 +67,10 @@ class RegistrationController extends AbstractController
         $session = $request->getSession();
         $step1   = $session->get('reg_step1');
 
-        // Si on arrive ici sans avoir fait l'étape 1, rediriger
         if (!$step1) {
             return $this->redirectToRoute('app_register');
         }
 
-        // ✅ Pré-remplir l'entité avec les données de l'étape 1 AVANT handleRequest
-        // Cela évite les erreurs de validation sur les champs nom/prénom/email/date
-        // qui sont vides dans le formulaire étape 2 mais déjà validés à l'étape 1.
         $user = new User();
         $user->setUserNom($step1['nom']);
         $user->setUserPrenom($step1['prenom']);
@@ -89,29 +85,48 @@ class RegistrationController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Gestion de l'image de profil
+
+            // ── Gestion de l'image de profil ──────────────────────────────
             $avatarFile = $form->get('avatarFile')->getData();
             if ($avatarFile) {
                 $safeFilename = $slugger->slug($step1['nom']);
                 $newFilename  = $safeFilename . '-' . uniqid() . '.' . $avatarFile->guessExtension();
                 $uploadDir    = $this->getParameter('kernel.project_dir') . '/public/user_images';
 
+                // Créer le dossier s'il n'existe pas
+                if (!is_dir($uploadDir)) {
+                    mkdir($uploadDir, 0777, true);
+                }
+
                 try {
                     $avatarFile->move($uploadDir, $newFilename);
                     $user->setUserImagePath('user_images/' . $newFilename);
                 } catch (FileException $e) {
-                    $this->addFlash('error', "Erreur lors de l'upload de l'image.");
+                    $this->addFlash('error', "Erreur lors de l'upload de l'image : " . $e->getMessage());
                 }
             }
 
-            $em->persist($user);
-            $em->flush();
+            // ── Persistence avec gestion d'erreur explicite ───────────────
+            try {
+                $em->persist($user);
+                $em->flush();
 
-            // Nettoyer la session
-            $session->remove('reg_step1');
+                // Nettoyer la session uniquement si succès
+                $session->remove('reg_step1');
 
-            $this->addFlash('success', 'Compte créé avec succès ! Vous pouvez maintenant vous connecter.');
-            return $this->redirectToRoute('app_login');
+                $this->addFlash('success', 'Compte créé avec succès ! Vous pouvez maintenant vous connecter.');
+                return $this->redirectToRoute('app_login');
+
+            } catch (\Doctrine\DBAL\Exception\UniqueConstraintViolationException $e) {
+                $this->addFlash('error', 'Cet email est déjà utilisé. Veuillez en choisir un autre.');
+                // Retour à l'étape 1 pour changer l'email
+                $session->remove('reg_step1');
+                return $this->redirectToRoute('app_register');
+
+            } catch (\Exception $e) {
+                $this->addFlash('error', 'Erreur lors de la création du compte : ' . $e->getMessage());
+                // Ne pas nettoyer la session → l'utilisateur peut réessayer
+            }
         }
 
         return $this->render('registration/register_step2.html.twig', [

@@ -69,7 +69,6 @@
             font-weight:500;cursor:pointer;font-family:var(--font-body);transition:.15s;
         }
         .btn-remove:hover{border-color:#EF4444;color:#EF4444}
-        .file-input{display:none}
 
         /* Form */
         .form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
@@ -101,6 +100,9 @@
             display:flex;align-items:center;justify-content:center;gap:8px;
         }
         .btn-submit:hover{background:var(--purple-dark)}
+
+        /* Flash */
+        .flash-error{background:#FEF2F2;color:#991B1B;padding:12px 16px;border-radius:10px;font-size:13px;margin-bottom:16px;border:1px solid #FECACA}
 
         /* Security note */
         .security-note{
@@ -134,6 +136,10 @@
             <div class="card-title">Informations complémentaires</div>
             <div class="card-sub">Étape 2 sur 2 — Personnalisez votre profil</div>
 
+            {% for msg in app.flashes('error') %}
+                <div class="flash-error">⚠ {{ msg }}</div>
+            {% endfor %}
+
             {{ form_start(form, {'attr': {'enctype': 'multipart/form-data', 'novalidate': 'novalidate', 'id': 'step2Form'}}) }}
 
             <!-- Photo de profil -->
@@ -146,18 +152,25 @@
                     <div class="avatar-controls">
                         <div class="avatar-hint" id="avatarHint">Aucune image sélectionnée</div>
                         <div style="display:flex;gap:8px">
-                            <button type="button" class="btn-upload" onclick="document.getElementById('avatarInput').click()">
+                            {#
+                              IMPORTANT : on récupère l'id généré par Symfony avec form_widget
+                              puis on cible ce champ depuis JS via document.querySelector('[name$="[avatarFile]"]')
+                              pour éviter les problèmes de préfixe de nom de formulaire.
+                            #}
+                            <button type="button" class="btn-upload" id="openAvatarBtn">
                                 📁 Choisir une image
                             </button>
                             <button type="button" class="btn-remove" id="removeBtn" onclick="removeAvatar()" style="display:none">
                                 🗑 Supprimer
                             </button>
                         </div>
-                        <div class="avatar-hint">Formats acceptés : JPG, PNG, GIF, BMP</div>
+                        <div class="avatar-hint">Formats acceptés : JPG, PNG, GIF, WebP (max 2 Mo)</div>
                     </div>
                 </div>
-                {# Champ fichier caché #}
-                <div style="display:none">{{ form_widget(form.avatarFile, {'attr': {'id': 'avatarInput', 'accept': 'image/*'}}) }}</div>
+                {# Champ fichier rendu par Symfony — caché visuellement #}
+                <div style="display:none" id="avatarFieldWrapper">
+                    {{ form_widget(form.avatarFile) }}
+                </div>
                 {% if form_errors(form.avatarFile) %}
                     <div class="form-error">{{ form_errors(form.avatarFile) }}</div>
                 {% endif %}
@@ -220,7 +233,7 @@
 
             <div class="security-note">
                 <span class="lock">🔒</span>
-                <span>Vos données sont chiffrées et sécurisées. Les images sont vérifiées automatiquement. L'étape suivante enregistrera votre visage pour la connexion biométrique.</span>
+                <span>Vos données sont chiffrées et sécurisées. Les images sont vérifiées automatiquement.</span>
             </div>
 
             {{ form_end(form) }}
@@ -229,27 +242,37 @@
 
     <script>
         // ── Avatar preview ──────────────────────────────────────────────────────────
-        const avatarInput   = document.getElementById('avatarInput');
+        // On récupère le vrai input file généré par Symfony (quel que soit son id préfixé)
+        const avatarInput   = document.querySelector('#avatarFieldWrapper input[type="file"]');
         const avatarPreview = document.getElementById('avatarPreview');
         const avatarHint    = document.getElementById('avatarHint');
         const removeBtn     = document.getElementById('removeBtn');
         const initiale      = '{{ step1.prenom|first|upper }}';
 
-        avatarInput.addEventListener('change', function() {
-            if (this.files && this.files[0]) {
-                const file = this.files[0];
-                const reader = new FileReader();
-                reader.onload = e => {
-                    avatarPreview.innerHTML = `<img src="${e.target.result}" alt="Avatar">`;
-                    avatarHint.textContent = file.name;
-                    removeBtn.style.display = 'flex';
-                };
-                reader.readAsDataURL(file);
+        // Le bouton "Choisir une image" déclenche le vrai input file caché
+        document.getElementById('openAvatarBtn').addEventListener('click', function() {
+            if (avatarInput) {
+                avatarInput.click();
             }
         });
 
+        if (avatarInput) {
+            avatarInput.addEventListener('change', function() {
+                if (this.files && this.files[0]) {
+                    const file = this.files[0];
+                    const reader = new FileReader();
+                    reader.onload = e => {
+                        avatarPreview.innerHTML = `<img src="${e.target.result}" alt="Avatar" style="width:80px;height:80px;border-radius:50%;object-fit:cover;">`;
+                        avatarHint.textContent = file.name + ' (' + (file.size / 1024).toFixed(0) + ' Ko)';
+                        removeBtn.style.display = 'flex';
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+
         function removeAvatar() {
-            avatarInput.value = '';
+            if (avatarInput) avatarInput.value = '';
             avatarPreview.innerHTML = initiale;
             avatarHint.textContent = 'Aucune image sélectionnée';
             removeBtn.style.display = 'none';
