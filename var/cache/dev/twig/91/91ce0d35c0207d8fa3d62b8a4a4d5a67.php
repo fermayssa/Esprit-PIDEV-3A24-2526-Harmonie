@@ -364,10 +364,14 @@ class __TwigTemplate_03e763f932159b6312f4f0a8a863bc06 extends Template
         yield "        </div>
     </div>
 </div>
-";
+<script src=\"";
         // line 186
-        yield from $this->unwrap()->yieldBlock('javascripts', $context, $blocks);
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl("harmonie/js/admin-ajax.js"), "html", null, true);
+        yield "\"></script>
+";
         // line 187
+        yield from $this->unwrap()->yieldBlock('javascripts', $context, $blocks);
+        // line 188
         yield "</body>
 </html>
 ";
@@ -470,7 +474,7 @@ class __TwigTemplate_03e763f932159b6312f4f0a8a863bc06 extends Template
         yield from [];
     }
 
-    // line 186
+    // line 187
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -513,7 +517,7 @@ class __TwigTemplate_03e763f932159b6312f4f0a8a863bc06 extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  474 => 186,  452 => 182,  429 => 173,  407 => 100,  384 => 5,  371 => 187,  369 => 186,  364 => 183,  361 => 182,  352 => 180,  347 => 179,  338 => 177,  334 => 176,  328 => 173,  318 => 166,  314 => 165,  307 => 161,  301 => 158,  285 => 149,  275 => 146,  265 => 143,  255 => 140,  247 => 135,  243 => 134,  237 => 131,  233 => 130,  222 => 126,  210 => 121,  200 => 118,  188 => 113,  179 => 107,  175 => 106,  168 => 101,  166 => 100,  73 => 10,  69 => 9,  65 => 8,  59 => 5,  53 => 1,);
+        return array (  478 => 187,  456 => 182,  433 => 173,  411 => 100,  388 => 5,  375 => 188,  373 => 187,  369 => 186,  364 => 183,  361 => 182,  352 => 180,  347 => 179,  338 => 177,  334 => 176,  328 => 173,  318 => 166,  314 => 165,  307 => 161,  301 => 158,  285 => 149,  275 => 146,  265 => 143,  255 => 140,  247 => 135,  243 => 134,  237 => 131,  233 => 130,  222 => 126,  210 => 121,  200 => 118,  188 => 113,  179 => 107,  175 => 106,  168 => 101,  166 => 100,  73 => 10,  69 => 9,  65 => 8,  59 => 5,  53 => 1,);
     }
 
     public function getSourceContext(): Source
@@ -703,6 +707,7 @@ class __TwigTemplate_03e763f932159b6312f4f0a8a863bc06 extends Template
         </div>
     </div>
 </div>
+<script src=\"{{ asset('harmonie/js/admin-ajax.js') }}\"></script>
 {% block javascripts %}{% endblock %}
 </body>
 </html>

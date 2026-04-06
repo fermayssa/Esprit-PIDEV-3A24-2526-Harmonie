@@ -234,3 +234,8 @@ f0ae48,127.0.0.1,GET,http://localhost:8000/admin/salles,1775443516,,200,request
 50de58,127.0.0.1,GET,http://localhost:8000/admin/taches,1775443528,,200,request
 35facb,127.0.0.1,GET,http://localhost:8000/admin/evenements,1775443529,,200,request
 55d2b3,127.0.0.1,GET,http://localhost:8000/admin/demandes,1775443533,,200,request
+0856ac,127.0.0.1,GET,http://localhost:8000/admin/demandes,1775443798,,200,request
+843b1c,127.0.0.1,POST,http://localhost:8000/admin/demandes/1/accepter,1775443800,,200,request
+c29887,127.0.0.1,GET,http://localhost:8000/admin/demandes?page=1&q=&statut=EN_ATTENTE,1775443802,,200,request
+be2ed1,127.0.0.1,GET,http://localhost:8000/admin/demandes?page=1&q=&statut=ACCEPTEE,1775443803,,200,request
+ed2791,127.0.0.1,GET,http://localhost:8000/admin/demandes?page=1&q=,1775443805,,200,request
