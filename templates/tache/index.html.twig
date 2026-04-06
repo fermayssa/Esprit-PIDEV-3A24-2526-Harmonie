@@ -32,6 +32,7 @@
 
 {% block stylesheets %}
     {{ parent() }}
+    <link href="{{ asset('harmonie/css/harmony-theme.css') }}" rel="stylesheet">
     <link href="{{ asset('harmonie/css/harmony-panel.css') }}" rel="stylesheet">
     <style>
         .kan-page { max-width: 1120px; margin: 0 auto; }
@@ -161,7 +162,9 @@
     </style>
 {% endblock %}
 
-{% block content %}
+{% block body %}
+{% include '_planning_topbar.html.twig' %}
+<main class="page">
 <div class="kan-page"
      id="kanban-root"
      data-csrf="{{ csrf_token('tache_dnd') }}"
@@ -231,10 +234,10 @@
         {% include 'tache/_form_panel.html.twig' with { form: tacheFormNew, panel_mode: 'new' } only %}
     </template>
 </div>
+</main>
 {% endblock %}
 
-{% block javascripts %}
-    {{ parent() }}
+{% block body_javascripts %}
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js" crossorigin="anonymous"></script>
     <script src="{{ asset('harmonie/js/export-handler.js') }}"></script>
     <script>

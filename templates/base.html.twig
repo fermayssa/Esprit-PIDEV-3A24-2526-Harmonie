@@ -1,94 +1,27 @@
 <!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{% block title %}Harmony{% endblock %}</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <link href="{{ asset('harmonie/css/harmony-theme.css') }}" rel="stylesheet">
-    {% block stylesheets %}{% endblock %}
-</head>
-<body>
-{% set r = app.request.attributes.get('_route') ?? '' %}
-<header class="topbar">
-    <a href="{{ path('app_home') }}" class="topbar-logo" title="Harmony">
-        <img src="{{ asset('images/logo.svg') }}" class="logo-mark" width="34" height="34" alt="">
-        <span class="logo-name">Harmony</span>
-    </a>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
+        {% block stylesheets %}
+        {% endblock %}
 
-    <nav class="nav-links" aria-label="Navigation principale">
-        <a href="{{ path('app_home') }}" class="nav-link{{ r == 'app_home' ? ' active' : '' }}"><span class="nav-emoji">🏠</span> Accueil</a>
-        <a href="{{ path('app_activite_index') }}" class="nav-link{{ r starts with 'app_activite' ? ' active' : '' }}"><span class="nav-emoji">🏋</span> Activités</a>
-        <a href="{{ path('app_post_index') }}" class="nav-link{{ r starts with 'app_post' ? ' active' : '' }}"><span class="nav-emoji">💬</span> Forum</a>
-        <a href="{{ path('app_tache_index') }}" class="nav-link{{ r starts with 'app_tache' ? ' active' : '' }}"><span class="nav-emoji">📚</span> Tâches</a>
-        <a href="{{ path('app_evenement_index') }}" class="nav-link{{ r starts with 'app_evenement' ? ' active' : '' }}"><span class="nav-emoji">📅</span> Événements</a>
-        <a href="{{ path('app_consommation_index') }}" class="nav-link{{ (r starts with 'app_consommation' or r starts with 'app_aliment') ? ' active' : '' }}"><span class="nav-emoji">🥗</span> Nutrition</a>
-        <a href="{{ path('app_session_meditation_index') }}" class="nav-link{{ r starts with 'app_session_meditation' ? ' active' : '' }}"><span class="nav-emoji">🧘</span> Méditation</a>
-        <a href="{{ path('app_journal_humeur_index') }}" class="nav-link{{ r starts with 'app_journal_humeur' ? ' active' : '' }}"><span class="nav-emoji">📔</span> Journal</a>
-        <a href="{{ path('app_courses_index') }}" class="nav-link{{ r starts with 'app_courses' ? ' active' : '' }}"><span class="nav-emoji">📖</span> Library</a>
-    </nav>
+        {% block javascripts %}
+            {% block importmap %}{{ importmap('app') }}{% endblock %}
+        {% endblock %}
 
-    <div class="topbar-right">
-        {% if is_granted('ROLE_ADMIN') %}
-            <a href="{{ path('admin_dashboard') }}" class="nav-link" style="margin-right:8px;font-size:14px;">Admin</a>
+        {% set frankenphpHotReload = app.request.server.get('FRANKENPHP_HOT_RELOAD') %}
+        {% if frankenphpHotReload %}
+        <meta name="frankenphp-hot-reload:url" content="{{ frankenphpHotReload }}">
+        <script src="https://cdn.jsdelivr.net/npm/idiomorph"></script>
+        <script src="https://cdn.jsdelivr.net/npm/frankenphp-hot-reload/+esm" type="module"></script>
         {% endif %}
-        {% if app.user %}
-            <a href="{{ path('app_logout') }}" class="logout-btn" title="Déconnexion">🚪 Déconnexion</a>
-        {% else %}
-            <a href="{{ path('app_login') }}" class="logout-btn" title="Connexion">🔑 Connexion</a>
-        {% endif %}
-        <div class="profile-wrap">
-            <div class="avatar" id="avatarBtn" role="button" tabindex="0" aria-label="Profil">
-                {% if app.user and app.user.userPrenom is defined %}
-                    {{ app.user.userPrenom|slice(0, 1)|upper }}
-                {% else %}
-                    H
-                {% endif %}
-            </div>
-            <div class="profile-dropdown" id="profileDropdown">
-                <div class="pd-name">
-                    {% if app.user and app.user.userPrenom is defined %}
-                        {{ app.user.userPrenom }} {{ app.user.userNom }}
-                    {% else %}
-                        Invité
-                    {% endif %}
-                </div>
-                <div class="pd-email">
-                    {% if app.user and app.user.userEmail is defined %}
-                        {{ app.user.userEmail }}
-                    {% else %}
-                        —
-                    {% endif %}
-                </div>
-                <div class="pd-divider"></div>
-                <div class="pd-hint">Espace étudiant Harmony</div>
-            </div>
-        </div>
-    </div>
-</header>
-
-<main class="page">
-    {% for label, messages in app.flashes %}
-        {% for message in messages %}
-            <div class="alert alert-{{ label == 'error' ? 'error' : label }}" role="alert">{{ message }}</div>
-        {% endfor %}
-    {% endfor %}
-    {% block content %}{% endblock %}
-</main>
-
-<script>
-(function () {
-    var btn = document.getElementById('avatarBtn');
-    var drop = document.getElementById('profileDropdown');
-    if (!btn || !drop) return;
-    btn.addEventListener('click', function (e) { e.stopPropagation(); drop.classList.toggle('open'); });
-    document.addEventListener('click', function () { drop.classList.remove('open'); });
-})();
-</script>
-{% block javascripts %}
-    {{ importmap('app') }}
-{% endblock %}
-</body>
+    </head>
+    <body data-turbo="false">
+        {% block body %}{% endblock %}
+        {% block body_javascripts %}{% endblock %}
+    </body>
 </html>

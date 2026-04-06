@@ -22,6 +22,7 @@
 
 {% block stylesheets %}
     {{ parent() }}
+    <link href="{{ asset('harmonie/css/harmony-theme.css') }}" rel="stylesheet">
     <link href="{{ asset('harmonie/css/harmony-forms.css') }}" rel="stylesheet">
     <link href="{{ asset('harmonie/css/harmony-panel.css') }}" rel="stylesheet">
     <style>
@@ -125,7 +126,9 @@
     </style>
 {% endblock %}
 
-{% block content %}
+{% block body %}
+{% include '_planning_topbar.html.twig' %}
+<main class="page">
 <div id="evenement-calendar-root"
      class="harmony-split-root cal-page"
      data-calendar-year="{{ year }}"
@@ -209,10 +212,10 @@
         {% include 'evenement/_form_panel.html.twig' with { form: evenementFormNew, panel_mode: 'new' } only %}
     </template>
 </div>
+</main>
 {% endblock %}
 
-{% block javascripts %}
-    {{ parent() }}
+{% block body_javascripts %}
     <script src="{{ asset('harmonie/js/cal-tunisia-holidays.js') }}" defer></script>
     <script src="{{ asset('harmonie/js/evenement-form.js') }}"></script>
     <script src="{{ asset('harmonie/js/export-handler.js') }}"></script>

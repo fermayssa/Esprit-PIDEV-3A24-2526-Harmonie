@@ -2,7 +2,14 @@
 
 {% block title %}Salle index{% endblock %}
 
-{% block content %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('harmonie/css/harmony-theme.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+{% include '_planning_topbar.html.twig' %}
+<main class="page">
     <h1>Salle index</h1>
 
     <table class="table table-bordered table-hover w-100">
@@ -42,4 +49,5 @@
     </table>
 
     <a href="{{ path('app_salle_new') }}">Create new</a>
+</main>
 {% endblock %}

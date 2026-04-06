@@ -2,9 +2,11 @@
 
 namespace App\Entity;
 
+use App\Enum\Humeur;
 use App\Repository\JournalHumeurRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: JournalHumeurRepository::class)]
 #[ORM\Table(name: 'journal_humeur')]
@@ -12,87 +14,57 @@ class JournalHumeur
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(name: 'id', type: Types::INTEGER)]
     private ?int $id = null;
 
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'user_id', nullable: false)]
     private ?User $user = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $date = null;
+    #[ORM\Column(name: 'date', type: Types::DATE_MUTABLE)]
+    #[Assert\NotBlank(message: 'La date est obligatoire.')]
+    private ?\DateTimeInterface $dateJournal = null;
 
-    #[ORM\Column(length: 50)]
-    private string $humeur;
+    #[ORM\Column(name: 'humeur', type: Types::STRING, length: 50, enumType: Humeur::class)]
+    #[Assert\NotBlank(message: "L'humeur est obligatoire.")]
+    private ?Humeur $humeur = null;
 
-    #[ORM\Column]
-    private int $score;
+    #[ORM\Column(name: 'score', type: Types::INTEGER)]
+    private int $score = 3;
 
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
-    private ?string $contenu = null;
+    #[ORM\Column(name: 'contenu', type: Types::TEXT)]
+    #[Assert\NotBlank(message: 'Le contenu est obligatoire.')]
+    #[Assert\Length(
+        max: 1000,
+        maxMessage: 'Le contenu ne peut pas dépasser {{ limit }} caractères.'
+    )]
+    private string $contenu = '';
 
-    public function getId(): ?int
+    public function __construct()
     {
-        return $this->id;
+        $this->dateJournal = new \DateTime();
     }
 
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
+    public function getId(): ?int { return $this->id; }
 
-    public function setUser(?User $user): static
-    {
-        $this->user = $user;
+    public function getUser(): ?User { return $this->user; }
+    public function setUser(?User $user): self { $this->user = $user; return $this; }
 
-        return $this;
-    }
+    public function getDateJournal(): ?\DateTimeInterface { return $this->dateJournal; }
+    public function setDateJournal(?\DateTimeInterface $dateJournal): self { $this->dateJournal = $dateJournal; return $this; }
 
-    public function getDate(): ?\DateTimeInterface
-    {
-        return $this->date;
-    }
-
-    public function setDate(?\DateTimeInterface $date): static
-    {
-        $this->date = $date;
-
-        return $this;
-    }
-
-    public function getHumeur(): string
-    {
-        return $this->humeur;
-    }
-
-    public function setHumeur(string $humeur): static
+    public function getHumeur(): ?Humeur { return $this->humeur; }
+    public function setHumeur(?Humeur $humeur): self
     {
         $this->humeur = $humeur;
-
+        if ($humeur !== null) {
+            $this->score = $humeur->score();
+        }
         return $this;
     }
 
-    public function getScore(): int
-    {
-        return $this->score;
-    }
+    public function getScore(): int { return $this->score; }
 
-    public function setScore(int $score): static
-    {
-        $this->score = $score;
-
-        return $this;
-    }
-
-    public function getContenu(): ?string
-    {
-        return $this->contenu;
-    }
-
-    public function setContenu(?string $contenu): static
-    {
-        $this->contenu = $contenu;
-
-        return $this;
-    }
+    public function getContenu(): ?string { return $this->contenu; }
+    public function setContenu(?string $contenu): self { $this->contenu = $contenu ?? ''; return $this; }
 }

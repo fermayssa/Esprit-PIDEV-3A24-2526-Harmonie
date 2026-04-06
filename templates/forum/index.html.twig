@@ -1,0 +1,192 @@
+{% extends 'base.html.twig' %}
+{% block title %}Forum — Harmony{% endblock %}
+
+{% block stylesheets %}
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+        --purple: #6A5ACD; --purple-dark: #4B3B9E; --purple-soft: #8B7FD4;
+        --purple-pale: #EDE8FA; --purple-ghost: #F7F5FD;
+        --text: #1C1733; --text-mid: #4A4570; --text-muted: #9590B8;
+        --border: rgba(106,90,205,.12); --white: #FFFFFF;
+        --font-head: 'Syne', sans-serif; --font-body: 'Inter', sans-serif;
+    }
+    html, body { font-family: var(--font-body); background: var(--purple-ghost); color: var(--text); }
+
+    .topbar { position: sticky; top: 0; z-index: 200; background: var(--white);
+        border-bottom: 1px solid var(--border); height: 62px; display: flex;
+        align-items: center; padding: 0 40px; gap: 8px; }
+    .topbar-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; margin-right: 32px; }
+    .logo-mark { width: 34px; height: 34px; border-radius: 10px; object-fit: contain; }
+    .logo-name { font-family: var(--font-head); font-size: 18px; font-weight: 700; color: var(--text); }
+    .nav-links { display: flex; align-items: center; gap: 2px; flex: 1; }
+    .nav-link { display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px;
+        border-radius: 9px; font-size: 13.5px; font-weight: 500; color: var(--text-mid);
+        text-decoration: none; transition: background .15s, color .15s; }
+    .nav-link:hover, .nav-link.active { background: var(--purple-pale); color: var(--purple); font-weight: 600; }
+    .topbar-right { display: flex; align-items: center; gap: 10px; margin-left: auto; }
+    .logout-btn { padding: 7px 16px; border-radius: 9px; border: 1.5px solid rgba(239,68,68,.2);
+        background: transparent; color: #E05252; font-size: 13px; cursor: pointer; }
+    .avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--purple);
+        color: white; font-family: var(--font-head); font-weight: 700; font-size: 14px;
+        display: grid; place-items: center; cursor: pointer; }
+
+    .page { max-width: 1200px; margin: 0 auto; padding: 48px 40px 80px; }
+
+    /* HEADER */
+    .forum-header {
+        background: linear-gradient(135deg, var(--purple) 0%, var(--purple-dark) 100%);
+        border-radius: 22px; padding: 40px 48px; margin-bottom: 36px;
+        display: flex; align-items: center; justify-content: space-between;
+        position: relative; overflow: hidden;
+    }
+    .forum-header::after {
+        content: ''; position: absolute; right: -60px; top: -60px;
+        width: 260px; height: 260px; border-radius: 50%;
+        background: rgba(255,255,255,.06); pointer-events: none;
+    }
+    .fh-left h1 { font-family: var(--font-head); font-size: 32px; font-weight: 800;
+        color: white; margin-bottom: 6px; }
+    .fh-left p { color: rgba(255,255,255,.75); font-size: 14px; }
+    .fh-right { display: flex; align-items: center; gap: 12px; position: relative; z-index: 1; }
+    .fh-badge { background: rgba(255,255,255,.15); color: white;
+        border: 1px solid rgba(255,255,255,.25);
+        padding: 6px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; }
+    .btn-new-cat {
+        display: inline-flex; align-items: center; gap: 8px;
+        padding: 10px 20px; background: white; color: var(--purple-dark);
+        border-radius: 10px; font-size: 13px; font-weight: 700;
+        text-decoration: none; transition: opacity .15s;
+    }
+    .btn-new-cat:hover { opacity: .9; }
+
+    /* GRID */
+    .cat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 18px; }
+
+    /* CARTE catégorie */
+    .cat-card {
+        background: var(--white); border: 1px solid var(--border);
+        border-radius: 18px; overflow: hidden;
+        display: flex; flex-direction: column;
+        transition: border-color .18s, transform .18s, box-shadow .18s;
+        position: relative;
+    }
+    .cat-card:hover { border-color: var(--purple-soft); transform: translateY(-4px);
+        box-shadow: 0 12px 36px rgba(106,90,205,.13); }
+    .cat-card-top-bar {
+        height: 3px;
+        background: linear-gradient(90deg, var(--purple), var(--purple-soft));
+    }
+    .cat-card-body {
+        padding: 22px 20px 14px;
+        flex: 1;
+        display: flex; flex-direction: column; gap: 8px;
+        /* lien cliquable vers les posts */
+        text-decoration: none; color: inherit;
+    }
+    .cat-icon { width: 44px; height: 44px; background: var(--purple-pale);
+        border-radius: 12px; display: grid; place-items: center; font-size: 22px; }
+    .cat-name { font-family: var(--font-head); font-size: 15px; font-weight: 700; color: var(--text); }
+    .cat-desc { font-size: 12px; color: var(--text-muted); line-height: 1.6; flex: 1; }
+    .cat-meta { font-size: 11px; color: var(--purple); font-weight: 600;
+        background: var(--purple-pale); padding: 3px 10px; border-radius: 20px;
+        display: inline-block; width: fit-content; }
+
+    /* ACTIONS CRUD en bas de la carte */
+    .cat-card-actions {
+        display: flex; gap: 6px;
+        padding: 10px 20px 14px;
+        border-top: 1px solid var(--purple-ghost);
+    }
+    .btn-edit { display: inline-flex; align-items: center; gap: 4px;
+        padding: 5px 12px; background: var(--purple-pale); color: var(--purple);
+        border: none; border-radius: 8px; font-size: 12px; font-weight: 600;
+        cursor: pointer; text-decoration: none; transition: background .15s; }
+    .btn-edit:hover { background: #ddd6f7; }
+    .btn-delete { display: inline-flex; align-items: center; gap: 4px;
+        padding: 5px 12px; background: #FEF2F2; color: #E05252;
+        border: none; border-radius: 8px; font-size: 12px; font-weight: 600;
+        cursor: pointer; transition: background .15s; }
+    .btn-delete:hover { background: #fde8e8; }
+
+    @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+    .fade { animation: fadeUp .4s ease both; }
+</style>
+{% endblock %}
+
+{% block body %}
+<header class="topbar">
+    <a href="{{ path('homepage') }}" class="topbar-logo">
+        <img src="{{ asset('images/logo.png') }}" class="logo-mark" alt="Harmony">
+        <span class="logo-name">Harmony</span>
+    </a>
+    <nav class="nav-links">
+        <a href="{{ path('activites') }}"  class="nav-link">🏋 Activités</a>
+        <a href="{{ path('forum') }}"      class="nav-link active">💬 Forum</a>
+        <a href="{{ path('taches') }}"     class="nav-link">📚 Tâches</a>
+        <a href="{{ path('evenements') }}" class="nav-link">📅 Événements</a>
+        <a href="{{ path('nutrition') }}"  class="nav-link">🥗 Nutrition</a>
+        <a href="{{ path('meditation') }}" class="nav-link">🧘 Méditation</a>
+        <a href="{{ path('journal') }}"    class="nav-link">📔 Journal</a>
+        <a href="{{ path('library') }}"    class="nav-link">📖 Library</a>
+    </nav>
+    <div class="topbar-right">
+        <button class="logout-btn">🚪 Déconnexion</button>
+        <div class="avatar">E</div>
+    </div>
+</header>
+
+<main class="page">
+
+    <div class="forum-header fade">
+        <div class="fh-left">
+            <h1>💬 Forum et Communauté</h1>
+            <p>Explore les discussions, pose tes questions et partage tes connaissances</p>
+        </div>
+        <div class="fh-right">
+            <span class="fh-badge">{{ categories|length }} catégories</span>
+            <a href="{{ path('forum_categorie_new') }}" class="btn-new-cat">
+                ➕ Nouvelle catégorie
+            </a>
+        </div>
+    </div>
+
+    <div class="cat-grid">
+        {% for cat in categories %}
+        <div class="cat-card fade">
+
+            <div class="cat-card-top-bar"></div>
+
+            {# Zone cliquable → posts #}
+            <a href="{{ path('forum_posts', {id: cat.idCategorie}) }}" class="cat-card-body">
+                <div class="cat-icon">💬</div>
+                <div class="cat-name">{{ cat.nomCategorie }}</div>
+                {% if cat.description %}
+                    <div class="cat-desc">{{ cat.description }}</div>
+                {% endif %}
+                <span class="cat-meta">Voir les posts →</span>
+            </a>
+
+            {# Boutons CRUD #}
+            <div class="cat-card-actions">
+                <a href="{{ path('forum_categorie_edit', {id: cat.idCategorie}) }}"
+                   class="btn-edit">✏️ Modifier</a>
+                <form method="POST"
+                      action="{{ path('forum_categorie_delete', {id: cat.idCategorie}) }}"
+                      onsubmit="return confirm('Supprimer cette catégorie et tous ses posts ?');"
+                      style="display:inline;">
+                    <button type="submit" class="btn-delete">🗑 Supprimer</button>
+                </form>
+            </div>
+
+        </div>
+        {% else %}
+            <p style="color:var(--text-muted); grid-column:1/-1; text-align:center; padding:40px;">
+                Aucune catégorie pour l'instant.
+            </p>
+        {% endfor %}
+    </div>
+
+</main>
+{% endblock %}
