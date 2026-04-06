@@ -462,6 +462,6 @@ function filterTable(q, tbodyId) {
 </script>
 {% endblock %}
 
-", "back/commentaires.html.twig", "/Users/rayen/Downloads/Esprit-PIWEB-3A24-2526-Harmonie-forum-communication-3/templates/back/commentaires.html.twig");
+", "back/commentaires.html.twig", "/Users/rayen/Desktop/pi dev/mon_projet/templates/back/commentaires.html.twig");
     }
 }

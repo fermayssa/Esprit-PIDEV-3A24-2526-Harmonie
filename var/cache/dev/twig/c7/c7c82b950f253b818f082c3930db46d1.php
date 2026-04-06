@@ -475,6 +475,6 @@ class __TwigTemplate_9e07caa74a679a971974e7c9ec3ebc23 extends Template
         <div class=\"empty-conseils\">Aucun conseil pour cette session. Ajoutez-en un !</div>
     {% endfor %}
 {% endblock %}
-", "meditation/admin/show.html.twig", "/Users/rayen/Downloads/Esprit-PIWEB-3A24-2526-Harmonie-forum-communication-3/templates/meditation/admin/show.html.twig");
+", "meditation/admin/show.html.twig", "/Users/rayen/Desktop/pi dev/mon_projet/templates/meditation/admin/show.html.twig");
     }
 }

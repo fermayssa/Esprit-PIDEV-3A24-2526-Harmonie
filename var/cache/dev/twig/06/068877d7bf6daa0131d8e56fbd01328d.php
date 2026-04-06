@@ -307,6 +307,6 @@ class __TwigTemplate_dc93645194c9db98605d5aaf95136623 extends Template
     <a href=\"{{ path('app_salle_new') }}\">Create new</a>
 </main>
 {% endblock %}
-", "salle/index.html.twig", "/Users/rayen/Downloads/Esprit-PIWEB-3A24-2526-Harmonie-forum-communication-3/templates/salle/index.html.twig");
+", "salle/index.html.twig", "/Users/rayen/Desktop/pi dev/mon_projet/templates/salle/index.html.twig");
     }
 }

@@ -293,6 +293,6 @@ class __TwigTemplate_6bd4c04de1d545abb3d7776b09e5d735 extends Template
     {{ include('salle/_delete_form.html.twig') }}
 </main>
 {% endblock %}
-", "salle/show.html.twig", "/Users/rayen/Downloads/Esprit-PIWEB-3A24-2526-Harmonie-forum-communication-3/templates/salle/show.html.twig");
+", "salle/show.html.twig", "/Users/rayen/Desktop/pi dev/mon_projet/templates/salle/show.html.twig");
     }
 }

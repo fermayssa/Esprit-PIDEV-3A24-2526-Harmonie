@@ -788,6 +788,6 @@ class __TwigTemplate_4e863213bc37b987534e6e782ee3c02e extends Template
         });
     </script>
 {% endblock %}
-", "registration/register_step1.html.twig", "/Users/rayen/Downloads/Esprit-PIWEB-3A24-2526-Harmonie-forum-communication-3/templates/registration/register_step1.html.twig");
+", "registration/register_step1.html.twig", "/Users/rayen/Desktop/pi dev/mon_projet/templates/registration/register_step1.html.twig");
     }
 }

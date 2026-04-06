@@ -204,6 +204,6 @@ class __TwigTemplate_47d33f759c8db9506f9baaabe6c8a4e9 extends Template
     <a href=\"{{ path('app_salle_index') }}\">back to list</a>
 </main>
 {% endblock %}
-", "salle/new.html.twig", "/Users/rayen/Downloads/Esprit-PIWEB-3A24-2526-Harmonie-forum-communication-3/templates/salle/new.html.twig");
+", "salle/new.html.twig", "/Users/rayen/Desktop/pi dev/mon_projet/templates/salle/new.html.twig");
     }
 }

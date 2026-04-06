@@ -52,74 +52,75 @@ class __TwigTemplate_4f99d02909554cd955bc6b966c3d5432 extends Template
         // line 3
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("homepage");
         yield "\" class=\"topbar-logo\">
-        <img src=\"";
+            <img src=\"";
         // line 4
         yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl("images/logo.png"), "html", null, true);
         yield "\" class=\"logo-mark\" alt=\"Harmony\">
+        <span class=\"logo-name\">Harmony</span>
     </a>
 
     <nav class=\"nav-links\">
         <a href=\"";
-        // line 8
+        // line 9
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("activites");
         yield "\"   class=\"nav-link ";
-        if (((isset($context["current_route"]) || array_key_exists("current_route", $context) ? $context["current_route"] : (function () { throw new RuntimeError('Variable "current_route" does not exist.', 8, $this->source); })()) == "activites")) {
+        if (((isset($context["current_route"]) || array_key_exists("current_route", $context) ? $context["current_route"] : (function () { throw new RuntimeError('Variable "current_route" does not exist.', 9, $this->source); })()) == "activites")) {
             yield "active";
         }
         yield "\"><span class=\"nav-emoji\">🏋</span> Activités</a>
         <a href=\"";
-        // line 9
+        // line 10
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("forum");
         yield "\"       class=\"nav-link ";
-        if ((is_string($_v0 = (isset($context["current_route"]) || array_key_exists("current_route", $context) ? $context["current_route"] : (function () { throw new RuntimeError('Variable "current_route" does not exist.', 9, $this->source); })())) && is_string($_v1 = "forum") && str_starts_with($_v0, $_v1))) {
+        if ((is_string($_v0 = (isset($context["current_route"]) || array_key_exists("current_route", $context) ? $context["current_route"] : (function () { throw new RuntimeError('Variable "current_route" does not exist.', 10, $this->source); })())) && is_string($_v1 = "forum") && str_starts_with($_v0, $_v1))) {
             yield "active";
         }
         yield "\"><span class=\"nav-emoji\">💬</span> Forum</a>
         <a href=\"";
-        // line 10
+        // line 11
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("taches");
         yield "\"      class=\"nav-link ";
-        if (((is_string($_v2 = (isset($context["current_route"]) || array_key_exists("current_route", $context) ? $context["current_route"] : (function () { throw new RuntimeError('Variable "current_route" does not exist.', 10, $this->source); })())) && is_string($_v3 = "app_tache") && str_starts_with($_v2, $_v3)) || ((isset($context["current_route"]) || array_key_exists("current_route", $context) ? $context["current_route"] : (function () { throw new RuntimeError('Variable "current_route" does not exist.', 10, $this->source); })()) == "taches"))) {
+        if (((is_string($_v2 = (isset($context["current_route"]) || array_key_exists("current_route", $context) ? $context["current_route"] : (function () { throw new RuntimeError('Variable "current_route" does not exist.', 11, $this->source); })())) && is_string($_v3 = "app_tache") && str_starts_with($_v2, $_v3)) || ((isset($context["current_route"]) || array_key_exists("current_route", $context) ? $context["current_route"] : (function () { throw new RuntimeError('Variable "current_route" does not exist.', 11, $this->source); })()) == "taches"))) {
             yield "active";
         }
         yield "\"><span class=\"nav-emoji\">📚</span> Tâches</a>
         <a href=\"";
-        // line 11
+        // line 12
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("evenements");
         yield "\"  class=\"nav-link ";
-        if (((is_string($_v4 = (isset($context["current_route"]) || array_key_exists("current_route", $context) ? $context["current_route"] : (function () { throw new RuntimeError('Variable "current_route" does not exist.', 11, $this->source); })())) && is_string($_v5 = "app_evenement") && str_starts_with($_v4, $_v5)) || ((isset($context["current_route"]) || array_key_exists("current_route", $context) ? $context["current_route"] : (function () { throw new RuntimeError('Variable "current_route" does not exist.', 11, $this->source); })()) == "evenements"))) {
+        if (((is_string($_v4 = (isset($context["current_route"]) || array_key_exists("current_route", $context) ? $context["current_route"] : (function () { throw new RuntimeError('Variable "current_route" does not exist.', 12, $this->source); })())) && is_string($_v5 = "app_evenement") && str_starts_with($_v4, $_v5)) || ((isset($context["current_route"]) || array_key_exists("current_route", $context) ? $context["current_route"] : (function () { throw new RuntimeError('Variable "current_route" does not exist.', 12, $this->source); })()) == "evenements"))) {
             yield "active";
         }
         yield "\"><span class=\"nav-emoji\">📅</span> Événements</a>
         <a href=\"";
-        // line 12
+        // line 13
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("nutrition");
         yield "\"   class=\"nav-link ";
-        if (((isset($context["current_route"]) || array_key_exists("current_route", $context) ? $context["current_route"] : (function () { throw new RuntimeError('Variable "current_route" does not exist.', 12, $this->source); })()) == "nutrition")) {
+        if (((isset($context["current_route"]) || array_key_exists("current_route", $context) ? $context["current_route"] : (function () { throw new RuntimeError('Variable "current_route" does not exist.', 13, $this->source); })()) == "nutrition")) {
             yield "active";
         }
         yield "\"><span class=\"nav-emoji\">🥗</span> Nutrition</a>
         <a href=\"";
-        // line 13
+        // line 14
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("meditation");
         yield "\"  class=\"nav-link ";
-        if ((is_string($_v6 = (isset($context["current_route"]) || array_key_exists("current_route", $context) ? $context["current_route"] : (function () { throw new RuntimeError('Variable "current_route" does not exist.', 13, $this->source); })())) && is_string($_v7 = "meditation") && str_starts_with($_v6, $_v7))) {
+        if ((is_string($_v6 = (isset($context["current_route"]) || array_key_exists("current_route", $context) ? $context["current_route"] : (function () { throw new RuntimeError('Variable "current_route" does not exist.', 14, $this->source); })())) && is_string($_v7 = "meditation") && str_starts_with($_v6, $_v7))) {
             yield "active";
         }
         yield "\"><span class=\"nav-emoji\">🧘</span> Méditation</a>
         <a href=\"";
-        // line 14
+        // line 15
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("journal");
         yield "\"     class=\"nav-link ";
-        if ((is_string($_v8 = (isset($context["current_route"]) || array_key_exists("current_route", $context) ? $context["current_route"] : (function () { throw new RuntimeError('Variable "current_route" does not exist.', 14, $this->source); })())) && is_string($_v9 = "journal") && str_starts_with($_v8, $_v9))) {
+        if ((is_string($_v8 = (isset($context["current_route"]) || array_key_exists("current_route", $context) ? $context["current_route"] : (function () { throw new RuntimeError('Variable "current_route" does not exist.', 15, $this->source); })())) && is_string($_v9 = "journal") && str_starts_with($_v8, $_v9))) {
             yield "active";
         }
         yield "\"><span class=\"nav-emoji\">📔</span> Journal</a>
         <a href=\"";
-        // line 15
+        // line 16
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("library");
         yield "\"     class=\"nav-link ";
-        if (((isset($context["current_route"]) || array_key_exists("current_route", $context) ? $context["current_route"] : (function () { throw new RuntimeError('Variable "current_route" does not exist.', 15, $this->source); })()) == "library")) {
+        if (((isset($context["current_route"]) || array_key_exists("current_route", $context) ? $context["current_route"] : (function () { throw new RuntimeError('Variable "current_route" does not exist.', 16, $this->source); })()) == "library")) {
             yield "active";
         }
         yield "\"><span class=\"nav-emoji\">📖</span> Library</a>
@@ -127,25 +128,25 @@ class __TwigTemplate_4f99d02909554cd955bc6b966c3d5432 extends Template
 
     <div class=\"topbar-right\">
         <a href=\"";
-        // line 19
+        // line 20
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_logout");
         yield "\" class=\"logout-btn\" style=\"text-decoration:none;\">🚪 Déconnexion</a>
 
         <div class=\"profile-wrap\">
             <div class=\"avatar\" id=\"avatarBtn\">
                 ";
-        // line 23
-        yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 23, $this->source); })()), "user", [], "any", false, false, false, 23)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::upper($this->env->getCharset(), Twig\Extension\CoreExtension::first($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 23, $this->source); })()), "user", [], "any", false, false, false, 23), "firstName", [], "any", false, false, false, 23))), "html", null, true)) : ("E"));
+        // line 24
+        yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 24, $this->source); })()), "user", [], "any", false, false, false, 24)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::upper($this->env->getCharset(), Twig\Extension\CoreExtension::first($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 24, $this->source); })()), "user", [], "any", false, false, false, 24), "firstName", [], "any", false, false, false, 24))), "html", null, true)) : ("E"));
         yield "
             </div>
             <div class=\"profile-dropdown\" id=\"profileDropdown\">
                 <div class=\"pd-name\">";
-        // line 26
-        yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 26, $this->source); })()), "user", [], "any", false, false, false, 26)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 26, $this->source); })()), "user", [], "any", false, false, false, 26), "firstName", [], "any", false, false, false, 26) . " ") . CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 26, $this->source); })()), "user", [], "any", false, false, false, 26), "lastName", [], "any", false, false, false, 26)), "html", null, true)) : ("Étudiant"));
+        // line 27
+        yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 27, $this->source); })()), "user", [], "any", false, false, false, 27)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 27, $this->source); })()), "user", [], "any", false, false, false, 27), "firstName", [], "any", false, false, false, 27) . " ") . CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 27, $this->source); })()), "user", [], "any", false, false, false, 27), "lastName", [], "any", false, false, false, 27)), "html", null, true)) : ("Étudiant"));
         yield "</div>
                 <div class=\"pd-email\">";
-        // line 27
-        yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 27, $this->source); })()), "user", [], "any", false, false, false, 27)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 27, $this->source); })()), "user", [], "any", false, false, false, 27), "email", [], "any", false, false, false, 27), "html", null, true)) : ("email@exemple.com"));
+        // line 28
+        yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 28, $this->source); })()), "user", [], "any", false, false, false, 28)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 28, $this->source); })()), "user", [], "any", false, false, false, 28), "email", [], "any", false, false, false, 28), "html", null, true)) : ("email@exemple.com"));
         yield "</div>
                 <div class=\"pd-divider\"></div>
                 <div class=\"pd-hint\">Double-clic pour modifier</div>
@@ -191,7 +192,7 @@ class __TwigTemplate_4f99d02909554cd955bc6b966c3d5432 extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  148 => 27,  144 => 26,  138 => 23,  131 => 19,  120 => 15,  112 => 14,  104 => 13,  96 => 12,  88 => 11,  80 => 10,  72 => 9,  64 => 8,  57 => 4,  53 => 3,  50 => 2,  48 => 1,);
+        return array (  149 => 28,  145 => 27,  139 => 24,  132 => 20,  121 => 16,  113 => 15,  105 => 14,  97 => 13,  89 => 12,  81 => 11,  73 => 10,  65 => 9,  57 => 4,  53 => 3,  50 => 2,  48 => 1,);
     }
 
     public function getSourceContext(): Source
@@ -199,7 +200,8 @@ class __TwigTemplate_4f99d02909554cd955bc6b966c3d5432 extends Template
         return new Source("{% set current_route = app.request.attributes.get('_route') %}
 <header class=\"topbar\">
     <a href=\"{{ path('homepage') }}\" class=\"topbar-logo\">
-        <img src=\"{{ asset('images/logo.png') }}\" class=\"logo-mark\" alt=\"Harmony\">
+            <img src=\"{{ asset('images/logo.png') }}\" class=\"logo-mark\" alt=\"Harmony\">
+        <span class=\"logo-name\">Harmony</span>
     </a>
 
     <nav class=\"nav-links\">

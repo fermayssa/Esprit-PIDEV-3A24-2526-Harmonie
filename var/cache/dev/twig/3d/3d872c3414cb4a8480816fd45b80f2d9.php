@@ -137,6 +137,6 @@ class __TwigTemplate_6eae271f2359e7b20f36bd4245a8051a extends Template
 .exception-message-wrapper .container {
     min-height: unset;
 }
-", "@WebProfiler/Collector/exception.css.twig", "/Users/rayen/Downloads/Esprit-PIWEB-3A24-2526-Harmonie-forum-communication-3/vendor/symfony/web-profiler-bundle/Resources/views/Collector/exception.css.twig");
+", "@WebProfiler/Collector/exception.css.twig", "/Users/rayen/Desktop/pi dev/mon_projet/vendor/symfony/web-profiler-bundle/Resources/views/Collector/exception.css.twig");
     }
 }

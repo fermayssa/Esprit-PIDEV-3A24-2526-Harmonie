@@ -142,6 +142,6 @@ class __TwigTemplate_341c1bd9dd9f42be0046281e944d9873 extends Template
     </tbody>
 </table>
 </div>
-", "@WebProfiler/Profiler/table.html.twig", "/Users/rayen/Downloads/Esprit-PIWEB-3A24-2526-Harmonie-forum-communication-3/vendor/symfony/web-profiler-bundle/Resources/views/Profiler/table.html.twig");
+", "@WebProfiler/Profiler/table.html.twig", "/Users/rayen/Desktop/pi dev/mon_projet/vendor/symfony/web-profiler-bundle/Resources/views/Profiler/table.html.twig");
     }
 }

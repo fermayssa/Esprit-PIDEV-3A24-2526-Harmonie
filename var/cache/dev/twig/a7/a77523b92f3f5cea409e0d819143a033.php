@@ -1056,6 +1056,6 @@ $context["call"], "return", [], "any", false, false, false, 313) === false)) {
         </menu>
     </dialog>
 {% endblock %}
-", "@WebProfiler/Collector/workflow.html.twig", "/Users/rayen/Downloads/Esprit-PIWEB-3A24-2526-Harmonie-forum-communication-3/vendor/symfony/web-profiler-bundle/Resources/views/Collector/workflow.html.twig");
+", "@WebProfiler/Collector/workflow.html.twig", "/Users/rayen/Desktop/pi dev/mon_projet/vendor/symfony/web-profiler-bundle/Resources/views/Collector/workflow.html.twig");
     }
 }

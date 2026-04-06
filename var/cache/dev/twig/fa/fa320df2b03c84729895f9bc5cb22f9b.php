@@ -186,6 +186,6 @@ class __TwigTemplate_bc180fba725a7161b5761f0440ad1684 extends Template
         {%- endfor -%}
     </pre>
 {% endif %}
-", "@Doctrine/Collector/explain.html.twig", "/Users/rayen/Downloads/Esprit-PIWEB-3A24-2526-Harmonie-forum-communication-3/vendor/doctrine/doctrine-bundle/templates/Collector/explain.html.twig");
+", "@Doctrine/Collector/explain.html.twig", "/Users/rayen/Desktop/pi dev/mon_projet/vendor/doctrine/doctrine-bundle/templates/Collector/explain.html.twig");
     }
 }

@@ -98,10 +98,7 @@ class __TwigTemplate_7ec5c223c6c46b28214a9c5a59acb003 extends Template
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "stylesheets"));
 
         // line 6
-        yield "    <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">
-    <link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>
-    <link href=\"https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap\" rel=\"stylesheet\">
-    <style>
+        yield "    <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         :root {
             --purple:#6A5ACD;--purple-dark:#4B3B9E;--purple-soft:#8B7FD4;
@@ -111,27 +108,6 @@ class __TwigTemplate_7ec5c223c6c46b28214a9c5a59acb003 extends Template
             --font-head:'Syne',sans-serif;--font-body:'Inter',sans-serif;
         }
         html,body{height:100%;font-family:var(--font-body);background:var(--purple-ghost);color:var(--text);}
-
-        .topbar{position:sticky;top:0;z-index:200;background:var(--white);border-bottom:1px solid var(--border);height:62px;display:flex;align-items:center;padding:0 40px;gap:8px;}
-        .topbar-logo{display:flex;align-items:center;gap:10px;text-decoration:none;margin-right:32px;}
-        .logo-mark{width:34px;height:34px;border-radius:10px;object-fit:contain;flex-shrink:0;}
-        .nav-links{display:flex;align-items:center;gap:2px;flex:1;flex-wrap:nowrap;overflow-x:auto;}
-        .nav-link{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:9px;font-size:13.5px;font-weight:500;color:var(--text-mid);text-decoration:none;white-space:nowrap;transition:background .15s,color .15s;}
-        .nav-link:hover{background:var(--purple-pale);color:var(--purple);}
-        .nav-link.active{background:var(--purple-pale);color:var(--purple);font-weight:600;}
-        .nav-link .nav-emoji{font-size:14px;}
-        .topbar-right{display:flex;align-items:center;gap:10px;margin-left:auto;flex-shrink:0;}
-        .logout-btn{padding:7px 16px;border-radius:9px;border:1.5px solid rgba(239,68,68,.2);background:transparent;color:#E05252;font-family:var(--font-body);font-size:13px;font-weight:500;cursor:pointer;transition:background .15s,border-color .15s;white-space:nowrap;text-decoration:none;}
-        .logout-btn:hover{background:#FEF2F2;border-color:#E05252;}
-        .profile-wrap{position:relative;}
-        .avatar{width:36px;height:36px;border-radius:50%;background:var(--purple);color:white;font-family:var(--font-head);font-weight:700;font-size:14px;display:grid;place-items:center;cursor:pointer;border:2px solid var(--purple-pale);transition:box-shadow .15s;}
-        .avatar:hover{box-shadow:0 0 0 3px rgba(106,90,205,.25);}
-        .profile-dropdown{position:absolute;top:calc(100% + 10px);right:0;width:220px;background:var(--white);border:1px solid var(--border);border-radius:14px;box-shadow:0 12px 40px rgba(0,0,0,.1);padding:16px;display:none;z-index:500;}
-        .profile-dropdown.open{display:block;}
-        .pd-name{font-size:14px;font-weight:600;color:var(--text);}
-        .pd-email{font-size:12px;color:var(--text-muted);margin-top:2px;}
-        .pd-divider{height:1px;background:var(--border);margin:12px 0;}
-        .pd-hint{font-size:11px;color:var(--text-muted);font-style:italic;}
 
         .container{max-width:1200px;margin:0 auto;padding:48px 40px 80px;}
         .page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;}
@@ -184,7 +160,7 @@ class __TwigTemplate_7ec5c223c6c46b28214a9c5a59acb003 extends Template
         yield from [];
     }
 
-    // line 84
+    // line 60
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -197,102 +173,18 @@ class __TwigTemplate_7ec5c223c6c46b28214a9c5a59acb003 extends Template
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "body"));
 
-        // line 85
+        // line 61
         yield "    ";
-        $context["current_route"] = CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 85, $this->source); })()), "request", [], "any", false, false, false, 85), "attributes", [], "any", false, false, false, 85), "get", ["_route"], "method", false, false, false, 85);
-        // line 86
+        yield from $this->load("_planning_topbar.html.twig", 61)->unwrap()->yield($context);
+        // line 62
         yield "
-    <header class=\"topbar\">
-        <a href=\"";
-        // line 88
-        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("homepage");
-        yield "\" class=\"topbar-logo\">
-            <img src=\"";
-        // line 89
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl("images/logo.png"), "html", null, true);
-        yield "\" class=\"logo-mark\" alt=\"Harmony\">
-        </a>
-        <nav class=\"nav-links\">
-            <a href=\"";
-        // line 92
-        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("activites");
-        yield "\" class=\"nav-link ";
-        yield ((((isset($context["current_route"]) || array_key_exists("current_route", $context) ? $context["current_route"] : (function () { throw new RuntimeError('Variable "current_route" does not exist.', 92, $this->source); })()) == "activites")) ? ("active") : (""));
-        yield "\"><span class=\"nav-emoji\">🏋</span> Activités</a>
-            <a href=\"";
-        // line 93
-        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("forum");
-        yield "\" class=\"nav-link ";
-        yield ((((isset($context["current_route"]) || array_key_exists("current_route", $context) ? $context["current_route"] : (function () { throw new RuntimeError('Variable "current_route" does not exist.', 93, $this->source); })()) == "forum")) ? ("active") : (""));
-        yield "\"><span class=\"nav-emoji\">💬</span> Forum</a>
-            <a href=\"";
-        // line 94
-        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("taches");
-        yield "\" class=\"nav-link ";
-        yield ((((isset($context["current_route"]) || array_key_exists("current_route", $context) ? $context["current_route"] : (function () { throw new RuntimeError('Variable "current_route" does not exist.', 94, $this->source); })()) == "taches")) ? ("active") : (""));
-        yield "\"><span class=\"nav-emoji\">📚</span> Tâches</a>
-            <a href=\"";
-        // line 95
-        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("evenements");
-        yield "\" class=\"nav-link ";
-        yield ((((isset($context["current_route"]) || array_key_exists("current_route", $context) ? $context["current_route"] : (function () { throw new RuntimeError('Variable "current_route" does not exist.', 95, $this->source); })()) == "evenements")) ? ("active") : (""));
-        yield "\"><span class=\"nav-emoji\">📅</span> Événements</a>
-            <a href=\"";
-        // line 96
-        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("nutrition");
-        yield "\" class=\"nav-link ";
-        yield ((((isset($context["current_route"]) || array_key_exists("current_route", $context) ? $context["current_route"] : (function () { throw new RuntimeError('Variable "current_route" does not exist.', 96, $this->source); })()) == "nutrition")) ? ("active") : (""));
-        yield "\"><span class=\"nav-emoji\">🥗</span> Nutrition</a>
-            <a href=\"";
-        // line 97
-        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("meditation");
-        yield "\" class=\"nav-link ";
-        yield ((CoreExtension::inFilter("meditation", (isset($context["current_route"]) || array_key_exists("current_route", $context) ? $context["current_route"] : (function () { throw new RuntimeError('Variable "current_route" does not exist.', 97, $this->source); })()))) ? ("active") : (""));
-        yield "\"><span class=\"nav-emoji\">🧘</span> Méditation</a>
-            <a href=\"";
-        // line 98
-        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("journal");
-        yield "\" class=\"nav-link active\"><span class=\"nav-emoji\">📔</span> Journal</a>
-            <a href=\"";
-        // line 99
-        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("library");
-        yield "\" class=\"nav-link ";
-        yield ((((isset($context["current_route"]) || array_key_exists("current_route", $context) ? $context["current_route"] : (function () { throw new RuntimeError('Variable "current_route" does not exist.', 99, $this->source); })()) == "library")) ? ("active") : (""));
-        yield "\"><span class=\"nav-emoji\">📖</span> Library</a>
-        </nav>
-        <div class=\"topbar-right\">
-            <a href=\"";
-        // line 102
-        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_logout");
-        yield "\" class=\"logout-btn\">🚪 Déconnexion</a>
-            <div class=\"profile-wrap\">
-                <div class=\"avatar\" id=\"avatarBtn\">";
-        // line 104
-        yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 104, $this->source); })()), "user", [], "any", false, false, false, 104)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::upper($this->env->getCharset(), Twig\Extension\CoreExtension::first($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 104, $this->source); })()), "user", [], "any", false, false, false, 104), "firstName", [], "any", false, false, false, 104))), "html", null, true)) : ("E"));
-        yield "</div>
-                <div class=\"profile-dropdown\" id=\"profileDropdown\">
-                    <div class=\"pd-name\">";
-        // line 106
-        yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 106, $this->source); })()), "user", [], "any", false, false, false, 106)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 106, $this->source); })()), "user", [], "any", false, false, false, 106), "firstName", [], "any", false, false, false, 106) . " ") . CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 106, $this->source); })()), "user", [], "any", false, false, false, 106), "lastName", [], "any", false, false, false, 106)), "html", null, true)) : ("Étudiant"));
-        yield "</div>
-                    <div class=\"pd-email\">";
-        // line 107
-        yield (((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 107, $this->source); })()), "user", [], "any", false, false, false, 107)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 107, $this->source); })()), "user", [], "any", false, false, false, 107), "email", [], "any", false, false, false, 107), "html", null, true)) : ("email@exemple.com"));
-        yield "</div>
-                    <div class=\"pd-divider\"></div>
-                    <div class=\"pd-hint\">Double-clic pour modifier</div>
-                </div>
-            </div>
-        </div>
-    </header>
-
     <div class=\"container\">
         ";
-        // line 116
+        // line 64
         $context['_parent'] = $context;
-        $context['_seq'] = CoreExtension::ensureTraversable(CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 116, $this->source); })()), "flashes", ["success"], "method", false, false, false, 116));
+        $context['_seq'] = CoreExtension::ensureTraversable(CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 64, $this->source); })()), "flashes", ["success"], "method", false, false, false, 64));
         foreach ($context['_seq'] as $context["_key"] => $context["msg"]) {
-            // line 117
+            // line 65
             yield "            <div class=\"flash-success\">✅ ";
             yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($context["msg"], "html", null, true);
             yield "</div>
@@ -301,12 +193,12 @@ class __TwigTemplate_7ec5c223c6c46b28214a9c5a59acb003 extends Template
         $_parent = $context['_parent'];
         unset($context['_seq'], $context['_key'], $context['msg'], $context['_parent']);
         $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 119
+        // line 67
         yield "
         <div class=\"page-header\">
             <h1 class=\"page-title\">📔 Mon Journal</h1>
             <a href=\"";
-        // line 122
+        // line 70
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("journal_new");
         yield "\" class=\"action-btn btn-primary\">+ Nouvelle entrée</a>
         </div>
@@ -319,72 +211,72 @@ class __TwigTemplate_7ec5c223c6c46b28214a9c5a59acb003 extends Template
             <select id=\"humeurFilter\" class=\"filter-select\">
                 <option value=\"\">Toutes les humeurs</option>
                 ";
-        // line 132
+        // line 80
         $context['_parent'] = $context;
-        $context['_seq'] = CoreExtension::ensureTraversable((isset($context["humeurs"]) || array_key_exists("humeurs", $context) ? $context["humeurs"] : (function () { throw new RuntimeError('Variable "humeurs" does not exist.', 132, $this->source); })()));
+        $context['_seq'] = CoreExtension::ensureTraversable((isset($context["humeurs"]) || array_key_exists("humeurs", $context) ? $context["humeurs"] : (function () { throw new RuntimeError('Variable "humeurs" does not exist.', 80, $this->source); })()));
         foreach ($context['_seq'] as $context["_key"] => $context["h"]) {
-            // line 133
+            // line 81
             yield "                    <option value=\"";
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["h"], "value", [], "any", false, false, false, 133), "html", null, true);
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["h"], "value", [], "any", false, false, false, 81), "html", null, true);
             yield "\">";
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["h"], "emoji", [], "any", false, false, false, 133), "html", null, true);
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["h"], "emoji", [], "any", false, false, false, 81), "html", null, true);
             yield " ";
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["h"], "label", [], "any", false, false, false, 133), "html", null, true);
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["h"], "label", [], "any", false, false, false, 81), "html", null, true);
             yield "</option>
                 ";
         }
         $_parent = $context['_parent'];
         unset($context['_seq'], $context['_key'], $context['h'], $context['_parent']);
         $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 135
+        // line 83
         yield "            </select>
         </div>
 
         <div class=\"results-count\" id=\"resultsCount\">";
-        // line 138
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::length($this->env->getCharset(), (isset($context["entries"]) || array_key_exists("entries", $context) ? $context["entries"] : (function () { throw new RuntimeError('Variable "entries" does not exist.', 138, $this->source); })())), "html", null, true);
+        // line 86
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::length($this->env->getCharset(), (isset($context["entries"]) || array_key_exists("entries", $context) ? $context["entries"] : (function () { throw new RuntimeError('Variable "entries" does not exist.', 86, $this->source); })())), "html", null, true);
         yield " entrée(s)</div>
         <div class=\"loading\" id=\"loading\">⏳ Chargement...</div>
 
         <div class=\"cards-grid\" id=\"cardsGrid\">
             ";
-        // line 142
+        // line 90
         $context['_parent'] = $context;
-        $context['_seq'] = CoreExtension::ensureTraversable((isset($context["entries"]) || array_key_exists("entries", $context) ? $context["entries"] : (function () { throw new RuntimeError('Variable "entries" does not exist.', 142, $this->source); })()));
+        $context['_seq'] = CoreExtension::ensureTraversable((isset($context["entries"]) || array_key_exists("entries", $context) ? $context["entries"] : (function () { throw new RuntimeError('Variable "entries" does not exist.', 90, $this->source); })()));
         $context['_iterated'] = false;
         foreach ($context['_seq'] as $context["_key"] => $context["e"]) {
-            // line 143
+            // line 91
             yield "                <div class=\"card\">
                     <div class=\"card-header\">
                         <span class=\"card-date\">";
-            // line 145
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate(CoreExtension::getAttribute($this->env, $this->source, $context["e"], "dateJournal", [], "any", false, false, false, 145), "d/m/Y"), "html", null, true);
+            // line 93
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate(CoreExtension::getAttribute($this->env, $this->source, $context["e"], "dateJournal", [], "any", false, false, false, 93), "d/m/Y"), "html", null, true);
             yield "</span>
                         <span class=\"mood-badge mood-";
-            // line 146
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["e"], "score", [], "any", false, false, false, 146), "html", null, true);
+            // line 94
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["e"], "score", [], "any", false, false, false, 94), "html", null, true);
             yield "\">";
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["e"], "humeur", [], "any", false, false, false, 146), "emoji", [], "any", false, false, false, 146), "html", null, true);
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["e"], "humeur", [], "any", false, false, false, 94), "emoji", [], "any", false, false, false, 94), "html", null, true);
             yield " ";
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["e"], "humeur", [], "any", false, false, false, 146), "label", [], "any", false, false, false, 146), "html", null, true);
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, $context["e"], "humeur", [], "any", false, false, false, 94), "label", [], "any", false, false, false, 94), "html", null, true);
             yield "</span>
                     </div>
                     <div class=\"card-contenu\">";
-            // line 148
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["e"], "contenu", [], "any", false, false, false, 148), "html", null, true);
+            // line 96
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["e"], "contenu", [], "any", false, false, false, 96), "html", null, true);
             yield "</div>
                     <div class=\"card-actions\">
                         <a href=\"";
-            // line 150
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("journal_edit", ["id" => CoreExtension::getAttribute($this->env, $this->source, $context["e"], "id", [], "any", false, false, false, 150)]), "html", null, true);
+            // line 98
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("journal_edit", ["id" => CoreExtension::getAttribute($this->env, $this->source, $context["e"], "id", [], "any", false, false, false, 98)]), "html", null, true);
             yield "\">✏️ Modifier</a>
                         <form method=\"post\" action=\"";
-            // line 151
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("journal_delete", ["id" => CoreExtension::getAttribute($this->env, $this->source, $context["e"], "id", [], "any", false, false, false, 151)]), "html", null, true);
+            // line 99
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("journal_delete", ["id" => CoreExtension::getAttribute($this->env, $this->source, $context["e"], "id", [], "any", false, false, false, 99)]), "html", null, true);
             yield "\" style=\"display:inline\" onsubmit=\"return confirm('Supprimer cette entrée ?')\">
                             <input type=\"hidden\" name=\"_token\" value=\"";
-            // line 152
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderCsrfToken(("delete" . CoreExtension::getAttribute($this->env, $this->source, $context["e"], "id", [], "any", false, false, false, 152))), "html", null, true);
+            // line 100
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderCsrfToken(("delete" . CoreExtension::getAttribute($this->env, $this->source, $context["e"], "id", [], "any", false, false, false, 100))), "html", null, true);
             yield "\">
                             <button type=\"submit\" class=\"btn-del\">🗑 Supprimer</button>
                         </form>
@@ -393,14 +285,14 @@ class __TwigTemplate_7ec5c223c6c46b28214a9c5a59acb003 extends Template
             ";
             $context['_iterated'] = true;
         }
-        // line 157
+        // line 105
         if (!$context['_iterated']) {
-            // line 158
+            // line 106
             yield "                <div class=\"empty-state\">
                     <div class=\"icon\">📔</div>
                     <p>Aucune entrée dans votre journal.</p>
                     <a href=\"";
-            // line 161
+            // line 109
             yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("journal_new");
             yield "\" class=\"action-btn btn-primary\" style=\"margin-top:16px;display:inline-flex\">+ Écrire ma première entrée</a>
                 </div>
@@ -409,17 +301,12 @@ class __TwigTemplate_7ec5c223c6c46b28214a9c5a59acb003 extends Template
         $_parent = $context['_parent'];
         unset($context['_seq'], $context['_key'], $context['e'], $context['_parent'], $context['_iterated']);
         $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 164
+        // line 112
         yield "        </div>
     </div>
 
     <script>
     (function(){
-        const btn = document.getElementById('avatarBtn');
-        const drop = document.getElementById('profileDropdown');
-        btn.addEventListener('click', e => { e.stopPropagation(); drop.classList.toggle('open'); });
-        document.addEventListener('click', () => drop.classList.remove('open'));
-
         const searchInput = document.getElementById('searchInput');
         const humeurFilter = document.getElementById('humeurFilter');
         const grid = document.getElementById('cardsGrid');
@@ -438,7 +325,7 @@ class __TwigTemplate_7ec5c223c6c46b28214a9c5a59acb003 extends Template
             grid.style.opacity = '0.4';
 
             fetch(`";
-        // line 191
+        // line 134
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("journal_search");
         yield "?q=\${encodeURIComponent(q)}&humeur=\${encodeURIComponent(humeur)}`)
                 .then(r => r.json())
@@ -508,7 +395,7 @@ class __TwigTemplate_7ec5c223c6c46b28214a9c5a59acb003 extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  442 => 191,  413 => 164,  404 => 161,  399 => 158,  397 => 157,  387 => 152,  383 => 151,  379 => 150,  374 => 148,  365 => 146,  361 => 145,  357 => 143,  352 => 142,  345 => 138,  340 => 135,  327 => 133,  323 => 132,  310 => 122,  305 => 119,  296 => 117,  292 => 116,  280 => 107,  276 => 106,  271 => 104,  266 => 102,  258 => 99,  254 => 98,  248 => 97,  242 => 96,  236 => 95,  230 => 94,  224 => 93,  218 => 92,  212 => 89,  208 => 88,  204 => 86,  201 => 85,  188 => 84,  101 => 6,  88 => 5,  65 => 3,  42 => 1,);
+        return array (  329 => 134,  305 => 112,  296 => 109,  291 => 106,  289 => 105,  279 => 100,  275 => 99,  271 => 98,  266 => 96,  257 => 94,  253 => 93,  249 => 91,  244 => 90,  237 => 86,  232 => 83,  219 => 81,  215 => 80,  202 => 70,  197 => 67,  188 => 65,  184 => 64,  180 => 62,  177 => 61,  164 => 60,  101 => 6,  88 => 5,  65 => 3,  42 => 1,);
     }
 
     public function getSourceContext(): Source
@@ -518,9 +405,6 @@ class __TwigTemplate_7ec5c223c6c46b28214a9c5a59acb003 extends Template
 {% block title %}Journal - Harmony{% endblock %}
 
 {% block stylesheets %}
-    <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">
-    <link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>
-    <link href=\"https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap\" rel=\"stylesheet\">
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         :root {
@@ -531,27 +415,6 @@ class __TwigTemplate_7ec5c223c6c46b28214a9c5a59acb003 extends Template
             --font-head:'Syne',sans-serif;--font-body:'Inter',sans-serif;
         }
         html,body{height:100%;font-family:var(--font-body);background:var(--purple-ghost);color:var(--text);}
-
-        .topbar{position:sticky;top:0;z-index:200;background:var(--white);border-bottom:1px solid var(--border);height:62px;display:flex;align-items:center;padding:0 40px;gap:8px;}
-        .topbar-logo{display:flex;align-items:center;gap:10px;text-decoration:none;margin-right:32px;}
-        .logo-mark{width:34px;height:34px;border-radius:10px;object-fit:contain;flex-shrink:0;}
-        .nav-links{display:flex;align-items:center;gap:2px;flex:1;flex-wrap:nowrap;overflow-x:auto;}
-        .nav-link{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:9px;font-size:13.5px;font-weight:500;color:var(--text-mid);text-decoration:none;white-space:nowrap;transition:background .15s,color .15s;}
-        .nav-link:hover{background:var(--purple-pale);color:var(--purple);}
-        .nav-link.active{background:var(--purple-pale);color:var(--purple);font-weight:600;}
-        .nav-link .nav-emoji{font-size:14px;}
-        .topbar-right{display:flex;align-items:center;gap:10px;margin-left:auto;flex-shrink:0;}
-        .logout-btn{padding:7px 16px;border-radius:9px;border:1.5px solid rgba(239,68,68,.2);background:transparent;color:#E05252;font-family:var(--font-body);font-size:13px;font-weight:500;cursor:pointer;transition:background .15s,border-color .15s;white-space:nowrap;text-decoration:none;}
-        .logout-btn:hover{background:#FEF2F2;border-color:#E05252;}
-        .profile-wrap{position:relative;}
-        .avatar{width:36px;height:36px;border-radius:50%;background:var(--purple);color:white;font-family:var(--font-head);font-weight:700;font-size:14px;display:grid;place-items:center;cursor:pointer;border:2px solid var(--purple-pale);transition:box-shadow .15s;}
-        .avatar:hover{box-shadow:0 0 0 3px rgba(106,90,205,.25);}
-        .profile-dropdown{position:absolute;top:calc(100% + 10px);right:0;width:220px;background:var(--white);border:1px solid var(--border);border-radius:14px;box-shadow:0 12px 40px rgba(0,0,0,.1);padding:16px;display:none;z-index:500;}
-        .profile-dropdown.open{display:block;}
-        .pd-name{font-size:14px;font-weight:600;color:var(--text);}
-        .pd-email{font-size:12px;color:var(--text-muted);margin-top:2px;}
-        .pd-divider{height:1px;background:var(--border);margin:12px 0;}
-        .pd-hint{font-size:11px;color:var(--text-muted);font-style:italic;}
 
         .container{max-width:1200px;margin:0 auto;padding:48px 40px 80px;}
         .page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;}
@@ -597,35 +460,7 @@ class __TwigTemplate_7ec5c223c6c46b28214a9c5a59acb003 extends Template
 {% endblock %}
 
 {% block body %}
-    {% set current_route = app.request.attributes.get('_route') %}
-
-    <header class=\"topbar\">
-        <a href=\"{{ path('homepage') }}\" class=\"topbar-logo\">
-            <img src=\"{{ asset('images/logo.png') }}\" class=\"logo-mark\" alt=\"Harmony\">
-        </a>
-        <nav class=\"nav-links\">
-            <a href=\"{{ path('activites') }}\" class=\"nav-link {{ current_route == 'activites' ? 'active' }}\"><span class=\"nav-emoji\">🏋</span> Activités</a>
-            <a href=\"{{ path('forum') }}\" class=\"nav-link {{ current_route == 'forum' ? 'active' }}\"><span class=\"nav-emoji\">💬</span> Forum</a>
-            <a href=\"{{ path('taches') }}\" class=\"nav-link {{ current_route == 'taches' ? 'active' }}\"><span class=\"nav-emoji\">📚</span> Tâches</a>
-            <a href=\"{{ path('evenements') }}\" class=\"nav-link {{ current_route == 'evenements' ? 'active' }}\"><span class=\"nav-emoji\">📅</span> Événements</a>
-            <a href=\"{{ path('nutrition') }}\" class=\"nav-link {{ current_route == 'nutrition' ? 'active' }}\"><span class=\"nav-emoji\">🥗</span> Nutrition</a>
-            <a href=\"{{ path('meditation') }}\" class=\"nav-link {{ 'meditation' in current_route ? 'active' }}\"><span class=\"nav-emoji\">🧘</span> Méditation</a>
-            <a href=\"{{ path('journal') }}\" class=\"nav-link active\"><span class=\"nav-emoji\">📔</span> Journal</a>
-            <a href=\"{{ path('library') }}\" class=\"nav-link {{ current_route == 'library' ? 'active' }}\"><span class=\"nav-emoji\">📖</span> Library</a>
-        </nav>
-        <div class=\"topbar-right\">
-            <a href=\"{{ path('app_logout') }}\" class=\"logout-btn\">🚪 Déconnexion</a>
-            <div class=\"profile-wrap\">
-                <div class=\"avatar\" id=\"avatarBtn\">{{ app.user ? app.user.firstName|first|upper : 'E' }}</div>
-                <div class=\"profile-dropdown\" id=\"profileDropdown\">
-                    <div class=\"pd-name\">{{ app.user ? app.user.firstName ~ ' ' ~ app.user.lastName : 'Étudiant' }}</div>
-                    <div class=\"pd-email\">{{ app.user ? app.user.email : 'email@exemple.com' }}</div>
-                    <div class=\"pd-divider\"></div>
-                    <div class=\"pd-hint\">Double-clic pour modifier</div>
-                </div>
-            </div>
-        </div>
-    </header>
+    {% include '_planning_topbar.html.twig' %}
 
     <div class=\"container\">
         {% for msg in app.flashes('success') %}
@@ -681,11 +516,6 @@ class __TwigTemplate_7ec5c223c6c46b28214a9c5a59acb003 extends Template
 
     <script>
     (function(){
-        const btn = document.getElementById('avatarBtn');
-        const drop = document.getElementById('profileDropdown');
-        btn.addEventListener('click', e => { e.stopPropagation(); drop.classList.toggle('open'); });
-        document.addEventListener('click', () => drop.classList.remove('open'));
-
         const searchInput = document.getElementById('searchInput');
         const humeurFilter = document.getElementById('humeurFilter');
         const grid = document.getElementById('cardsGrid');

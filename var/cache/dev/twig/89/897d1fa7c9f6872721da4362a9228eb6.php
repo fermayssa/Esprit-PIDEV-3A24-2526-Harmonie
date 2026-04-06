@@ -449,6 +449,6 @@ class __TwigTemplate_f118fe546e1eae7d2eba1e41e80a34e4 extends Template
         </div>
     </div>
 {% endblock %}
-", "profile/edit.html.twig", "/Users/rayen/Downloads/Esprit-PIWEB-3A24-2526-Harmonie-forum-communication-3/templates/profile/edit.html.twig");
+", "profile/edit.html.twig", "/Users/rayen/Desktop/pi dev/mon_projet/templates/profile/edit.html.twig");
     }
 }

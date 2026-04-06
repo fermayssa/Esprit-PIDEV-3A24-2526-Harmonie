@@ -644,6 +644,6 @@ class __TwigTemplate_681c4b788b79ff25087585be149aa3d1 extends Template
         }
     }
 </script>
-", "@WebProfiler/Profiler/base_js.html.twig", "/Users/rayen/Downloads/Esprit-PIWEB-3A24-2526-Harmonie-forum-communication-3/vendor/symfony/web-profiler-bundle/Resources/views/Profiler/base_js.html.twig");
+", "@WebProfiler/Profiler/base_js.html.twig", "/Users/rayen/Desktop/pi dev/mon_projet/vendor/symfony/web-profiler-bundle/Resources/views/Profiler/base_js.html.twig");
     }
 }

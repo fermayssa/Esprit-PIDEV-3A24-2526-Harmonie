@@ -94,6 +94,6 @@ class __TwigTemplate_07ea97fb544f1df6fcf77a45e0fbc22c extends Template
     <input type=\"hidden\" name=\"_token\" value=\"{{ csrf_token('delete' ~ salle.id) }}\">
     <button class=\"btn\">Delete</button>
 </form>
-", "salle/_delete_form.html.twig", "/Users/rayen/Downloads/Esprit-PIWEB-3A24-2526-Harmonie-forum-communication-3/templates/salle/_delete_form.html.twig");
+", "salle/_delete_form.html.twig", "/Users/rayen/Desktop/pi dev/mon_projet/templates/salle/_delete_form.html.twig");
     }
 }

@@ -557,6 +557,6 @@ function filterByCat(catId) {
 }
 </script>
 {% endblock %}
-", "back/posts.html.twig", "/Users/rayen/Downloads/Esprit-PIWEB-3A24-2526-Harmonie-forum-communication-3/templates/back/posts.html.twig");
+", "back/posts.html.twig", "/Users/rayen/Desktop/pi dev/mon_projet/templates/back/posts.html.twig");
     }
 }

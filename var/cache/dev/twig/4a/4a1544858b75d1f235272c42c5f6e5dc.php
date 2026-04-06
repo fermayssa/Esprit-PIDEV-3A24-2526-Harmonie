@@ -1673,6 +1673,6 @@ $this->env->getRuntime('Symfony\Component\Form\FormRenderer')->searchAndRenderBl
         {% if form is not rootform %}</small>{% else %}</div>{% endif %}
     {%- endif %}
 {%- endblock form_errors %}
-", "foundation_5_layout.html.twig", "/Users/rayen/Downloads/Esprit-PIWEB-3A24-2526-Harmonie-forum-communication-3/vendor/symfony/twig-bridge/Resources/views/Form/foundation_5_layout.html.twig");
+", "foundation_5_layout.html.twig", "/Users/rayen/Desktop/pi dev/mon_projet/vendor/symfony/twig-bridge/Resources/views/Form/foundation_5_layout.html.twig");
     }
 }

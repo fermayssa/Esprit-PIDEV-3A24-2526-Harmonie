@@ -2,35 +2,7 @@
 {% block title %}{{ categorie.nomCategorie }} — Forum Harmony{% endblock %}
 
 {% block stylesheets %}
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-    :root{
-        --purple:#6A5ACD;--purple-dark:#4B3B9E;--purple-soft:#8B7FD4;
-        --purple-pale:#EDE8FA;--purple-ghost:#F7F5FD;
-        --text:#1C1733;--text-mid:#4A4570;--text-muted:#9590B8;
-        --border:rgba(106,90,205,.12);--white:#FFFFFF;
-        --font-head:'Syne',sans-serif;--font-body:'Inter',sans-serif;
-    }
-    html,body{font-family:var(--font-body);background:var(--purple-ghost);color:var(--text);}
-
-    .topbar{position:sticky;top:0;z-index:200;background:var(--white);
-        border-bottom:1px solid var(--border);height:62px;display:flex;
-        align-items:center;padding:0 40px;gap:8px;}
-    .topbar-logo{display:flex;align-items:center;gap:10px;text-decoration:none;margin-right:32px;}
-    .logo-mark{width:34px;height:34px;border-radius:10px;object-fit:contain;}
-    .nav-links{display:flex;align-items:center;gap:2px;flex:1;}
-    .nav-link{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;
-        border-radius:9px;font-size:13.5px;font-weight:500;color:var(--text-mid);
-        text-decoration:none;transition:background .15s,color .15s;}
-    .nav-link:hover,.nav-link.active{background:var(--purple-pale);color:var(--purple);font-weight:600;}
-    .topbar-right{display:flex;align-items:center;gap:10px;margin-left:auto;}
-    .logout-btn{padding:7px 16px;border-radius:9px;border:1.5px solid rgba(239,68,68,.2);
-        background:transparent;color:#E05252;font-size:13px;cursor:pointer;}
-    .avatar{width:36px;height:36px;border-radius:50%;background:var(--purple);
-        color:white;font-family:var(--font-head);font-weight:700;font-size:14px;
-        display:grid;place-items:center;}
-
     .page{max-width:860px;margin:0 auto;padding:48px 40px 80px;}
 
     .breadcrumb{display:flex;align-items:center;gap:8px;font-size:13px;
@@ -172,25 +144,7 @@
 {% endblock %}
 
 {% block body %}
-<header class="topbar">
-    <a href="{{ path('homepage') }}" class="topbar-logo">
-        <img src="{{ asset('images/logo.png') }}" class="logo-mark" alt="Harmony">
-    </a>
-    <nav class="nav-links">
-        <a href="{{ path('activites') }}"  class="nav-link">🏋 Activités</a>
-        <a href="{{ path('forum') }}"      class="nav-link active">💬 Forum</a>
-        <a href="{{ path('taches') }}"     class="nav-link">📚 Tâches</a>
-        <a href="{{ path('evenements') }}" class="nav-link">📅 Événements</a>
-        <a href="{{ path('nutrition') }}"  class="nav-link">🥗 Nutrition</a>
-        <a href="{{ path('meditation') }}" class="nav-link">🧘 Méditation</a>
-        <a href="{{ path('journal') }}"    class="nav-link">📔 Journal</a>
-        <a href="{{ path('library') }}"    class="nav-link">📖 Library</a>
-    </nav>
-    <div class="topbar-right">
-        <button class="logout-btn">🚪 Déconnexion</button>
-        <div class="avatar">E</div>
-    </div>
-</header>
+{% include '_planning_topbar.html.twig' %}
 
 <main class="page">
 

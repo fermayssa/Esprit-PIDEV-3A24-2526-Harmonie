@@ -99,31 +99,7 @@ class __TwigTemplate_25e5ce378e9f27b1f4433e8828fd7747 extends Template
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "stylesheets"));
 
         // line 5
-        yield "<link href=\"https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap\" rel=\"stylesheet\">
-<style>
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-    :root{--purple:#6A5ACD;--purple-dark:#4B3B9E;--purple-soft:#8B7FD4;
-        --purple-pale:#EDE8FA;--purple-ghost:#F7F5FD;--text:#1C1733;
-        --text-mid:#4A4570;--text-muted:#9590B8;--border:rgba(106,90,205,.12);
-        --white:#FFFFFF;--font-head:'Syne',sans-serif;--font-body:'Inter',sans-serif;}
-    html,body{font-family:var(--font-body);background:var(--purple-ghost);color:var(--text);}
-    .topbar{position:sticky;top:0;z-index:200;background:var(--white);
-        border-bottom:1px solid var(--border);height:62px;display:flex;
-        align-items:center;padding:0 40px;gap:8px;}
-    .topbar-logo{display:flex;align-items:center;gap:10px;text-decoration:none;margin-right:32px;}
-    .logo-mark{width:34px;height:34px;border-radius:10px;object-fit:contain;}
-    .nav-links{display:flex;align-items:center;gap:2px;flex:1;}
-    .nav-link{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;
-        border-radius:9px;font-size:13.5px;font-weight:500;color:var(--text-mid);
-        text-decoration:none;transition:background .15s,color .15s;}
-    .nav-link:hover,.nav-link.active{background:var(--purple-pale);color:var(--purple);font-weight:600;}
-    .topbar-right{display:flex;align-items:center;gap:10px;margin-left:auto;}
-    .logout-btn{padding:7px 16px;border-radius:9px;border:1.5px solid rgba(239,68,68,.2);
-        background:transparent;color:#E05252;font-size:13px;cursor:pointer;}
-    .avatar{width:36px;height:36px;border-radius:50%;background:var(--purple);
-        color:white;font-family:var(--font-head);font-weight:700;font-size:14px;
-        display:grid;place-items:center;}
-
+        yield "<style>
     .page{max-width:600px;margin:0 auto;padding:48px 40px 80px;}
 
     .form-card{background:var(--white);border:1px solid var(--border);
@@ -168,7 +144,7 @@ class __TwigTemplate_25e5ce378e9f27b1f4433e8828fd7747 extends Template
         yield from [];
     }
 
-    // line 66
+    // line 42
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -181,91 +157,44 @@ class __TwigTemplate_25e5ce378e9f27b1f4433e8828fd7747 extends Template
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "body"));
 
-        // line 67
-        yield "<header class=\"topbar\">
-    <a href=\"";
-        // line 68
-        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("homepage");
-        yield "\" class=\"topbar-logo\">
-        <img src=\"";
-        // line 69
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl("images/logo.png"), "html", null, true);
-        yield "\" class=\"logo-mark\" alt=\"Harmony\">
-    </a>
-    <nav class=\"nav-links\">
-        <a href=\"";
-        // line 72
-        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("activites");
-        yield "\" class=\"nav-link\">🏋 Activités</a>
-        <a href=\"";
-        // line 73
-        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("forum");
-        yield "\"     class=\"nav-link active\">💬 Forum</a>
-        <a href=\"";
-        // line 74
-        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("taches");
-        yield "\"    class=\"nav-link\">📚 Tâches</a>
-        <a href=\"";
-        // line 75
-        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("evenements");
-        yield "\" class=\"nav-link\">📅 Événements</a>
-        <a href=\"";
-        // line 76
-        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("nutrition");
-        yield "\" class=\"nav-link\">🥗 Nutrition</a>
-        <a href=\"";
-        // line 77
-        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("meditation");
-        yield "\" class=\"nav-link\">🧘 Méditation</a>
-        <a href=\"";
-        // line 78
-        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("journal");
-        yield "\"   class=\"nav-link\">📔 Journal</a>
-        <a href=\"";
-        // line 79
-        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("library");
-        yield "\"   class=\"nav-link\">📖 Library</a>
-    </nav>
-    <div class=\"topbar-right\">
-        <button class=\"logout-btn\">🚪 Déconnexion</button>
-        <div class=\"avatar\">E</div>
-    </div>
-</header>
-
+        // line 43
+        yield from $this->load("_planning_topbar.html.twig", 43)->unwrap()->yield($context);
+        // line 44
+        yield "
 <main class=\"page\">
     <div class=\"form-card\">
         <div class=\"form-title\">
             ";
-        // line 90
-        yield (((($tmp = (isset($context["cat"]) || array_key_exists("cat", $context) ? $context["cat"] : (function () { throw new RuntimeError('Variable "cat" does not exist.', 90, $this->source); })())) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ("✏️ Modifier la catégorie") : ("➕ Nouvelle catégorie"));
+        // line 48
+        yield (((($tmp = (isset($context["cat"]) || array_key_exists("cat", $context) ? $context["cat"] : (function () { throw new RuntimeError('Variable "cat" does not exist.', 48, $this->source); })())) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ("✏️ Modifier la catégorie") : ("➕ Nouvelle catégorie"));
         yield "
         </div>
 
         ";
-        // line 93
-        if ((($tmp = (isset($context["error"]) || array_key_exists("error", $context) ? $context["error"] : (function () { throw new RuntimeError('Variable "error" does not exist.', 93, $this->source); })())) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-            // line 94
+        // line 51
+        if ((($tmp = (isset($context["error"]) || array_key_exists("error", $context) ? $context["error"] : (function () { throw new RuntimeError('Variable "error" does not exist.', 51, $this->source); })())) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+            // line 52
             yield "        <div class=\"error-box\">⚠️ ";
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["error"]) || array_key_exists("error", $context) ? $context["error"] : (function () { throw new RuntimeError('Variable "error" does not exist.', 94, $this->source); })()), "html", null, true);
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["error"]) || array_key_exists("error", $context) ? $context["error"] : (function () { throw new RuntimeError('Variable "error" does not exist.', 52, $this->source); })()), "html", null, true);
             yield "</div>
         ";
         }
-        // line 96
+        // line 54
         yield "
         <form method=\"POST\" action=\"";
-        // line 97
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["action"]) || array_key_exists("action", $context) ? $context["action"] : (function () { throw new RuntimeError('Variable "action" does not exist.', 97, $this->source); })()), "html", null, true);
+        // line 55
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["action"]) || array_key_exists("action", $context) ? $context["action"] : (function () { throw new RuntimeError('Variable "action" does not exist.', 55, $this->source); })()), "html", null, true);
         yield "\" id=\"catForm\">
             <div class=\"form-group\">
                 <label class=\"form-label\">Nom de la catégorie *</label>
                 <input type=\"text\" name=\"nom\" id=\"nomInput\"
                     class=\"form-input ";
-        // line 101
-        yield ((((isset($context["error"]) || array_key_exists("error", $context) ? $context["error"] : (function () { throw new RuntimeError('Variable "error" does not exist.', 101, $this->source); })()) && (is_string($_v0 = (isset($context["error"]) || array_key_exists("error", $context) ? $context["error"] : (function () { throw new RuntimeError('Variable "error" does not exist.', 101, $this->source); })())) && is_string($_v1 = "Le nom") && str_starts_with($_v0, $_v1)))) ? ("error") : (""));
+        // line 59
+        yield ((((isset($context["error"]) || array_key_exists("error", $context) ? $context["error"] : (function () { throw new RuntimeError('Variable "error" does not exist.', 59, $this->source); })()) && (is_string($_v0 = (isset($context["error"]) || array_key_exists("error", $context) ? $context["error"] : (function () { throw new RuntimeError('Variable "error" does not exist.', 59, $this->source); })())) && is_string($_v1 = "Le nom") && str_starts_with($_v0, $_v1)))) ? ("error") : (""));
         yield "\"
                     value=\"";
-        // line 102
-        yield (((($tmp = (isset($context["cat"]) || array_key_exists("cat", $context) ? $context["cat"] : (function () { throw new RuntimeError('Variable "cat" does not exist.', 102, $this->source); })())) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["cat"]) || array_key_exists("cat", $context) ? $context["cat"] : (function () { throw new RuntimeError('Variable "cat" does not exist.', 102, $this->source); })()), "nomCategorie", [], "any", false, false, false, 102), "html", null, true)) : (""));
+        // line 60
+        yield (((($tmp = (isset($context["cat"]) || array_key_exists("cat", $context) ? $context["cat"] : (function () { throw new RuntimeError('Variable "cat" does not exist.', 60, $this->source); })())) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["cat"]) || array_key_exists("cat", $context) ? $context["cat"] : (function () { throw new RuntimeError('Variable "cat" does not exist.', 60, $this->source); })()), "nomCategorie", [], "any", false, false, false, 60), "html", null, true)) : (""));
         yield "\"
                     placeholder=\"Ex: Programmation, Base de données...\"
                     maxlength=\"100\" required>
@@ -277,20 +206,20 @@ class __TwigTemplate_25e5ce378e9f27b1f4433e8828fd7747 extends Template
                 <textarea name=\"description\" id=\"descInput\"
                     class=\"form-textarea\"
                     placeholder=\"Décris brièvement cette catégorie...\">";
-        // line 112
-        yield (((($tmp = (isset($context["cat"]) || array_key_exists("cat", $context) ? $context["cat"] : (function () { throw new RuntimeError('Variable "cat" does not exist.', 112, $this->source); })())) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["cat"]) || array_key_exists("cat", $context) ? $context["cat"] : (function () { throw new RuntimeError('Variable "cat" does not exist.', 112, $this->source); })()), "description", [], "any", false, false, false, 112), "html", null, true)) : (""));
+        // line 70
+        yield (((($tmp = (isset($context["cat"]) || array_key_exists("cat", $context) ? $context["cat"] : (function () { throw new RuntimeError('Variable "cat" does not exist.', 70, $this->source); })())) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["cat"]) || array_key_exists("cat", $context) ? $context["cat"] : (function () { throw new RuntimeError('Variable "cat" does not exist.', 70, $this->source); })()), "description", [], "any", false, false, false, 70), "html", null, true)) : (""));
         yield "</textarea>
             </div>
 
             <div class=\"form-actions\">
                 <a href=\"";
-        // line 116
+        // line 74
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("forum");
         yield "\" class=\"btn-cancel\">Annuler</a>
                 <button type=\"submit\" class=\"btn-submit\">
                     ";
-        // line 118
-        yield (((($tmp = (isset($context["cat"]) || array_key_exists("cat", $context) ? $context["cat"] : (function () { throw new RuntimeError('Variable "cat" does not exist.', 118, $this->source); })())) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ("💾 Enregistrer") : ("➕ Créer la catégorie"));
+        // line 76
+        yield (((($tmp = (isset($context["cat"]) || array_key_exists("cat", $context) ? $context["cat"] : (function () { throw new RuntimeError('Variable "cat" does not exist.', 76, $this->source); })())) && $tmp instanceof Markup ? (string) $tmp : $tmp)) ? ("💾 Enregistrer") : ("➕ Créer la catégorie"));
         yield "
                 </button>
             </div>
@@ -346,7 +275,7 @@ class __TwigTemplate_25e5ce378e9f27b1f4433e8828fd7747 extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  293 => 118,  288 => 116,  281 => 112,  268 => 102,  264 => 101,  257 => 97,  254 => 96,  248 => 94,  246 => 93,  240 => 90,  226 => 79,  222 => 78,  218 => 77,  214 => 76,  210 => 75,  206 => 74,  202 => 73,  198 => 72,  192 => 69,  188 => 68,  185 => 67,  172 => 66,  102 => 5,  89 => 4,  65 => 2,  42 => 1,);
+        return array (  222 => 76,  217 => 74,  210 => 70,  197 => 60,  193 => 59,  186 => 55,  183 => 54,  177 => 52,  175 => 51,  169 => 48,  163 => 44,  161 => 43,  148 => 42,  102 => 5,  89 => 4,  65 => 2,  42 => 1,);
     }
 
     public function getSourceContext(): Source
@@ -355,31 +284,7 @@ class __TwigTemplate_25e5ce378e9f27b1f4433e8828fd7747 extends Template
 {% block title %}{{ cat ? 'Modifier' : 'Nouvelle' }} catégorie — Harmony{% endblock %}
 
 {% block stylesheets %}
-<link href=\"https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap\" rel=\"stylesheet\">
 <style>
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-    :root{--purple:#6A5ACD;--purple-dark:#4B3B9E;--purple-soft:#8B7FD4;
-        --purple-pale:#EDE8FA;--purple-ghost:#F7F5FD;--text:#1C1733;
-        --text-mid:#4A4570;--text-muted:#9590B8;--border:rgba(106,90,205,.12);
-        --white:#FFFFFF;--font-head:'Syne',sans-serif;--font-body:'Inter',sans-serif;}
-    html,body{font-family:var(--font-body);background:var(--purple-ghost);color:var(--text);}
-    .topbar{position:sticky;top:0;z-index:200;background:var(--white);
-        border-bottom:1px solid var(--border);height:62px;display:flex;
-        align-items:center;padding:0 40px;gap:8px;}
-    .topbar-logo{display:flex;align-items:center;gap:10px;text-decoration:none;margin-right:32px;}
-    .logo-mark{width:34px;height:34px;border-radius:10px;object-fit:contain;}
-    .nav-links{display:flex;align-items:center;gap:2px;flex:1;}
-    .nav-link{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;
-        border-radius:9px;font-size:13.5px;font-weight:500;color:var(--text-mid);
-        text-decoration:none;transition:background .15s,color .15s;}
-    .nav-link:hover,.nav-link.active{background:var(--purple-pale);color:var(--purple);font-weight:600;}
-    .topbar-right{display:flex;align-items:center;gap:10px;margin-left:auto;}
-    .logout-btn{padding:7px 16px;border-radius:9px;border:1.5px solid rgba(239,68,68,.2);
-        background:transparent;color:#E05252;font-size:13px;cursor:pointer;}
-    .avatar{width:36px;height:36px;border-radius:50%;background:var(--purple);
-        color:white;font-family:var(--font-head);font-weight:700;font-size:14px;
-        display:grid;place-items:center;}
-
     .page{max-width:600px;margin:0 auto;padding:48px 40px 80px;}
 
     .form-card{background:var(--white);border:1px solid var(--border);
@@ -417,25 +322,7 @@ class __TwigTemplate_25e5ce378e9f27b1f4433e8828fd7747 extends Template
 {% endblock %}
 
 {% block body %}
-<header class=\"topbar\">
-    <a href=\"{{ path('homepage') }}\" class=\"topbar-logo\">
-        <img src=\"{{ asset('images/logo.png') }}\" class=\"logo-mark\" alt=\"Harmony\">
-    </a>
-    <nav class=\"nav-links\">
-        <a href=\"{{ path('activites') }}\" class=\"nav-link\">🏋 Activités</a>
-        <a href=\"{{ path('forum') }}\"     class=\"nav-link active\">💬 Forum</a>
-        <a href=\"{{ path('taches') }}\"    class=\"nav-link\">📚 Tâches</a>
-        <a href=\"{{ path('evenements') }}\" class=\"nav-link\">📅 Événements</a>
-        <a href=\"{{ path('nutrition') }}\" class=\"nav-link\">🥗 Nutrition</a>
-        <a href=\"{{ path('meditation') }}\" class=\"nav-link\">🧘 Méditation</a>
-        <a href=\"{{ path('journal') }}\"   class=\"nav-link\">📔 Journal</a>
-        <a href=\"{{ path('library') }}\"   class=\"nav-link\">📖 Library</a>
-    </nav>
-    <div class=\"topbar-right\">
-        <button class=\"logout-btn\">🚪 Déconnexion</button>
-        <div class=\"avatar\">E</div>
-    </div>
-</header>
+{% include '_planning_topbar.html.twig' %}
 
 <main class=\"page\">
     <div class=\"form-card\">
@@ -492,6 +379,6 @@ class __TwigTemplate_25e5ce378e9f27b1f4433e8828fd7747 extends Template
         }
     });
 </script>
-{% endblock %}", "forum/categorie_form.html.twig", "/Users/rayen/Downloads/Esprit-PIWEB-3A24-2526-Harmonie-forum-communication-3/templates/forum/categorie_form.html.twig");
+{% endblock %}", "forum/categorie_form.html.twig", "/Users/rayen/Desktop/pi dev/mon_projet/templates/forum/categorie_form.html.twig");
     }
 }

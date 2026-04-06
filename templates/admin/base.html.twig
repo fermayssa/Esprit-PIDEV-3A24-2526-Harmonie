@@ -136,6 +136,14 @@
                 <span class="s-icon">🗂️</span> Catégories
             </a>
 
+            <div class="sidebar-section" style="margin-top:8px;">Sport & Nutrition</div>
+            <a href="{{ path('admin_sport_index') }}" class="sidebar-link {% if app.request.attributes.get('_route') starts with 'admin_sport' %}active{% endif %}">
+                <span class="s-icon">🏋️</span> Gestion Sport
+            </a>
+            <a href="{{ path('admin_nutrition_index') }}" class="sidebar-link {% if app.request.attributes.get('_route') starts with 'admin_nutrition' %}active{% endif %}">
+                <span class="s-icon">🥗</span> Gestion Nutrition
+            </a>
+
             <div class="sidebar-section" style="margin-top:8px;">Planning</div>
             <a href="{{ path('admin_evenement_index') }}" class="sidebar-link {% if app.request.attributes.get('_route') starts with 'admin_evenement' %}active{% endif %}">
                 <span class="s-icon">📅</span> Événements
@@ -183,7 +191,8 @@
         </div>
     </div>
 </div>
-<script src="{{ asset('harmonie/js/admin-ajax.js') }}"></script>
-{% block javascripts %}{% endblock %}
+{% block javascripts %}
+    <script src="{{ asset('harmonie/js/admin-ajax.js') }}"></script>
+{% endblock %}
 </body>
 </html>

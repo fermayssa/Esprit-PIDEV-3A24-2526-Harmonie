@@ -500,6 +500,6 @@ class __TwigTemplate_9d5e1d8553adc91e1e692ef6adfe3ec6 extends Template
         document.addEventListener('click', () => drop.classList.remove('open'));
     </script>
 {% endblock %}
-", "profile/index.html.twig", "/Users/rayen/Downloads/Esprit-PIWEB-3A24-2526-Harmonie-forum-communication-3/templates/profile/index.html.twig");
+", "profile/index.html.twig", "/Users/rayen/Desktop/pi dev/mon_projet/templates/profile/index.html.twig");
     }
 }
