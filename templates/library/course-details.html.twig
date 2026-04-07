@@ -366,7 +366,7 @@
             <button class="logout-btn">🚪 Déconnexion</button>
             <div class="profile-wrap">
                 <div class="avatar" id="avatarBtn">
-                    {{ app.user ? app.user.firstName[0]|upper : 'E' }}
+                    {{ app.user ? app.user.firstName|first|upper : 'E' }}
                 </div>
                 <div class="profile-dropdown" id="profileDropdown">
                     <div class="pd-name">{{ app.user ? app.user.firstName ~ ' ' ~ app.user.lastName : 'Étudiant' }}</div>
