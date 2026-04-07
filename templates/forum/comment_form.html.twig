@@ -1,0 +1,92 @@
+{% extends 'base.html.twig' %}
+{% block title %}Modifier commentaire — Harmony{% endblock %}
+
+{% block stylesheets %}
+<style>
+    .page{max-width:600px;margin:0 auto;padding:48px 40px 80px;}
+    .breadcrumb{display:flex;align-items:center;gap:8px;font-size:13px;
+        color:var(--text-muted);margin-bottom:24px;}
+    .breadcrumb a{color:var(--purple);text-decoration:none;font-weight:500;}
+
+    .post-ref{background:var(--purple-ghost);border:1px solid var(--border);
+        border-radius:12px;padding:14px 18px;margin-bottom:24px;
+        font-size:13px;color:var(--text-mid);}
+    .post-ref strong{color:var(--text);font-size:14px;}
+
+    .form-card{background:var(--white);border:1px solid var(--border);
+        border-radius:20px;padding:40px;}
+    .form-title{font-family:var(--font-head);font-size:22px;font-weight:800;
+        color:var(--text);margin-bottom:24px;}
+    .form-group{margin-bottom:20px;}
+    .form-label{display:block;font-size:13px;font-weight:600;color:var(--text-mid);margin-bottom:7px;}
+    .form-textarea{width:100%;padding:11px 14px;border:1.5px solid var(--border);
+        border-radius:10px;font-family:var(--font-body);font-size:14px;color:var(--text);
+        background:var(--white);transition:border-color .15s;outline:none;
+        resize:vertical;min-height:120px;}
+    .form-textarea:focus{border-color:var(--purple);box-shadow:0 0 0 3px rgba(106,90,205,.1);}
+    .form-textarea.error{border-color:#E05252;}
+
+    .error-box{background:#FEF2F2;border:1px solid rgba(239,68,68,.2);
+        border-radius:10px;padding:12px 16px;margin-bottom:20px;
+        color:#E05252;font-size:13px;display:flex;align-items:center;gap:8px;}
+
+    .form-actions{display:flex;gap:12px;margin-top:24px;}
+    .btn-submit{flex:1;padding:12px;background:var(--purple);color:white;border:none;
+        border-radius:11px;font-family:var(--font-body);font-size:14px;font-weight:600;
+        cursor:pointer;transition:background .15s;}
+    .btn-submit:hover{background:var(--purple-dark);}
+    .btn-cancel{padding:12px 24px;background:var(--purple-ghost);color:var(--text-mid);
+        border:1.5px solid var(--border);border-radius:11px;font-family:var(--font-body);
+        font-size:14px;font-weight:500;cursor:pointer;text-decoration:none;
+        display:inline-flex;align-items:center;}
+</style>
+{% endblock %}
+
+{% block body %}
+{% include '_planning_topbar.html.twig' %}
+
+<main class="page">
+    <div class="breadcrumb">
+        <a href="{{ path('forum') }}">💬 Forum</a>
+        <span>›</span>
+        <span>Modifier commentaire</span>
+    </div>
+
+    <div class="post-ref">
+        💬 Commentaire sur le post : <strong>{{ post.titre }}</strong>
+    </div>
+
+    <div class="form-card">
+        <div class="form-title"> ✏️ Modifier le commentaire</div>
+
+        {% if error %}
+        <div class="error-box"> ⚠️ {{ error }}</div>
+        {% endif %}
+
+        <form method="POST" action="{{ action }}" id="commentForm">
+            <div class="form-group">
+                <label class="form-label">Ton commentaire *</label>
+                <textarea name="contenu" id="contenuInput"
+                    class="form-textarea {{ error ? 'error' }}"
+                    placeholder="Modifie ton commentaire..."
+                    required>{{ comment.contenu }}</textarea>
+            </div>
+
+            <div class="form-actions">
+                <a href="{{ path('forum_posts', {id: post.idCategorie}) }}" class="btn-cancel">Annuler</a>
+                <button type="submit" class="btn-submit"> 💾 Enregistrer</button>
+            </div>
+        </form>
+    </div>
+</main>
+
+<script>
+    document.getElementById('commentForm').addEventListener('submit', function(e) {
+        const v = document.getElementById('contenuInput').value.trim();
+        if (v.length < 3) {
+            e.preventDefault();
+            document.getElementById('contenuInput').classList.add('error');
+        }
+    });
+</script>
+{% endblock %}

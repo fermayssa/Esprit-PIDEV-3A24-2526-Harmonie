@@ -3,7 +3,41 @@
     <head>
         <meta charset="UTF-8">
         <title>{% block title %}Welcome!{% endblock %}</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
+        <style>
+/* ══ GLOBAL TOPBAR ══ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+    --purple:#6A5ACD;--purple-dark:#4B3B9E;--purple-soft:#8B7FD4;
+    --purple-pale:#EDE8FA;--purple-ghost:#F7F5FD;
+    --text:#1C1733;--text-mid:#4A4570;--text-muted:#9590B8;
+    --border:rgba(106,90,205,.12);--white:#FFFFFF;
+    --font-head:'Syne',sans-serif;--font-body:'Inter',sans-serif;
+}
+html,body{font-family:var(--font-body);background:var(--purple-ghost);color:var(--text);}
+.topbar{position:sticky;top:0;z-index:200;background:var(--white);border-bottom:1px solid var(--border);height:62px;display:flex;align-items:center;padding:0 40px;gap:8px;}
+.topbar-logo{display:flex;align-items:center;gap:10px;text-decoration:none;margin-right:32px;}
+.logo-mark{width:34px;height:34px;border-radius:10px;object-fit:contain;flex-shrink:0;}
+.logo-name{font-family:var(--font-head);font-size:18px;font-weight:700;color:var(--text);}
+.nav-links{display:flex;align-items:center;gap:2px;flex:1;flex-wrap:nowrap;overflow-x:auto;}
+.nav-link{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:9px;font-size:13.5px;font-weight:500;color:var(--text-mid);text-decoration:none;white-space:nowrap;transition:background .15s,color .15s;}
+.nav-link:hover,.nav-link.active{background:var(--purple-pale);color:var(--purple);font-weight:600;}
+.nav-link .nav-emoji{font-size:14px;}
+.topbar-right{display:flex;align-items:center;gap:10px;margin-left:auto;flex-shrink:0;}
+.logout-btn{padding:7px 16px;border-radius:9px;border:1.5px solid rgba(239,68,68,.2);background:transparent;color:#E05252;font-family:var(--font-body);font-size:13px;font-weight:500;cursor:pointer;text-decoration:none;transition:background .15s,border-color .15s;white-space:nowrap;}
+.logout-btn:hover{background:#FEF2F2;border-color:#E05252;}
+.profile-wrap{position:relative;}
+.avatar{width:36px;height:36px;border-radius:50%;background:var(--purple);color:white;font-family:var(--font-head);font-weight:700;font-size:14px;display:grid;place-items:center;cursor:pointer;border:2px solid var(--purple-pale);transition:box-shadow .15s;}
+.avatar:hover{box-shadow:0 0 0 3px rgba(106,90,205,.25);}
+.profile-dropdown{position:absolute;top:calc(100% + 10px);right:0;width:220px;background:var(--white);border:1px solid var(--border);border-radius:14px;box-shadow:0 12px 40px rgba(0,0,0,.1);padding:16px;display:none;z-index:500;}
+.profile-dropdown.open{display:block;}
+.pd-name{font-size:14px;font-weight:600;color:var(--text);}
+.pd-email{font-size:12px;color:var(--text-muted);margin-top:2px;}
+.pd-divider{height:1px;background:var(--border);margin:12px 0;}
+.pd-hint{font-size:11px;color:var(--text-muted);font-style:italic;}
+</style>
         {% block stylesheets %}
         {% endblock %}
 
@@ -18,152 +52,8 @@
         <script src="https://cdn.jsdelivr.net/npm/frankenphp-hot-reload/+esm" type="module"></script>
         {% endif %}
     </head>
-    <body>
+    <body data-turbo="false">
         {% block body %}{% endblock %}
-        <!-- ══════════════════════════════════════════════════════════════
-         DEV MOCK USER PICKER  —  remove before production
-         Paste at the bottom of base.html.twig, just before </body>
-         ══════════════════════════════════════════════════════════════ -->
-        <div id="mockUserWidget" style="
-    position:fixed; bottom:16px; right:16px; z-index:9999;
-    font-family:Inter,sans-serif; font-size:13px;">
-
-            <button id="mockUserToggle" style="
-      background:#01696f; color:#fff; border:none; border-radius:999px;
-      padding:7px 16px; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,.3);
-      display:flex; align-items:center; gap:6px; font-size:13px; font-weight:500;">
-                👤 <span id="mockUserLabel">Pick user…</span>
-            </button>
-
-            <div id="mockUserPanel" style="
-      display:none; position:absolute; bottom:calc(100% + 8px); right:0;
-      background:#1c1b19; border:1px solid #393836; border-radius:14px;
-      padding:16px; min-width:300px; box-shadow:0 8px 32px rgba(0,0,0,.5);">
-
-                <p style="color:#5a5957; margin:0 0 10px; font-size:11px;
-              text-transform:uppercase; letter-spacing:.07em;">
-                    🛠 Dev — Switch user
-                </p>
-
-                <input id="mockUserSearch" type="text" placeholder="Search by name or email…"
-                       autocomplete="off" style="
-        width:100%; box-sizing:border-box; background:#22211f;
-        border:1px solid #393836; border-radius:8px;
-        padding:7px 10px; color:#cdccca; font-size:13px; margin-bottom:10px;
-        outline:none;">
-
-                <div id="mockUserList" style="
-        max-height:240px; overflow-y:auto;
-        display:flex; flex-direction:column; gap:3px;"></div>
-
-                <button id="mockUserClear" style="
-        margin-top:12px; width:100%; background:transparent;
-        border:1px solid #393836; border-radius:8px;
-        color:#797876; padding:6px; cursor:pointer; font-size:12px;">
-                    ✕ Clear (no user)
-                </button>
-            </div>
-        </div>
-
-        <script>
-            (function(){
-                let allUsers = [], activeId = null;
-                const toggle   = document.getElementById('mockUserToggle');
-                const panel    = document.getElementById('mockUserPanel');
-                const label    = document.getElementById('mockUserLabel');
-                const search   = document.getElementById('mockUserSearch');
-                const listEl   = document.getElementById('mockUserList');
-                const clearBtn = document.getElementById('mockUserClear');
-
-                // Load current mock user on page load
-                fetch('/dev/mock-user/current').then(r => r.json()).then(d => {
-                    if (d.user) { activeId = d.user.id; label.textContent = d.user.firstname + ' ' + d.user.lastname; }
-                });
-
-                toggle.addEventListener('click', e => {
-                    e.stopPropagation();
-                    const opening = panel.style.display === 'none';
-                    panel.style.display = opening ? 'block' : 'none';
-                    if (opening) {
-                        if (!allUsers.length) loadUsers(); else renderList(allUsers);
-                        setTimeout(() => search.focus(), 60);
-                    }
-                });
-                document.addEventListener('click', () => panel.style.display = 'none');
-                panel.addEventListener('click', e => e.stopPropagation());
-                search.addEventListener('keydown', e => e.stopPropagation());
-
-                function loadUsers() {
-                    listEl.innerHTML = '<p style="color:#5a5957;font-size:12px;text-align:center;padding:12px 0;">Loading…</p>';
-                    fetch('/dev/mock-user/list').then(r => r.json()).then(data => {
-                        allUsers = data;
-                        renderList(allUsers);
-                    });
-                }
-
-                function roleColor(role) {
-                    const map = { ADMIN: '#a86fdf', COACH: '#4f98a3', ETUDIANT: '#6daa45', USER: '#6daa45' };
-                    return map[(role || '').toUpperCase()] || '#797876';
-                }
-
-                function renderList(items) {
-                    listEl.innerHTML = '';
-                    if (!items.length) {
-                        listEl.innerHTML = '<p style="color:#5a5957;font-size:12px;text-align:center;padding:12px 0;">No users found</p>';
-                        return;
-                    }
-                    items.forEach(u => {
-                        const isActive = u.id == activeId;
-                        const btn = document.createElement('button');
-                        btn.style.cssText = `text-align:left; background:${isActive ? '#1a3335' : 'transparent'};
-        border:1px solid ${isActive ? '#4f98a3' : 'transparent'};
-        border-radius:8px; padding:8px 10px; color:#cdccca;
-        cursor:pointer; font-size:13px; width:100%; transition:background .15s;`;
-                        btn.innerHTML = `
-        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
-          <strong style="font-size:13px;">${u.firstname} ${u.lastname}</strong>
-          <span style="font-size:10px;color:${roleColor(u.role)};font-weight:600;
-                       background:${roleColor(u.role)}22;border-radius:4px;padding:1px 6px;">
-            ${u.role || ''}
-          </span>
-        </div>
-        <div style="color:#797876;font-size:11px;margin-top:1px;">${u.email} · #${u.id}</div>`;
-                        btn.addEventListener('mouseenter', () => { if (!isActive) btn.style.background = '#22211f'; });
-                        btn.addEventListener('mouseleave', () => { if (!isActive) btn.style.background = 'transparent'; });
-                        btn.addEventListener('click', () => selectUser(u));
-                        listEl.appendChild(btn);
-                    });
-                }
-
-                search.addEventListener('input', () => {
-                    const q = search.value.toLowerCase();
-                    renderList(allUsers.filter(u =>
-                        (u.firstname + ' ' + u.lastname + ' ' + u.email).toLowerCase().includes(q)
-                    ));
-                });
-
-                function selectUser(u) {
-                    const fd = new FormData(); fd.append('userId', u.id);
-                    fetch('/dev/mock-user/set', { method: 'POST', body: fd })
-                        .then(r => r.json()).then(d => {
-                        if (!d.ok) return;
-                        activeId = u.id;
-                        label.textContent = u.firstname + ' ' + u.lastname;
-                        panel.style.display = 'none';
-                        location.reload();
-                    });
-                }
-
-                clearBtn.addEventListener('click', () => {
-                    const fd = new FormData(); fd.append('userId', 0);
-                    fetch('/dev/mock-user/set', { method: 'POST', body: fd }).then(() => {
-                        activeId = null; label.textContent = 'Pick user…';
-                        panel.style.display = 'none';
-                        location.reload();
-                    });
-                });
-            })();
-        </script>
-        <!-- ══ END DEV MOCK USER PICKER ══ -->
+        {% block body_javascripts %}{% endblock %}
     </body>
 </html>
