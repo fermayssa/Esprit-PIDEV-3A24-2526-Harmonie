@@ -1,0 +1,268 @@
+{% extends 'base.html.twig' %}
+{% block title %}Inscription — Étape 1 — Harmony{% endblock %}
+
+{% block stylesheets %}
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+        :root{
+            --purple:#6A5ACD;--purple-dark:#4B3B9E;--purple-pale:#EDE8FA;
+            --purple-ghost:#F7F5FD;--text:#1C1733;--text-mid:#4A4570;
+            --text-muted:#9590B8;--border:rgba(106,90,205,.15);
+            --green:#10B981;--red:#EF4444;
+            --font-head:'Syne',sans-serif;--font-body:'Inter',sans-serif
+        }
+        html,body{min-height:100vh;font-family:var(--font-body);background:var(--purple-ghost);display:flex;align-items:center;justify-content:center;padding:40px 20px}
+        .wrap{width:100%;max-width:520px}
+
+        /* Progress */
+        .progress-wrap{display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:32px}
+        .step-circle{
+            width:36px;height:36px;border-radius:50%;
+            display:flex;align-items:center;justify-content:center;
+            font-family:var(--font-head);font-size:14px;font-weight:800;
+            transition:.3s;
+        }
+        .step-circle.active{background:var(--purple);color:#fff;box-shadow:0 4px 14px rgba(106,90,205,.4)}
+        .step-circle.done{background:var(--green);color:#fff}
+        .step-circle.inactive{background:#fff;color:var(--text-muted);border:2px solid var(--border)}
+        .step-line{width:60px;height:3px;background:var(--border)}
+        .step-line.done{background:var(--green)}
+        .step-labels{display:flex;justify-content:space-between;margin-bottom:28px;padding:0 4px}
+        .step-label{font-size:11px;font-weight:600;color:var(--text-muted);text-align:center;width:36px}
+        .step-label.active{color:var(--purple)}
+
+        /* Card */
+        .card{background:#fff;border:1px solid var(--border);border-radius:24px;padding:44px;box-shadow:0 20px 60px rgba(106,90,205,.09);animation:fadeUp .4s ease both}
+        @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+        .card-logo{display:flex;align-items:center;gap:10px;margin-bottom:28px}
+        .card-logo img{width:32px;height:32px;border-radius:9px;object-fit:contain}
+        .card-logo span{font-family:var(--font-head);font-size:18px;font-weight:800;color:var(--text)}
+        .card-title{font-family:var(--font-head);font-size:26px;font-weight:800;color:var(--text);margin-bottom:4px}
+        .card-sub{font-size:13px;color:var(--text-muted);margin-bottom:28px}
+
+        /* Form */
+        .form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+        .form-group{margin-bottom:16px;position:relative}
+        .form-group label{display:block;font-size:12.5px;font-weight:600;color:var(--text-mid);margin-bottom:6px;letter-spacing:.3px}
+        .form-group label .req{color:var(--purple)}
+        .form-group input{
+            width:100%;padding:11px 14px;border:1.5px solid var(--border);
+            border-radius:11px;font-family:var(--font-body);font-size:14px;color:var(--text);
+            background:var(--purple-ghost);outline:none;transition:border-color .2s,background .2s;
+        }
+        .form-group input:focus{border-color:var(--purple);background:#fff;box-shadow:0 0 0 3px rgba(106,90,205,.08)}
+        .form-group input.is-valid{border-color:var(--green)}
+        .form-group input.is-invalid{border-color:var(--red)}
+        .form-error{color:var(--red);font-size:11.5px;margin-top:4px;display:flex;align-items:center;gap:4px}
+        .form-error::before{content:'⚠';}
+        .form-hint{font-size:11px;color:var(--text-muted);margin-top:4px}
+
+        /* Password strength */
+        .pwd-strength{margin-top:8px}
+        .pwd-bars{display:flex;gap:4px;margin-bottom:6px}
+        .pwd-bar{height:4px;flex:1;border-radius:4px;background:#eee;transition:background .3s}
+        .pwd-rules{display:grid;grid-template-columns:1fr 1fr;gap:3px}
+        .pwd-rule{font-size:11px;color:var(--text-muted);display:flex;align-items:center;gap:5px;transition:color .2s}
+        .pwd-rule.ok{color:var(--green)}
+        .pwd-rule::before{content:'○';font-size:10px}
+        .pwd-rule.ok::before{content:'✓'}
+
+        /* Btn */
+        .btn-submit{
+            width:100%;padding:13px;background:var(--purple);color:#fff;
+            border:none;border-radius:12px;font-family:var(--font-body);
+            font-size:15px;font-weight:600;cursor:pointer;margin-top:8px;
+            box-shadow:0 4px 18px rgba(106,90,205,.35);transition:background .15s,transform .1s;
+            display:flex;align-items:center;justify-content:center;gap:8px;
+        }
+        .btn-submit:hover{background:var(--purple-dark);transform:translateY(-1px)}
+        .btn-submit:active{transform:translateY(0)}
+        .auth-footer{text-align:center;margin-top:20px;font-size:13px;color:var(--text-muted)}
+        .auth-footer a{color:var(--purple);text-decoration:none;font-weight:600}
+        .auth-footer a:hover{text-decoration:underline}
+
+        /* Flash */
+        .flash-error{background:#FEF2F2;color:#991B1B;padding:12px 16px;border-radius:10px;font-size:13px;margin-bottom:16px;border:1px solid #FECACA}
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="wrap">
+        <!-- Progress bar -->
+        <div class="progress-wrap">
+            <div class="step-circle active">1</div>
+            <div class="step-line"></div>
+            <div class="step-circle inactive">2</div>
+        </div>
+        <div class="step-labels">
+            <span class="step-label active">Compte</span>
+            <span class="step-label" style="width:auto;margin-left:auto;">Profil</span>
+        </div>
+
+        <div class="card">
+            <div class="card-logo">
+                <img src="{{ asset('images/logo.png') }}" alt="Harmony">
+                <span>Harmony</span>
+            </div>
+            <div class="card-title">Créer un compte ✦</div>
+            <div class="card-sub">Étape 1 sur 2 — Vos informations de base</div>
+
+            {% for msg in app.flashes('error') %}
+                <div class="flash-error">{{ msg }}</div>
+            {% endfor %}
+
+            {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'id': 'step1Form'}}) }}
+
+            <div class="form-row">
+                <div class="form-group">
+                    {{ form_label(form.userNom) }}<span class="req"> *</span>
+                    {{ form_widget(form.userNom, {'attr': {'placeholder': 'Votre nom', 'id': 'nom'}}) }}
+                    <div class="form-error" id="nom-error" style="display:none"></div>
+                    {% if form_errors(form.userNom) %}
+                        <div class="form-error">{{ form_errors(form.userNom) }}</div>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.userPrenom) }}<span class="req"> *</span>
+                    {{ form_widget(form.userPrenom, {'attr': {'placeholder': 'Votre prénom', 'id': 'prenom'}}) }}
+                    <div class="form-error" id="prenom-error" style="display:none"></div>
+                    {% if form_errors(form.userPrenom) %}
+                        <div class="form-error">{{ form_errors(form.userPrenom) }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="form-group">
+                {{ form_label(form.userEmail) }}<span class="req"> *</span>
+                {{ form_widget(form.userEmail, {'attr': {'placeholder': 'votre@email.com', 'id': 'email'}}) }}
+                <div class="form-error" id="email-error" style="display:none"></div>
+                {% if form_errors(form.userEmail) %}
+                    <div class="form-error">{{ form_errors(form.userEmail) }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    {{ form_label(form.plainPassword.first) }}<span class="req"> *</span>
+                    {{ form_widget(form.plainPassword.first, {'attr': {'id': 'pwd'}}) }}
+                    <div class="pwd-strength" id="pwdStrength">
+                        <div class="pwd-bars">
+                            <div class="pwd-bar" id="bar1"></div>
+                            <div class="pwd-bar" id="bar2"></div>
+                            <div class="pwd-bar" id="bar3"></div>
+                            <div class="pwd-bar" id="bar4"></div>
+                        </div>
+                        <div class="pwd-rules">
+                            <div class="pwd-rule" id="r-len">8 caractères min</div>
+                            <div class="pwd-rule" id="r-maj">1 majuscule</div>
+                            <div class="pwd-rule" id="r-num">1 chiffre</div>
+                            <div class="pwd-rule" id="r-sym">1 symbole</div>
+                        </div>
+                    </div>
+                    {% if form_errors(form.plainPassword.first) %}
+                        <div class="form-error">{{ form_errors(form.plainPassword.first) }}</div>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.plainPassword.second) }}<span class="req"> *</span>
+                    {{ form_widget(form.plainPassword.second, {'attr': {'id': 'pwd2'}}) }}
+                    <div class="form-error" id="pwd2-error" style="display:none"></div>
+                    {% if form_errors(form.plainPassword.second) %}
+                        <div class="form-error">{{ form_errors(form.plainPassword.second) }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="form-group">
+                {{ form_label(form.userDateDeNaissance) }}<span class="req"> *</span>
+                {{ form_widget(form.userDateDeNaissance) }}
+                {% if form_errors(form.userDateDeNaissance) %}
+                    <div class="form-error">{{ form_errors(form.userDateDeNaissance) }}</div>
+                {% endif %}
+            </div>
+
+            <button class="btn-submit" type="submit">
+                Continuer → <span style="font-size:18px;">🚀</span>
+            </button>
+            {{ form_end(form) }}
+
+            <div class="auth-footer">
+                Déjà un compte ? <a href="{{ path('app_login') }}">Se connecter</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ── Validation temps réel ──────────────────────────────────────────────────
+        function validate(input, errorEl, rules) {
+            const val = input.value.trim();
+            for (const [test, msg] of rules) {
+                if (!test(val)) {
+                    errorEl.textContent = msg;
+                    errorEl.style.display = 'flex';
+                    input.classList.add('is-invalid');
+                    input.classList.remove('is-valid');
+                    return false;
+                }
+            }
+            errorEl.style.display = 'none';
+            input.classList.remove('is-invalid');
+            input.classList.add('is-valid');
+            return true;
+        }
+
+        const nom    = document.getElementById('nom');
+        const prenom = document.getElementById('prenom');
+        const email  = document.getElementById('email');
+        const pwd    = document.getElementById('pwd');
+        const pwd2   = document.getElementById('pwd2');
+
+        nom.addEventListener('blur', () => validate(nom, document.getElementById('nom-error'), [
+            [v => v.length >= 4, 'Le nom doit contenir au moins 4 caractères.'],
+            [v => /^[a-zA-ZÀ-ÿ\s\-]+$/.test(v), 'Le nom ne peut contenir que des lettres.'],
+        ]));
+
+        prenom.addEventListener('blur', () => validate(prenom, document.getElementById('prenom-error'), [
+            [v => v.length >= 4, 'Le prénom doit contenir au moins 4 caractères.'],
+            [v => /^[a-zA-ZÀ-ÿ\s\-]+$/.test(v), 'Le prénom ne peut contenir que des lettres.'],
+        ]));
+
+        email.addEventListener('blur', () => validate(email, document.getElementById('email-error'), [
+            [v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v), 'Format email invalide (ex: user@domain.com).'],
+        ]));
+
+        // ── Password strength ──────────────────────────────────────────────────────
+        const rules = {
+            len: v => v.length >= 8,
+            maj: v => /[A-Z]/.test(v),
+            num: v => /\d/.test(v),
+            sym: v => /[\W_]/.test(v),
+        };
+        const colors = ['#EF4444','#F59E0B','#10B981','#6A5ACD'];
+
+        pwd.addEventListener('input', () => {
+            const v = pwd.value;
+            const score = Object.values(rules).filter(r => r(v)).length;
+            ['bar1','bar2','bar3','bar4'].forEach((id, i) => {
+                document.getElementById(id).style.background = i < score ? colors[score-1] : '#eee';
+            });
+            Object.entries(rules).forEach(([key, fn]) => {
+                document.getElementById('r-' + key).classList.toggle('ok', fn(v));
+            });
+        });
+
+        pwd2.addEventListener('blur', () => {
+            const err = document.getElementById('pwd2-error');
+            if (pwd2.value !== pwd.value) {
+                err.textContent = 'Les mots de passe ne correspondent pas.';
+                err.style.display = 'flex';
+                pwd2.classList.add('is-invalid');
+            } else {
+                err.style.display = 'none';
+                pwd2.classList.remove('is-invalid');
+                pwd2.classList.add('is-valid');
+            }
+        });
+    </script>
+{% endblock %}
