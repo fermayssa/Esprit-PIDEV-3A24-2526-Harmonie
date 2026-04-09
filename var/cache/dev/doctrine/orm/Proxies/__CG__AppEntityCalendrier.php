@@ -7,7 +7,7 @@ namespace Proxies\__CG__\App\Entity;
  */
 class Calendrier extends \App\Entity\Calendrier implements \Doctrine\ORM\Proxy\InternalProxy
 {
-    use \Symfony\Component\VarExporter\LazyGhostTrait {
+     use \Symfony\Component\VarExporter\LazyGhostTrait {
         initializeLazyObject as private;
         setLazyObjectAsInitialized as public __setInitialized;
         isLazyObjectInitialized as private;
@@ -30,7 +30,7 @@ class Calendrier extends \App\Entity\Calendrier implements \Doctrine\ORM\Proxy\I
         'id' => [parent::class, 'id', null, 16],
         'taches' => [parent::class, 'taches', null, 16],
         'vueCalendrier' => [parent::class, 'vueCalendrier', null, 16],
-    ];
+    ];
 
     public function __isInitialized(): bool
     {
