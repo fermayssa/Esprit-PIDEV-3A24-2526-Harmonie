@@ -391,7 +391,10 @@ class __TwigTemplate_4401aa8db7481547c6babf2a9ded752f extends Template
 </div>
 
 </main>
-<script src=\"harmonie-chatbot-widget.js\"></script>
+<script src=\"";
+        // line 239
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl("harmonie-chatbot-widget.js"), "html", null, true);
+        yield "\"></script>
 ";
         
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->leave($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof);
@@ -762,7 +765,7 @@ class __TwigTemplate_4401aa8db7481547c6babf2a9ded752f extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  727 => 23,  721 => 20,  718 => 19,  712 => 17,  709 => 16,  703 => 13,  690 => 9,  688 => 8,  684 => 7,  679 => 6,  676 => 5,  673 => 4,  654 => 3,  422 => 244,  419 => 243,  406 => 242,  390 => 235,  388 => 234,  367 => 215,  358 => 213,  354 => 212,  344 => 204,  335 => 202,  331 => 201,  321 => 193,  312 => 191,  308 => 190,  295 => 180,  286 => 174,  281 => 172,  277 => 171,  273 => 170,  268 => 167,  266 => 166,  253 => 165,  114 => 36,  110 => 35,  105 => 34,  92 => 33,  69 => 31,  58 => 1,  56 => 29,  43 => 1,);
+        return array (  730 => 23,  724 => 20,  721 => 19,  715 => 17,  712 => 16,  706 => 13,  693 => 9,  691 => 8,  687 => 7,  682 => 6,  679 => 5,  676 => 4,  657 => 3,  425 => 244,  422 => 243,  409 => 242,  396 => 239,  390 => 235,  388 => 234,  367 => 215,  358 => 213,  354 => 212,  344 => 204,  335 => 202,  331 => 201,  321 => 193,  312 => 191,  308 => 190,  295 => 180,  286 => 174,  281 => 172,  277 => 171,  273 => 170,  268 => 167,  266 => 166,  253 => 165,  114 => 36,  110 => 35,  105 => 34,  92 => 33,  69 => 31,  58 => 1,  56 => 29,  43 => 1,);
     }
 
     public function getSourceContext(): Source
@@ -1005,7 +1008,7 @@ class __TwigTemplate_4401aa8db7481547c6babf2a9ded752f extends Template
 </div>
 
 </main>
-<script src=\"harmonie-chatbot-widget.js\"></script>
+<script src=\"{{ asset('harmonie-chatbot-widget.js') }}\"></script>
 {% endblock %}
 
 {% block body_javascripts %}
