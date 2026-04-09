@@ -76,6 +76,8 @@
     <p><a href="{{ path('app_evenement_index') }}">← Calendrier</a></p>
     <p><a href="{{ path('app_evenement_edit', {'id': evenement.id}) }}">Modifier</a></p>
 
+
     {{ include('evenement/_delete_form.html.twig') }}
 </main>
+<script src="{{ asset('harmonie-chatbot-widget.js') }}"></script>
 {% endblock %}

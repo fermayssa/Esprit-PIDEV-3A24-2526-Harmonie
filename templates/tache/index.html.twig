@@ -234,7 +234,9 @@
         {% include 'tache/_form_panel.html.twig' with { form: tacheFormNew, panel_mode: 'new' } only %}
     </template>
 </div>
+
 </main>
+<script src="{{ asset('harmonie-chatbot-widget.js') }}"></script>
 {% endblock %}
 
 {% block body_javascripts %}

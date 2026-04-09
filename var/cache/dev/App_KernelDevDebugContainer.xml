@@ -515,6 +515,14 @@
         <argument type="service" id=".service_locator.TJNRSaV.App\Controller\BackController"/>
       </call>
     </service>
+    <service id="App\Controller\ChatbotController" class="App\Controller\ChatbotController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
+      <tag name="routing.controller"/>
+      <tag name="container.service_subscriber"/>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.TJNRSaV.App\Controller\ChatbotController"/>
+      </call>
+    </service>
     <service id="App\Controller\EvenementsController" class="App\Controller\EvenementsController" public="true" autowire="true" autoconfigure="true">
       <tag name="controller.service_arguments"/>
       <tag name="routing.controller"/>
@@ -4065,6 +4073,7 @@
         <argument>App\Controller\AdminTacheController</argument>
         <argument>App\Controller\AdminUserController</argument>
         <argument>App\Controller\BackController</argument>
+        <argument>App\Controller\ChatbotController</argument>
         <argument>App\Controller\EvenementsController</argument>
         <argument>App\Controller\ForumController</argument>
         <argument>App\Controller\HomepageController</argument>
@@ -8473,6 +8482,10 @@
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\BackController" class="App\Controller\BackController" autowire="true" abstract="true"/>
     <service id=".instanceof.App\Controller\BackController.0.App\Controller\BackController" class="App\Controller\BackController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\BackController" class="App\Controller\BackController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\ChatbotController" class="App\Controller\ChatbotController" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\ChatbotController" class="App\Controller\ChatbotController" autowire="true" abstract="true"/>
+    <service id=".instanceof.App\Controller\ChatbotController.0.App\Controller\ChatbotController" class="App\Controller\ChatbotController" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Controller\ChatbotController" class="App\Controller\ChatbotController" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\EvenementsController" class="App\Controller\EvenementsController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\EvenementsController" class="App\Controller\EvenementsController" autowire="true" abstract="true"/>
     <service id=".instanceof.App\Controller\EvenementsController.0.App\Controller\EvenementsController" class="App\Controller\EvenementsController" autowire="true" abstract="true"/>
@@ -10927,6 +10940,12 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.TJNRSaV" method="withContext"/>
     </service>
+    <service id=".service_locator.TJNRSaV.App\Controller\ChatbotController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\ChatbotController"/>
+      <argument>App\Controller\ChatbotController</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.TJNRSaV" method="withContext"/>
+    </service>
     <service id=".service_locator.TJNRSaV.App\Controller\EvenementsController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\EvenementsController"/>
       <argument>App\Controller\EvenementsController</argument>
@@ -11221,6 +11240,7 @@
           <argument>App\Controller\AdminTacheController</argument>
           <argument>App\Controller\AdminUserController</argument>
           <argument>App\Controller\BackController</argument>
+          <argument>App\Controller\ChatbotController</argument>
           <argument>App\Controller\EvenementsController</argument>
           <argument>App\Controller\ForumController</argument>
           <argument>App\Controller\HomepageController</argument>

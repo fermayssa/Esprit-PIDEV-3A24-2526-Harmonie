@@ -389,7 +389,9 @@ class __TwigTemplate_4401aa8db7481547c6babf2a9ded752f extends Template
         // line 235
         yield "    </template>
 </div>
+
 </main>
+<script src=\"harmonie-chatbot-widget.js\"></script>
 ";
         
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->leave($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof);
@@ -400,7 +402,7 @@ class __TwigTemplate_4401aa8db7481547c6babf2a9ded752f extends Template
         yield from [];
     }
 
-    // line 240
+    // line 242
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -413,10 +415,10 @@ class __TwigTemplate_4401aa8db7481547c6babf2a9ded752f extends Template
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "body_javascripts"));
 
-        // line 241
+        // line 243
         yield "    <script src=\"https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js\" crossorigin=\"anonymous\"></script>
     <script src=\"";
-        // line 242
+        // line 244
         yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl("harmonie/js/export-handler.js"), "html", null, true);
         yield "\"></script>
     <script>
@@ -760,7 +762,7 @@ class __TwigTemplate_4401aa8db7481547c6babf2a9ded752f extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  725 => 23,  719 => 20,  716 => 19,  710 => 17,  707 => 16,  701 => 13,  688 => 9,  686 => 8,  682 => 7,  677 => 6,  674 => 5,  671 => 4,  652 => 3,  420 => 242,  417 => 241,  404 => 240,  390 => 235,  388 => 234,  367 => 215,  358 => 213,  354 => 212,  344 => 204,  335 => 202,  331 => 201,  321 => 193,  312 => 191,  308 => 190,  295 => 180,  286 => 174,  281 => 172,  277 => 171,  273 => 170,  268 => 167,  266 => 166,  253 => 165,  114 => 36,  110 => 35,  105 => 34,  92 => 33,  69 => 31,  58 => 1,  56 => 29,  43 => 1,);
+        return array (  727 => 23,  721 => 20,  718 => 19,  712 => 17,  709 => 16,  703 => 13,  690 => 9,  688 => 8,  684 => 7,  679 => 6,  676 => 5,  673 => 4,  654 => 3,  422 => 244,  419 => 243,  406 => 242,  390 => 235,  388 => 234,  367 => 215,  358 => 213,  354 => 212,  344 => 204,  335 => 202,  331 => 201,  321 => 193,  312 => 191,  308 => 190,  295 => 180,  286 => 174,  281 => 172,  277 => 171,  273 => 170,  268 => 167,  266 => 166,  253 => 165,  114 => 36,  110 => 35,  105 => 34,  92 => 33,  69 => 31,  58 => 1,  56 => 29,  43 => 1,);
     }
 
     public function getSourceContext(): Source
@@ -1001,7 +1003,9 @@ class __TwigTemplate_4401aa8db7481547c6babf2a9ded752f extends Template
         {% include 'tache/_form_panel.html.twig' with { form: tacheFormNew, panel_mode: 'new' } only %}
     </template>
 </div>
+
 </main>
+<script src=\"harmonie-chatbot-widget.js\"></script>
 {% endblock %}
 
 {% block body_javascripts %}
