@@ -1,0 +1,175 @@
+<?php
+
+namespace App\Service\Domain;
+
+use App\Entity\Calendrier;
+use App\Entity\DemandeReservation;
+use App\Entity\Evenement;
+use App\Entity\Salle;
+use App\Entity\Seance;
+use App\Entity\Tache;
+use App\Entity\User;
+use App\Repository\CalendrierRepository;
+use App\Repository\DemandeReservationRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
+
+final class PlanningDomainService
+{
+    use PersistenceHelper;
+
+    public function __construct(
+        private readonly EntityManagerInterface $entityManager,
+        private readonly ValidatorInterface $validator,
+        private readonly DemandeReservationRepository $demandeReservationRepository,
+        private readonly CalendrierRepository $calendrierRepository,
+    ) {
+    }
+
+    protected function getEntityManager(): EntityManagerInterface
+    {
+        return $this->entityManager;
+    }
+
+    protected function getValidator(): ValidatorInterface
+    {
+        return $this->validator;
+    }
+
+    public function saveSeance(Seance $seance): void
+    {
+        $salle = $seance->getSalle();
+        if ($salle && !$salle->isDisponible()) {
+            throw new \DomainException('La salle choisie n’est pas disponible.');
+        }
+        if ($seance->getNombreParticipants() < 0) {
+            throw new \DomainException('Le nombre de participants ne peut pas être négatif.');
+        }
+        $this->validateEntity($seance);
+        $this->persistAndFlush($seance);
+    }
+
+    public function saveEvenement(Evenement $evenement, ?User $demandeur = null): void
+    {
+        $debut = $evenement->getDateDebut();
+        $fin = $evenement->getDateFin();
+        if ($debut && $fin && $fin < $debut) {
+            throw new \DomainException('La date de fin doit être postérieure à la date de début.');
+        }
+        $this->normalizeEvenementCalendrier($evenement);
+        $this->syncEvenementChamps($evenement);
+        $this->validateEntity($evenement);
+        $this->entityManager->persist($evenement);
+        $this->entityManager->flush();
+
+        $reserver = $demandeur ?? $evenement->getProprietaire();
+        if ($reserver instanceof User
+            && 'presentiel' === $evenement->getLieuType()
+            && $evenement->getSalle()
+        ) {
+            $pending = $this->demandeReservationRepository->countPendingForEvenementAndSalle(
+                $evenement,
+                $evenement->getSalle(),
+            );
+            if (0 === $pending) {
+                $d = new DemandeReservation();
+                $d->setEvenement($evenement);
+                $d->setSalle($evenement->getSalle());
+                $d->setUtilisateur($reserver);
+                $d->setStatut(DemandeReservation::STATUT_EN_ATTENTE);
+                $d->setDateDemande(new \DateTimeImmutable());
+                $evenement->addDemandeReservation($d);
+                $evenement->setStatutDemandeSalle('EN_ATTENTE');
+                $this->entityManager->persist($d);
+                $this->entityManager->flush();
+            }
+        }
+    }
+
+    private function syncEvenementChamps(Evenement $e): void
+    {
+        $map = ['cours' => 'COURS', 'reunion' => 'REUNION', 'loisir' => 'LOISIR', 'autre' => 'AUTRE'];
+        $et = $e->getEventType();
+        if ($et && isset($map[$et])) {
+            $e->setTypeEvenement($map[$et]);
+        }
+        if ('en_ligne' === $e->getLieuType()) {
+            $e->setSalle(null);
+            $e->setLieuAdresse(null);
+            $e->setLieu('En ligne');
+
+            return;
+        }
+        if ('presentiel' === $e->getLieuType()) {
+            if ($e->getSalle()) {
+                $e->setLieu($e->getSalle()->getNom());
+            } elseif ($e->getLieuAdresse()) {
+                $e->setLieu($e->getLieuAdresse());
+            }
+        }
+    }
+
+    public function saveTache(Tache $tache): void
+    {
+        $this->normalizeTacheCalendrier($tache);
+        $this->validateEntity($tache);
+        $this->persistAndFlush($tache);
+    }
+
+    public function saveCalendrier(Calendrier $calendrier): void
+    {
+        $this->validateEntity($calendrier);
+        $this->persistAndFlush($calendrier);
+    }
+
+    public function saveSalle(Salle $salle): void
+    {
+        if ($salle->getCapacite() < 1) {
+            throw new \DomainException('La capacité doit être au moins 1.');
+        }
+        $this->validateEntity($salle);
+        $this->persistAndFlush($salle);
+    }
+
+    public function removeSeance(Seance $seance): void
+    {
+        $this->removeAndFlush($seance);
+    }
+
+    public function removeEvenement(Evenement $evenement): void
+    {
+        $this->removeAndFlush($evenement);
+    }
+
+    public function removeTache(Tache $tache): void
+    {
+        $this->removeAndFlush($tache);
+    }
+
+    public function removeCalendrier(Calendrier $calendrier): void
+    {
+        $this->removeAndFlush($calendrier);
+    }
+
+    public function removeSalle(Salle $salle): void
+    {
+        $this->removeAndFlush($salle);
+    }
+
+    private function normalizeTacheCalendrier(Tache $tache): void
+    {
+        $cal = $this->calendrierRepository->findPrimary();
+        if (null === $cal) {
+            throw new \DomainException('Aucun calendrier n’est configuré. Contactez un administrateur.');
+        }
+        $tache->setCalendrier($cal);
+    }
+
+    private function normalizeEvenementCalendrier(Evenement $evenement): void
+    {
+        $cal = $this->calendrierRepository->findPrimary();
+        if (null !== $cal) {
+            $evenement->setCalendrier($cal);
+        }
+    }
+}
