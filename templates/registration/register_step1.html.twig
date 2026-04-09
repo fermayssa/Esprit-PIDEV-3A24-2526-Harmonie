@@ -58,10 +58,18 @@
         .form-error::before{content:'⚠';}
         .form-hint{font-size:11px;color:var(--text-muted);margin-top:4px}
 
-        /* Password strength */
+        /* ── Password strength ──────────────────────── */
         .pwd-strength{margin-top:8px}
-        .pwd-bars{display:flex;gap:4px;margin-bottom:6px}
+        .pwd-bars{display:flex;gap:4px;margin-bottom:4px}
         .pwd-bar{height:4px;flex:1;border-radius:4px;background:#eee;transition:background .3s}
+
+        /* ← NOUVEAU : label texte de force */
+        .strength-label{
+            font-size:12px;font-weight:700;min-height:18px;
+            margin-bottom:6px;transition:color .2s;
+            display:flex;align-items:center;gap:5px;
+        }
+
         .pwd-rules{display:grid;grid-template-columns:1fr 1fr;gap:3px}
         .pwd-rule{font-size:11px;color:var(--text-muted);display:flex;align-items:center;gap:5px;transition:color .2s}
         .pwd-rule.ok{color:var(--green)}
@@ -146,6 +154,8 @@
                 <div class="form-group">
                     {{ form_label(form.plainPassword.first) }}<span class="req"> *</span>
                     {{ form_widget(form.plainPassword.first, {'attr': {'id': 'pwd'}}) }}
+
+                    {# ── Indicateur de force du mot de passe ── #}
                     <div class="pwd-strength" id="pwdStrength">
                         <div class="pwd-bars">
                             <div class="pwd-bar" id="bar1"></div>
@@ -153,6 +163,8 @@
                             <div class="pwd-bar" id="bar3"></div>
                             <div class="pwd-bar" id="bar4"></div>
                         </div>
+                        {# ← NOUVEAU : affiche "Faible / Moyen / Fort / Très fort" #}
+                        <div class="strength-label" id="strengthLabel"></div>
                         <div class="pwd-rules">
                             <div class="pwd-rule" id="r-len">8 caractères min</div>
                             <div class="pwd-rule" id="r-maj">1 majuscule</div>
@@ -160,6 +172,7 @@
                             <div class="pwd-rule" id="r-sym">1 symbole</div>
                         </div>
                     </div>
+
                     {% if form_errors(form.plainPassword.first) %}
                         <div class="form-error">{{ form_errors(form.plainPassword.first) }}</div>
                     {% endif %}
@@ -239,14 +252,34 @@
             num: v => /\d/.test(v),
             sym: v => /[\W_]/.test(v),
         };
-        const colors = ['#EF4444','#F59E0B','#10B981','#6A5ACD'];
+
+        // Rouge → Orange → Vert → Violet (très fort)
+        const colors = ['#EF4444', '#F59E0B', '#10B981', '#6A5ACD'];
+
+        // ← NOUVEAU : libellés textuels associés au score
+        const strengthLabels = ['', '🔴 Faible', '🟠 Moyen', '🟢 Fort', '💪 Très fort'];
 
         pwd.addEventListener('input', () => {
-            const v = pwd.value;
+            const v     = pwd.value;
             const score = Object.values(rules).filter(r => r(v)).length;
-            ['bar1','bar2','bar3','bar4'].forEach((id, i) => {
-                document.getElementById(id).style.background = i < score ? colors[score-1] : '#eee';
+
+            // Mettre à jour les barres colorées
+            ['bar1', 'bar2', 'bar3', 'bar4'].forEach((id, i) => {
+                document.getElementById(id).style.background =
+                    i < score ? colors[score - 1] : '#eee';
             });
+
+            // ← NOUVEAU : mettre à jour le libellé textuel
+            const labelEl = document.getElementById('strengthLabel');
+            if (v.length === 0) {
+                labelEl.textContent = '';
+                labelEl.style.color = '';
+            } else {
+                labelEl.textContent = strengthLabels[score] || strengthLabels[1];
+                labelEl.style.color = colors[Math.max(0, score - 1)];
+            }
+
+            // Mettre à jour les règles individuelles
             Object.entries(rules).forEach(([key, fn]) => {
                 document.getElementById('r-' + key).classList.toggle('ok', fn(v));
             });

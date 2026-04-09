@@ -18,7 +18,7 @@
         background: var(--purple-ghost); color: var(--text);
     }
 
-    /* ── TOPBAR (reprise du base) ── */
+    /* ── TOPBAR ── */
     .topbar { position: sticky; top: 0; z-index: 200; background: var(--white); border-bottom: 1px solid var(--border); height: 62px; display: flex; align-items: center; padding: 0 40px; gap: 8px; }
     .topbar-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; margin-right: 32px; }
     .logo-mark { width: 34px; height: 34px; border-radius: 10px; object-fit: contain; flex-shrink: 0; }
@@ -44,13 +44,7 @@
     .sidebar-email { font-size: 12px; color: var(--text-muted); }
     .sidebar-nav { padding: 10px 12px 16px; }
     .sidebar-section-label { font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--text-muted); padding: 10px 10px 6px; }
-    .sidebar-link {
-        display: flex; align-items: center; gap: 10px;
-        padding: 10px 12px; border-radius: 11px;
-        font-size: 13.5px; font-weight: 500; color: var(--text-mid);
-        text-decoration: none; margin-bottom: 2px;
-        transition: background .15s, color .15s;
-    }
+    .sidebar-link { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 11px; font-size: 13.5px; font-weight: 500; color: var(--text-mid); text-decoration: none; margin-bottom: 2px; transition: background .15s, color .15s; }
     .sidebar-link:hover { background: var(--purple-ghost); color: var(--purple); }
     .sidebar-link.active { background: var(--purple-pale); color: var(--purple); font-weight: 600; }
     .sidebar-link .sl-icon { width: 32px; height: 32px; border-radius: 9px; background: var(--purple-ghost); display: grid; place-items: center; font-size: 16px; flex-shrink: 0; }
@@ -62,27 +56,16 @@
     .settings-main { display: flex; flex-direction: column; gap: 0; }
 
     /* ── SECTION CARD ── */
-    .settings-card {
-        background: var(--white); border: 1px solid var(--border);
-        border-radius: 20px; overflow: hidden;
-        animation: fadeUp .35s ease both;
-    }
+    .settings-card { background: var(--white); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; animation: fadeUp .35s ease both; }
     @keyframes fadeUp { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:none; } }
-    .settings-card-head {
-        padding: 24px 28px 20px; border-bottom: 1px solid var(--border);
-        display: flex; align-items: center; gap: 14px;
-    }
+    .settings-card-head { padding: 24px 28px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 14px; }
     .settings-card-icon { width: 44px; height: 44px; border-radius: 12px; background: var(--purple-pale); display: grid; place-items: center; font-size: 22px; flex-shrink: 0; }
     .settings-card-title { font-family: var(--font-head); font-size: 17px; font-weight: 700; color: var(--text); }
     .settings-card-sub { font-size: 12.5px; color: var(--text-muted); margin-top: 2px; }
     .settings-card-body { padding: 28px; }
 
     /* ── AVATAR UPLOADER ── */
-    .avatar-uploader {
-        display: flex; align-items: center; gap: 20px;
-        background: var(--purple-ghost); border: 1.5px dashed rgba(106,90,205,.3);
-        border-radius: 16px; padding: 20px; margin-bottom: 24px;
-    }
+    .avatar-uploader { display: flex; align-items: center; gap: 20px; background: var(--purple-ghost); border: 1.5px dashed rgba(106,90,205,.3); border-radius: 16px; padding: 20px; margin-bottom: 24px; }
     .avatar-big { width: 84px; height: 84px; border-radius: 50%; background: var(--purple); display: grid; place-items: center; font-family: var(--font-head); font-size: 32px; font-weight: 800; color: #fff; border: 3px solid var(--white); overflow: hidden; flex-shrink: 0; box-shadow: 0 4px 16px rgba(106,90,205,.25); }
     .avatar-big img { width: 84px; height: 84px; border-radius: 50%; object-fit: cover; }
     .avatar-uploader-info { flex: 1; }
@@ -98,17 +81,8 @@
     .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
     .form-group { margin-bottom: 16px; }
     .form-group label { display: block; font-size: 12.5px; font-weight: 600; color: var(--text-mid); margin-bottom: 6px; }
-    .form-group input, .form-group select {
-        width: 100%; padding: 11px 14px;
-        border: 1.5px solid var(--border); border-radius: 10px;
-        font-family: var(--font-body); font-size: 14px; color: var(--text);
-        background: var(--purple-ghost); outline: none;
-        transition: border-color .15s, background .15s, box-shadow .15s;
-    }
-    .form-group input:focus, .form-group select:focus {
-        border-color: var(--purple); background: #fff;
-        box-shadow: 0 0 0 3px rgba(106,90,205,.08);
-    }
+    .form-group input, .form-group select { width: 100%; padding: 11px 14px; border: 1.5px solid var(--border); border-radius: 10px; font-family: var(--font-body); font-size: 14px; color: var(--text); background: var(--purple-ghost); outline: none; transition: border-color .15s, background .15s, box-shadow .15s; }
+    .form-group input:focus, .form-group select:focus { border-color: var(--purple); background: #fff; box-shadow: 0 0 0 3px rgba(106,90,205,.08); }
     .form-error { color: var(--red); font-size: 11.5px; margin-top: 4px; display: flex; align-items: center; gap: 4px; }
     .form-hint { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
 
@@ -124,10 +98,19 @@
     .security-block-title { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
     .security-block-title .sb-icon { font-size: 18px; }
 
-    /* Strength bar pour le mdp */
+    /* ── Password strength ──────────────────────────── */
     .pwd-strength { margin-top: 8px; }
-    .pwd-bars { display: flex; gap: 4px; margin-bottom: 6px; }
+    .pwd-bars { display: flex; gap: 4px; margin-bottom: 4px; }
     .pwd-bar { height: 4px; flex: 1; border-radius: 4px; background: #ddd; transition: background .3s; }
+
+    /* ← NOUVEAU : label texte de force */
+    .strength-label {
+        font-size: 12px; font-weight: 700;
+        min-height: 18px; margin-bottom: 6px;
+        transition: color .2s;
+        display: flex; align-items: center; gap: 5px;
+    }
+
     .pwd-rules { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; }
     .pwd-rule { font-size: 11px; color: var(--text-muted); display: flex; align-items: center; gap: 5px; transition: color .2s; }
     .pwd-rule.ok { color: var(--green); }
@@ -405,7 +388,8 @@
                         <div class="form-group">
                             {{ form_label(securityForm.newPassword.first) }}
                             {{ form_widget(securityForm.newPassword.first, {'attr': {'id': 'newPwd', 'placeholder': '••••••••'}}) }}
-                            {# Barre de force #}
+
+                            {# ── Indicateur de force du nouveau mot de passe ── #}
                             <div class="pwd-strength" id="pwdStrength">
                                 <div class="pwd-bars">
                                     <div class="pwd-bar" id="bar1"></div>
@@ -413,6 +397,8 @@
                                     <div class="pwd-bar" id="bar3"></div>
                                     <div class="pwd-bar" id="bar4"></div>
                                 </div>
+                                {# ← NOUVEAU : label textuel de force #}
+                                <div class="strength-label" id="strengthLabel"></div>
                                 <div class="pwd-rules">
                                     <div class="pwd-rule" id="r-len">8 caractères min</div>
                                     <div class="pwd-rule" id="r-maj">1 majuscule</div>
@@ -420,6 +406,7 @@
                                     <div class="pwd-rule" id="r-sym">1 symbole</div>
                                 </div>
                             </div>
+
                             <div class="form-error">{{ form_errors(securityForm.newPassword.first) }}</div>
                         </div>
                         <div class="form-group" style="margin-bottom:0;">
@@ -448,10 +435,10 @@
 
 <script>
 // ── Avatar preview ──────────────────────────────────────────────────────────
-const avatarInput  = document.querySelector('#avatarWrapper input[type="file"]');
-const avatarPreview = document.getElementById('avatarPreview');
+const avatarInput    = document.querySelector('#avatarWrapper input[type="file"]');
+const avatarPreview  = document.getElementById('avatarPreview');
 const avatarFilename = document.getElementById('avatarFilename');
-const pickBtn = document.getElementById('pickAvatarBtn');
+const pickBtn        = document.getElementById('pickAvatarBtn');
 
 if (pickBtn && avatarInput) {
     pickBtn.addEventListener('click', () => avatarInput.click());
@@ -468,8 +455,8 @@ if (pickBtn && avatarInput) {
     });
 }
 
-// ── Password strength ────────────────────────────────────────────────────────
-const newPwd = document.getElementById('newPwd');
+// ── Password strength (onglet Sécurité) ─────────────────────────────────────
+const newPwd  = document.getElementById('newPwd');
 const newPwd2 = document.getElementById('newPwd2');
 
 if (newPwd) {
@@ -479,14 +466,34 @@ if (newPwd) {
         num: v => /\d/.test(v),
         sym: v => /[\W_]/.test(v),
     };
-    const colors = ['#EF4444','#F59E0B','#10B981','#6A5ACD'];
+
+    // Rouge → Orange → Vert → Violet (très fort)
+    const colors = ['#EF4444', '#F59E0B', '#10B981', '#6A5ACD'];
+
+    // ← NOUVEAU : libellés textuels
+    const strengthLabels = ['', '🔴 Faible', '🟠 Moyen', '🟢 Fort', '💪 Très fort'];
 
     newPwd.addEventListener('input', () => {
-        const v = newPwd.value;
+        const v     = newPwd.value;
         const score = Object.values(rules).filter(r => r(v)).length;
-        ['bar1','bar2','bar3','bar4'].forEach((id, i) => {
-            document.getElementById(id).style.background = i < score ? colors[score - 1] : '#ddd';
+
+        // Barres colorées
+        ['bar1', 'bar2', 'bar3', 'bar4'].forEach((id, i) => {
+            document.getElementById(id).style.background =
+                i < score ? colors[score - 1] : '#ddd';
         });
+
+        // ← NOUVEAU : label textuel
+        const labelEl = document.getElementById('strengthLabel');
+        if (v.length === 0) {
+            labelEl.textContent = '';
+            labelEl.style.color = '';
+        } else {
+            labelEl.textContent = strengthLabels[score] || strengthLabels[1];
+            labelEl.style.color = colors[Math.max(0, score - 1)];
+        }
+
+        // Règles individuelles
         Object.entries(rules).forEach(([key, fn]) => {
             document.getElementById('r-' + key).classList.toggle('ok', fn(v));
         });

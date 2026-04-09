@@ -83,9 +83,10 @@ class ProfileController extends AbstractController
      */
     #[Route('/profile/security', name: 'app_profile_security', methods: ['GET', 'POST'])]
     public function security(
-        Request                     $request,
-        EntityManagerInterface      $em,
-        UserPasswordHasherInterface $hasher
+        Request                         $request,
+        EntityManagerInterface          $em,
+        UserPasswordHasherInterface     $hasher,
+        \Symfony\Component\Security\Http\Authentication\AuthenticationUtils $authUtils,
     ): Response {
         /** @var \App\Entity\User $user */
         $user = $this->getUser();
@@ -94,29 +95,35 @@ class ProfileController extends AbstractController
         $securityForm->handleRequest($request);
 
         if ($securityForm->isSubmitted() && $securityForm->isValid()) {
-            $data       = $securityForm->getData();
-            $hasChanges = false;
-            $errors     = [];
 
-            // ── Changement d'email ────────────────────────────────────────
-            $newEmail = trim($data['newEmail'] ?? '');
+            // ── CORRECTION 1 : lire chaque champ individuellement ──────────────
+            // getData() renvoie null quand data_class=null + tous les champs mapped=false.
+            // Il faut passer par ->get('nom')->getData() sur chaque champ.
+            $newEmail   = trim($securityForm->get('newEmail')->getData() ?? '');
+            $currentPwd = $securityForm->get('currentPassword')->getData() ?? '';
+            $newPwd     = $securityForm->get('newPassword')->getData() ?? '';
+
+            $hasChanges      = false;
+            $errors          = [];
+            $emailChanged    = false;
+            $passwordChanged = false;
+
+            // ── Changement d'email ────────────────────────────────────────────
             if ($newEmail !== '' && $newEmail !== $user->getUserEmail()) {
                 $user->setUserEmail($newEmail);
-                $hasChanges = true;
+                $hasChanges   = true;
+                $emailChanged = true;
             }
 
-            // ── Changement de mot de passe ────────────────────────────────
-            $currentPwd = $data['currentPassword'] ?? '';
-            $newPwd     = $data['newPassword']     ?? '';
-
+            // ── Changement de mot de passe ────────────────────────────────────
             if ($newPwd !== '') {
-                // Vérifier l'ancien mot de passe
                 if (!$hasher->isPasswordValid($user, $currentPwd)) {
                     $errors[] = 'Le mot de passe actuel est incorrect.';
                 } else {
                     $hashed = $hasher->hashPassword($user, $newPwd);
                     $user->setUserPassword($hashed);
-                    $hasChanges = true;
+                    $hasChanges      = true;
+                    $passwordChanged = true;
                 }
             }
 
@@ -126,13 +133,19 @@ class ProfileController extends AbstractController
                 }
             } elseif ($hasChanges) {
                 $em->flush();
-                $this->addFlash('success_security', 'Paramètres de sécurité mis à jour.');
+
+                // ── CORRECTION 2 : régénération de la session ──────────────────
+                // Après changement d'email (= userIdentifier) ou de password,
+                // le token Symfony en session devient périmé.
+                // On invalide la session et on redirige vers le login avec un message.
+                $request->getSession()->invalidate();
+                $this->addFlash('success', 'Sécurité mise à jour. Veuillez vous reconnecter.');
+                return $this->redirectToRoute('app_login');
             }
 
             return $this->redirectToRoute('app_profile_security');
         }
 
-        // Créer le formulaire profil vide (pour l'affichage de l'onglet)
         $profileForm = $this->createForm(ProfileFormType::class, $user);
 
         return $this->render('profile/settings.html.twig', [

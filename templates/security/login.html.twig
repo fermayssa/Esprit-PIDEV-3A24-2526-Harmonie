@@ -11,7 +11,10 @@
             --text-muted: #9590B8; --border: rgba(106,90,205,.12);
             --font-head: 'Syne', sans-serif; --font-body: 'Inter', sans-serif;
         }
-        html, body { min-height: 100vh; font-family: var(--font-body); background: var(--purple-ghost); display: grid; place-items: center; }
+        html, body {
+            min-height: 100vh; font-family: var(--font-body);
+            background: var(--purple-ghost); display: grid; place-items: center;
+        }
         .auth-card {
             background: #fff; border: 1px solid var(--border); border-radius: 22px;
             padding: 48px 44px; width: 100%; max-width: 420px;
@@ -19,19 +22,75 @@
             animation: fadeUp .4s ease both;
         }
         @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; } }
-        .auth-logo { display: flex; align-items: center; gap: 10px; margin-bottom: 28px; justify-content: center; }
+        .auth-logo {
+            display: flex; align-items: center; gap: 10px;
+            margin-bottom: 28px; justify-content: center;
+        }
         .auth-logo img { width: 36px; height: 36px; border-radius: 10px; object-fit: contain; }
         .auth-logo span { font-family: var(--font-head); font-size: 20px; font-weight: 800; color: var(--text); }
         .auth-title { font-family: var(--font-head); font-size: 26px; font-weight: 800; color: var(--text); margin-bottom: 6px; text-align: center; }
         .auth-sub { font-size: 13.5px; color: var(--text-muted); text-align: center; margin-bottom: 28px; }
+
         .form-group { margin-bottom: 16px; }
-        .form-group label { display: block; font-size: 13px; font-weight: 500; color: var(--text-mid); margin-bottom: 6px; }
+        .form-group label {
+            display: block; font-size: 13px; font-weight: 500;
+            color: var(--text-mid); margin-bottom: 6px;
+        }
         .form-group input {
             width: 100%; padding: 11px 14px; border: 1.5px solid var(--border);
             border-radius: 10px; font-family: var(--font-body); font-size: 14px; color: var(--text);
             background: var(--purple-ghost); outline: none; transition: border-color .15s;
         }
         .form-group input:focus { border-color: var(--purple); background: #fff; }
+
+        /* ── CAPTCHA ───────────────────────────── */
+        .captcha-wrap { margin-bottom: 16px; }
+        .captcha-wrap label {
+            display: block; font-size: 13px; font-weight: 500;
+            color: var(--text-mid); margin-bottom: 8px;
+        }
+        .captcha-question-box {
+            display: flex; align-items: center; justify-content: space-between;
+            background: var(--purple-pale); border: 1.5px solid rgba(106,90,205,.25);
+            border-radius: 11px; padding: 12px 18px; margin-bottom: 10px;
+        }
+        .captcha-math {
+            font-family: var(--font-head); font-size: 24px; font-weight: 800;
+            color: var(--purple); letter-spacing: 4px;
+        }
+        .captcha-equals {
+            font-size: 13px; font-weight: 600; color: var(--text-muted);
+        }
+        .captcha-input {
+            width: 100%; padding: 11px 14px; border: 1.5px solid var(--border);
+            border-radius: 10px; font-family: var(--font-head); font-size: 18px;
+            font-weight: 700; color: var(--text); background: var(--purple-ghost);
+            outline: none; text-align: center; letter-spacing: 4px;
+            transition: border-color .15s;
+        }
+        .captcha-input:focus { border-color: var(--purple); background: #fff; }
+        .captcha-hint {
+            font-size: 11px; color: var(--text-muted); text-align: center;
+            margin-top: 5px;
+        }
+
+        /* ── ALERTS ────────────────────────────── */
+        .alert-error {
+            background: #FEE2E2; color: #991B1B; padding: 10px 14px;
+            border-radius: 9px; font-size: 13px; margin-bottom: 14px;
+            border: 1px solid #FECACA; display: flex; align-items: center; gap: 8px;
+        }
+        .alert-captcha {
+            background: #FFF7ED; color: #92400E; padding: 10px 14px;
+            border-radius: 9px; font-size: 13px; margin-bottom: 14px;
+            border: 1px solid #FCD34D; display: flex; align-items: center; gap: 8px;
+        }
+        .alert-success {
+            background: #D1FAE5; color: #065F46; padding: 10px 14px;
+            border-radius: 9px; font-size: 13px; margin-bottom: 14px;
+            border: 1px solid #6EE7B7;
+        }
+
         .btn-submit {
             width: 100%; padding: 13px; background: var(--purple); color: #fff;
             border: none; border-radius: 11px; font-family: var(--font-body);
@@ -40,13 +99,17 @@
             transition: background .15s, transform .15s;
         }
         .btn-submit:hover { background: var(--purple-dark); transform: translateY(-1px); }
-        .alert-error { background: #FEE2E2; color: #991B1B; padding: 10px 14px; border-radius: 9px; font-size: 13px; margin-bottom: 16px; }
         .auth-footer { text-align: center; margin-top: 22px; font-size: 13px; color: var(--text-muted); }
         .auth-footer a { color: var(--purple); text-decoration: none; font-weight: 500; }
         .auth-footer a:hover { text-decoration: underline; }
         .divider { display: flex; align-items: center; gap: 12px; margin: 18px 0; }
         .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
         .divider span { font-size: 12px; color: var(--text-muted); }
+        .session-info {
+            display: flex; align-items: center; gap: 6px;
+            font-size: 11px; color: var(--text-muted); margin-top: 12px;
+            justify-content: center;
+        }
     </style>
 {% endblock %}
 
@@ -59,24 +122,63 @@
         <div class="auth-title">Bon retour 👋</div>
         <div class="auth-sub">Connectez-vous à votre espace étudiant</div>
 
+        {# ── Erreur d'authentification Symfony (mauvais email/mdp) ── #}
         {% if error %}
             <div class="alert-error">⚠ {{ error.messageKey|trans(error.messageData, 'security') }}</div>
         {% endif %}
 
+        {# ── Erreur CAPTCHA (flash injecté par CaptchaListener) ── #}
+        {% for msg in app.flashes('captcha_error') %}
+            <div class="alert-captcha">🔒 {{ msg }}</div>
+        {% endfor %}
+
+        {# ── Message de succès (ex : après changement de mot de passe) ── #}
+        {% for msg in app.flashes('success') %}
+            <div class="alert-success">✅ {{ msg }}</div>
+        {% endfor %}
+
         <form method="post" action="{{ path('app_login') }}">
+
+            {# ── Email ── #}
             <div class="form-group">
                 <label for="email">Adresse email</label>
                 <input type="email" id="email" name="email"
                        value="{{ last_username }}" required autofocus
                        placeholder="votre@email.com">
             </div>
+
+            {# ── Mot de passe ── #}
             <div class="form-group">
                 <label for="password">Mot de passe</label>
-                <input type="password" id="password" name="password" required placeholder="••••••••">
+                <input type="password" id="password" name="password"
+                       required placeholder="••••••••">
             </div>
+
+            {# ── CAPTCHA mathématique ── #}
+            <div class="captcha-wrap">
+                <label>🔐 Vérification de sécurité</label>
+                <div class="captcha-question-box">
+                    <span class="captcha-math">{{ captcha_question }}</span>
+                    <span class="captcha-equals">= ?</span>
+                </div>
+                <input type="text"
+                       id="captcha"
+                       name="captcha"
+                       class="captcha-input"
+                       required
+                       autocomplete="off"
+                       inputmode="numeric"
+                       placeholder="?"
+                       maxlength="3">
+                <p class="captcha-hint">Entrez le résultat du calcul ci-dessus</p>
+            </div>
+
             <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
             <button class="btn-submit" type="submit">Se connecter →</button>
         </form>
+
+        <p class="session-info">🕐 Session maintenue 3 h après connexion</p>
 
         <div class="divider"><span>ou</span></div>
 

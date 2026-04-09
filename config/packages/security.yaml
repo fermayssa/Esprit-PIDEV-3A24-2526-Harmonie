@@ -30,7 +30,8 @@ security:
                 target: app_login
             remember_me:
                 secret: '%kernel.secret%'
-                lifetime: 604800
+                lifetime: 10800              # ← 3 heures (3 × 60 × 60)
+                always_remember_me: true     # ← Actif automatiquement à chaque login
 
     role_hierarchy:
         ROLE_ADMIN: [ROLE_USER]

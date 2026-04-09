@@ -648,6 +648,7 @@
       <tag name="controller.service_arguments"/>
       <tag name="routing.controller"/>
       <tag name="container.service_subscriber"/>
+      <argument type="service" id="App\Service\CaptchaService"/>
       <call method="setContainer">
         <argument type="service" id=".service_locator.TJNRSaV.App\Controller\SecurityController"/>
       </call>
@@ -743,6 +744,12 @@
     </service>
     <service id="App\Enum\Humeur" class="App\Enum\Humeur" autowire="true" autoconfigure="true">
       <tag name="container.excluded" source="because it's an enum"/>
+    </service>
+    <service id="App\EventListener\CaptchaListener" class="App\EventListener\CaptchaListener" autowire="true" autoconfigure="true">
+      <tag name="kernel.event_subscriber"/>
+      <tag name="container.hot_path"/>
+      <argument type="service" id="App\Service\CaptchaService"/>
+      <argument type="service" id="router.default"/>
     </service>
     <service id="App\Form\AdminEditUserFormType" class="App\Form\AdminEditUserFormType" autowire="true" autoconfigure="true">
       <tag name="form.type" csrf_token_id="%.form.type_extension.csrf.token_id%"/>
@@ -852,6 +859,7 @@
       <tag name="doctrine.repository_service"/>
       <argument type="service" id="doctrine"/>
     </service>
+    <service id="App\Service\CaptchaService" class="App\Service\CaptchaService" autowire="true" autoconfigure="true"/>
     <service id="App\Service\Domain\PlanningDomainService" class="App\Service\Domain\PlanningDomainService" autowire="true" autoconfigure="true">
       <argument type="service" id="doctrine.orm.default_entity_manager"/>
       <argument type="service" id="debug.validator"/>
@@ -892,7 +900,7 @@
     </service>
     <service id="argument_resolver.service" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver">
       <tag name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver" priority="-50">controller.argument_value_resolver</tag>
-      <argument type="service" id=".service_locator.PEzpSDL"/>
+      <argument type="service" id=".service_locator.nEigcwi"/>
     </service>
     <service id="argument_resolver.default" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver">
       <tag name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver" priority="-100">controller.argument_value_resolver</tag>
@@ -3419,6 +3427,14 @@
         <argument>0</argument>
       </call>
       <call method="addListener">
+        <argument>kernel.request</argument>
+        <argument type="collection">
+          <argument type="service_closure" id="App\EventListener\CaptchaListener"/>
+          <argument>onKernelRequest</argument>
+        </argument>
+        <argument>10</argument>
+      </call>
+      <call method="addListener">
         <argument>kernel.controller_arguments</argument>
         <argument type="collection">
           <argument type="service_closure" id="argument_resolver.request_payload"/>
@@ -4016,7 +4032,7 @@
     </service>
     <service id="argument_resolver.not_tagged_controller" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\NotTaggedControllerValueResolver">
       <tag name="controller.argument_value_resolver" priority="-200"/>
-      <argument type="service" id=".service_locator.PEzpSDL"/>
+      <argument type="service" id=".service_locator.nEigcwi"/>
     </service>
     <service id="debug.log_processor" class="Symfony\Bridge\Monolog\Processor\DebugProcessor">
       <tag name="kernel.reset" method="reset"/>
@@ -8049,7 +8065,8 @@
       <argument type="service" id="request_stack"/>
       <argument type="collection">
         <argument key="secret">%env(APP_SECRET)%</argument>
-        <argument key="lifetime">604800</argument>
+        <argument key="lifetime">10800</argument>
+        <argument key="always_remember_me">true</argument>
         <argument key="user_providers" type="collection"/>
         <argument key="catch_exceptions">true</argument>
         <argument key="signature_properties" type="collection">
@@ -8061,7 +8078,6 @@
         <argument key="secure">false</argument>
         <argument key="httponly">true</argument>
         <argument key="samesite">null</argument>
-        <argument key="always_remember_me">false</argument>
         <argument key="remember_me_parameter">_remember_me</argument>
       </argument>
       <argument type="service" id="monolog.logger.security" on-invalid="null"/>
@@ -8069,7 +8085,7 @@
     <service id="security.listener.check_remember_me_conditions.main" class="Symfony\Component\Security\Http\EventListener\CheckRememberMeConditionsListener">
       <tag name="kernel.event_subscriber" dispatcher="debug.security.event_dispatcher.main"/>
       <argument type="collection">
-        <argument key="always_remember_me">false</argument>
+        <argument key="always_remember_me">true</argument>
         <argument key="remember_me_parameter">_remember_me</argument>
       </argument>
       <argument type="service" id="monolog.logger" on-invalid="null"/>
@@ -8630,6 +8646,8 @@
     <service id=".abstract.instanceof.App\Entity\User" class="App\Entity\User" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.UnitEnum.0.App\Enum\Humeur" class="App\Enum\Humeur" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Enum\Humeur" class="App\Enum\Humeur" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Component\EventDispatcher\EventSubscriberInterface.0.App\EventListener\CaptchaListener" class="App\EventListener\CaptchaListener" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\EventListener\CaptchaListener" class="App\EventListener\CaptchaListener" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\AdminEditUserFormType" class="App\Form\AdminEditUserFormType" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Form\AdminEditUserFormType" class="App\Form\AdminEditUserFormType" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\AdminSalleType" class="App\Form\AdminSalleType" autowire="true" abstract="true"/>
@@ -9960,18 +9978,19 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.wEoPZVd" method="withContext"/>
     </service>
-    <service id=".service_locator.O6aUYCb" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.t0KwCtW" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="em" type="service_closure" id="doctrine.orm.default_entity_manager"/>
         <argument key="hasher" type="service_closure" id="security.user_password_hasher"/>
+        <argument key="authUtils" type="service_closure" id="security.authentication_utils"/>
       </argument>
     </service>
-    <service id=".service_locator.O6aUYCb.App\Controller\ProfileController::security()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.t0KwCtW.App\Controller\ProfileController::security()" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\ProfileController::security()"/>
       <argument>App\Controller\ProfileController::security()</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.O6aUYCb" method="withContext"/>
+      <factory service=".service_locator.t0KwCtW" method="withContext"/>
     </service>
     <service id=".service_locator.0I1vCn4" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
@@ -10113,7 +10132,7 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.z0A7H.F" method="withContext"/>
     </service>
-    <service id=".service_locator.PEzpSDL" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.nEigcwi" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="kernel::registerContainerConfiguration" type="service_closure" id=".service_locator.1vYpZ1B.kernel::registerContainerConfiguration()"/>
@@ -10194,7 +10213,7 @@
         <argument key="App\Controller\NutritionController::apiModifier" type="service_closure" id=".service_locator.Uw2k5kr.App\Controller\NutritionController::apiModifier()"/>
         <argument key="App\Controller\NutritionController::apiSupprimer" type="service_closure" id=".service_locator.Uw2k5kr.App\Controller\NutritionController::apiSupprimer()"/>
         <argument key="App\Controller\ProfileController::settings" type="service_closure" id=".service_locator.wEoPZVd.App\Controller\ProfileController::settings()"/>
-        <argument key="App\Controller\ProfileController::security" type="service_closure" id=".service_locator.O6aUYCb.App\Controller\ProfileController::security()"/>
+        <argument key="App\Controller\ProfileController::security" type="service_closure" id=".service_locator.t0KwCtW.App\Controller\ProfileController::security()"/>
         <argument key="App\Controller\RegistrationController::register" type="service_closure" id=".service_locator.0I1vCn4.App\Controller\RegistrationController::register()"/>
         <argument key="App\Controller\RegistrationController::registerStep2" type="service_closure" id=".service_locator.wEoPZVd.App\Controller\RegistrationController::registerStep2()"/>
         <argument key="App\Controller\SalleController::index" type="service_closure" id=".service_locator.qJRwpWf.App\Controller\SalleController::index()"/>
@@ -10289,7 +10308,7 @@
         <argument key="App\Controller\NutritionController:apiModifier" type="service_closure" id=".service_locator.Uw2k5kr.App\Controller\NutritionController::apiModifier()"/>
         <argument key="App\Controller\NutritionController:apiSupprimer" type="service_closure" id=".service_locator.Uw2k5kr.App\Controller\NutritionController::apiSupprimer()"/>
         <argument key="App\Controller\ProfileController:settings" type="service_closure" id=".service_locator.wEoPZVd.App\Controller\ProfileController::settings()"/>
-        <argument key="App\Controller\ProfileController:security" type="service_closure" id=".service_locator.O6aUYCb.App\Controller\ProfileController::security()"/>
+        <argument key="App\Controller\ProfileController:security" type="service_closure" id=".service_locator.t0KwCtW.App\Controller\ProfileController::security()"/>
         <argument key="App\Controller\RegistrationController:register" type="service_closure" id=".service_locator.0I1vCn4.App\Controller\RegistrationController::register()"/>
         <argument key="App\Controller\RegistrationController:registerStep2" type="service_closure" id=".service_locator.wEoPZVd.App\Controller\RegistrationController::registerStep2()"/>
         <argument key="App\Controller\SalleController:index" type="service_closure" id=".service_locator.qJRwpWf.App\Controller\SalleController::index()"/>
@@ -12857,7 +12876,7 @@
     <service id="Psr\Log\LoggerInterface" alias="monolog.logger"/>
     <service id="container.env_var_processors_locator" alias=".service_locator.ryAvHi4" public="true"/>
     <service id="twig.loader.filesystem" alias="twig.loader.native_filesystem"/>
-    <service id="argument_resolver.controller_locator" alias=".service_locator.PEzpSDL"/>
+    <service id="argument_resolver.controller_locator" alias=".service_locator.nEigcwi"/>
     <service id="doctrine.id_generator_locator" alias=".service_locator.W55Po6X"/>
     <service id="twig.loader" alias="twig.loader.native_filesystem"/>
     <service id=".Psr\Log\LoggerInterface $request" alias="monolog.logger.request"/>
@@ -12954,7 +12973,7 @@
     <service id=".service_locator.zZLgE7T" alias=".service_locator.9SYQ8z3"/>
     <service id=".service_locator.h.3.LVM" alias=".service_locator.Uw2k5kr"/>
     <service id=".service_locator.jMHKBAi" alias=".service_locator.wEoPZVd"/>
-    <service id=".service_locator.TadShlz" alias=".service_locator.O6aUYCb"/>
+    <service id=".service_locator.IgTyD6C" alias=".service_locator.t0KwCtW"/>
     <service id=".service_locator.MVL9hvL" alias=".service_locator.0I1vCn4"/>
     <service id=".service_locator.k5boMfp" alias=".service_locator._Ls6dHU"/>
     <service id=".service_locator.YU1i9lx" alias=".service_locator.Jt3EkEi"/>
