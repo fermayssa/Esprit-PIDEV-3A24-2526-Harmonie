@@ -132,7 +132,14 @@
                 class="sidebar-link {{ app.request.attributes.get('_route') starts with 'back_categor' ? 'active' }}">
                 <span class="s-icon">🗂️</span> Catégories
             </a>
-           
+            <a href="{{ path('back_posts') }}"
+                class="sidebar-link {{ app.request.attributes.get('_route') starts with 'back_post' ? 'active' }}">
+                <span class="s-icon">📝</span> Posts
+            </a>
+            <a href="{{ path('back_commentaires') }}"
+                class="sidebar-link {{ app.request.attributes.get('_route') starts with 'back_commentaire' ? 'active' }}">
+                <span class="s-icon">💬</span> Commentaires
+            </a>
         </nav>
 
         <div class="sidebar-bottom">

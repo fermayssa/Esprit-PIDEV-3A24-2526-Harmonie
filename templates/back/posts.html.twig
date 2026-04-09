@@ -76,7 +76,7 @@
     <tbody id="post-tbody">
       {% for post in posts %}
       <tr data-search="{{ post.titre|lower }} {{ post.contenu|lower }}"
-          data-cat="{{ post.idCategorie ? post.idCategorie.idCategorie : '' }}">
+          data-cat="{{ post.idCategorie ? post.idCategorie : '' }}">
         <td class="td-muted">#{{ post.idPost }}</td>
         <td>
           <span class="td-name">{{ post.titre }}</span>
@@ -86,7 +86,14 @@
         </td>
         <td>
           {% if post.idCategorie %}
-            <span class="badge cat">{{ post.idCategorie.nomCategorie }}</span>
+            {# NOUVEAU — utilise catMap passé par le controller #}
+{% if post.idCategorie and catMap[post.idCategorie] is defined %}
+    <span class="badge cat">{{ catMap[post.idCategorie] }}</span>
+{% elseif post.idCategorie %}
+    <span class="badge cat">Cat. #{{ post.idCategorie }}</span>
+{% else %}
+    <span class="td-muted">—</span>
+{% endif %}
           {% else %}
             <span class="td-muted">—</span>
           {% endif %}
