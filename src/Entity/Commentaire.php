@@ -30,7 +30,13 @@ class Commentaire
 
     public function getIdCommentaire(): ?int { return $this->idCommentaire; }
     public function getContenu(): ?string { return $this->contenu; }
-    public function setContenu(string $contenu): static { $this->contenu = $contenu; return $this; }
+    
+    public function setContenu(?string $contenu): static 
+{ 
+    $this->contenu = $contenu; 
+    return $this; 
+}
+    
     public function getDateCommentaire(): ?\DateTimeInterface { return $this->dateCommentaire; }
     public function setDateCommentaire(\DateTimeInterface $d): static { $this->dateCommentaire = $d; return $this; }
     public function getIdPost(): ?int { return $this->idPost; }

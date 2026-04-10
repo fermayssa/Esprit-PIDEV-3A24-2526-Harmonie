@@ -669,3 +669,10 @@ c713ee,127.0.0.1,GET,http://127.0.0.1:8000/forum/categorie/30,1775851409,,200,re
 5df0d4,127.0.0.1,GET,http://127.0.0.1:8000/forum/comment/66/edit,1775852167,,200,request
 136750,127.0.0.1,GET,http://127.0.0.1:8000/forum/comment/66/edit,1775852171,f79efc,500,request
 f79efc,127.0.0.1,POST,http://127.0.0.1:8000/forum/comment/66/edit,1775852171,,500,request
+2b83fd,127.0.0.1,POST,http://127.0.0.1:8000/forum/comment/66/edit,1775852765,,200,request
+94bd3a,127.0.0.1,POST,http://127.0.0.1:8000/forum/comment/66/edit,1775852772,,200,request
+303aa5,127.0.0.1,POST,http://127.0.0.1:8000/forum/comment/66/edit,1775852779,,302,request
+a60f78,127.0.0.1,GET,http://127.0.0.1:8000/forum/categorie/30,1775852780,,200,request
+7e4993,127.0.0.1,GET,http://127.0.0.1:8000/forum/comment/66/edit,1775852785,,200,request
+c7321e,127.0.0.1,POST,http://127.0.0.1:8000/forum/comment/66/edit,1775852792,,302,request
+0ce3b3,127.0.0.1,GET,http://127.0.0.1:8000/forum/categorie/30,1775852792,,200,request

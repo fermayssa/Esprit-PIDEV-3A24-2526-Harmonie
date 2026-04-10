@@ -14,6 +14,8 @@ class CommentaireType extends AbstractType
         $builder
             ->add('contenu', TextareaType::class, [
                 'label' => false,
+                'required'       => true,
+                'empty_data'     => '',   // ← retourne '' au lieu de null
                 'attr'  => [
                     'placeholder' => 'Écris ton commentaire...',
                     'class'       => 'form-textarea',
