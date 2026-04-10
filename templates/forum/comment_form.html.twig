@@ -105,20 +105,23 @@
         <div class="error-box"> ⚠️ {{ error }}</div>
         {% endif %}
 
-        <form method="POST" action="{{ action }}" id="commentForm">
-            <div class="form-group">
-                <label class="form-label">Ton commentaire *</label>
-                <textarea name="contenu" id="contenuInput"
-                    class="form-textarea {{ error ? 'error' }}"
-                    placeholder="Modifie ton commentaire..."
-                    required>{{ comment.contenu }}</textarea>
-            </div>
+        {{ form_start(form) }}
 
-            <div class="form-actions">
-                <a href="{{ path('forum_posts', {id: post.idCategorie}) }}" class="btn-cancel">Annuler</a>
-                <button type="submit" class="btn-submit"> 💾 Enregistrer</button>
-            </div>
-        </form>
+    <div class="form-group">
+        {{ form_label(form.contenu) }}
+        {{ form_widget(form.contenu) }}
+        {% if form_errors(form.contenu) %}
+            <div class="error-box">⚠️ {{ form_errors(form.contenu) }}</div>
+        {% endif %}
+    </div>
+
+    <div class="form-actions">
+        <a href="{{ path('forum_posts', {id: post.idCategorie}) }}" class="btn-cancel">Annuler</a>
+        <button type="submit" class="btn-submit">💾 Enregistrer</button>
+    </div>
+
+{{ form_end(form) }}
+
     </div>
 </main>
 
