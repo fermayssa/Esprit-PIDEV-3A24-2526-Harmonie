@@ -23,6 +23,7 @@ class User extends \App\Entity\User implements \Doctrine\ORM\Proxy\InternalProxy
 
     private const LAZY_OBJECT_PROPERTY_SCOPES = [
         "\0".parent::class."\0".'dateInscription' => [parent::class, 'dateInscription', null, 16],
+        "\0".parent::class."\0".'faceIdEnabled' => [parent::class, 'faceIdEnabled', null, 16],
         "\0".parent::class."\0".'faceImagePath' => [parent::class, 'faceImagePath', null, 16],
         "\0".parent::class."\0".'isActive' => [parent::class, 'isActive', null, 16],
         "\0".parent::class."\0".'typeUtilisateur' => [parent::class, 'typeUtilisateur', null, 16],
@@ -40,6 +41,7 @@ class User extends \App\Entity\User implements \Doctrine\ORM\Proxy\InternalProxy
         "\0".parent::class."\0".'userSexe' => [parent::class, 'userSexe', null, 16],
         "\0".parent::class."\0".'userTaille' => [parent::class, 'userTaille', null, 16],
         'dateInscription' => [parent::class, 'dateInscription', null, 16],
+        'faceIdEnabled' => [parent::class, 'faceIdEnabled', null, 16],
         'faceImagePath' => [parent::class, 'faceImagePath', null, 16],
         'isActive' => [parent::class, 'isActive', null, 16],
         'typeUtilisateur' => [parent::class, 'typeUtilisateur', null, 16],

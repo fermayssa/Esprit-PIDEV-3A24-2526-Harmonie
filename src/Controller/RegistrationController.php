@@ -8,6 +8,7 @@ use App\Form\RegistrationStep2FormType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -70,7 +71,6 @@ class RegistrationController extends AbstractController
             return $this->redirectToRoute('app_register');
         }
 
-        // ── Construire l'entité avec les données de l'étape 1 ────────────────
         $user = new User();
         $user->setUserNom($step1['nom']);
         $user->setUserPrenom($step1['prenom']);
@@ -86,7 +86,7 @@ class RegistrationController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            // ── Upload avatar ─────────────────────────────────────────────────
+            // Upload avatar
             $avatarFile = $form->get('avatarFile')->getData();
             if ($avatarFile) {
                 $safeFilename = $slugger->slug($step1['nom']);
@@ -105,33 +105,157 @@ class RegistrationController extends AbstractController
                 }
             }
 
-            // ── Persist + Flush avec gestion d'erreur complète ───────────────
-            try {
-                $em->persist($user);
-                $em->flush();
+            // Stocker les données step2 en session pour step3
+            $session->set('reg_step2_user', [
+                'nom'                      => $user->getUserNom(),
+                'prenom'                   => $user->getUserPrenom(),
+                'email'                    => $user->getUserEmail(),
+                'password'                 => $user->getUserPassword(),
+                'dateNaissance'            => $user->getUserDateDeNaissance(),
+                'sexe'                     => $user->getUserSexe(),
+                'poids'                    => $user->getUserPoids(),
+                'taille'                   => $user->getUserTaille(),
+                'niveauActivite'           => $user->getUserNiveauActivitePhysique(),
+                'niveauScolaire'           => $user->getUserNiveauScolaire(),
+                'etablissement'            => $user->getUserEtablissementScolaire(),
+                'imagePath'                => $user->getUserImagePath(),
+                'dateInscription'          => $user->getDateInscription(),
+            ]);
 
-                // Succès : nettoyer la session et rediriger
-                $session->remove('reg_step1');
-                $this->addFlash('success', 'Compte créé avec succès ! Vous pouvez vous connecter.');
-                return $this->redirectToRoute('app_login');
-
-            } catch (\Doctrine\DBAL\Exception\UniqueConstraintViolationException $e) {
-                $session->remove('reg_step1');
-                $this->addFlash('error', 'Cet email est déjà utilisé. Veuillez recommencer avec un autre email.');
-                return $this->redirectToRoute('app_register');
-
-            } catch (\Doctrine\DBAL\Exception $e) {
-                // Erreur DBAL — affiche le message exact pour diagnostic
-                $this->addFlash('error', 'Erreur base de données : ' . $e->getMessage());
-
-            } catch (\Exception $e) {
-                $this->addFlash('error', 'Erreur inattendue : ' . $e->getMessage());
-            }
+            return $this->redirectToRoute('app_register_step3');
         }
 
         return $this->render('registration/register_step2.html.twig', [
             'form'  => $form->createView(),
             'step1' => $step1,
         ]);
+    }
+
+    // ── Étape 3 : Capture faciale ─────────────────────────────────────────────
+    #[Route('/register/step3', name: 'app_register_step3')]
+    public function registerStep3(Request $request): Response
+    {
+        if ($this->getUser()) {
+            return $this->redirectToRoute('homepage');
+        }
+
+        $session = $request->getSession();
+
+        if (!$session->get('reg_step2_user')) {
+            return $this->redirectToRoute('app_register');
+        }
+
+        return $this->render('registration/register_step3.html.twig');
+    }
+
+    // ── API : Sauvegarder l'image faciale et créer le compte ──────────────────
+    #[Route('/register/save-face', name: 'app_register_save_face', methods: ['POST'])]
+    public function saveFace(Request $request, EntityManagerInterface $em): JsonResponse
+    {
+        $session  = $request->getSession();
+        $userData = $session->get('reg_step2_user');
+
+        if (!$userData) {
+            return new JsonResponse(['error' => 'Session expirée'], 400);
+        }
+
+        $data      = json_decode($request->getContent(), true);
+        $faceImage = $data['faceImage'] ?? null; // base64 PNG
+
+        // Créer le user
+        $user = new User();
+        $user->setUserNom($userData['nom']);
+        $user->setUserPrenom($userData['prenom']);
+        $user->setUserEmail($userData['email']);
+        $user->setUserPassword($userData['password']);
+        $user->setUserDateDeNaissance($userData['dateNaissance']);
+        $user->setUserSexe($userData['sexe']);
+        $user->setUserPoids($userData['poids']);
+        $user->setUserTaille($userData['taille'] ? (int)$userData['taille'] : null);
+        $user->setUserNiveauActivitePhysique($userData['niveauActivite']);
+        $user->setUserNiveauScolaire($userData['niveauScolaire']);
+        $user->setUserEtablissementScolaire($userData['etablissement']);
+        $user->setUserImagePath($userData['imagePath']);
+        $user->setDateInscription($userData['dateInscription']);
+        $user->setTypeUtilisateur('ETUDIANT');
+        $user->setIsActive(true);
+
+        // Sauvegarder l'image faciale
+        if ($faceImage) {
+            $faceDir = $this->getParameter('kernel.project_dir') . '/public/face_data';
+            if (!is_dir($faceDir)) {
+                mkdir($faceDir, 0777, true);
+            }
+
+            // Décoder le base64
+            $imageData = preg_replace('/^data:image\/\w+;base64,/', '', $faceImage);
+            $imageData = base64_decode($imageData);
+
+            $filename = 'face_' . uniqid() . '.png';
+            file_put_contents($faceDir . '/' . $filename, $imageData);
+
+            $user->setFaceImagePath('face_data/' . $filename);
+            $user->setFaceIdEnabled(true); // Active le face ID par défaut si photo prise
+        }
+
+        try {
+            $em->persist($user);
+            $em->flush();
+
+            // Nettoyer la session
+            $session->remove('reg_step1');
+            $session->remove('reg_step2_user');
+
+            return new JsonResponse(['success' => true]);
+
+        } catch (\Doctrine\DBAL\Exception\UniqueConstraintViolationException $e) {
+            $session->remove('reg_step1');
+            $session->remove('reg_step2_user');
+            return new JsonResponse(['error' => 'Email déjà utilisé.'], 409);
+        } catch (\Throwable $e) {
+            return new JsonResponse(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    // ── API : Ignorer la capture faciale (inscription sans face ID) ───────────
+    #[Route('/register/skip-face', name: 'app_register_skip_face', methods: ['POST'])]
+    public function skipFace(Request $request, EntityManagerInterface $em): JsonResponse
+    {
+        $session  = $request->getSession();
+        $userData = $session->get('reg_step2_user');
+
+        if (!$userData) {
+            return new JsonResponse(['error' => 'Session expirée'], 400);
+        }
+
+        $user = new User();
+        $user->setUserNom($userData['nom']);
+        $user->setUserPrenom($userData['prenom']);
+        $user->setUserEmail($userData['email']);
+        $user->setUserPassword($userData['password']);
+        $user->setUserDateDeNaissance($userData['dateNaissance']);
+        $user->setUserSexe($userData['sexe']);
+        $user->setUserPoids($userData['poids']);
+        $user->setUserTaille($userData['taille'] ? (int)$userData['taille'] : null);
+        $user->setUserNiveauActivitePhysique($userData['niveauActivite']);
+        $user->setUserNiveauScolaire($userData['niveauScolaire']);
+        $user->setUserEtablissementScolaire($userData['etablissement']);
+        $user->setUserImagePath($userData['imagePath']);
+        $user->setDateInscription($userData['dateInscription']);
+        $user->setTypeUtilisateur('ETUDIANT');
+        $user->setIsActive(true);
+        $user->setFaceIdEnabled(false);
+
+        try {
+            $em->persist($user);
+            $em->flush();
+
+            $session->remove('reg_step1');
+            $session->remove('reg_step2_user');
+
+            return new JsonResponse(['success' => true]);
+        } catch (\Throwable $e) {
+            return new JsonResponse(['error' => $e->getMessage()], 500);
+        }
     }
 }

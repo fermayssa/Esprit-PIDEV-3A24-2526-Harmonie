@@ -544,6 +544,14 @@
         <argument type="service" id=".service_locator.TJNRSaV.App\Controller\EvenementsController"/>
       </call>
     </service>
+    <service id="App\Controller\FaceAuthController" class="App\Controller\FaceAuthController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
+      <tag name="routing.controller"/>
+      <tag name="container.service_subscriber"/>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.TJNRSaV.App\Controller\FaceAuthController"/>
+      </call>
+    </service>
     <service id="App\Controller\ForumController" class="App\Controller\ForumController" public="true" autowire="true" autoconfigure="true">
       <tag name="controller.service_arguments"/>
       <tag name="routing.controller"/>
@@ -788,6 +796,12 @@
       <tag name="container.hot_path"/>
       <tag name="container.hot_path"/>
     </service>
+    <service id="App\EventListener\FaceAuthListener" class="App\EventListener\FaceAuthListener" autowire="true" autoconfigure="true">
+      <tag name="kernel.event_subscriber"/>
+      <tag name="container.hot_path"/>
+      <argument type="service" id="router.default"/>
+      <argument type="service" id="App\Repository\UserRepository"/>
+    </service>
     <service id="App\Form\AdminEditUserFormType" class="App\Form\AdminEditUserFormType" autowire="true" autoconfigure="true">
       <tag name="form.type" csrf_token_id="%.form.type_extension.csrf.token_id%"/>
     </service>
@@ -945,7 +959,7 @@
     </service>
     <service id="argument_resolver.service" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver">
       <tag name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver" priority="-50">controller.argument_value_resolver</tag>
-      <argument type="service" id=".service_locator.nEigcwi"/>
+      <argument type="service" id=".service_locator.c8PaYgL"/>
     </service>
     <service id="argument_resolver.default" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver">
       <tag name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver" priority="-100">controller.argument_value_resolver</tag>
@@ -3512,6 +3526,22 @@
         <argument>0</argument>
       </call>
       <call method="addListener">
+        <argument>security.interactive_login</argument>
+        <argument type="collection">
+          <argument type="service_closure" id="App\EventListener\FaceAuthListener"/>
+          <argument>onLogin</argument>
+        </argument>
+        <argument>0</argument>
+      </call>
+      <call method="addListener">
+        <argument>kernel.request</argument>
+        <argument type="collection">
+          <argument type="service_closure" id="App\EventListener\FaceAuthListener"/>
+          <argument>onRequest</argument>
+        </argument>
+        <argument>7</argument>
+      </call>
+      <call method="addListener">
         <argument>kernel.controller_arguments</argument>
         <argument type="collection">
           <argument type="service_closure" id="argument_resolver.request_payload"/>
@@ -4117,7 +4147,7 @@
     </service>
     <service id="argument_resolver.not_tagged_controller" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\NotTaggedControllerValueResolver">
       <tag name="controller.argument_value_resolver" priority="-200"/>
-      <argument type="service" id=".service_locator.nEigcwi"/>
+      <argument type="service" id=".service_locator.c8PaYgL"/>
     </service>
     <service id="debug.log_processor" class="Symfony\Bridge\Monolog\Processor\DebugProcessor">
       <tag name="kernel.reset" method="reset"/>
@@ -4212,6 +4242,7 @@
         <argument>App\Controller\BackController</argument>
         <argument>App\Controller\CoversController</argument>
         <argument>App\Controller\EvenementsController</argument>
+        <argument>App\Controller\FaceAuthController</argument>
         <argument>App\Controller\ForumController</argument>
         <argument>App\Controller\HomepageController</argument>
         <argument>App\Controller\JournalController</argument>
@@ -7546,6 +7577,13 @@
         <argument>null</argument>
       </call>
       <call method="add">
+        <argument type="service" id=".security.request_matcher.8WDFZpK"/>
+        <argument type="collection">
+          <argument>PUBLIC_ACCESS</argument>
+        </argument>
+        <argument>null</argument>
+      </call>
+      <call method="add">
         <argument type="service" id=".security.request_matcher.SVK5D2B"/>
         <argument type="collection">
           <argument>ROLE_ADMIN</argument>
@@ -8283,6 +8321,14 @@
         <argument type="service" id=".security.request_matcher.LORg6t3"/>
       </argument>
     </service>
+    <service id=".security.request_matcher.rp3B7KB" class="Symfony\Component\HttpFoundation\RequestMatcher\PathRequestMatcher">
+      <argument>^/face-verify</argument>
+    </service>
+    <service id=".security.request_matcher.8WDFZpK" class="Symfony\Component\HttpFoundation\ChainRequestMatcher">
+      <argument type="collection">
+        <argument type="service" id=".security.request_matcher.rp3B7KB"/>
+      </argument>
+    </service>
     <service id=".security.request_matcher.pqyCXG8" class="Symfony\Component\HttpFoundation\RequestMatcher\PathRequestMatcher">
       <argument>^/admin</argument>
     </service>
@@ -8726,6 +8772,10 @@
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\EvenementsController" class="App\Controller\EvenementsController" autowire="true" abstract="true"/>
     <service id=".instanceof.App\Controller\EvenementsController.0.App\Controller\EvenementsController" class="App\Controller\EvenementsController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\EvenementsController" class="App\Controller\EvenementsController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\FaceAuthController" class="App\Controller\FaceAuthController" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\FaceAuthController" class="App\Controller\FaceAuthController" autowire="true" abstract="true"/>
+    <service id=".instanceof.App\Controller\FaceAuthController.0.App\Controller\FaceAuthController" class="App\Controller\FaceAuthController" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Controller\FaceAuthController" class="App\Controller\FaceAuthController" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\ForumController" class="App\Controller\ForumController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\ForumController" class="App\Controller\ForumController" autowire="true" abstract="true"/>
     <service id=".instanceof.App\Controller\ForumController.0.App\Controller\ForumController" class="App\Controller\ForumController" autowire="true" abstract="true"/>
@@ -8840,6 +8890,8 @@
     <service id=".abstract.instanceof.App\EventListener\CaptchaListener" class="App\EventListener\CaptchaListener" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\EventDispatcher\EventSubscriberInterface.0.App\EventListener\DebugRequestListener" class="App\EventListener\DebugRequestListener" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\EventListener\DebugRequestListener" class="App\EventListener\DebugRequestListener" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Component\EventDispatcher\EventSubscriberInterface.0.App\EventListener\FaceAuthListener" class="App\EventListener\FaceAuthListener" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\EventListener\FaceAuthListener" class="App\EventListener\FaceAuthListener" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\AdminEditUserFormType" class="App\Form\AdminEditUserFormType" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Form\AdminEditUserFormType" class="App\Form\AdminEditUserFormType" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\AdminSalleType" class="App\Form\AdminSalleType" autowire="true" abstract="true"/>
@@ -9034,6 +9086,14 @@
           <argument>checkPassport</argument>
         </argument>
         <argument>1024</argument>
+      </call>
+      <call method="addListener">
+        <argument>security.interactive_login</argument>
+        <argument type="collection">
+          <argument type="service_closure" id="App\EventListener\FaceAuthListener"/>
+          <argument>onLogin</argument>
+        </argument>
+        <argument>0</argument>
       </call>
       <call method="addListener">
         <argument>Symfony\Component\Security\Http\Event\CheckPassportEvent</argument>
@@ -9984,11 +10044,48 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.NsUdOW3" method="withContext"/>
     </service>
+    <service id=".service_locator.IU8TuTU" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="userRepo" type="service_closure" id="App\Repository\UserRepository"/>
+        <argument key="em" type="service_closure" id="doctrine.orm.default_entity_manager"/>
+      </argument>
+    </service>
+    <service id=".service_locator.IU8TuTU.App\Controller\FaceAuthController::check()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\FaceAuthController::check()"/>
+      <argument>App\Controller\FaceAuthController::check()</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.IU8TuTU" method="withContext"/>
+    </service>
+    <service id=".service_locator.kVZvsIK" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="userRepo" type="service_closure" id="App\Repository\UserRepository"/>
+      </argument>
+    </service>
+    <service id=".service_locator.kVZvsIK.App\Controller\FaceAuthController::faceSuccess()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\FaceAuthController::faceSuccess()"/>
+      <argument>App\Controller\FaceAuthController::faceSuccess()</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.kVZvsIK" method="withContext"/>
+    </service>
     <service id=".service_locator.z0A7H.F" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="em" type="service_closure" id="doctrine.orm.default_entity_manager"/>
       </argument>
+    </service>
+    <service id=".service_locator.z0A7H.F.App\Controller\FaceAuthController::toggleFaceId()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\FaceAuthController::toggleFaceId()"/>
+      <argument>App\Controller\FaceAuthController::toggleFaceId()</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.z0A7H.F" method="withContext"/>
+    </service>
+    <service id=".service_locator.z0A7H.F.App\Controller\FaceAuthController::updateFace()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\FaceAuthController::updateFace()"/>
+      <argument>App\Controller\FaceAuthController::updateFace()</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.z0A7H.F" method="withContext"/>
     </service>
     <service id=".service_locator.z0A7H.F.App\Controller\ForumController::index()" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\ForumController::index()"/>
@@ -10206,6 +10303,18 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.wEoPZVd" method="withContext"/>
     </service>
+    <service id=".service_locator.z0A7H.F.App\Controller\RegistrationController::saveFace()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\RegistrationController::saveFace()"/>
+      <argument>App\Controller\RegistrationController::saveFace()</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.z0A7H.F" method="withContext"/>
+    </service>
+    <service id=".service_locator.z0A7H.F.App\Controller\RegistrationController::skipFace()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\RegistrationController::skipFace()"/>
+      <argument>App\Controller\RegistrationController::skipFace()</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.z0A7H.F" method="withContext"/>
+    </service>
     <service id=".service_locator.qJRwpWf.App\Controller\SalleController::index()" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\SalleController::index()"/>
       <argument>App\Controller\SalleController::index()</argument>
@@ -10328,7 +10437,7 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.z0A7H.F" method="withContext"/>
     </service>
-    <service id=".service_locator.nEigcwi" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.c8PaYgL" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="kernel::registerContainerConfiguration" type="service_closure" id=".service_locator.1vYpZ1B.kernel::registerContainerConfiguration()"/>
@@ -10386,6 +10495,10 @@
         <argument key="App\Controller\EvenementsController::show" type="service_closure" id=".service_locator.ZILOSg7.App\Controller\EvenementsController::show()"/>
         <argument key="App\Controller\EvenementsController::edit" type="service_closure" id=".service_locator.NsUdOW3.App\Controller\EvenementsController::edit()"/>
         <argument key="App\Controller\EvenementsController::delete" type="service_closure" id=".service_locator.NsUdOW3.App\Controller\EvenementsController::delete()"/>
+        <argument key="App\Controller\FaceAuthController::check" type="service_closure" id=".service_locator.IU8TuTU.App\Controller\FaceAuthController::check()"/>
+        <argument key="App\Controller\FaceAuthController::faceSuccess" type="service_closure" id=".service_locator.kVZvsIK.App\Controller\FaceAuthController::faceSuccess()"/>
+        <argument key="App\Controller\FaceAuthController::toggleFaceId" type="service_closure" id=".service_locator.z0A7H.F.App\Controller\FaceAuthController::toggleFaceId()"/>
+        <argument key="App\Controller\FaceAuthController::updateFace" type="service_closure" id=".service_locator.z0A7H.F.App\Controller\FaceAuthController::updateFace()"/>
         <argument key="App\Controller\ForumController::index" type="service_closure" id=".service_locator.z0A7H.F.App\Controller\ForumController::index()"/>
         <argument key="App\Controller\ForumController::newCategorie" type="service_closure" id=".service_locator.z0A7H.F.App\Controller\ForumController::newCategorie()"/>
         <argument key="App\Controller\ForumController::editCategorie" type="service_closure" id=".service_locator.z0A7H.F.App\Controller\ForumController::editCategorie()"/>
@@ -10412,6 +10525,8 @@
         <argument key="App\Controller\ProfileController::security" type="service_closure" id=".service_locator.t0KwCtW.App\Controller\ProfileController::security()"/>
         <argument key="App\Controller\RegistrationController::register" type="service_closure" id=".service_locator.0I1vCn4.App\Controller\RegistrationController::register()"/>
         <argument key="App\Controller\RegistrationController::registerStep2" type="service_closure" id=".service_locator.wEoPZVd.App\Controller\RegistrationController::registerStep2()"/>
+        <argument key="App\Controller\RegistrationController::saveFace" type="service_closure" id=".service_locator.z0A7H.F.App\Controller\RegistrationController::saveFace()"/>
+        <argument key="App\Controller\RegistrationController::skipFace" type="service_closure" id=".service_locator.z0A7H.F.App\Controller\RegistrationController::skipFace()"/>
         <argument key="App\Controller\SalleController::index" type="service_closure" id=".service_locator.qJRwpWf.App\Controller\SalleController::index()"/>
         <argument key="App\Controller\SalleController::new" type="service_closure" id=".service_locator.Ekf188_.App\Controller\SalleController::new()"/>
         <argument key="App\Controller\SalleController::show" type="service_closure" id=".service_locator._Ls6dHU.App\Controller\SalleController::show()"/>
@@ -10481,6 +10596,10 @@
         <argument key="App\Controller\EvenementsController:show" type="service_closure" id=".service_locator.ZILOSg7.App\Controller\EvenementsController::show()"/>
         <argument key="App\Controller\EvenementsController:edit" type="service_closure" id=".service_locator.NsUdOW3.App\Controller\EvenementsController::edit()"/>
         <argument key="App\Controller\EvenementsController:delete" type="service_closure" id=".service_locator.NsUdOW3.App\Controller\EvenementsController::delete()"/>
+        <argument key="App\Controller\FaceAuthController:check" type="service_closure" id=".service_locator.IU8TuTU.App\Controller\FaceAuthController::check()"/>
+        <argument key="App\Controller\FaceAuthController:faceSuccess" type="service_closure" id=".service_locator.kVZvsIK.App\Controller\FaceAuthController::faceSuccess()"/>
+        <argument key="App\Controller\FaceAuthController:toggleFaceId" type="service_closure" id=".service_locator.z0A7H.F.App\Controller\FaceAuthController::toggleFaceId()"/>
+        <argument key="App\Controller\FaceAuthController:updateFace" type="service_closure" id=".service_locator.z0A7H.F.App\Controller\FaceAuthController::updateFace()"/>
         <argument key="App\Controller\ForumController:index" type="service_closure" id=".service_locator.z0A7H.F.App\Controller\ForumController::index()"/>
         <argument key="App\Controller\ForumController:newCategorie" type="service_closure" id=".service_locator.z0A7H.F.App\Controller\ForumController::newCategorie()"/>
         <argument key="App\Controller\ForumController:editCategorie" type="service_closure" id=".service_locator.z0A7H.F.App\Controller\ForumController::editCategorie()"/>
@@ -10507,6 +10626,8 @@
         <argument key="App\Controller\ProfileController:security" type="service_closure" id=".service_locator.t0KwCtW.App\Controller\ProfileController::security()"/>
         <argument key="App\Controller\RegistrationController:register" type="service_closure" id=".service_locator.0I1vCn4.App\Controller\RegistrationController::register()"/>
         <argument key="App\Controller\RegistrationController:registerStep2" type="service_closure" id=".service_locator.wEoPZVd.App\Controller\RegistrationController::registerStep2()"/>
+        <argument key="App\Controller\RegistrationController:saveFace" type="service_closure" id=".service_locator.z0A7H.F.App\Controller\RegistrationController::saveFace()"/>
+        <argument key="App\Controller\RegistrationController:skipFace" type="service_closure" id=".service_locator.z0A7H.F.App\Controller\RegistrationController::skipFace()"/>
         <argument key="App\Controller\SalleController:index" type="service_closure" id=".service_locator.qJRwpWf.App\Controller\SalleController::index()"/>
         <argument key="App\Controller\SalleController:new" type="service_closure" id=".service_locator.Ekf188_.App\Controller\SalleController::new()"/>
         <argument key="App\Controller\SalleController:show" type="service_closure" id=".service_locator._Ls6dHU.App\Controller\SalleController::show()"/>
@@ -11248,6 +11369,12 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.TJNRSaV" method="withContext"/>
     </service>
+    <service id=".service_locator.TJNRSaV.App\Controller\FaceAuthController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\FaceAuthController"/>
+      <argument>App\Controller\FaceAuthController</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.TJNRSaV" method="withContext"/>
+    </service>
     <service id=".service_locator.TJNRSaV.App\Controller\ForumController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\ForumController"/>
       <argument>App\Controller\ForumController</argument>
@@ -11574,6 +11701,7 @@
           <argument>App\Controller\BackController</argument>
           <argument>App\Controller\CoversController</argument>
           <argument>App\Controller\EvenementsController</argument>
+          <argument>App\Controller\FaceAuthController</argument>
           <argument>App\Controller\ForumController</argument>
           <argument>App\Controller\HomepageController</argument>
           <argument>App\Controller\JournalController</argument>
@@ -13128,7 +13256,7 @@
     </service>
     <service id="container.env_var_processors_locator" alias=".service_locator.ryAvHi4" public="true"/>
     <service id="twig.loader.filesystem" alias="twig.loader.native_filesystem"/>
-    <service id="argument_resolver.controller_locator" alias=".service_locator.nEigcwi"/>
+    <service id="argument_resolver.controller_locator" alias=".service_locator.c8PaYgL"/>
     <service id="doctrine.id_generator_locator" alias=".service_locator.W55Po6X"/>
     <service id="twig.loader" alias="twig.loader.native_filesystem"/>
     <service id=".Psr\Log\LoggerInterface $request" alias="monolog.logger.request"/>
@@ -13220,6 +13348,8 @@
     <service id=".service_locator.L.ivR_d" alias=".service_locator.OwMsx8r"/>
     <service id=".service_locator.23Ydx6f" alias=".service_locator.NgPr0wp"/>
     <service id=".service_locator.KNSic_m" alias=".service_locator.n60qnZK"/>
+    <service id=".service_locator.BaF.vtQ" alias=".service_locator.IU8TuTU"/>
+    <service id=".service_locator.3aAg6C." alias=".service_locator.kVZvsIK"/>
     <service id=".service_locator.0ekWYPZ" alias=".service_locator.z0A7H.F"/>
     <service id=".service_locator.a4BGQuG" alias=".service_locator.j4Wlmfc"/>
     <service id=".service_locator.qG0FeeQ" alias=".service_locator.eTqhGjo"/>

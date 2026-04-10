@@ -164,4 +164,20 @@ class ProfileController extends AbstractController
     {
         return $this->redirectToRoute('app_profile_settings');
     }
+    #[Route('/profile/2fa', name: 'app_profile_2fa', methods: ['GET'])]
+    public function twofa(): Response
+    {
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+
+        $profileForm  = $this->createForm(ProfileFormType::class, $user);
+        $securityForm = $this->createForm(SecuritySettingsFormType::class);
+
+        return $this->render('profile/settings.html.twig', [
+            'user'         => $user,
+            'profileForm'  => $profileForm->createView(),
+            'securityForm' => $securityForm->createView(),
+            'activeTab'    => '2fa',
+        ]);
+    }
 }

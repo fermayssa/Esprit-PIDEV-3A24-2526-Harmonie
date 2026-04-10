@@ -111,12 +111,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(name: 'face_image_path', type: Types::STRING, length: 500, nullable: true)]
     private ?string $faceImagePath = null;
 
+    #[ORM\Column(name: 'face_id_enabled', type: Types::BOOLEAN, options: ['default' => false])]
+    private bool $faceIdEnabled = false;
+
     // ── Symfony UserInterface ──────────────────────────────────────────────
 
-    public function getUserIdentifier(): string
-    {
-        return $this->userEmail;
-    }
+    public function getUserIdentifier(): string { return $this->userEmail; }
 
     public function getRoles(): array
     {
@@ -125,21 +125,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             : ['ROLE_USER'];
     }
 
-    public function getPassword(): string
-    {
-        return $this->userPassword;
-    }
-
+    public function getPassword(): string { return $this->userPassword; }
     public function eraseCredentials(): void {}
 
-    // ── Aliases for Twig templates ────────────────────────────────────────
-
+    // ── Aliases ────────────────────────────────────────────────────────────
     public function getFirstName(): string { return $this->userPrenom; }
     public function getLastName(): string  { return $this->userNom; }
     public function getEmail(): string     { return $this->userEmail; }
 
     // ── Getters / Setters ─────────────────────────────────────────────────
-
     public function getUserId(): ?int { return $this->userId; }
     public function getId(): ?int     { return $this->userId; }
 
@@ -191,4 +185,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getFaceImagePath(): ?string { return $this->faceImagePath; }
     public function setFaceImagePath(?string $v): self { $this->faceImagePath = $v; return $this; }
+
+    public function isFaceIdEnabled(): bool { return $this->faceIdEnabled; }
+    public function getFaceIdEnabled(): bool { return $this->faceIdEnabled; }
+    public function setFaceIdEnabled(bool $v): self { $this->faceIdEnabled = $v; return $this; }
 }

@@ -30,15 +30,16 @@ security:
                 target: app_login
             remember_me:
                 secret: '%kernel.secret%'
-                lifetime: 10800              # ← 3 heures (3 × 60 × 60)
-                always_remember_me: true     # ← Actif automatiquement à chaque login
+                lifetime: 10800
+                always_remember_me: true
 
     role_hierarchy:
         ROLE_ADMIN: [ROLE_USER]
 
     access_control:
-        - { path: ^/login,    roles: PUBLIC_ACCESS }
-        - { path: ^/register, roles: PUBLIC_ACCESS }
-        - { path: ^/admin,    roles: ROLE_ADMIN }
-        - { path: ^/profile,  roles: ROLE_USER }
-        - { path: ^/,         roles: ROLE_USER }
+        - { path: ^/login,        roles: PUBLIC_ACCESS }
+        - { path: ^/register,     roles: PUBLIC_ACCESS }
+        - { path: ^/face-verify,  roles: PUBLIC_ACCESS }
+        - { path: ^/admin,        roles: ROLE_ADMIN }
+        - { path: ^/profile,      roles: ROLE_USER }
+        - { path: ^/,             roles: ROLE_USER }
