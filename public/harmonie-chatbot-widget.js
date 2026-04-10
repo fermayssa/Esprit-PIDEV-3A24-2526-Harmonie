@@ -448,6 +448,11 @@ Réponds de façon claire, concise et bienveillante avec des emojis appropriés.
         const sendBtn  = chatbox.querySelector('.hcw-send-btn');
         const closeBtn = chatbox.querySelector('.hcw-header-close');
 
+        // Injection des tâches du backend si dispo
+        if (window.HARMONIE_TASKS && Array.isArray(window.HARMONIE_TASKS)) {
+            state.tasks = window.HARMONIE_TASKS;
+        }
+
         addMessage(getWelcomeHTML(detectPageContext()), 'bot', true);
 
         let isOpen = false;

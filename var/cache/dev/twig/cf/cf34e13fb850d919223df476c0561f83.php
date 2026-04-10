@@ -391,8 +391,42 @@ class __TwigTemplate_4401aa8db7481547c6babf2a9ded752f extends Template
 </div>
 
 </main>
+<script>
+window.HARMONIE_TASKS = [
+    ...(";
+        // line 241
+        yield json_encode(CoreExtension::getAttribute($this->env, $this->source, (isset($context["columns"]) || array_key_exists("columns", $context) ? $context["columns"] : (function () { throw new RuntimeError('Variable "columns" does not exist.', 241, $this->source); })()), "A_FAIRE", [], "any", false, false, false, 241));
+        yield ").map(t => ({
+        id: t.id,
+        title: t.nom,
+        priority: t.priorite ?? 'moyenne',
+        dueDate: t.deadline ?? '',
+        completed: false
+    })),
+    ...(";
+        // line 248
+        yield json_encode(CoreExtension::getAttribute($this->env, $this->source, (isset($context["columns"]) || array_key_exists("columns", $context) ? $context["columns"] : (function () { throw new RuntimeError('Variable "columns" does not exist.', 248, $this->source); })()), "EN_COURS", [], "any", false, false, false, 248));
+        yield ").map(t => ({
+        id: t.id,
+        title: t.nom,
+        priority: t.priorite ?? 'moyenne',
+        dueDate: t.deadline ?? '',
+        completed: false
+    })),
+    ...(";
+        // line 255
+        yield json_encode(CoreExtension::getAttribute($this->env, $this->source, (isset($context["columns"]) || array_key_exists("columns", $context) ? $context["columns"] : (function () { throw new RuntimeError('Variable "columns" does not exist.', 255, $this->source); })()), "TERMINEE", [], "any", false, false, false, 255));
+        yield ").map(t => ({
+        id: t.id,
+        title: t.nom,
+        priority: t.priorite ?? 'moyenne',
+        dueDate: t.deadline ?? '',
+        completed: true
+    }))
+];
+</script>
 <script src=\"";
-        // line 239
+        // line 264
         yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl("harmonie-chatbot-widget.js"), "html", null, true);
         yield "\"></script>
 ";
@@ -405,7 +439,7 @@ class __TwigTemplate_4401aa8db7481547c6babf2a9ded752f extends Template
         yield from [];
     }
 
-    // line 242
+    // line 267
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -418,10 +452,10 @@ class __TwigTemplate_4401aa8db7481547c6babf2a9ded752f extends Template
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "body_javascripts"));
 
-        // line 243
+        // line 268
         yield "    <script src=\"https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js\" crossorigin=\"anonymous\"></script>
     <script src=\"";
-        // line 244
+        // line 269
         yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl("harmonie/js/export-handler.js"), "html", null, true);
         yield "\"></script>
     <script>
@@ -765,7 +799,7 @@ class __TwigTemplate_4401aa8db7481547c6babf2a9ded752f extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  730 => 23,  724 => 20,  721 => 19,  715 => 17,  712 => 16,  706 => 13,  693 => 9,  691 => 8,  687 => 7,  682 => 6,  679 => 5,  676 => 4,  657 => 3,  425 => 244,  422 => 243,  409 => 242,  396 => 239,  390 => 235,  388 => 234,  367 => 215,  358 => 213,  354 => 212,  344 => 204,  335 => 202,  331 => 201,  321 => 193,  312 => 191,  308 => 190,  295 => 180,  286 => 174,  281 => 172,  277 => 171,  273 => 170,  268 => 167,  266 => 166,  253 => 165,  114 => 36,  110 => 35,  105 => 34,  92 => 33,  69 => 31,  58 => 1,  56 => 29,  43 => 1,);
+        return array (  764 => 23,  758 => 20,  755 => 19,  749 => 17,  746 => 16,  740 => 13,  727 => 9,  725 => 8,  721 => 7,  716 => 6,  713 => 5,  710 => 4,  691 => 3,  459 => 269,  456 => 268,  443 => 267,  430 => 264,  418 => 255,  408 => 248,  398 => 241,  390 => 235,  388 => 234,  367 => 215,  358 => 213,  354 => 212,  344 => 204,  335 => 202,  331 => 201,  321 => 193,  312 => 191,  308 => 190,  295 => 180,  286 => 174,  281 => 172,  277 => 171,  273 => 170,  268 => 167,  266 => 166,  253 => 165,  114 => 36,  110 => 35,  105 => 34,  92 => 33,  69 => 31,  58 => 1,  56 => 29,  43 => 1,);
     }
 
     public function getSourceContext(): Source
@@ -1008,6 +1042,31 @@ class __TwigTemplate_4401aa8db7481547c6babf2a9ded752f extends Template
 </div>
 
 </main>
+<script>
+window.HARMONIE_TASKS = [
+    ...({{ columns.A_FAIRE|json_encode|raw }}).map(t => ({
+        id: t.id,
+        title: t.nom,
+        priority: t.priorite ?? 'moyenne',
+        dueDate: t.deadline ?? '',
+        completed: false
+    })),
+    ...({{ columns.EN_COURS|json_encode|raw }}).map(t => ({
+        id: t.id,
+        title: t.nom,
+        priority: t.priorite ?? 'moyenne',
+        dueDate: t.deadline ?? '',
+        completed: false
+    })),
+    ...({{ columns.TERMINEE|json_encode|raw }}).map(t => ({
+        id: t.id,
+        title: t.nom,
+        priority: t.priorite ?? 'moyenne',
+        dueDate: t.deadline ?? '',
+        completed: true
+    }))
+];
+</script>
 <script src=\"{{ asset('harmonie-chatbot-widget.js') }}\"></script>
 {% endblock %}
 

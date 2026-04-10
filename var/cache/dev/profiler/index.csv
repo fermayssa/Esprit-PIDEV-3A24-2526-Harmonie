@@ -483,3 +483,10 @@ cd6e73,127.0.0.1,GET,http://127.0.0.1:8000/forum,1775827982,,200,request
 98440c,127.0.0.1,GET,http://127.0.0.1:8000/tache/index,1775828177,,200,request
 54ac54,127.0.0.1,GET,http://127.0.0.1:8000/evenement/index,1775828227,,200,request
 467ec6,127.0.0.1,GET,http://127.0.0.1:8000/tache/index,1775828229,,200,request
+4722aa,127.0.0.1,GET,http://127.0.0.1:8000/tache/index,1775829013,,200,request
+d06375,127.0.0.1,GET,http://127.0.0.1:8000/tache/index,1775829036,,200,request
+8ea049,127.0.0.1,GET,http://127.0.0.1:8000/tache/index,1775829058,,200,request
+f87b38,127.0.0.1,GET,http://127.0.0.1:8000/tache/index,1775829145,,200,request
+6f06f9,127.0.0.1,POST,http://127.0.0.1:8000/tache/4/statut,1775829148,,200,request
+a63432,127.0.0.1,POST,http://127.0.0.1:8000/tache/11/statut,1775829150,,200,request
+196c90,127.0.0.1,GET,http://127.0.0.1:8000/evenement/index,1775829153,,200,request

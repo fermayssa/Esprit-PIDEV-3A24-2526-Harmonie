@@ -236,6 +236,31 @@
 </div>
 
 </main>
+<script>
+window.HARMONIE_TASKS = [
+    ...({{ columns.A_FAIRE|json_encode|raw }}).map(t => ({
+        id: t.id,
+        title: t.nom,
+        priority: t.priorite ?? 'moyenne',
+        dueDate: t.deadline ?? '',
+        completed: false
+    })),
+    ...({{ columns.EN_COURS|json_encode|raw }}).map(t => ({
+        id: t.id,
+        title: t.nom,
+        priority: t.priorite ?? 'moyenne',
+        dueDate: t.deadline ?? '',
+        completed: false
+    })),
+    ...({{ columns.TERMINEE|json_encode|raw }}).map(t => ({
+        id: t.id,
+        title: t.nom,
+        priority: t.priorite ?? 'moyenne',
+        dueDate: t.deadline ?? '',
+        completed: true
+    }))
+];
+</script>
 <script src="{{ asset('harmonie-chatbot-widget.js') }}"></script>
 {% endblock %}
 
