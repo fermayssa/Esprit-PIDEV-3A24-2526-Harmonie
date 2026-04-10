@@ -750,6 +750,12 @@
     <service id="App\Form\AdminSalleType" class="App\Form\AdminSalleType" autowire="true" autoconfigure="true">
       <tag name="form.type" csrf_token_id="%.form.type_extension.csrf.token_id%"/>
     </service>
+    <service id="App\Form\CategorieType" class="App\Form\CategorieType" autowire="true" autoconfigure="true">
+      <tag name="form.type" csrf_token_id="%.form.type_extension.csrf.token_id%"/>
+    </service>
+    <service id="App\Form\CommentaireType" class="App\Form\CommentaireType" autowire="true" autoconfigure="true">
+      <tag name="form.type" csrf_token_id="%.form.type_extension.csrf.token_id%"/>
+    </service>
     <service id="App\Form\ConseilType" class="App\Form\ConseilType" autowire="true" autoconfigure="true">
       <tag name="form.type" csrf_token_id="%.form.type_extension.csrf.token_id%"/>
     </service>
@@ -757,6 +763,9 @@
       <tag name="form.type" csrf_token_id="%.form.type_extension.csrf.token_id%"/>
     </service>
     <service id="App\Form\JournalHumeurType" class="App\Form\JournalHumeurType" autowire="true" autoconfigure="true">
+      <tag name="form.type" csrf_token_id="%.form.type_extension.csrf.token_id%"/>
+    </service>
+    <service id="App\Form\PostType" class="App\Form\PostType" autowire="true" autoconfigure="true">
       <tag name="form.type" csrf_token_id="%.form.type_extension.csrf.token_id%"/>
     </service>
     <service id="App\Form\ProfileFormType" class="App\Form\ProfileFormType" autowire="true" autoconfigure="true">
@@ -1895,9 +1904,12 @@
       <argument type="collection">
         <argument>App\Form\AdminEditUserFormType</argument>
         <argument>App\Form\AdminSalleType</argument>
+        <argument>App\Form\CategorieType</argument>
+        <argument>App\Form\CommentaireType</argument>
         <argument>App\Form\ConseilType</argument>
         <argument>App\Form\EvenementType</argument>
         <argument>App\Form\JournalHumeurType</argument>
+        <argument>App\Form\PostType</argument>
         <argument>App\Form\ProfileFormType</argument>
         <argument>App\Form\RegistrationFormType</argument>
         <argument>App\Form\RegistrationStep2FormType</argument>
@@ -4660,7 +4672,7 @@
       <argument type="service" id="form.registry"/>
     </service>
     <service id="form.extension" class="Symfony\Component\Form\Extension\DependencyInjection\DependencyInjectionExtension">
-      <argument type="service" id=".service_locator.l4j3mTc"/>
+      <argument type="service" id=".service_locator.nlqEwTn"/>
       <argument type="collection">
         <argument key="Symfony\Component\Form\Extension\Core\Type\FormType" type="iterator">
           <argument type="service" id="form.type_extension.form.transformation_failure_handling"/>
@@ -4771,9 +4783,12 @@
       <argument type="collection">
         <argument key="App\Form\AdminEditUserFormType">submit</argument>
         <argument key="App\Form\AdminSalleType">submit</argument>
+        <argument key="App\Form\CategorieType">submit</argument>
+        <argument key="App\Form\CommentaireType">submit</argument>
         <argument key="App\Form\ConseilType">submit</argument>
         <argument key="App\Form\EvenementType">submit</argument>
         <argument key="App\Form\JournalHumeurType">submit</argument>
+        <argument key="App\Form\PostType">submit</argument>
         <argument key="App\Form\ProfileFormType">submit</argument>
         <argument key="App\Form\RegistrationFormType">submit</argument>
         <argument key="App\Form\RegistrationStep2FormType">submit</argument>
@@ -8632,12 +8647,18 @@
     <service id=".abstract.instanceof.App\Form\AdminEditUserFormType" class="App\Form\AdminEditUserFormType" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\AdminSalleType" class="App\Form\AdminSalleType" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Form\AdminSalleType" class="App\Form\AdminSalleType" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\CategorieType" class="App\Form\CategorieType" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Form\CategorieType" class="App\Form\CategorieType" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\CommentaireType" class="App\Form\CommentaireType" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Form\CommentaireType" class="App\Form\CommentaireType" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\ConseilType" class="App\Form\ConseilType" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Form\ConseilType" class="App\Form\ConseilType" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\EvenementType" class="App\Form\EvenementType" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Form\EvenementType" class="App\Form\EvenementType" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\JournalHumeurType" class="App\Form\JournalHumeurType" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Form\JournalHumeurType" class="App\Form\JournalHumeurType" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\PostType" class="App\Form\PostType" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Form\PostType" class="App\Form\PostType" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\ProfileFormType" class="App\Form\ProfileFormType" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Form\ProfileFormType" class="App\Form\ProfileFormType" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\RegistrationFormType" class="App\Form\RegistrationFormType" autowire="true" abstract="true"/>
@@ -10474,14 +10495,17 @@
       <argument type="service" id="argument_resolver.query_parameter_value_resolver"/>
       <argument type="service" id="debug.stopwatch"/>
     </service>
-    <service id=".service_locator.l4j3mTc" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.nlqEwTn" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="App\Form\AdminEditUserFormType" type="service_closure" id="App\Form\AdminEditUserFormType"/>
         <argument key="App\Form\AdminSalleType" type="service_closure" id="App\Form\AdminSalleType"/>
+        <argument key="App\Form\CategorieType" type="service_closure" id="App\Form\CategorieType"/>
+        <argument key="App\Form\CommentaireType" type="service_closure" id="App\Form\CommentaireType"/>
         <argument key="App\Form\ConseilType" type="service_closure" id="App\Form\ConseilType"/>
         <argument key="App\Form\EvenementType" type="service_closure" id="App\Form\EvenementType"/>
         <argument key="App\Form\JournalHumeurType" type="service_closure" id="App\Form\JournalHumeurType"/>
+        <argument key="App\Form\PostType" type="service_closure" id="App\Form\PostType"/>
         <argument key="App\Form\ProfileFormType" type="service_closure" id="App\Form\ProfileFormType"/>
         <argument key="App\Form\RegistrationFormType" type="service_closure" id="App\Form\RegistrationFormType"/>
         <argument key="App\Form\RegistrationStep2FormType" type="service_closure" id="App\Form\RegistrationStep2FormType"/>

@@ -90,56 +90,45 @@
             {{ cat ? '✏️ Modifier la catégorie' : '➕ Nouvelle catégorie' }}
         </div>
 
-        {% if error %}
-        <div class="error-box">⚠️ {{ error }}</div>
-        {% endif %}
-
         {{ form_start(form) }}
 
-        <div class="form-group">
-            {{ form_label(form.nomCategorie) }}
-             {{ form_widget(form.nomCategorie) }}
-        <div class="char-count"><span id="nomCount">0</span>/100</div>
-            {% if form_errors(form.nomCategorie) %}
-            <div class="error-box">⚠️ {{ form_errors(form.nomCategorie) }}</div>
-            {% endif %}
-        </div>
+            <div class="form-group">
+                {{ form_label(form.nomCategorie, 'Nom de la catégorie *', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.nomCategorie) }}
+                {% if form_errors(form.nomCategorie)|length > 0 %}
+                    <div class="error-box">⚠️ {{ form_errors(form.nomCategorie) }}</div>
+                {% endif %}
+                <div class="char-count"><span id="nomCount">0</span>/100</div>
+            </div>
 
-        <div class="form-group">
-             {{ form_label(form.description) }}
-            {{ form_widget(form.description) }}
-            {% if form_errors(form.description) %}
-            <div class="error-box">⚠️ {{ form_errors(form.description) }}</div>
-            {% endif %}
-        </div>
+            <div class="form-group">
+                {{ form_label(form.description, 'Description', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.description) }}
+                {% if form_errors(form.description)|length > 0 %}
+                    <div class="error-box">⚠️ {{ form_errors(form.description) }}</div>
+                {% endif %}
+            </div>
 
-        <div class="form-actions">
-            <a href="{{ path('forum') }}" class="btn-cancel">Annuler</a>
-         <button type="submit" class="btn-submit">
-            {{ cat ? '💾 Enregistrer' : '➕ Créer la catégorie' }}
-             </button>
-        </div>
+            <div class="form-actions">
+                <a href="{{ path('forum') }}" class="btn-cancel">Annuler</a>
+                <button type="submit" class="btn-submit">
+                    {{ cat ? '💾 Enregistrer' : '➕ Créer la catégorie' }}
+                </button>
+            </div>
 
-{{ form_end(form) }}
-
+        {{ form_end(form) }}
     </div>
 </main>
 
+{% block javascripts %}
 <script>
-    const nomInput = document.getElementById('nomInput');
+    const nomInput = document.getElementById('categorie_nomCategorie');
     const nomCount = document.getElementById('nomCount');
-    function updateCount() { nomCount.textContent = nomInput.value.length; }
-    nomInput.addEventListener('input', updateCount);
-    updateCount();
-
-    // Validation côté client
-    document.getElementById('catForm').addEventListener('submit', function(e) {
-        const nom = nomInput.value.trim();
-        if (nom.length < 3) {
-            e.preventDefault();
-            nomInput.classList.add('error');
-            nomInput.focus();
-        }
-    });
+    if (nomInput && nomCount) {
+        function updateCount() { nomCount.textContent = nomInput.value.length; }
+        nomInput.addEventListener('input', updateCount);
+        updateCount();
+    }
 </script>
+{% endblock %}
 {% endblock %}
