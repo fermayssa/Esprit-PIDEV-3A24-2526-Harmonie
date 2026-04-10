@@ -13,11 +13,12 @@ class CommentaireType extends AbstractType
     {
         $builder
             ->add('contenu', TextareaType::class, [
-                'label' => 'Ton commentaire *',
+                'label' => false,
                 'attr'  => [
                     'placeholder' => 'Écris ton commentaire...',
                     'class'       => 'form-textarea',
                 ],
+                'error_bubbling' => false,
             ]);
     }
 

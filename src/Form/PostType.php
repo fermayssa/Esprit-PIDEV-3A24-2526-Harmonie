@@ -14,19 +14,21 @@ class PostType extends AbstractType
     {
         $builder
             ->add('titre', TextType::class, [
-                'label' => 'Titre *',
+                'label' => false,  // ← on gère le label manuellement dans Twig
                 'attr'  => [
                     'placeholder' => 'Un titre clair et précis...',
                     'class'       => 'form-input',
                     'maxlength'   => 150,
                 ],
+                'error_bubbling' => false,
             ])
             ->add('contenu', TextareaType::class, [
-                'label' => 'Contenu *',
+                'label' => false,
                 'attr'  => [
                     'placeholder' => 'Développe ta question ou ton sujet...',
                     'class'       => 'form-textarea',
                 ],
+                'error_bubbling' => false,
             ]);
     }
 

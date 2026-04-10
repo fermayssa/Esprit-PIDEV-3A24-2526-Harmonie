@@ -14,20 +14,22 @@ class CategorieType extends AbstractType
     {
         $builder
             ->add('nomCategorie', TextType::class, [
-                'label' => 'Nom de la catégorie *',
+                'label' => false,
                 'attr'  => [
                     'placeholder' => 'Ex: Programmation, Base de données...',
                     'class'       => 'form-input',
                     'maxlength'   => 100,
                 ],
+                'error_bubbling' => false,
             ])
             ->add('description', TextareaType::class, [
-                'label'    => 'Description',
+                'label'    => false,
                 'required' => false,
                 'attr'     => [
                     'placeholder' => 'Décris brièvement cette catégorie...',
                     'class'       => 'form-textarea',
                 ],
+                'error_bubbling' => false,
             ]);
     }
 

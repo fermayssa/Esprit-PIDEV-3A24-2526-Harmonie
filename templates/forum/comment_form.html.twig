@@ -104,12 +104,12 @@
         {{ form_start(form) }}
 
             <div class="form-group">
-    {{ form_label(form.contenu, 'Ton commentaire *', {'label_attr': {'class': 'form-label'}}) }}
-    {{ form_widget(form.contenu, {'attr': {'class': 'form-textarea'}}) }}
-    {% for error in form.contenu.vars.errors %}
-        <div class="error-box">⚠️ {{ error.message }}</div>
-    {% endfor %}
-</div>
+                <label class="form-label">Ton commentaire *</label>
+                {{ form_widget(form.contenu) }}
+                {% for error in form.contenu.vars.errors %}
+                    <div class="error-box">⚠️ {{ error.message }}</div>
+                {% endfor %}
+            </div>
 
             <div class="form-actions">
                 <a href="{{ path('forum_posts', {id: post.idCategorie}) }}" class="btn-cancel">Annuler</a>

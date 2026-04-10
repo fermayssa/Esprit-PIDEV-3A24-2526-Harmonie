@@ -299,13 +299,23 @@
                       class="add-comment-form"
                       onsubmit="return validateComment(this)">
                     <div class="add-comment-avatar">U</div>
-                    <div class="add-comment-right">
-                        <textarea name="contenu" class="add-comment-input"
-                                  placeholder="Rejoindre la conversation..." rows="2"></textarea>
-                        <div class="add-comment-actions">
-                            <button type="submit" class="btn-send-comment">💬 Commenter</button>
+
+                 <div class="add-comment-right">
+                    {% set flashKey = 'comment_error_' ~ post.idPost %}
+                    {% set flashErrors = app.flashes(flashKey) %}
+                    {% for msg in flashErrors %}
+                        <div style="color:#E05252;font-size:12px;font-weight:600;margin-bottom:6px;">
+                            ⚠️ {{ msg }}
                         </div>
+                    {% endfor %}
+                    <textarea name="contenu"
+                            class="add-comment-input {{ flashErrors is not empty ? 'error' }}"
+                            placeholder="Rejoindre la conversation..." rows="2"></textarea>
+                    <div class="add-comment-actions">
+                        <button type="submit" class="btn-send-comment">💬 Commenter</button>
                     </div>
+                </div>
+
                 </form>
 
                 <div class="comments-divider"></div>
@@ -399,8 +409,24 @@ async function toggleLike(btn) {
         btn.dataset.liked = data.liked ? '1' : '0';
     } catch(e) { console.error('Like error', e); }
 }
+//--------------------------------------------------
+
+// Auto-ouvrir la section commentaires si erreur flash
+(function() {
+    const params = new URLSearchParams(window.location.search);
+    const openPost = params.get('open_post');
+    if (openPost) {
+        const section = document.getElementById('comments-' + openPost);
+        const btn = document.querySelector(`[onclick*="comments-${openPost}"]`);
+        if (section) {
+            section.classList.add('open');
+            if (btn) btn.classList.add('open');
+        }
+    }
+})();
 
 // ── TOGGLE COMMENTAIRES ────────────────────────────
+
 function toggleComments(id, btn) {
     const section = document.getElementById(id);
     const isOpen  = section.classList.toggle('open');

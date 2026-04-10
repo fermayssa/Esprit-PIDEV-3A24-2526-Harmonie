@@ -270,22 +270,32 @@ public function editPost(int $id, Request $request, EntityManagerInterface $em):
     // ════════════════════════════════════════════════
 
     #[Route('/forum/post/{idPost}/comment/new', name: 'forum_comment_new', methods: ['POST'])]
-    public function newComment(int $idPost, Request $request, EntityManagerInterface $em): Response
-    {
-        $post = $em->getRepository(Post::class)->find($idPost);
-        if (!$post) throw $this->createNotFoundException();
-        $contenu = trim($request->request->get('contenu', ''));
-        if (strlen($contenu) >= 3) {
-            $c = new Commentaire();
-            $c->setContenu($contenu);
-            $c->setIdPost($idPost);
-            $c->setUserId($this->currentUserId);
-            $c->setDateCommentaire(new \DateTime());
-            $em->persist($c);
-            $em->flush();
-        }
-        return $this->redirectToRoute('forum_posts', ['id' => $post->getIdCategorie()]);
+public function newComment(int $idPost, Request $request, EntityManagerInterface $em): Response
+{
+    $post = $em->getRepository(Post::class)->find($idPost);
+    if (!$post) throw $this->createNotFoundException();
+
+    $contenu = trim($request->request->get('contenu', ''));
+
+    if (strlen($contenu) < 3) {
+        // Flash avec l'ID du post pour afficher l'erreur sur le bon post
+        $this->addFlash('comment_error_' . $idPost, 'Le commentaire doit contenir au moins 3 caractères.');
+        return $this->redirectToRoute('forum_posts', [
+            'id'       => $post->getIdCategorie(),
+            'open_post' => $idPost,  // pour rouvrir la section commentaires
+        ]);
     }
+
+    $c = new Commentaire();
+    $c->setContenu($contenu);
+    $c->setIdPost($idPost);
+    $c->setUserId($this->currentUserId);
+    $c->setDateCommentaire(new \DateTime());
+    $em->persist($c);
+    $em->flush();
+
+    return $this->redirectToRoute('forum_posts', ['id' => $post->getIdCategorie()]);
+}
 
     #[Route('/forum/comment/{id}/edit', name: 'forum_comment_edit', methods: ['GET','POST'])]
 public function editComment(int $id, Request $request, EntityManagerInterface $em): Response

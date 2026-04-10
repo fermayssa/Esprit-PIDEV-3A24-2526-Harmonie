@@ -93,21 +93,21 @@
         {{ form_start(form) }}
 
             <div class="form-group">
-    {{ form_label(form.nomCategorie, 'Nom de la catégorie *', {'label_attr': {'class': 'form-label'}}) }}
-    {{ form_widget(form.nomCategorie, {'attr': {'class': 'form-input', 'maxlength': '100'}}) }}
-    <div class="char-count"><span id="nomCount">0</span>/100</div>
-    {% for error in form.nomCategorie.vars.errors %}
-        <div class="error-box">⚠️ {{ error.message }}</div>
-    {% endfor %}
-</div>
+                <label class="form-label">Nom de la catégorie *</label>
+                {{ form_widget(form.nomCategorie) }}
+                {% for error in form.nomCategorie.vars.errors %}
+                    <div class="error-box">⚠️ {{ error.message }}</div>
+                {% endfor %}
+                <div class="char-count"><span id="nomCount">0</span>/100</div>
+            </div>
 
-<div class="form-group">
-    {{ form_label(form.description, 'Description', {'label_attr': {'class': 'form-label'}}) }}
-    {{ form_widget(form.description, {'attr': {'class': 'form-textarea'}}) }}
-    {% for error in form.description.vars.errors %}
-        <div class="error-box">⚠️ {{ error.message }}</div>
-    {% endfor %}
-</div>
+            <div class="form-group">
+                <label class="form-label">Description</label>
+                {{ form_widget(form.description) }}
+                {% for error in form.description.vars.errors %}
+                    <div class="error-box">⚠️ {{ error.message }}</div>
+                {% endfor %}
+            </div>
 
             <div class="form-actions">
                 <a href="{{ path('forum') }}" class="btn-cancel">Annuler</a>
