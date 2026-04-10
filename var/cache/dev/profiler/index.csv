@@ -663,3 +663,9 @@ ac4d03,127.0.0.1,GET,http://127.0.0.1:8000/forum/categorie/25,1775851377,,200,re
 c713ee,127.0.0.1,GET,http://127.0.0.1:8000/forum/categorie/30,1775851409,,200,request
 3aeae0,127.0.0.1,GET,http://127.0.0.1:8000/forum/categorie/30,1775851788,,200,request
 64c5b9,127.0.0.1,GET,http://127.0.0.1:8000/forum/categorie/30,1775851870,,200,request
+5fba21,127.0.0.1,GET,http://127.0.0.1:8000/forum/categorie/30,1775852146,,200,request
+6c6e00,127.0.0.1,POST,http://127.0.0.1:8000/forum/post/66/comment/new,1775852161,,302,request
+29160b,127.0.0.1,GET,http://127.0.0.1:8000/forum/categorie/30,1775852161,,200,request
+5df0d4,127.0.0.1,GET,http://127.0.0.1:8000/forum/comment/66/edit,1775852167,,200,request
+136750,127.0.0.1,GET,http://127.0.0.1:8000/forum/comment/66/edit,1775852171,f79efc,500,request
+f79efc,127.0.0.1,POST,http://127.0.0.1:8000/forum/comment/66/edit,1775852171,,500,request

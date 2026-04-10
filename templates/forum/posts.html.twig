@@ -301,15 +301,8 @@
                     <div class="add-comment-avatar">U</div>
 
                  <div class="add-comment-right">
-                    {% set flashKey = 'comment_error_' ~ post.idPost %}
-                    {% set flashErrors = app.flashes(flashKey) %}
-                    {% for msg in flashErrors %}
-                        <div style="color:#E05252;font-size:12px;font-weight:600;margin-bottom:6px;">
-                            ⚠️ {{ msg }}
-                        </div>
-                    {% endfor %}
                     <textarea name="contenu"
-                            class="add-comment-input {{ flashErrors is not empty ? 'error' }}"
+                            class="add-comment-input"
                             placeholder="Rejoindre la conversation..." rows="2"></textarea>
                     <div class="add-comment-actions">
                         <button type="submit" class="btn-send-comment">💬 Commenter</button>
@@ -437,13 +430,28 @@ function toggleComments(id, btn) {
 // ── VALIDATION COMMENTAIRE ─────────────────────────
 function validateComment(form) {
     const ta = form.querySelector('textarea');
+    
+    // Supprimer l'ancien message d'erreur s'il existe
+    const oldError = form.querySelector('.comment-error-msg');
+    if (oldError) oldError.remove();
+
     if (ta.value.trim().length < 3) {
         ta.classList.add('error');
         ta.focus();
+
+        // Créer et insérer le message d'erreur
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'comment-error-msg';
+        errorDiv.style.cssText = 'color:#E05252;font-size:12px;font-weight:600;margin-top:6px;';
+        errorDiv.textContent = '⚠️ Le commentaire doit contenir au moins 3 caractères.';
+        ta.insertAdjacentElement('afterend', errorDiv);
+
         return false;
     }
+
     ta.classList.remove('error');
     return true;
 }
+
 </script>
 {% endblock %}
