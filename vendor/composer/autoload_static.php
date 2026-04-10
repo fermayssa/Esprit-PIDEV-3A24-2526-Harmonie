@@ -171,6 +171,7 @@ class ComposerStaticInitd98bd09117ca527cc5140ad21a61849a
             'Symfony\\Component\\Mime\\' => 23,
             'Symfony\\Component\\Messenger\\Bridge\\Doctrine\\' => 44,
             'Symfony\\Component\\Messenger\\' => 28,
+            'Symfony\\Component\\Mercure\\' => 26,
             'Symfony\\Component\\Mailer\\' => 25,
             'Symfony\\Component\\Intl\\' => 23,
             'Symfony\\Component\\HttpKernel\\' => 29,
@@ -197,6 +198,7 @@ class ComposerStaticInitd98bd09117ca527cc5140ad21a61849a
             'Symfony\\Bundle\\TwigBundle\\' => 26,
             'Symfony\\Bundle\\SecurityBundle\\' => 30,
             'Symfony\\Bundle\\MonologBundle\\' => 29,
+            'Symfony\\Bundle\\MercureBundle\\' => 29,
             'Symfony\\Bundle\\MakerBundle\\' => 27,
             'Symfony\\Bundle\\FrameworkBundle\\' => 31,
             'Symfony\\Bundle\\DebugBundle\\' => 27,
@@ -204,6 +206,7 @@ class ComposerStaticInitd98bd09117ca527cc5140ad21a61849a
             'Symfony\\Bridge\\Monolog\\' => 23,
             'Symfony\\Bridge\\Doctrine\\' => 24,
             'Svg\\' => 4,
+            'StellaMaris\\Clock\\' => 18,
             'Sabberworm\\CSS\\' => 15,
         ),
         'P' =>
@@ -224,6 +227,11 @@ class ComposerStaticInitd98bd09117ca527cc5140ad21a61849a
             'Monolog\\' => 8,
             'Matrix\\' => 7,
             'Masterminds\\' => 12,
+        ),
+        'L' =>
+        array (
+            'Lcobucci\\JWT\\' => 13,
+            'Lcobucci\\Clock\\' => 15,
         ),
         'F' =>
         array (
@@ -451,6 +459,10 @@ class ComposerStaticInitd98bd09117ca527cc5140ad21a61849a
         array (
             0 => __DIR__ . '/..' . '/symfony/messenger',
         ),
+        'Symfony\\Component\\Mercure\\' =>
+        array (
+            0 => __DIR__ . '/..' . '/symfony/mercure/src',
+        ),
         'Symfony\\Component\\Mailer\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/mailer',
@@ -555,6 +567,10 @@ class ComposerStaticInitd98bd09117ca527cc5140ad21a61849a
         array (
             0 => __DIR__ . '/..' . '/symfony/monolog-bundle/src',
         ),
+        'Symfony\\Bundle\\MercureBundle\\' =>
+        array (
+            0 => __DIR__ . '/..' . '/symfony/mercure-bundle/src',
+        ),
         'Symfony\\Bundle\\MakerBundle\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/maker-bundle/src',
@@ -582,6 +598,10 @@ class ComposerStaticInitd98bd09117ca527cc5140ad21a61849a
         'Svg\\' =>
         array (
             0 => __DIR__ . '/..' . '/dompdf/php-svg-lib/src/Svg',
+        ),
+        'StellaMaris\\Clock\\' =>
+        array (
+            0 => __DIR__ . '/..' . '/stella-maris/clock/src',
         ),
         'Sabberworm\\CSS\\' =>
         array (
@@ -638,6 +658,14 @@ class ComposerStaticInitd98bd09117ca527cc5140ad21a61849a
         'Masterminds\\' =>
         array (
             0 => __DIR__ . '/..' . '/masterminds/html5/src',
+        ),
+        'Lcobucci\\JWT\\' =>
+        array (
+            0 => __DIR__ . '/..' . '/lcobucci/jwt/src',
+        ),
+        'Lcobucci\\Clock\\' =>
+        array (
+            0 => __DIR__ . '/..' . '/lcobucci/clock/src',
         ),
         'FontLib\\' =>
         array (

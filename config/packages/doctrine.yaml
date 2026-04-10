@@ -5,7 +5,7 @@ doctrine:
         # utilise un driver de plateforme générique qui fait échouer les INSERT
         # silencieusement (pas d'exception visible, pas d'écriture en BDD).
         server_version: '8.2.0'
-        schema_filter: '/^(user|session_meditation|conseil|journal_humeur|doctrine_migration_versions)$/'
+        schema_filter: '/^(user|conversation|message)$/'
         profiling_collect_backtrace: '%kernel.debug%'
         use_savepoints: true
     orm:

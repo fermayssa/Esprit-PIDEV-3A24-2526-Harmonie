@@ -9,8 +9,8 @@
     <parameter key="kernel.runtime_mode.cli">%env(not:default:kernel.runtime_mode.web:)%</parameter>
     <parameter key="kernel.runtime_mode.worker">%env(bool:default::key:worker:default:kernel.runtime_mode:)%</parameter>
     <parameter key="kernel.debug">true</parameter>
-    <parameter key="kernel.build_dir">C:\xampp\htdocs\gestion-user\var\cache\dev</parameter>
-    <parameter key="kernel.cache_dir">C:\xampp\htdocs\gestion-user\var\cache\dev</parameter>
+    <parameter key="kernel.build_dir">C:/xampp/htdocs/gestion-user/var/cache/dev</parameter>
+    <parameter key="kernel.cache_dir">C:/xampp/htdocs/gestion-user/var/cache/dev</parameter>
     <parameter key="kernel.logs_dir">C:\xampp\htdocs\gestion-user\var\log</parameter>
     <parameter key="kernel.bundles" type="collection">
       <parameter key="FrameworkBundle">Symfony\Bundle\FrameworkBundle\FrameworkBundle</parameter>
@@ -25,6 +25,7 @@
       <parameter key="SecurityBundle">Symfony\Bundle\SecurityBundle\SecurityBundle</parameter>
       <parameter key="MonologBundle">Symfony\Bundle\MonologBundle\MonologBundle</parameter>
       <parameter key="MakerBundle">Symfony\Bundle\MakerBundle\MakerBundle</parameter>
+      <parameter key="MercureBundle">Symfony\Bundle\MercureBundle\MercureBundle</parameter>
     </parameter>
     <parameter key="kernel.bundles_metadata" type="collection">
       <parameter key="FrameworkBundle" type="collection">
@@ -75,6 +76,10 @@
         <parameter key="path">C:\xampp\htdocs\gestion-user\vendor\symfony\maker-bundle</parameter>
         <parameter key="namespace">Symfony\Bundle\MakerBundle</parameter>
       </parameter>
+      <parameter key="MercureBundle" type="collection">
+        <parameter key="path">C:\xampp\htdocs\gestion-user\vendor\symfony\mercure-bundle\src</parameter>
+        <parameter key="namespace">Symfony\Bundle\MercureBundle</parameter>
+      </parameter>
     </parameter>
     <parameter key="kernel.charset">UTF-8</parameter>
     <parameter key="kernel.container_class">App_KernelDevDebugContainer</parameter>
@@ -123,6 +128,9 @@
       <parameter key="Symfony\Bundle\MakerBundle\MakerBundle" type="collection">
         <parameter key="dev">true</parameter>
       </parameter>
+      <parameter key="Symfony\Bundle\MercureBundle\MercureBundle" type="collection">
+        <parameter key="all">true</parameter>
+      </parameter>
     </parameter>
     <parameter key="event_dispatcher.event_aliases" type="collection">
       <parameter key="Symfony\Component\Console\Event\ConsoleCommandEvent">console.command</parameter>
@@ -164,15 +172,15 @@
     <parameter key="translator.logging">false</parameter>
     <parameter key="translator.default_path">C:\xampp\htdocs\gestion-user/translations</parameter>
     <parameter key="debug.error_handler.throw_at">-1</parameter>
-    <parameter key="debug.container.dump">C:\xampp\htdocs\gestion-user\var\cache\dev/App_KernelDevDebugContainer.xml</parameter>
+    <parameter key="debug.container.dump">C:/xampp/htdocs/gestion-user/var/cache/dev/App_KernelDevDebugContainer.xml</parameter>
     <parameter key="router.request_context.host">localhost</parameter>
     <parameter key="router.request_context.scheme">http</parameter>
     <parameter key="router.request_context.base_url">%env(DEFAULT_URI)%</parameter>
     <parameter key="router.resource">kernel::loadRoutes</parameter>
-    <parameter key="router.cache_dir">C:\xampp\htdocs\gestion-user\var\cache\dev</parameter>
+    <parameter key="router.cache_dir">C:/xampp/htdocs/gestion-user/var/cache/dev</parameter>
     <parameter key="request_listener.http_port">80</parameter>
     <parameter key="request_listener.https_port">443</parameter>
-    <parameter key="serializer.mapping.cache.file">C:\xampp\htdocs\gestion-user\var\cache\dev/serialization.php</parameter>
+    <parameter key="serializer.mapping.cache.file">C:/xampp/htdocs/gestion-user/var/cache/dev/serialization.php</parameter>
     <parameter key=".serializer.named_serializers" type="collection"/>
     <parameter key="cache.prefix.seed">_C:\xampp\htdocs\gestion-user.App_KernelDevDebugContainer</parameter>
     <parameter key="session.metadata.storage_key">_sf2_meta</parameter>
@@ -191,11 +199,11 @@
       <parameter key="data-controller">csrf-protection</parameter>
     </parameter>
     <parameter key=".form.type_extension.csrf.token_id">submit</parameter>
-    <parameter key="validator.mapping.cache.file">C:\xampp\htdocs\gestion-user\var\cache\dev/validation.php</parameter>
+    <parameter key="validator.mapping.cache.file">C:/xampp/htdocs/gestion-user/var/cache/dev/validation.php</parameter>
     <parameter key="validator.translation_domain">validators</parameter>
     <parameter key="profiler_listener.only_exceptions">false</parameter>
     <parameter key="profiler_listener.only_main_requests">false</parameter>
-    <parameter key="profiler.storage.dsn">file:C:\xampp\htdocs\gestion-user\var\cache\dev/profiler</parameter>
+    <parameter key="profiler.storage.dsn">file:C:/xampp/htdocs/gestion-user/var/cache/dev/profiler</parameter>
     <parameter key="doctrine.dbal.configuration.class">Doctrine\DBAL\Configuration</parameter>
     <parameter key="doctrine.data_collector.class">Doctrine\Bundle\DoctrineBundle\DataCollector\DoctrineDataCollector</parameter>
     <parameter key="doctrine.dbal.connection.event_manager.class">Symfony\Bridge\Doctrine\ContainerAwareEventManager</parameter>
@@ -272,7 +280,7 @@
     <parameter key="doctrine.orm.auto_generate_proxy_classes">true</parameter>
     <parameter key="doctrine.orm.enable_lazy_ghost_objects">true</parameter>
     <parameter key="doctrine.orm.enable_native_lazy_objects">false</parameter>
-    <parameter key="doctrine.orm.proxy_dir">C:\xampp\htdocs\gestion-user\var\cache\dev/doctrine/orm/Proxies</parameter>
+    <parameter key="doctrine.orm.proxy_dir">C:/xampp/htdocs/gestion-user/var/cache/dev/doctrine/orm/Proxies</parameter>
     <parameter key="doctrine.orm.proxy_namespace">Proxies</parameter>
     <parameter key="doctrine.migrations.preferred_em">null</parameter>
     <parameter key="doctrine.migrations.preferred_connection">null</parameter>
@@ -404,6 +412,10 @@
       <parameter key="serializer.data_collector" type="collection">
         <parameter>serializer</parameter>
         <parameter>@WebProfiler/Collector/serializer.html.twig</parameter>
+      </parameter>
+      <parameter key="data_collector.mercure" type="collection">
+        <parameter>mercure</parameter>
+        <parameter>@Mercure/Collector/mercure.html.twig</parameter>
       </parameter>
       <parameter key="data_collector.config" type="collection">
         <parameter>config</parameter>
@@ -603,6 +615,18 @@
         <argument type="service" id=".service_locator.TJNRSaV.App\Controller\MeditationController"/>
       </call>
     </service>
+    <service id="App\Controller\MessagingController" class="App\Controller\MessagingController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
+      <tag name="routing.controller"/>
+      <tag name="container.service_subscriber"/>
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
+      <argument type="service" id="App\Repository\ConversationRepository"/>
+      <argument type="service" id="App\Repository\MessageRepository"/>
+      <argument type="service" id="App\Repository\UserRepository"/>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.TJNRSaV.App\Controller\MessagingController"/>
+      </call>
+    </service>
     <service id="App\Controller\MockUserController" class="App\Controller\MockUserController" public="true" autowire="true" autoconfigure="true">
       <tag name="controller.service_arguments"/>
       <tag name="routing.controller"/>
@@ -698,6 +722,10 @@
       <tag name="container.excluded" source="because it's a Doctrine entity"/>
       <tag name="container.excluded" source="with #[Doctrine\ORM\Mapping\Entity] attribute"/>
     </service>
+    <service id="App\Entity\Conversation" class="App\Entity\Conversation" autowire="true" autoconfigure="true">
+      <tag name="container.excluded" source="because it's a Doctrine entity"/>
+      <tag name="container.excluded" source="with #[Doctrine\ORM\Mapping\Entity] attribute"/>
+    </service>
     <service id="App\Entity\DemandeReservation" class="App\Entity\DemandeReservation" autowire="true" autoconfigure="true">
       <tag name="container.excluded" source="because it's a Doctrine entity"/>
       <tag name="container.excluded" source="with #[Doctrine\ORM\Mapping\Entity] attribute"/>
@@ -711,6 +739,10 @@
       <tag name="container.excluded" source="with #[Doctrine\ORM\Mapping\Entity] attribute"/>
     </service>
     <service id="App\Entity\JournalHumeur" class="App\Entity\JournalHumeur" autowire="true" autoconfigure="true">
+      <tag name="container.excluded" source="because it's a Doctrine entity"/>
+      <tag name="container.excluded" source="with #[Doctrine\ORM\Mapping\Entity] attribute"/>
+    </service>
+    <service id="App\Entity\Message" class="App\Entity\Message" autowire="true" autoconfigure="true">
       <tag name="container.excluded" source="because it's a Doctrine entity"/>
       <tag name="container.excluded" source="with #[Doctrine\ORM\Mapping\Entity] attribute"/>
     </service>
@@ -750,6 +782,11 @@
       <tag name="container.hot_path"/>
       <argument type="service" id="App\Service\CaptchaService"/>
       <argument type="service" id="router.default"/>
+    </service>
+    <service id="App\EventListener\DebugRequestListener" class="App\EventListener\DebugRequestListener" autowire="true" autoconfigure="true">
+      <tag name="kernel.event_subscriber"/>
+      <tag name="container.hot_path"/>
+      <tag name="container.hot_path"/>
     </service>
     <service id="App\Form\AdminEditUserFormType" class="App\Form\AdminEditUserFormType" autowire="true" autoconfigure="true">
       <tag name="form.type" csrf_token_id="%.form.type_extension.csrf.token_id%"/>
@@ -815,6 +852,10 @@
       <tag name="doctrine.repository_service"/>
       <argument type="service" id="doctrine"/>
     </service>
+    <service id="App\Repository\ConversationRepository" class="App\Repository\ConversationRepository" autowire="true" autoconfigure="true">
+      <tag name="doctrine.repository_service"/>
+      <argument type="service" id="doctrine"/>
+    </service>
     <service id="App\Repository\DemandeReservationRepository" class="App\Repository\DemandeReservationRepository" autowire="true" autoconfigure="true">
       <tag name="doctrine.repository_service"/>
       <argument type="service" id="doctrine"/>
@@ -828,6 +869,10 @@
       <argument type="service" id="doctrine"/>
     </service>
     <service id="App\Repository\JournalHumeurRepository" class="App\Repository\JournalHumeurRepository" autowire="true" autoconfigure="true">
+      <tag name="doctrine.repository_service"/>
+      <argument type="service" id="doctrine"/>
+    </service>
+    <service id="App\Repository\MessageRepository" class="App\Repository\MessageRepository" autowire="true" autoconfigure="true">
       <tag name="doctrine.repository_service"/>
       <argument type="service" id="doctrine"/>
     </service>
@@ -1004,7 +1049,7 @@
       <tag name="container.no_preload"/>
       <argument type="tagged_iterator" tag="kernel.cache_warmer"/>
       <argument>true</argument>
-      <argument>C:\xampp\htdocs\gestion-user\var\cache\dev/App_KernelDevDebugContainerDeprecations.log</argument>
+      <argument>C:/xampp/htdocs/gestion-user/var/cache/dev/App_KernelDevDebugContainerDeprecations.log</argument>
     </service>
     <service id="cache_clearer" class="Symfony\Component\HttpKernel\CacheClearer\ChainCacheClearer">
       <argument type="tagged_iterator" tag="kernel.cache_clearer"/>
@@ -1656,6 +1701,12 @@
               <argument type="collection"/>
             </argument>
           </argument>
+          <argument key="Symfony\Component\Mercure\Update" type="collection">
+            <argument type="collection">
+              <argument>mercure.hub.default.message_handler</argument>
+              <argument type="collection"/>
+            </argument>
+          </argument>
         </argument>
       </argument>
       <call method="setName">
@@ -2107,7 +2158,7 @@
       <argument/>
       <argument>0</argument>
       <argument>%container.build_id%</argument>
-      <argument>C:\xampp\htdocs\gestion-user\var\cache\dev/pools/system</argument>
+      <argument>C:/xampp/htdocs/gestion-user/var/cache/dev/pools/system</argument>
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
     </service>
@@ -2299,7 +2350,7 @@
     <service id="asset_mapper.cached_mapped_asset_factory" class="Symfony\Component\AssetMapper\Factory\CachedMappedAssetFactory">
       <tag name="container.decorator" id="asset_mapper.mapped_asset_factory" inner="asset_mapper.cached_mapped_asset_factory.inner"/>
       <argument type="service" id="asset_mapper.cached_mapped_asset_factory.inner"/>
-      <argument>C:\xampp\htdocs\gestion-user\var\cache\dev/asset_mapper</argument>
+      <argument>C:/xampp/htdocs/gestion-user/var/cache/dev/asset_mapper</argument>
       <argument>true</argument>
     </service>
     <service id="asset_mapper.repository" class="Symfony\Component\AssetMapper\AssetMapperRepository">
@@ -2697,7 +2748,7 @@
         </argument>
       </argument>
       <argument type="collection">
-        <argument key="cache_dir">C:\xampp\htdocs\gestion-user\var\cache\dev/translations</argument>
+        <argument key="cache_dir">C:/xampp/htdocs/gestion-user/var/cache/dev/translations</argument>
         <argument key="debug">true</argument>
         <argument key="resource_files" type="collection">
           <argument key="af" type="collection">
@@ -3003,6 +3054,7 @@
           <argument>C:\xampp\htdocs\gestion-user\vendor\symfony\security-bundle/translations</argument>
           <argument>C:\xampp\htdocs\gestion-user\vendor\symfony\monolog-bundle\src/translations</argument>
           <argument>C:\xampp\htdocs\gestion-user\vendor\symfony\maker-bundle/translations</argument>
+          <argument>C:\xampp\htdocs\gestion-user\vendor\symfony\mercure-bundle\src/translations</argument>
         </argument>
         <argument key="cache_vary" type="collection">
           <argument key="scanned_directories" type="collection">
@@ -3022,6 +3074,7 @@
             <argument>C:\xampp\htdocs\gestion-user\vendor\symfony\security-bundle/translations</argument>
             <argument>C:\xampp\htdocs\gestion-user\vendor\symfony\monolog-bundle\src/translations</argument>
             <argument>C:\xampp\htdocs\gestion-user\vendor\symfony\maker-bundle/translations</argument>
+            <argument>C:\xampp\htdocs\gestion-user\vendor\symfony\mercure-bundle\src/translations</argument>
           </argument>
         </argument>
       </argument>
@@ -3433,6 +3486,30 @@
           <argument>onKernelRequest</argument>
         </argument>
         <argument>10</argument>
+      </call>
+      <call method="addListener">
+        <argument>kernel.request</argument>
+        <argument type="collection">
+          <argument type="service_closure" id="App\EventListener\DebugRequestListener"/>
+          <argument>onRequest</argument>
+        </argument>
+        <argument>5</argument>
+      </call>
+      <call method="addListener">
+        <argument>kernel.response</argument>
+        <argument type="collection">
+          <argument type="service_closure" id="App\EventListener\DebugRequestListener"/>
+          <argument>onResponse</argument>
+        </argument>
+        <argument>0</argument>
+      </call>
+      <call method="addListener">
+        <argument>kernel.exception</argument>
+        <argument type="collection">
+          <argument type="service_closure" id="App\EventListener\DebugRequestListener"/>
+          <argument>onException</argument>
+        </argument>
+        <argument>0</argument>
       </call>
       <call method="addListener">
         <argument>kernel.controller_arguments</argument>
@@ -3995,6 +4072,14 @@
         <argument>0</argument>
       </call>
       <call method="addListener">
+        <argument>kernel.response</argument>
+        <argument type="collection">
+          <argument type="service_closure" id="Symfony\Component\Mercure\EventSubscriber\SetCookieSubscriber"/>
+          <argument>onKernelResponse</argument>
+        </argument>
+        <argument>0</argument>
+      </call>
+      <call method="addListener">
         <argument>Symfony\Component\Security\Http\Event\CheckPassportEvent</argument>
         <argument type="collection">
           <argument type="service_closure" id="security.listener.csrf_protection"/>
@@ -4135,6 +4220,7 @@
         <argument>App\Controller\LibraryControllers\CoursesController</argument>
         <argument>App\Controller\LibraryControllers\LibraryController</argument>
         <argument>App\Controller\MeditationController</argument>
+        <argument>App\Controller\MessagingController</argument>
         <argument>App\Controller\MockUserController</argument>
         <argument>App\Controller\NutritionController</argument>
         <argument>App\Controller\ProfileController</argument>
@@ -4172,7 +4258,7 @@
       <argument type="service" id=".service_locator.xdLQ5FJ.router.default"/>
       <argument>kernel::loadRoutes</argument>
       <argument type="collection">
-        <argument key="cache_dir">C:\xampp\htdocs\gestion-user\var\cache\dev</argument>
+        <argument key="cache_dir">C:/xampp/htdocs/gestion-user/var/cache/dev</argument>
         <argument key="debug">true</argument>
         <argument key="generator_class">Symfony\Component\Routing\Generator\CompiledUrlGenerator</argument>
         <argument key="generator_dumper_class">Symfony\Component\Routing\Generator\Dumper\CompiledUrlGeneratorDumper</argument>
@@ -4373,10 +4459,10 @@
       <argument type="collection">
         <argument type="service" id="serializer.mapping.attribute_loader"/>
       </argument>
-      <argument>C:\xampp\htdocs\gestion-user\var\cache\dev/serialization.php</argument>
+      <argument>C:/xampp/htdocs/gestion-user/var/cache/dev/serialization.php</argument>
     </service>
     <service id="serializer.mapping.cache.symfony" class="Psr\Cache\CacheItemPoolInterface">
-      <argument>C:\xampp\htdocs\gestion-user\var\cache\dev/serialization.php</argument>
+      <argument>C:/xampp/htdocs/gestion-user/var/cache/dev/serialization.php</argument>
       <argument type="service" id="cache.serializer"/>
       <factory class="Symfony\Component\Cache\Adapter\PhpArrayAdapter" method="create"/>
     </service>
@@ -4600,7 +4686,7 @@
       <argument>true</argument>
     </service>
     <service id="session.storage.factory.mock_file" class="Symfony\Component\HttpFoundation\Session\Storage\MockFileSessionStorageFactory">
-      <argument>C:\xampp\htdocs\gestion-user\var\cache\dev/sessions</argument>
+      <argument>C:/xampp/htdocs/gestion-user/var/cache/dev/sessions</argument>
       <argument>MOCKSESSID</argument>
       <argument type="service">
         <service class="Symfony\Component\HttpFoundation\Session\Storage\MetadataBag">
@@ -4843,10 +4929,10 @@
     <service id="validator.mapping.cache_warmer" class="Symfony\Bundle\FrameworkBundle\CacheWarmer\ValidatorCacheWarmer">
       <tag name="kernel.cache_warmer"/>
       <argument type="service" id="validator.builder"/>
-      <argument>C:\xampp\htdocs\gestion-user\var\cache\dev/validation.php</argument>
+      <argument>C:/xampp/htdocs/gestion-user/var/cache/dev/validation.php</argument>
     </service>
     <service id="validator.mapping.cache.adapter" class="Symfony\Component\Cache\Adapter\PhpArrayAdapter" constructor="create">
-      <argument>C:\xampp\htdocs\gestion-user\var\cache\dev/validation.php</argument>
+      <argument>C:/xampp/htdocs/gestion-user/var/cache/dev/validation.php</argument>
       <argument type="service" id="cache.validator"/>
     </service>
     <service id="validator.validator_factory" class="Symfony\Component\Validator\ContainerConstraintValidatorFactory">
@@ -5572,11 +5658,14 @@
         <argument type="service" id="serializer.data_collector"/>
       </call>
       <call method="add">
+        <argument type="service" id="data_collector.mercure"/>
+      </call>
+      <call method="add">
         <argument type="service" id="data_collector.config"/>
       </call>
     </service>
     <service id="profiler.storage" class="Symfony\Component\HttpKernel\Profiler\FileProfilerStorage">
-      <argument>file:C:\xampp\htdocs\gestion-user\var\cache\dev/profiler</argument>
+      <argument>file:C:/xampp/htdocs/gestion-user/var/cache/dev/profiler</argument>
     </service>
     <service id="profiler_listener" class="Symfony\Component\HttpKernel\EventListener\ProfilerListener">
       <tag name="kernel.reset" method="?reset"/>
@@ -5657,7 +5746,7 @@
       <tag name="monolog.logger" channel="profiler"/>
       <tag name="data_collector" template="@WebProfiler/Collector/logger.html.twig" id="logger" priority="300"/>
       <argument type="service" id="monolog.logger.profiler" on-invalid="ignore"/>
-      <argument>C:\xampp\htdocs\gestion-user\var\cache\dev/App_KernelDevDebugContainer</argument>
+      <argument>C:/xampp/htdocs/gestion-user/var/cache/dev/App_KernelDevDebugContainer</argument>
       <argument type="service" id=".virtual_request_stack" on-invalid="ignore"/>
     </service>
     <service id="data_collector.time" class="Symfony\Component\HttpKernel\DataCollector\TimeDataCollector">
@@ -5917,7 +6006,7 @@
     </service>
     <service id="doctrine.dbal.default_regex_schema_filter" class="Doctrine\Bundle\DoctrineBundle\Dbal\RegexSchemaAssetFilter">
       <tag name="doctrine.dbal.schema_filter" connection="default"/>
-      <argument>/^(user|session_meditation|conseil|journal_humeur|doctrine_migration_versions)$/</argument>
+      <argument>/^(user|conversation|message)$/</argument>
     </service>
     <service id="doctrine.dbal.default_connection.event_manager" class="Symfony\Bridge\Doctrine\ContainerAwareEventManager">
       <argument type="service" id=".service_locator.fipAWQf"/>
@@ -6076,7 +6165,7 @@
     <service id="doctrine.orm.configuration" class="Doctrine\ORM\Configuration" abstract="true"/>
     <service id="doctrine.orm.entity_manager.abstract" class="Doctrine\ORM\EntityManager" lazy="true" abstract="true"/>
     <service id="doctrine.orm.container_repository_factory" class="Doctrine\Bundle\DoctrineBundle\Repository\ContainerRepositoryFactory">
-      <argument type="service" id=".service_locator.4VsXblu"/>
+      <argument type="service" id=".service_locator.QwKfTVx"/>
     </service>
     <service id="doctrine.orm.manager_configurator.abstract" class="Doctrine\Bundle\DoctrineBundle\ManagerConfigurator" abstract="true">
       <argument type="collection"/>
@@ -6274,7 +6363,7 @@
         <argument type="service" id=".doctrine.orm.default_metadata_driver"/>
       </call>
       <call method="setProxyDir">
-        <argument>C:\xampp\htdocs\gestion-user\var\cache\dev/doctrine/orm/Proxies</argument>
+        <argument>C:/xampp/htdocs/gestion-user/var/cache/dev/doctrine/orm/Proxies</argument>
       </call>
       <call method="setProxyNamespace">
         <argument>Proxies</argument>
@@ -6700,7 +6789,7 @@
       <tag name="kernel.reset" method="resetGlobals"/>
       <argument type="service" id="twig.loader.native_filesystem"/>
       <argument type="collection">
-        <argument key="cache">C:\xampp\htdocs\gestion-user\var\cache\dev/twig</argument>
+        <argument key="cache">C:/xampp/htdocs/gestion-user/var/cache/dev/twig</argument>
         <argument key="charset">UTF-8</argument>
         <argument key="debug">true</argument>
         <argument key="strict_variables">true</argument>
@@ -6771,6 +6860,9 @@
       </call>
       <call method="addExtension">
         <argument type="service" id="turbo.twig.extension"/>
+      </call>
+      <call method="addExtension">
+        <argument type="service" id="Symfony\Component\Mercure\Twig\MercureExtension"/>
       </call>
       <call method="addExtension">
         <argument type="service" id="stimulus.twig_extension"/>
@@ -6899,6 +6991,14 @@
       <call method="addPath">
         <argument>C:\xampp\htdocs\gestion-user\vendor\symfony\maker-bundle/templates</argument>
         <argument>!Maker</argument>
+      </call>
+      <call method="addPath">
+        <argument>C:\xampp\htdocs\gestion-user\vendor\symfony\mercure-bundle\src/Resources/views</argument>
+        <argument>Mercure</argument>
+      </call>
+      <call method="addPath">
+        <argument>C:\xampp\htdocs\gestion-user\vendor\symfony\mercure-bundle\src/Resources/views</argument>
+        <argument>!Mercure</argument>
       </call>
       <call method="addPath">
         <argument>C:\xampp\htdocs\gestion-user/templates</argument>
@@ -7190,7 +7290,7 @@
     </service>
     <service id="turbo.twig.runtime" class="Symfony\UX\Turbo\Twig\TurboRuntime">
       <tag name="twig.runtime"/>
-      <argument type="service" id=".service_locator.dpiLQ5O"/>
+      <argument type="service" id=".service_locator.nT7rZtz"/>
       <argument>default</argument>
     </service>
     <service id="turbo.doctrine.event_listener" class="Symfony\UX\Turbo\Doctrine\BroadcastListener">
@@ -8492,6 +8592,88 @@
       <argument type="service" id="maker.file_manager"/>
       <argument type="service" id="maker.generator"/>
     </service>
+    <service id="mercure.hub.default.jwt.factory" class="Symfony\Component\Mercure\Jwt\LcobucciFactory">
+      <tag name="mercure.jwt.factory"/>
+      <argument>%env(MERCURE_JWT_SECRET)%</argument>
+      <argument>hmac.sha256</argument>
+      <argument>null</argument>
+      <argument/>
+    </service>
+    <service id=".lazy.mercure.hub.default.jwt.factory" class="Symfony\Component\Mercure\Jwt\TokenFactoryInterface">
+      <argument type="collection">
+        <argument type="service" id="mercure.hub.default.jwt.factory"/>
+        <argument>create</argument>
+      </argument>
+      <factory class="Closure" method="fromCallable"/>
+    </service>
+    <service id="mercure.hub.default.jwt.provider" class="Symfony\Component\Mercure\Jwt\FactoryTokenProvider">
+      <tag name="mercure.jwt.factory"/>
+      <argument type="service" id=".lazy.mercure.hub.default.jwt.factory"/>
+      <argument type="collection">
+        <argument>*</argument>
+      </argument>
+      <argument type="collection">
+        <argument>*</argument>
+      </argument>
+    </service>
+    <service id="mercure.hub.default.message_handler" class="Symfony\Component\Mercure\Messenger\UpdateHandler">
+      <tag name="messenger.message_handler"/>
+      <argument type="service" id="mercure.hub.default.traceable"/>
+    </service>
+    <service id="mercure.hub.default.publisher.traceable" class="Symfony\Component\Mercure\Debug\TraceablePublisher">
+      <tag name="mercure.publisher"/>
+      <tag name="container.decorator" id="mercure.hub.default.publisher" inner="mercure.hub.default.publisher.traceable.inner"/>
+      <argument type="service" id="mercure.hub.default.publisher.traceable.inner"/>
+      <argument type="service" id="debug.stopwatch"/>
+      <deprecated package="symfony/mercure-bundle" version="0.2">The "%service_id%" service is deprecated. Use "mercure.hub.default.traceable" instead.</deprecated>
+    </service>
+    <service id="mercure.hub.default.traceable" class="Symfony\Component\Mercure\Debug\TraceableHub">
+      <tag name="mercure.hub"/>
+      <tag name="container.decorator" id="mercure.hub.default" inner="mercure.hub.default.traceable.inner"/>
+      <argument type="service" id="mercure.hub.default.traceable.inner"/>
+      <argument type="service" id="debug.stopwatch"/>
+    </service>
+    <service id="turbo.mercure.default.renderer" class="Symfony\UX\Turbo\Bridge\Mercure\TurboStreamListenRenderer">
+      <tag name="turbo.renderer.stream_listen" transport="default"/>
+      <argument type="service" id="mercure.hub.default.traceable"/>
+      <argument type="service" id="stimulus.helper"/>
+      <argument type="service" id="turbo.id_accessor"/>
+      <argument type="service" id="twig"/>
+    </service>
+    <service id="turbo.mercure.default.broadcaster" class="Symfony\UX\Turbo\Bridge\Mercure\Broadcaster">
+      <tag name="turbo.broadcaster"/>
+      <argument>default</argument>
+      <argument type="service" id="mercure.hub.default.traceable"/>
+    </service>
+    <service id="data_collector.mercure" class="Symfony\Bundle\MercureBundle\DataCollector\MercureDataCollector">
+      <tag name="data_collector" template="@Mercure/Collector/mercure.html.twig" id="mercure"/>
+      <argument type="iterator">
+        <argument key="default" type="service" id="mercure.hub.default.traceable"/>
+      </argument>
+    </service>
+    <service id="Symfony\Component\Mercure\HubRegistry" class="Symfony\Component\Mercure\HubRegistry">
+      <argument type="service" id="mercure.hub.default.traceable"/>
+      <argument type="collection">
+        <argument key="default" type="service" id="mercure.hub.default.traceable"/>
+      </argument>
+    </service>
+    <service id="Symfony\Component\Mercure\Authorization" class="Symfony\Component\Mercure\Authorization">
+      <argument type="service" id="Symfony\Component\Mercure\HubRegistry"/>
+      <argument>null</argument>
+    </service>
+    <service id="Symfony\Component\Mercure\Discovery" class="Symfony\Component\Mercure\Discovery">
+      <argument type="service" id="Symfony\Component\Mercure\HubRegistry"/>
+    </service>
+    <service id="Symfony\Component\Mercure\EventSubscriber\SetCookieSubscriber" class="Symfony\Component\Mercure\EventSubscriber\SetCookieSubscriber">
+      <tag name="kernel.event_subscriber" priority="-10"/>
+      <tag name="container.hot_path"/>
+    </service>
+    <service id="Symfony\Component\Mercure\Twig\MercureExtension" class="Symfony\Component\Mercure\Twig\MercureExtension">
+      <tag name="twig.extension"/>
+      <argument type="service" id="Symfony\Component\Mercure\HubRegistry"/>
+      <argument type="service" id="Symfony\Component\Mercure\Authorization"/>
+      <argument type="service" id="request_stack"/>
+    </service>
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\ActivitesController" class="App\Controller\ActivitesController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\ActivitesController" class="App\Controller\ActivitesController" autowire="true" abstract="true"/>
     <service id=".instanceof.App\Controller\ActivitesController.0.App\Controller\ActivitesController" class="App\Controller\ActivitesController" autowire="true" abstract="true"/>
@@ -8576,6 +8758,10 @@
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\MeditationController" class="App\Controller\MeditationController" autowire="true" abstract="true"/>
     <service id=".instanceof.App\Controller\MeditationController.0.App\Controller\MeditationController" class="App\Controller\MeditationController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\MeditationController" class="App\Controller\MeditationController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\MessagingController" class="App\Controller\MessagingController" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\MessagingController" class="App\Controller\MessagingController" autowire="true" abstract="true"/>
+    <service id=".instanceof.App\Controller\MessagingController.0.App\Controller\MessagingController" class="App\Controller\MessagingController" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Controller\MessagingController" class="App\Controller\MessagingController" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\MockUserController" class="App\Controller\MockUserController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\MockUserController" class="App\Controller\MockUserController" autowire="true" abstract="true"/>
     <service id=".instanceof.App\Controller\MockUserController.0.App\Controller\MockUserController" class="App\Controller\MockUserController" autowire="true" abstract="true"/>
@@ -8622,6 +8808,8 @@
     <service id=".abstract.instanceof.App\Entity\Conseil" class="App\Entity\Conseil" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.App\Entity\Consommation.0.App\Entity\Consommation" class="App\Entity\Consommation" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Entity\Consommation" class="App\Entity\Consommation" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.App\Entity\Conversation.0.App\Entity\Conversation" class="App\Entity\Conversation" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Entity\Conversation" class="App\Entity\Conversation" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.App\Entity\DemandeReservation.0.App\Entity\DemandeReservation" class="App\Entity\DemandeReservation" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Entity\DemandeReservation" class="App\Entity\DemandeReservation" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.App\Entity\Evenement.0.App\Entity\Evenement" class="App\Entity\Evenement" autowire="true" abstract="true"/>
@@ -8630,6 +8818,8 @@
     <service id=".abstract.instanceof.App\Entity\Exercice" class="App\Entity\Exercice" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.App\Entity\JournalHumeur.0.App\Entity\JournalHumeur" class="App\Entity\JournalHumeur" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Entity\JournalHumeur" class="App\Entity\JournalHumeur" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.App\Entity\Message.0.App\Entity\Message" class="App\Entity\Message" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Entity\Message" class="App\Entity\Message" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.App\Entity\Post.0.App\Entity\Post" class="App\Entity\Post" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Entity\Post" class="App\Entity\Post" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.App\Entity\Reaction.0.App\Entity\Reaction" class="App\Entity\Reaction" autowire="true" abstract="true"/>
@@ -8648,6 +8838,8 @@
     <service id=".abstract.instanceof.App\Enum\Humeur" class="App\Enum\Humeur" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\EventDispatcher\EventSubscriberInterface.0.App\EventListener\CaptchaListener" class="App\EventListener\CaptchaListener" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\EventListener\CaptchaListener" class="App\EventListener\CaptchaListener" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Component\EventDispatcher\EventSubscriberInterface.0.App\EventListener\DebugRequestListener" class="App\EventListener\DebugRequestListener" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\EventListener\DebugRequestListener" class="App\EventListener\DebugRequestListener" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\AdminEditUserFormType" class="App\Form\AdminEditUserFormType" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Form\AdminEditUserFormType" class="App\Form\AdminEditUserFormType" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\AdminSalleType" class="App\Form\AdminSalleType" autowire="true" abstract="true"/>
@@ -8686,6 +8878,8 @@
     <service id=".abstract.instanceof.App\Repository\ConseilRepository" class="App\Repository\ConseilRepository" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\ConsommationRepository" class="App\Repository\ConsommationRepository" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Repository\ConsommationRepository" class="App\Repository\ConsommationRepository" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\ConversationRepository" class="App\Repository\ConversationRepository" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Repository\ConversationRepository" class="App\Repository\ConversationRepository" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\DemandeReservationRepository" class="App\Repository\DemandeReservationRepository" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Repository\DemandeReservationRepository" class="App\Repository\DemandeReservationRepository" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\EvenementRepository" class="App\Repository\EvenementRepository" autowire="true" abstract="true"/>
@@ -8694,6 +8888,8 @@
     <service id=".abstract.instanceof.App\Repository\ExerciceRepository" class="App\Repository\ExerciceRepository" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\JournalHumeurRepository" class="App\Repository\JournalHumeurRepository" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Repository\JournalHumeurRepository" class="App\Repository\JournalHumeurRepository" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\MessageRepository" class="App\Repository\MessageRepository" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Repository\MessageRepository" class="App\Repository\MessageRepository" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\PostRepository" class="App\Repository\PostRepository" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Repository\PostRepository" class="App\Repository\PostRepository" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\ReactionRepository" class="App\Repository\ReactionRepository" autowire="true" abstract="true"/>
@@ -10614,6 +10810,10 @@
       <argument type="service" id="texter.messenger.desktop_handler"/>
       <argument type="collection"/>
     </service>
+    <service id=".messenger.handler_descriptor.Upry6Iy" class="Symfony\Component\Messenger\Handler\HandlerDescriptor">
+      <argument type="service" id="mercure.hub.default.message_handler"/>
+      <argument type="collection"/>
+    </service>
     <service id=".signing.messenger.default_serializer" class="Symfony\Component\Messenger\Transport\Serialization\SigningSerializer">
       <argument type="service" id="messenger.transport.native_php_serializer"/>
       <argument type="service">
@@ -10656,6 +10856,9 @@
         <argument key="Symfony\Component\Notifier\Message\DesktopMessage" type="iterator">
           <argument type="service" id=".messenger.handler_descriptor.Dkv9sRY"/>
         </argument>
+        <argument key="Symfony\Component\Mercure\Update" type="iterator">
+          <argument type="service" id=".messenger.handler_descriptor.Upry6Iy"/>
+        </argument>
       </argument>
     </service>
     <service id=".debug.http_client" class="Symfony\Component\HttpClient\TraceableHttpClient">
@@ -10675,7 +10878,7 @@
         <argument key="turbo.doctrine.event_listener" type="service_closure" id="turbo.doctrine.event_listener"/>
       </argument>
     </service>
-    <service id=".service_locator.4VsXblu" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.QwKfTVx" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="App\Repository\ActiviteRepository" type="service_closure" id="App\Repository\ActiviteRepository"/>
@@ -10685,10 +10888,12 @@
         <argument key="App\Repository\CommentaireRepository" type="service_closure" id="App\Repository\CommentaireRepository"/>
         <argument key="App\Repository\ConseilRepository" type="service_closure" id="App\Repository\ConseilRepository"/>
         <argument key="App\Repository\ConsommationRepository" type="service_closure" id="App\Repository\ConsommationRepository"/>
+        <argument key="App\Repository\ConversationRepository" type="service_closure" id="App\Repository\ConversationRepository"/>
         <argument key="App\Repository\DemandeReservationRepository" type="service_closure" id="App\Repository\DemandeReservationRepository"/>
         <argument key="App\Repository\EvenementRepository" type="service_closure" id="App\Repository\EvenementRepository"/>
         <argument key="App\Repository\ExerciceRepository" type="service_closure" id="App\Repository\ExerciceRepository"/>
         <argument key="App\Repository\JournalHumeurRepository" type="service_closure" id="App\Repository\JournalHumeurRepository"/>
+        <argument key="App\Repository\MessageRepository" type="service_closure" id="App\Repository\MessageRepository"/>
         <argument key="App\Repository\PostRepository" type="service_closure" id="App\Repository\PostRepository"/>
         <argument key="App\Repository\ReactionRepository" type="service_closure" id="App\Repository\ReactionRepository"/>
         <argument key="App\Repository\SalleRepository" type="service_closure" id="App\Repository\SalleRepository"/>
@@ -11091,6 +11296,12 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.TJNRSaV" method="withContext"/>
     </service>
+    <service id=".service_locator.TJNRSaV.App\Controller\MessagingController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\MessagingController"/>
+      <argument>App\Controller\MessagingController</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.TJNRSaV" method="withContext"/>
+    </service>
     <service id=".service_locator.TJNRSaV.App\Controller\MockUserController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\MockUserController"/>
       <argument>App\Controller\MockUserController</argument>
@@ -11286,6 +11497,12 @@
         <argument key="profiler" type="service_closure" id="profiler" on-invalid="ignore_uninitialized"/>
       </argument>
     </service>
+    <service id=".service_locator.nT7rZtz" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="default" type="service_closure" id="turbo.mercure.default.renderer"/>
+      </argument>
+    </service>
     <service id=".service_locator.1mjVCan" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
@@ -11365,6 +11582,7 @@
           <argument>App\Controller\LibraryControllers\CoursesController</argument>
           <argument>App\Controller\LibraryControllers\LibraryController</argument>
           <argument>App\Controller\MeditationController</argument>
+          <argument>App\Controller\MessagingController</argument>
           <argument>App\Controller\MockUserController</argument>
           <argument>App\Controller\NutritionController</argument>
           <argument>App\Controller\ProfileController</argument>
@@ -11582,6 +11800,19 @@
     </service>
     <service id="debug.security.firewall.authenticator.main.inner" class="Symfony\Component\Security\Http\Firewall\AuthenticatorManagerListener">
       <argument type="service" id="security.authenticator.manager.main"/>
+    </service>
+    <service id="mercure.hub.default.publisher.traceable.inner" class="Symfony\Component\Mercure\Publisher">
+      <argument>%env(MERCURE_URL)%</argument>
+      <argument type="service" id="mercure.hub.default.jwt.provider"/>
+      <argument type="service" id="http_client.uri_template" on-invalid="ignore"/>
+      <deprecated package="symfony/mercure-bundle" version="0.2">The "%service_id%" service is deprecated. You should stop using it, as it will be removed in the future, use "mercure.hub.default" instead.</deprecated>
+    </service>
+    <service id="mercure.hub.default.traceable.inner" class="Symfony\Component\Mercure\Hub">
+      <argument>%env(MERCURE_URL)%</argument>
+      <argument type="service" id="mercure.hub.default.jwt.provider"/>
+      <argument type="service" id=".lazy.mercure.hub.default.jwt.factory"/>
+      <argument>%env(MERCURE_PUBLIC_URL)%</argument>
+      <argument type="service" id="http_client.uri_template" on-invalid="ignore"/>
     </service>
     <service id="debug.security.event_dispatcher.main.inner" class="Symfony\Component\EventDispatcher\EventDispatcher"/>
     <service id="debug.traced.messenger.bus.default.inner" class="Symfony\Component\Messenger\MessageBus">
@@ -12616,7 +12847,7 @@
       <argument>HMtCgBEQvi</argument>
       <argument>0</argument>
       <argument>%container.build_id%</argument>
-      <argument>C:\xampp\htdocs\gestion-user\var\cache\dev/pools/system</argument>
+      <argument>C:/xampp/htdocs/gestion-user/var/cache/dev/pools/system</argument>
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
     </service>
@@ -12624,7 +12855,7 @@
       <argument>EVr0Aq8T1U</argument>
       <argument>0</argument>
       <argument>%container.build_id%</argument>
-      <argument>C:\xampp\htdocs\gestion-user\var\cache\dev/pools/system</argument>
+      <argument>C:/xampp/htdocs/gestion-user/var/cache/dev/pools/system</argument>
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
     </service>
@@ -12632,7 +12863,7 @@
       <argument>g7sBuXUFCt</argument>
       <argument>0</argument>
       <argument>%container.build_id%</argument>
-      <argument>C:\xampp\htdocs\gestion-user\var\cache\dev/pools/system</argument>
+      <argument>C:/xampp/htdocs/gestion-user/var/cache/dev/pools/system</argument>
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
     </service>
@@ -12640,7 +12871,7 @@
       <argument>MG+Si5nv5M</argument>
       <argument>0</argument>
       <argument>%container.build_id%</argument>
-      <argument>C:\xampp\htdocs\gestion-user\var\cache\dev/pools/system</argument>
+      <argument>C:/xampp/htdocs/gestion-user/var/cache/dev/pools/system</argument>
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
     </service>
@@ -12648,7 +12879,7 @@
       <argument>4Jp47y2VqM</argument>
       <argument>0</argument>
       <argument>%container.build_id%</argument>
-      <argument>C:\xampp\htdocs\gestion-user\var\cache\dev/pools/system</argument>
+      <argument>C:/xampp/htdocs/gestion-user/var/cache/dev/pools/system</argument>
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
     </service>
@@ -12674,7 +12905,7 @@
       <argument>9N1pG7Yu8X</argument>
       <argument>0</argument>
       <argument>%container.build_id%</argument>
-      <argument>C:\xampp\htdocs\gestion-user\var\cache\dev/pools/system</argument>
+      <argument>C:/xampp/htdocs/gestion-user/var/cache/dev/pools/system</argument>
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
     </service>
@@ -12684,7 +12915,7 @@
       <argument>s25x7oqH1x</argument>
       <argument>0</argument>
       <argument>%container.build_id%</argument>
-      <argument>C:\xampp\htdocs\gestion-user\var\cache\dev/pools/system</argument>
+      <argument>C:/xampp/htdocs/gestion-user/var/cache/dev/pools/system</argument>
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
     </service>
@@ -12692,7 +12923,7 @@
       <argument>lJhCE0LFX5</argument>
       <argument>0</argument>
       <argument>%container.build_id%</argument>
-      <argument>C:\xampp\htdocs\gestion-user\var\cache\dev/pools/system</argument>
+      <argument>C:/xampp/htdocs/gestion-user/var/cache/dev/pools/system</argument>
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
     </service>
@@ -12700,7 +12931,7 @@
       <argument>F8dmbpbsC3</argument>
       <argument>0</argument>
       <argument>%container.build_id%</argument>
-      <argument>C:\xampp\htdocs\gestion-user\var\cache\dev/pools/system</argument>
+      <argument>C:/xampp/htdocs/gestion-user/var/cache/dev/pools/system</argument>
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
     </service>
@@ -12708,7 +12939,7 @@
       <argument>isaVMF5aDW</argument>
       <argument>0</argument>
       <argument>%container.build_id%</argument>
-      <argument>C:\xampp\htdocs\gestion-user\var\cache\dev/pools/system</argument>
+      <argument>C:/xampp/htdocs/gestion-user/var/cache/dev/pools/system</argument>
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
     </service>
@@ -12874,6 +13105,27 @@
     <service id="Symfony\Component\Security\Core\User\UserCheckerInterface" alias="security.user_checker"/>
     <service id="logger" alias="monolog.logger"/>
     <service id="Psr\Log\LoggerInterface" alias="monolog.logger"/>
+    <service id="Symfony\Component\Mercure\Jwt\TokenFactoryInterface $default" alias=".lazy.mercure.hub.default.jwt.factory"/>
+    <service id="Symfony\Component\Mercure\Jwt\TokenFactoryInterface $defaultFactory" alias=".lazy.mercure.hub.default.jwt.factory"/>
+    <service id="Symfony\Component\Mercure\Jwt\TokenFactoryInterface $defaultTokenFactory" alias=".lazy.mercure.hub.default.jwt.factory"/>
+    <service id="Symfony\Component\Mercure\Jwt\TokenProviderInterface $default" alias="mercure.hub.default.jwt.provider"/>
+    <service id="Symfony\Component\Mercure\Jwt\TokenProviderInterface $defaultProvider" alias="mercure.hub.default.jwt.provider"/>
+    <service id="Symfony\Component\Mercure\Jwt\TokenProviderInterface $defaultTokenProvider" alias="mercure.hub.default.jwt.provider"/>
+    <service id="Symfony\Component\Mercure\HubInterface $defaultHub" alias="mercure.hub.default.traceable"/>
+    <service id="Symfony\Component\Mercure\HubInterface $default" alias="mercure.hub.default.traceable"/>
+    <service id="Symfony\Component\Mercure\PublisherInterface $defaultPublisher" alias="mercure.hub.default.publisher.traceable">
+      <deprecated package="symfony/mercure-bundle" version="0.2">The "%alias_id%" service is deprecated. You should stop using it, as it will be removed in the future, use "mercure.hub.default" instead.</deprecated>
+    </service>
+    <service id="Symfony\Component\Mercure\PublisherInterface $default" alias="mercure.hub.default.publisher.traceable">
+      <deprecated package="symfony/mercure-bundle" version="0.2">The "%alias_id%" service is deprecated. You should stop using it, as it will be removed in the future, use "mercure.hub.default" instead.</deprecated>
+    </service>
+    <service id="Symfony\Component\Mercure\HubInterface" alias="mercure.hub.default.traceable"/>
+    <service id="Symfony\Component\Mercure\Publisher" alias="mercure.hub.default.publisher.traceable">
+      <deprecated package="symfony/mercure-bundle" version="0.2">The "%alias_id%" service alias is deprecated. Use "Symfony\Component\Mercure\Hub" instead.</deprecated>
+    </service>
+    <service id="Symfony\Component\Mercure\PublisherInterface" alias="mercure.hub.default.publisher.traceable">
+      <deprecated package="symfony/mercure-bundle" version="0.2">The "%alias_id%" service alias is deprecated. Use "Symfony\Component\Mercure\HubInterface" instead.</deprecated>
+    </service>
     <service id="container.env_var_processors_locator" alias=".service_locator.ryAvHi4" public="true"/>
     <service id="twig.loader.filesystem" alias="twig.loader.native_filesystem"/>
     <service id="argument_resolver.controller_locator" alias=".service_locator.nEigcwi"/>
@@ -12911,6 +13163,7 @@
     <service id="Psr\Log\LoggerInterface $securityLogger" alias="monolog.logger.security"/>
     <service id=".Psr\Log\LoggerInterface $deprecation" alias="monolog.logger.deprecation"/>
     <service id="Psr\Log\LoggerInterface $deprecationLogger" alias="monolog.logger.deprecation"/>
+    <service id="turbo.mercure.stimulus_helper" alias="stimulus.helper"/>
     <service id=".service_locator.O8.cMm9" alias="messenger.receiver_locator"/>
     <service id=".service_locator.oeWXF0n" alias="messenger.retry_strategy_locator"/>
     <service id=".service_locator.S9tnIXR" alias=".service_locator.DA6YX9k"/>
@@ -12930,6 +13183,8 @@
     <service id="turbo.broadcaster.imux" alias="turbo.broadcaster.action_renderer"/>
     <service id="security.access.decision_manager" alias="debug.security.access.decision_manager"/>
     <service id="security.firewall.authenticator.main" alias="debug.security.firewall.authenticator.main"/>
+    <service id="mercure.hub.default.publisher" alias="mercure.hub.default.publisher.traceable"/>
+    <service id="mercure.hub.default" alias="mercure.hub.default.traceable"/>
     <service id="security.event_dispatcher.main" alias="debug.security.event_dispatcher.main"/>
     <service id="messenger.bus.default" alias="debug.traced.messenger.bus.default"/>
     <service id=".signing.messenger.default_serializer.inner" alias="messenger.transport.native_php_serializer"/>
