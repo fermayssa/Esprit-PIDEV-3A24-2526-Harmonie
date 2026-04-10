@@ -616,3 +616,8 @@ d689ba,127.0.0.1,GET,http://127.0.0.1:8000/forum/categorie/25/post/new,177582329
 f693a7,127.0.0.1,GET,http://127.0.0.1:8000/forum/post/68/edit,1775823352,,200,request
 084482,127.0.0.1,POST,http://127.0.0.1:8000/forum/post/68/edit,1775823359,,302,request
 b2120a,127.0.0.1,GET,http://127.0.0.1:8000/forum/categorie/25,1775823359,,200,request
+24f7ed,127.0.0.1,POST,http://127.0.0.1:8000/forum/post/68/comment/new,1775823463,,302,request
+f4baa6,127.0.0.1,GET,http://127.0.0.1:8000/forum/categorie/25,1775823464,,200,request
+2d40b8,127.0.0.1,GET,http://127.0.0.1:8000/forum/comment/63/edit,1775823468,,200,request
+a11432,127.0.0.1,POST,http://127.0.0.1:8000/forum/comment/63/edit,1775823473,,302,request
+88fceb,127.0.0.1,GET,http://127.0.0.1:8000/forum/categorie/25,1775823473,,200,request

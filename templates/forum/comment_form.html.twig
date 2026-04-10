@@ -99,29 +99,24 @@
     </div>
 
     <div class="form-card">
-        <div class="form-title"> ✏️ Modifier le commentaire</div>
-
-        {% if error %}
-        <div class="error-box"> ⚠️ {{ error }}</div>
-        {% endif %}
+        <div class="form-title">✏️ Modifier le commentaire</div>
 
         {{ form_start(form) }}
 
-    <div class="form-group">
-        {{ form_label(form.contenu) }}
-        {{ form_widget(form.contenu) }}
-        {% if form_errors(form.contenu) %}
-            <div class="error-box">⚠️ {{ form_errors(form.contenu) }}</div>
-        {% endif %}
-    </div>
+            <div class="form-group">
+                {{ form_label(form.contenu, 'Ton commentaire *', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.contenu) }}
+                {% if form_errors(form.contenu)|length > 0 %}
+                    <div class="error-box">⚠️ {{ form_errors(form.contenu) }}</div>
+                {% endif %}
+            </div>
 
-    <div class="form-actions">
-        <a href="{{ path('forum_posts', {id: post.idCategorie}) }}" class="btn-cancel">Annuler</a>
-        <button type="submit" class="btn-submit">💾 Enregistrer</button>
-    </div>
+            <div class="form-actions">
+                <a href="{{ path('forum_posts', {id: post.idCategorie}) }}" class="btn-cancel">Annuler</a>
+                <button type="submit" class="btn-submit">💾 Enregistrer</button>
+            </div>
 
-{{ form_end(form) }}
-
+        {{ form_end(form) }}
     </div>
 </main>
 
