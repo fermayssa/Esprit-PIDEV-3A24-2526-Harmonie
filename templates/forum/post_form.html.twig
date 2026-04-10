@@ -106,33 +106,34 @@
         <div class="error-box">⚠️ {{ error }}</div>
         {% endif %}
 
-        <form method="POST" action="{{ action }}" id="postForm">
-            <div class="form-group">
-                <label class="form-label">Titre *</label>
-                <input type="text" name="titre" id="titreInput"
-                    class="form-input {{ error and 'titre' in error ? 'error' }}"
-                    value="{{ post ? post.titre : '' }}"
-                    placeholder="Un titre clair et précis..."
-                    maxlength="150" required>
-                <div class="char-count"><span id="titreCount">0</span>/150</div>
-            </div>
+        {{ form_start(form) }}
 
-            <div class="form-group">
-                <label class="form-label">Contenu *</label>
-                <textarea name="contenu" id="contenuInput"
-                    class="form-textarea {{ error and 'contenu' in error ? 'error' }}"
-                    placeholder="Développe ta question ou ton sujet..."
-                    required>{{ post ? post.contenu : '' }}</textarea>
-                <div class="char-count"><span id="contenuCount">0</span> caractères</div>
-            </div>
+    <div class="form-group">
+        {{ form_label(form.titre) }}
+        {{ form_widget(form.titre) }}
+        {% if form_errors(form.titre) %}
+            <div class="error-box">⚠️ {{ form_errors(form.titre) }}</div>
+        {% endif %}
+    </div>
 
-            <div class="form-actions">
-                <a href="{{ path('forum_posts', {id: categorie.idCategorie}) }}" class="btn-cancel">Annuler</a>
-                <button type="submit" class="btn-submit">
-                    {{ post ? '💾 Enregistrer' : '📤 Publier le post' }}
-                </button>
-            </div>
-        </form>
+    <div class="form-group">
+        {{ form_label(form.contenu) }}
+        {{ form_widget(form.contenu) }}
+        {% if form_errors(form.contenu) %}
+            <div class="error-box">⚠️ {{ form_errors(form.contenu) }}</div>
+        {% endif %}
+    </div>
+
+    <div class="form-actions">
+        <a href="{{ path('forum_posts', {id: categorie.idCategorie}) }}" class="btn-cancel">Annuler</a>
+        <button type="submit" class="btn-submit">
+            {{ post ? '💾 Enregistrer' : '📤 Publier le post' }}
+        </button>
+    </div>
+
+{{ form_end(form) }}
+
+
     </div>
 </main>
 
