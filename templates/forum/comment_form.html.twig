@@ -104,12 +104,12 @@
         {{ form_start(form) }}
 
             <div class="form-group">
-                {{ form_label(form.contenu, 'Ton commentaire *', {'label_attr': {'class': 'form-label'}}) }}
-                {{ form_widget(form.contenu) }}
-                {% if form_errors(form.contenu)|length > 0 %}
-                    <div class="error-box">⚠️ {{ form_errors(form.contenu) }}</div>
-                {% endif %}
-            </div>
+    {{ form_label(form.contenu, 'Ton commentaire *', {'label_attr': {'class': 'form-label'}}) }}
+    {{ form_widget(form.contenu, {'attr': {'class': 'form-textarea'}}) }}
+    {% for error in form.contenu.vars.errors %}
+        <div class="error-box">⚠️ {{ error.message }}</div>
+    {% endfor %}
+</div>
 
             <div class="form-actions">
                 <a href="{{ path('forum_posts', {id: post.idCategorie}) }}" class="btn-cancel">Annuler</a>
@@ -120,13 +120,5 @@
     </div>
 </main>
 
-<script>
-    document.getElementById('commentForm').addEventListener('submit', function(e) {
-        const v = document.getElementById('contenuInput').value.trim();
-        if (v.length < 3) {
-            e.preventDefault();
-            document.getElementById('contenuInput').classList.add('error');
-        }
-    });
-</script>
+
 {% endblock %}
