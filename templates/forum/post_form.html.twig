@@ -89,6 +89,7 @@
     </div>
 </header>
 
+
 <main class="page">
     <div class="breadcrumb">
         <a href="{{ path('forum') }}">💬 Forum</a>
@@ -102,63 +103,50 @@
         <div class="form-title">{{ post ? '✏️ Modifier le post' : '📝 Nouveau post' }}</div>
         <div class="cat-badge">🗂 {{ categorie.nomCategorie }}</div>
 
-        {% if error %}
-        <div class="error-box">⚠️ {{ error }}</div>
-        {% endif %}
-
         {{ form_start(form) }}
 
-    <div class="form-group">
-        {{ form_label(form.titre) }}
-        {{ form_widget(form.titre) }}
-        {% if form_errors(form.titre) %}
-            <div class="error-box">⚠️ {{ form_errors(form.titre) }}</div>
-        {% endif %}
-    </div>
+            <div class="form-group">
+                {{ form_label(form.titre, 'Titre *', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.titre) }}
+                {% if form_errors(form.titre)|length > 0 %}
+                    <div class="error-box">⚠️ {{ form_errors(form.titre) }}</div>
+                {% endif %}
+                <div class="char-count"><span id="titreCount">0</span>/150</div>
+            </div>
 
-    <div class="form-group">
-        {{ form_label(form.contenu) }}
-        {{ form_widget(form.contenu) }}
-        {% if form_errors(form.contenu) %}
-            <div class="error-box">⚠️ {{ form_errors(form.contenu) }}</div>
-        {% endif %}
-    </div>
+            <div class="form-group">
+                {{ form_label(form.contenu, 'Contenu *', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.contenu) }}
+                {% if form_errors(form.contenu)|length > 0 %}
+                    <div class="error-box">⚠️ {{ form_errors(form.contenu) }}</div>
+                {% endif %}
+                <div class="char-count"><span id="contenuCount">0</span> caractères</div>
+            </div>
 
-    <div class="form-actions">
-        <a href="{{ path('forum_posts', {id: categorie.idCategorie}) }}" class="btn-cancel">Annuler</a>
-        <button type="submit" class="btn-submit">
-            {{ post ? '💾 Enregistrer' : '📤 Publier le post' }}
-        </button>
-    </div>
+            <div class="form-actions">
+                <a href="{{ path('forum_posts', {id: categorie.idCategorie}) }}" class="btn-cancel">Annuler</a>
+                <button type="submit" class="btn-submit">
+                    {{ post ? '💾 Enregistrer' : '📤 Publier le post' }}
+                </button>
+            </div>
 
-{{ form_end(form) }}
-
-
+        {{ form_end(form) }}
     </div>
 </main>
 
+{% block javascripts %}
 <script>
-    const titreInput   = document.getElementById('titreInput');
+    const titreInput   = document.getElementById('post_titre');
     const titreCount   = document.getElementById('titreCount');
-    const contenuInput = document.getElementById('contenuInput');
+    const contenuInput = document.getElementById('post_contenu');
     const contenuCount = document.getElementById('contenuCount');
 
-    function updateTitre()   { titreCount.textContent   = titreInput.value.length; }
-    function updateContenu() { contenuCount.textContent = contenuInput.value.length; }
+    function updateTitre()   { if(titreCount)   titreCount.textContent   = titreInput.value.length; }
+    function updateContenu() { if(contenuCount) contenuCount.textContent = contenuInput.value.length; }
 
-    titreInput.addEventListener('input', updateTitre);
-    contenuInput.addEventListener('input', updateContenu);
+    if (titreInput)   titreInput.addEventListener('input', updateTitre);
+    if (contenuInput) contenuInput.addEventListener('input', updateContenu);
     updateTitre(); updateContenu();
-
-    document.getElementById('postForm').addEventListener('submit', function(e) {
-        let ok = true;
-        if (titreInput.value.trim().length < 3) {
-            titreInput.classList.add('error'); ok = false;
-        }
-        if (contenuInput.value.trim().length < 10) {
-            contenuInput.classList.add('error'); ok = false;
-        }
-        if (!ok) e.preventDefault();
-    });
 </script>
+{% endblock %}
 {% endblock %}

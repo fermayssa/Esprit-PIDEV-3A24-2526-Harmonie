@@ -608,3 +608,11 @@ b09c5b,127.0.0.1,POST,http://127.0.0.1:8000/forum/categorie/new,1775822611,,200,
 1d0bac,127.0.0.1,POST,http://127.0.0.1:8000/forum/categorie/new,1775822619,,200,request
 05fb12,127.0.0.1,POST,http://127.0.0.1:8000/forum/categorie/new,1775822626,,302,request
 c1c71b,127.0.0.1,GET,http://127.0.0.1:8000/forum,1775822627,,200,request
+80255c,127.0.0.1,GET,http://127.0.0.1:8000/forum/categorie/25,1775823294,,200,request
+d689ba,127.0.0.1,GET,http://127.0.0.1:8000/forum/categorie/25/post/new,1775823296,,200,request
+6c04f6,127.0.0.1,POST,http://127.0.0.1:8000/forum/categorie/25/post/new,1775823302,,200,request
+627c94,127.0.0.1,POST,http://127.0.0.1:8000/forum/categorie/25/post/new,1775823317,,302,request
+17ea63,127.0.0.1,GET,http://127.0.0.1:8000/forum/categorie/25,1775823317,,200,request
+f693a7,127.0.0.1,GET,http://127.0.0.1:8000/forum/post/68/edit,1775823352,,200,request
+084482,127.0.0.1,POST,http://127.0.0.1:8000/forum/post/68/edit,1775823359,,302,request
+b2120a,127.0.0.1,GET,http://127.0.0.1:8000/forum/categorie/25,1775823359,,200,request
