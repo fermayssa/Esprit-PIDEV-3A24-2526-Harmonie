@@ -94,31 +94,34 @@
         <div class="error-box">⚠️ {{ error }}</div>
         {% endif %}
 
-        <form method="POST" action="{{ action }}" id="catForm">
-            <div class="form-group">
-                <label class="form-label">Nom de la catégorie *</label>
-                <input type="text" name="nom" id="nomInput"
-                    class="form-input {{ error and error starts with 'Le nom' ? 'error' }}"
-                    value="{{ cat ? cat.nomCategorie : '' }}"
-                    placeholder="Ex: Programmation, Base de données..."
-                    maxlength="100" required>
-                <div class="char-count"><span id="nomCount">0</span>/100</div>
-            </div>
+        {{ form_start(form) }}
 
-            <div class="form-group">
-                <label class="form-label">Description</label>
-                <textarea name="description" id="descInput"
-                    class="form-textarea"
-                    placeholder="Décris brièvement cette catégorie...">{{ cat ? cat.description : '' }}</textarea>
-            </div>
+        <div class="form-group">
+            {{ form_label(form.nomCategorie) }}
+             {{ form_widget(form.nomCategorie) }}
+        <div class="char-count"><span id="nomCount">0</span>/100</div>
+            {% if form_errors(form.nomCategorie) %}
+            <div class="error-box">⚠️ {{ form_errors(form.nomCategorie) }}</div>
+            {% endif %}
+        </div>
 
-            <div class="form-actions">
-                <a href="{{ path('forum') }}" class="btn-cancel">Annuler</a>
-                <button type="submit" class="btn-submit">
-                    {{ cat ? '💾 Enregistrer' : '➕ Créer la catégorie' }}
-                </button>
-            </div>
-        </form>
+        <div class="form-group">
+             {{ form_label(form.description) }}
+            {{ form_widget(form.description) }}
+            {% if form_errors(form.description) %}
+            <div class="error-box">⚠️ {{ form_errors(form.description) }}</div>
+            {% endif %}
+        </div>
+
+        <div class="form-actions">
+            <a href="{{ path('forum') }}" class="btn-cancel">Annuler</a>
+         <button type="submit" class="btn-submit">
+            {{ cat ? '💾 Enregistrer' : '➕ Créer la catégorie' }}
+             </button>
+        </div>
+
+{{ form_end(form) }}
+
     </div>
 </main>
 
