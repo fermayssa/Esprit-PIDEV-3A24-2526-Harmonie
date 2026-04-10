@@ -676,3 +676,11 @@ a60f78,127.0.0.1,GET,http://127.0.0.1:8000/forum/categorie/30,1775852780,,200,re
 7e4993,127.0.0.1,GET,http://127.0.0.1:8000/forum/comment/66/edit,1775852785,,200,request
 c7321e,127.0.0.1,POST,http://127.0.0.1:8000/forum/comment/66/edit,1775852792,,302,request
 0ce3b3,127.0.0.1,GET,http://127.0.0.1:8000/forum/categorie/30,1775852792,,200,request
+e5c9f3,127.0.0.1,GET,http://127.0.0.1:8000/forum,1775852946,,200,request
+cf73e1,127.0.0.1,GET,http://127.0.0.1:8000/forum/categorie/new,1775852948,,200,request
+1f6690,127.0.0.1,POST,http://127.0.0.1:8000/forum/categorie/new,1775852950,,200,request
+ccfe2d,127.0.0.1,GET,http://127.0.0.1:8000/forum/categorie/new,1775852955,,200,request
+922e98,127.0.0.1,GET,http://127.0.0.1:8000/forum/categorie/26,1775852979,,200,request
+55d4c0,127.0.0.1,GET,http://127.0.0.1:8000/forum/categorie/26,1775853183,,200,request
+80dcd6,127.0.0.1,GET,http://127.0.0.1:8000/forum/categorie/26,1775853433,,200,request
+b0442f,127.0.0.1,GET,http://127.0.0.1:8000/forum/categorie/24,1775853498,,200,request
