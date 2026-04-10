@@ -2,10 +2,10 @@
 (function () {
     // ✅ CONFIGURATION GROQ
     const CONFIG = {
-        API_KEY: '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',
-        MODEL:   'llama3-8b-8192',
-        API_URL: 'https://api.groq.com/openai/v1/chat/completions'
-    };
+    API_KEY: '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',
+    MODEL:   'llama-3.1-8b-instant',
+    API_URL: 'https://api.groq.com/openai/v1/chat/completions'
+};
 
     const state = {
         events: [], tasks: [],
