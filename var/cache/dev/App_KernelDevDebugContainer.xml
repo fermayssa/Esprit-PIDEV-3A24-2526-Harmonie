@@ -124,6 +124,7 @@
         <parameter key="dev">true</parameter>
       </parameter>
     </parameter>
+    <parameter key="posts_images_directory">C:\Users\mayss\IdeaProjects\PI_Web/public/uploads/posts</parameter>
     <parameter key="event_dispatcher.event_aliases" type="collection">
       <parameter key="Symfony\Component\Console\Event\ConsoleCommandEvent">console.command</parameter>
       <parameter key="Symfony\Component\Console\Event\ConsoleErrorEvent">console.error</parameter>
@@ -898,7 +899,7 @@
     </service>
     <service id="argument_resolver.service" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver">
       <tag name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver" priority="-50">controller.argument_value_resolver</tag>
-      <argument type="service" id=".service_locator.4ZVKQ8i"/>
+      <argument type="service" id=".service_locator.AMoybbN"/>
     </service>
     <service id="argument_resolver.default" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver">
       <tag name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver" priority="-100">controller.argument_value_resolver</tag>
@@ -4024,7 +4025,7 @@
     </service>
     <service id="argument_resolver.not_tagged_controller" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\NotTaggedControllerValueResolver">
       <tag name="controller.argument_value_resolver" priority="-200"/>
-      <argument type="service" id=".service_locator.4ZVKQ8i"/>
+      <argument type="service" id=".service_locator.AMoybbN"/>
     </service>
     <service id="debug.log_processor" class="Symfony\Bridge\Monolog\Processor\DebugProcessor">
       <tag name="kernel.reset" method="reset"/>
@@ -9831,17 +9832,24 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.z0A7H.F" method="withContext"/>
     </service>
-    <service id=".service_locator.z0A7H.F.App\Controller\ForumController::newPost()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.wEoPZVd" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="em" type="service_closure" id="doctrine.orm.default_entity_manager"/>
+        <argument key="slugger" type="service_closure" id="slugger"/>
+      </argument>
+    </service>
+    <service id=".service_locator.wEoPZVd.App\Controller\ForumController::newPost()" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\ForumController::newPost()"/>
       <argument>App\Controller\ForumController::newPost()</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.z0A7H.F" method="withContext"/>
+      <factory service=".service_locator.wEoPZVd" method="withContext"/>
     </service>
-    <service id=".service_locator.z0A7H.F.App\Controller\ForumController::editPost()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.wEoPZVd.App\Controller\ForumController::editPost()" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\ForumController::editPost()"/>
       <argument>App\Controller\ForumController::editPost()</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.z0A7H.F" method="withContext"/>
+      <factory service=".service_locator.wEoPZVd" method="withContext"/>
     </service>
     <service id=".service_locator.z0A7H.F.App\Controller\ForumController::deletePost()" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\ForumController::deletePost()"/>
@@ -9965,13 +9973,6 @@
       <argument>App\Controller\NutritionController::apiSupprimer()</argument>
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.Uw2k5kr" method="withContext"/>
-    </service>
-    <service id=".service_locator.wEoPZVd" class="Symfony\Component\DependencyInjection\ServiceLocator">
-      <tag name="container.service_locator"/>
-      <argument type="collection">
-        <argument key="em" type="service_closure" id="doctrine.orm.default_entity_manager"/>
-        <argument key="slugger" type="service_closure" id="slugger"/>
-      </argument>
     </service>
     <service id=".service_locator.wEoPZVd.App\Controller\ProfileController::edit()" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\ProfileController::edit()"/>
@@ -10119,7 +10120,7 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.z0A7H.F" method="withContext"/>
     </service>
-    <service id=".service_locator.4ZVKQ8i" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.AMoybbN" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="kernel::registerContainerConfiguration" type="service_closure" id=".service_locator.1vYpZ1B.kernel::registerContainerConfiguration()"/>
@@ -10183,8 +10184,8 @@
         <argument key="App\Controller\ForumController::deleteCategorie" type="service_closure" id=".service_locator.z0A7H.F.App\Controller\ForumController::deleteCategorie()"/>
         <argument key="App\Controller\ForumController::posts" type="service_closure" id=".service_locator.z0A7H.F.App\Controller\ForumController::posts()"/>
         <argument key="App\Controller\ForumController::toggleLike" type="service_closure" id=".service_locator.z0A7H.F.App\Controller\ForumController::toggleLike()"/>
-        <argument key="App\Controller\ForumController::newPost" type="service_closure" id=".service_locator.z0A7H.F.App\Controller\ForumController::newPost()"/>
-        <argument key="App\Controller\ForumController::editPost" type="service_closure" id=".service_locator.z0A7H.F.App\Controller\ForumController::editPost()"/>
+        <argument key="App\Controller\ForumController::newPost" type="service_closure" id=".service_locator.wEoPZVd.App\Controller\ForumController::newPost()"/>
+        <argument key="App\Controller\ForumController::editPost" type="service_closure" id=".service_locator.wEoPZVd.App\Controller\ForumController::editPost()"/>
         <argument key="App\Controller\ForumController::deletePost" type="service_closure" id=".service_locator.z0A7H.F.App\Controller\ForumController::deletePost()"/>
         <argument key="App\Controller\ForumController::newComment" type="service_closure" id=".service_locator.z0A7H.F.App\Controller\ForumController::newComment()"/>
         <argument key="App\Controller\ForumController::editComment" type="service_closure" id=".service_locator.z0A7H.F.App\Controller\ForumController::editComment()"/>
@@ -10277,8 +10278,8 @@
         <argument key="App\Controller\ForumController:deleteCategorie" type="service_closure" id=".service_locator.z0A7H.F.App\Controller\ForumController::deleteCategorie()"/>
         <argument key="App\Controller\ForumController:posts" type="service_closure" id=".service_locator.z0A7H.F.App\Controller\ForumController::posts()"/>
         <argument key="App\Controller\ForumController:toggleLike" type="service_closure" id=".service_locator.z0A7H.F.App\Controller\ForumController::toggleLike()"/>
-        <argument key="App\Controller\ForumController:newPost" type="service_closure" id=".service_locator.z0A7H.F.App\Controller\ForumController::newPost()"/>
-        <argument key="App\Controller\ForumController:editPost" type="service_closure" id=".service_locator.z0A7H.F.App\Controller\ForumController::editPost()"/>
+        <argument key="App\Controller\ForumController:newPost" type="service_closure" id=".service_locator.wEoPZVd.App\Controller\ForumController::newPost()"/>
+        <argument key="App\Controller\ForumController:editPost" type="service_closure" id=".service_locator.wEoPZVd.App\Controller\ForumController::editPost()"/>
         <argument key="App\Controller\ForumController:deletePost" type="service_closure" id=".service_locator.z0A7H.F.App\Controller\ForumController::deletePost()"/>
         <argument key="App\Controller\ForumController:newComment" type="service_closure" id=".service_locator.z0A7H.F.App\Controller\ForumController::newComment()"/>
         <argument key="App\Controller\ForumController:editComment" type="service_closure" id=".service_locator.z0A7H.F.App\Controller\ForumController::editComment()"/>
@@ -12863,7 +12864,7 @@
     <service id="Psr\Log\LoggerInterface" alias="monolog.logger"/>
     <service id="container.env_var_processors_locator" alias=".service_locator.ryAvHi4" public="true"/>
     <service id="twig.loader.filesystem" alias="twig.loader.native_filesystem"/>
-    <service id="argument_resolver.controller_locator" alias=".service_locator.4ZVKQ8i"/>
+    <service id="argument_resolver.controller_locator" alias=".service_locator.AMoybbN"/>
     <service id="doctrine.id_generator_locator" alias=".service_locator.W55Po6X"/>
     <service id="twig.loader" alias="twig.loader.native_filesystem"/>
     <service id=".Psr\Log\LoggerInterface $request" alias="monolog.logger.request"/>
@@ -12953,13 +12954,13 @@
     <service id=".service_locator.23Ydx6f" alias=".service_locator.NgPr0wp"/>
     <service id=".service_locator.KNSic_m" alias=".service_locator.n60qnZK"/>
     <service id=".service_locator.0ekWYPZ" alias=".service_locator.z0A7H.F"/>
+    <service id=".service_locator.jMHKBAi" alias=".service_locator.wEoPZVd"/>
     <service id=".service_locator.a4BGQuG" alias=".service_locator.j4Wlmfc"/>
     <service id=".service_locator.qG0FeeQ" alias=".service_locator.eTqhGjo"/>
     <service id=".service_locator.HEogJwd" alias=".service_locator.Cz8IWeY"/>
     <service id=".service_locator.RCAnKOx" alias=".service_locator.jFG7qVJ"/>
     <service id=".service_locator.zZLgE7T" alias=".service_locator.9SYQ8z3"/>
     <service id=".service_locator.h.3.LVM" alias=".service_locator.Uw2k5kr"/>
-    <service id=".service_locator.jMHKBAi" alias=".service_locator.wEoPZVd"/>
     <service id=".service_locator.MVL9hvL" alias=".service_locator.0I1vCn4"/>
     <service id=".service_locator.k5boMfp" alias=".service_locator._Ls6dHU"/>
     <service id=".service_locator.YU1i9lx" alias=".service_locator.Jt3EkEi"/>

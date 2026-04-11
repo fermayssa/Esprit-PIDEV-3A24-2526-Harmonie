@@ -14,6 +14,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\String\Slugger\SluggerInterface;
+
 
 class ForumController extends AbstractController
 {
@@ -234,9 +237,14 @@ public function posts(int $id, Request $request, EntityManagerInterface $em): Re
     //  POSTS CRUD
     // ════════════════════════════════════════════════
 
-    #[Route('/forum/categorie/{idCat}/post/new', name: 'forum_post_new', methods: ['GET','POST'])]
-public function newPost(int $idCat, Request $request, EntityManagerInterface $em): Response
-{
+    
+#[Route('/forum/categorie/{idCat}/post/new', name: 'forum_post_new', methods: ['GET','POST'])]
+public function newPost(
+    int $idCat,
+    Request $request,
+    EntityManagerInterface $em,
+    SluggerInterface $slugger
+): Response {
     $categorie = $em->getRepository(Categorie::class)->find($idCat);
     if (!$categorie) throw $this->createNotFoundException();
 
@@ -245,11 +253,31 @@ public function newPost(int $idCat, Request $request, EntityManagerInterface $em
     $form->handleRequest($request);
 
     if ($form->isSubmitted() && $form->isValid()) {
+
+        // ── Gestion upload image ──
+        $imageFile = $form->get('imageFile')->getData();
+        if ($imageFile) {
+            $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+            $safeFilename     = $slugger->slug($originalFilename);
+            $newFilename      = $safeFilename . '-' . uniqid() . '.' . $imageFile->guessExtension();
+
+            try {
+                $imageFile->move(
+                    $this->getParameter('posts_images_directory'),
+                    $newFilename
+                );
+                $post->setImagePath($newFilename);
+            } catch (FileException $e) {
+                // log si besoin
+            }
+        }
+
         $post->setIdCategorie($idCat);
         $post->setUserId($this->getCurrentUserId());
         $post->setDateCreation(new \DateTime());
         $em->persist($post);
         $em->flush();
+
         return $this->redirectToRoute('forum_posts', ['id' => $idCat]);
     }
 
@@ -260,10 +288,14 @@ public function newPost(int $idCat, Request $request, EntityManagerInterface $em
     ]);
 }
 
-    #[Route('/forum/post/{id}/edit', name: 'forum_post_edit', methods: ['GET','POST'])]
-public function editPost(int $id, Request $request, EntityManagerInterface $em): Response
-{
-    $post = $em->getRepository(Post::class)->find($id);
+#[Route('/forum/post/{id}/edit', name: 'forum_post_edit', methods: ['GET','POST'])]
+public function editPost(
+    int $id,
+    Request $request,
+    EntityManagerInterface $em,
+    SluggerInterface $slugger
+): Response {
+    $post      = $em->getRepository(Post::class)->find($id);
     if (!$post) throw $this->createNotFoundException();
     $categorie = $em->getRepository(Categorie::class)->find($post->getIdCategorie());
 
@@ -271,6 +303,25 @@ public function editPost(int $id, Request $request, EntityManagerInterface $em):
     $form->handleRequest($request);
 
     if ($form->isSubmitted() && $form->isValid()) {
+
+        // ── Gestion upload image ──
+        $imageFile = $form->get('imageFile')->getData();
+        if ($imageFile) {
+            $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+            $safeFilename     = $slugger->slug($originalFilename);
+            $newFilename      = $safeFilename . '-' . uniqid() . '.' . $imageFile->guessExtension();
+
+            try {
+                $imageFile->move(
+                    $this->getParameter('posts_images_directory'),
+                    $newFilename
+                );
+                $post->setImagePath($newFilename);
+            } catch (FileException $e) {
+                // log si besoin
+            }
+        }
+
         $em->flush();
         return $this->redirectToRoute('forum_posts', ['id' => $post->getIdCategorie()]);
     }
@@ -281,6 +332,8 @@ public function editPost(int $id, Request $request, EntityManagerInterface $em):
         'categorie' => $categorie,
     ]);
 }
+
+    
 
     #[Route('/forum/post/{id}/delete', name: 'forum_post_delete', methods: ['POST'])]
     public function deletePost(int $id, EntityManagerInterface $em): Response
