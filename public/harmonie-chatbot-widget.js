@@ -268,6 +268,110 @@
         if (el) el.remove();
     }
 
+    // ✅ CHARGEMENT DES DONNÉES DU BACKEND
+    async function loadTasksFromApi() {
+        try {
+            const res = await fetch('/api/tasks', { headers: { 'Accept': 'application/json' } });
+            if (!res.ok) throw new Error('Erreur API tâches');
+            state.tasks = await res.json();
+        } catch (e) {
+            console.error('Erreur chargement tâches:', e);
+        }
+    }
+    async function loadEventsFromApi() {
+        try {
+            const res = await fetch('/api/events', { headers: { 'Accept': 'application/json' } });
+            if (!res.ok) throw new Error('Erreur API événements');
+            state.events = await res.json();
+        } catch (e) {
+            console.error('Erreur chargement événements:', e);
+        }
+    }
+
+    // ✅ OPÉRATIONS CRUD SUR TÂCHES
+    async function createTaskInApi(taskData) {
+        try {
+            const res = await fetch('/api/tasks', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(taskData)
+            });
+            if (!res.ok) throw new Error('Erreur création');
+            const newTask = await res.json();
+            state.tasks.push(newTask);
+            return newTask;
+        } catch (e) {
+            throw new Error('❌ Impossible de créer la tâche: ' + e.message);
+        }
+    }
+    async function updateTaskInApi(id, taskData) {
+        try {
+            const res = await fetch(`/api/tasks/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(taskData)
+            });
+            if (!res.ok) throw new Error('Erreur mise à jour');
+            const updated = await res.json();
+            const idx = state.tasks.findIndex(t => t.id === id);
+            if (idx >= 0) state.tasks[idx] = updated;
+            return updated;
+        } catch (e) {
+            throw new Error('❌ Impossible de modifier la tâche: ' + e.message);
+        }
+    }
+    async function deleteTaskInApi(id) {
+        try {
+            const res = await fetch(`/api/tasks/${id}`, { method: 'DELETE' });
+            if (!res.ok) throw new Error('Erreur suppression');
+            state.tasks = state.tasks.filter(t => t.id !== id);
+        } catch (e) {
+            throw new Error('❌ Impossible de supprimer la tâche: ' + e.message);
+        }
+    }
+
+    // ✅ OPÉRATIONS CRUD SUR ÉVÉNEMENTS
+    async function createEventInApi(eventData) {
+        try {
+            const res = await fetch('/api/events', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(eventData)
+            });
+            if (!res.ok) throw new Error('Erreur création');
+            const newEvent = await res.json();
+            state.events.push(newEvent);
+            return newEvent;
+        } catch (e) {
+            throw new Error('❌ Impossible de créer l\'événement: ' + e.message);
+        }
+    }
+    async function updateEventInApi(id, eventData) {
+        try {
+            const res = await fetch(`/api/events/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(eventData)
+            });
+            if (!res.ok) throw new Error('Erreur mise à jour');
+            const updated = await res.json();
+            const idx = state.events.findIndex(e => e.id === id);
+            if (idx >= 0) state.events[idx] = updated;
+            return updated;
+        } catch (e) {
+            throw new Error('❌ Impossible de modifier l\'événement: ' + e.message);
+        }
+    }
+    async function deleteEventInApi(id) {
+        try {
+            const res = await fetch(`/api/events/${id}`, { method: 'DELETE' });
+            if (!res.ok) throw new Error('Erreur suppression');
+            state.events = state.events.filter(e => e.id !== id);
+        } catch (e) {
+            throw new Error('❌ Impossible de supprimer l\'événement: ' + e.message);
+        }
+    }
+
     // ✅ APPEL API GROQ (format OpenAI compatible)
     async function callGroqAPI(userMessage) {
         const systemPrompt = `Tu es Harmonie Assistant, un assistant personnel bienveillant intégré dans l'application Harmonie.
@@ -342,37 +446,66 @@ Réponds de façon claire, concise et bienveillante avec des emojis appropriés.
         const timeMatch = message.match(/(\d{1,2})[h:](\d{0,2})?/i);
         const hours = timeMatch ? parseInt(timeMatch[1]) : 10;
         const minutes = timeMatch && timeMatch[2] ? parseInt(timeMatch[2]) : 0;
-        const event = {
-            id: state.eventCounter++,
+        const tomorrow = new Date(Date.now()+86400000);
+        const date = tomorrow.toISOString().split('T')[0];
+        const startTime = `${date}T${String(hours).padStart(2,'0')}:${String(minutes).padStart(2,'0')}:00`;
+        const endTime = `${date}T${String(hours+1).padStart(2,'0')}:${String(minutes).padStart(2,'0')}:00`;
+        const eventData = {
             title: extractEventTitle(message),
-            date: new Date(Date.now()+86400000).toISOString().split('T')[0],
-            startTime: `${String(hours).padStart(2,'0')}:${String(minutes).padStart(2,'0')}`,
-            endTime:   `${String(hours+1).padStart(2,'0')}:${String(minutes).padStart(2,'0')}`,
-            location: extractLocation(message) || 'À définir'
+            description: null,
+            startTime: startTime,
+            endTime: endTime,
+            location: extractLocation(message) || 'À définir',
+            eventType: 'autre',
+            priority: 1
         };
-        state.events.push(event);
-        return `✅ <strong>Événement créé!</strong><div class="hcw-message-card event"><strong>📅 ${event.title}</strong><br>📆 ${formatDate(event.date)}<br>🕐 ${event.startTime} - ${event.endTime}<br>📍 ${event.location}</div>`;
+        createEventInApi(eventData).then(event => {
+            addMessage(`✅ <strong>Événement créé!</strong><div class="hcw-message-card event"><strong>📅 ${event.title}</strong><br>🕐 ${event.startTime}<br>📍 ${event.location}</div>`, 'bot', true);
+        }).catch(err => {
+            addMessage(`<div class="hcw-message-card error">❌ <strong>Erreur:</strong> ${err.message}</div>`, 'bot', true);
+        });
+        return null;
     }
 
     function handleShowEvents() {
         if (!state.events.length) return '📭 Aucun événement programmé.';
         let html = '📅 <strong>Vos événements:</strong><br>';
-        state.events.forEach(e => { html += `<div class="hcw-message-card event"><strong>${e.title}</strong><br>${formatDate(e.date)} • ${e.startTime}-${e.endTime}<br>📍 ${e.location}</div>`; });
+        state.events.forEach(e => {
+            const startStr = e.startTime ? e.startTime.substring(0, 16) : 'N/A';
+            html += `<div class="hcw-message-card event"><strong>${e.title}</strong><br>🕐 ${startStr}<br>📍 ${e.location || 'N/A'}</div>`;
+        });
         return html;
     }
 
     function handleDeleteEvent() {
         if (!state.events.length) return '📭 Aucun événement à supprimer.';
-        const last = state.events.pop();
-        return `✅ <strong>Supprimé!</strong><div class="hcw-message-card event"><strong>❌ ${last.title}</strong></div>`;
+        const last = state.events[state.events.length - 1];
+        if (!last.id) return '❌ Impossible de supprimer (ID manquant)';
+        deleteEventInApi(last.id).then(() => {
+            addMessage(`✅ <strong>Événement supprimé!</strong><div class="hcw-message-card event"><strong>❌ ${last.title}</strong></div>`, 'bot', true);
+        }).catch(err => {
+            addMessage(`<div class="hcw-message-card error">❌ ${err.message}</div>`, 'bot', true);
+        });
+        return null;
     }
 
     function handleAddTask(message) {
         const priority = extractPriority(message);
         const emoji = { haute:'🔴', moyenne:'🟡', basse:'🟢' }[priority];
-        const task = { id: state.taskCounter++, title: extractTaskTitle(message), priority, dueDate: extractDueDate(message), completed: false };
-        state.tasks.push(task);
-        return `✅ <strong>Tâche ajoutée!</strong><div class="hcw-message-card task"><strong>${emoji} ${task.title}</strong><br>Priorité: <strong>${priority}</strong><br>📅 ${task.dueDate}</div>`;
+        const taskData = {
+            title: extractTaskTitle(message),
+            priority,
+            dueDate: extractDueDate(message),
+            notes: null,
+            completed: false
+        };
+        createTaskInApi(taskData).then(task => {
+            const emoji = { haute:'🔴', moyenne:'🟡', basse:'🟢' }[task.priority];
+            addMessage(`✅ <strong>Tâche créée!</strong><div class="hcw-message-card task"><strong>${emoji} ${task.title}</strong><br>Priorité: <strong>${task.priority}</strong><br>📅 ${task.dueDate}</div>`, 'bot', true);
+        }).catch(err => {
+            addMessage(`<div class="hcw-message-card error">❌ <strong>Erreur:</strong> ${err.message}</div>`, 'bot', true);
+        });
+        return null;
     }
 
     function handleShowTasks(msg) {
@@ -393,14 +526,25 @@ Réponds de façon claire, concise et bienveillante avec des emojis appropriés.
     function handleCompleteTask() {
         const task = state.tasks.find(t => !t.completed);
         if (!task) return '✨ Toutes les tâches sont terminées!';
-        task.completed = true;
-        return `🎉 <strong>Bravo!</strong><div class="hcw-message-card task"><strong>✅ ${task.title}</strong><br>Marquée comme terminée!</div>`;
+        if (!task.id) return '❌ Impossible de marquer (ID manquant)';
+        updateTaskInApi(task.id, { completed: true }).then(updated => {
+            addMessage(`🎉 <strong>Bravo!</strong><div class="hcw-message-card task"><strong>✅ ${updated.title}</strong><br>Marquée comme terminée!</div>`, 'bot', true);
+        }).catch(err => {
+            addMessage(`<div class="hcw-message-card error">❌ ${err.message}</div>`, 'bot', true);
+        });
+        return null;
     }
 
     function handleDeleteTask() {
         if (!state.tasks.length) return '📭 Aucune tâche à supprimer.';
-        const last = state.tasks.pop();
-        return `✅ <strong>Supprimée!</strong><div class="hcw-message-card task"><strong>❌ ${last.title}</strong></div>`;
+        const last = state.tasks[state.tasks.length - 1];
+        if (!last.id) return '❌ Impossible de supprimer (ID manquant)';
+        deleteTaskInApi(last.id).then(() => {
+            addMessage(`✅ <strong>Tâche supprimée!</strong><div class="hcw-message-card task"><strong>❌ ${last.title}</strong></div>`, 'bot', true);
+        }).catch(err => {
+            addMessage(`<div class="hcw-message-card error">❌ ${err.message}</div>`, 'bot', true);
+        });
+        return null;
     }
 
     function getHelpMessage() {
@@ -448,10 +592,11 @@ Réponds de façon claire, concise et bienveillante avec des emojis appropriés.
         const sendBtn  = chatbox.querySelector('.hcw-send-btn');
         const closeBtn = chatbox.querySelector('.hcw-header-close');
 
-        // Injection des tâches du backend si dispo
-        if (window.HARMONIE_TASKS && Array.isArray(window.HARMONIE_TASKS)) {
-            state.tasks = window.HARMONIE_TASKS;
-        }
+        // Charger les données depuis les APIs
+        Promise.all([
+            loadTasksFromApi(),
+            loadEventsFromApi()
+        ]).catch(e => console.error('Erreur initialisation données:', e));
 
         addMessage(getWelcomeHTML(detectPageContext()), 'bot', true);
 

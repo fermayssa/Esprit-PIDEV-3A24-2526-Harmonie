@@ -507,6 +507,22 @@
         <argument type="service" id=".service_locator.TJNRSaV.App\Controller\AdminUserController"/>
       </call>
     </service>
+    <service id="App\Controller\Api\EventApiController" class="App\Controller\Api\EventApiController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
+      <tag name="routing.controller"/>
+      <tag name="container.service_subscriber"/>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.TJNRSaV.App\Controller\Api\EventApiController"/>
+      </call>
+    </service>
+    <service id="App\Controller\Api\TaskApiController" class="App\Controller\Api\TaskApiController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
+      <tag name="routing.controller"/>
+      <tag name="container.service_subscriber"/>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.TJNRSaV.App\Controller\Api\TaskApiController"/>
+      </call>
+    </service>
     <service id="App\Controller\BackController" class="App\Controller\BackController" public="true" autowire="true" autoconfigure="true">
       <tag name="controller.service_arguments"/>
       <tag name="routing.controller"/>
@@ -849,7 +865,7 @@
     </service>
     <service id="argument_resolver.service" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver">
       <tag name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver" priority="-50">controller.argument_value_resolver</tag>
-      <argument type="service" id=".service_locator.TLtyqPp"/>
+      <argument type="service" id=".service_locator.HkbUFRz"/>
     </service>
     <service id="argument_resolver.default" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver">
       <tag name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver" priority="-100">controller.argument_value_resolver</tag>
@@ -3980,7 +3996,7 @@
     </service>
     <service id="argument_resolver.not_tagged_controller" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\NotTaggedControllerValueResolver">
       <tag name="controller.argument_value_resolver" priority="-200"/>
-      <argument type="service" id=".service_locator.TLtyqPp"/>
+      <argument type="service" id=".service_locator.HkbUFRz"/>
     </service>
     <service id="debug.log_processor" class="Symfony\Bridge\Monolog\Processor\DebugProcessor">
       <tag name="kernel.reset" method="reset"/>
@@ -4072,6 +4088,8 @@
         <argument>App\Controller\AdminSportController</argument>
         <argument>App\Controller\AdminTacheController</argument>
         <argument>App\Controller\AdminUserController</argument>
+        <argument>App\Controller\Api\EventApiController</argument>
+        <argument>App\Controller\Api\TaskApiController</argument>
         <argument>App\Controller\BackController</argument>
         <argument>App\Controller\ChatbotController</argument>
         <argument>App\Controller\EvenementsController</argument>
@@ -8478,6 +8496,14 @@
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\AdminUserController" class="App\Controller\AdminUserController" autowire="true" abstract="true"/>
     <service id=".instanceof.App\Controller\AdminUserController.0.App\Controller\AdminUserController" class="App\Controller\AdminUserController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\AdminUserController" class="App\Controller\AdminUserController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\Api\EventApiController" class="App\Controller\Api\EventApiController" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\Api\EventApiController" class="App\Controller\Api\EventApiController" autowire="true" abstract="true"/>
+    <service id=".instanceof.App\Controller\Api\EventApiController.0.App\Controller\Api\EventApiController" class="App\Controller\Api\EventApiController" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Controller\Api\EventApiController" class="App\Controller\Api\EventApiController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\Api\TaskApiController" class="App\Controller\Api\TaskApiController" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\Api\TaskApiController" class="App\Controller\Api\TaskApiController" autowire="true" abstract="true"/>
+    <service id=".instanceof.App\Controller\Api\TaskApiController.0.App\Controller\Api\TaskApiController" class="App\Controller\Api\TaskApiController" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Controller\Api\TaskApiController" class="App\Controller\Api\TaskApiController" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\BackController" class="App\Controller\BackController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\BackController" class="App\Controller\BackController" autowire="true" abstract="true"/>
     <service id=".instanceof.App\Controller\BackController.0.App\Controller\BackController" class="App\Controller\BackController" autowire="true" abstract="true"/>
@@ -9549,6 +9575,81 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.kYAceIU" method="withContext"/>
     </service>
+    <service id=".service_locator.n60qnZK" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="evenementRepository" type="service_closure" id="App\Repository\EvenementRepository"/>
+      </argument>
+    </service>
+    <service id=".service_locator.n60qnZK.App\Controller\Api\EventApiController::list()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\Api\EventApiController::list()"/>
+      <argument>App\Controller\Api\EventApiController::list()</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.n60qnZK" method="withContext"/>
+    </service>
+    <service id=".service_locator.PUfitXC" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="em" type="service_closure" id="doctrine.orm.default_entity_manager"/>
+        <argument key="calendrierRepository" type="service_closure" id="App\Repository\CalendrierRepository"/>
+      </argument>
+    </service>
+    <service id=".service_locator.PUfitXC.App\Controller\Api\EventApiController::create()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\Api\EventApiController::create()"/>
+      <argument>App\Controller\Api\EventApiController::create()</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.PUfitXC" method="withContext"/>
+    </service>
+    <service id=".service_locator.AJCrrkc" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="event" type="service_closure" id=".errored..service_locator.AJCrrkc.App\Entity\Evenement"/>
+        <argument key="em" type="service_closure" id="doctrine.orm.default_entity_manager"/>
+      </argument>
+    </service>
+    <service id=".service_locator.AJCrrkc.App\Controller\Api\EventApiController::update()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\Api\EventApiController::update()"/>
+      <argument>App\Controller\Api\EventApiController::update()</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.AJCrrkc" method="withContext"/>
+    </service>
+    <service id=".service_locator.AJCrrkc.App\Controller\Api\EventApiController::delete()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\Api\EventApiController::delete()"/>
+      <argument>App\Controller\Api\EventApiController::delete()</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.AJCrrkc" method="withContext"/>
+    </service>
+    <service id=".service_locator.e53I5WH.App\Controller\Api\TaskApiController::list()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\Api\TaskApiController::list()"/>
+      <argument>App\Controller\Api\TaskApiController::list()</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.e53I5WH" method="withContext"/>
+    </service>
+    <service id=".service_locator.PUfitXC.App\Controller\Api\TaskApiController::create()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\Api\TaskApiController::create()"/>
+      <argument>App\Controller\Api\TaskApiController::create()</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.PUfitXC" method="withContext"/>
+    </service>
+    <service id=".service_locator.0MKPK3c" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="task" type="service_closure" id=".errored..service_locator.0MKPK3c.App\Entity\Tache"/>
+        <argument key="em" type="service_closure" id="doctrine.orm.default_entity_manager"/>
+      </argument>
+    </service>
+    <service id=".service_locator.0MKPK3c.App\Controller\Api\TaskApiController::update()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\Api\TaskApiController::update()"/>
+      <argument>App\Controller\Api\TaskApiController::update()</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.0MKPK3c" method="withContext"/>
+    </service>
+    <service id=".service_locator.0MKPK3c.App\Controller\Api\TaskApiController::delete()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\Api\TaskApiController::delete()"/>
+      <argument>App\Controller\Api\TaskApiController::delete()</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.0MKPK3c" method="withContext"/>
+    </service>
     <service id=".service_locator.ziqo37J" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
@@ -9677,12 +9778,6 @@
       <argument>App\Controller\EvenementsController::index()</argument>
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.NgPr0wp" method="withContext"/>
-    </service>
-    <service id=".service_locator.n60qnZK" class="Symfony\Component\DependencyInjection\ServiceLocator">
-      <tag name="container.service_locator"/>
-      <argument type="collection">
-        <argument key="evenementRepository" type="service_closure" id="App\Repository\EvenementRepository"/>
-      </argument>
     </service>
     <service id=".service_locator.n60qnZK.App\Controller\EvenementsController::exportCsv()" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\EvenementsController::exportCsv()"/>
@@ -10044,7 +10139,7 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.z0A7H.F" method="withContext"/>
     </service>
-    <service id=".service_locator.TLtyqPp" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.HkbUFRz" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="kernel::registerContainerConfiguration" type="service_closure" id=".service_locator.1vYpZ1B.kernel::registerContainerConfiguration()"/>
@@ -10086,6 +10181,14 @@
         <argument key="App\Controller\AdminUserController::edit" type="service_closure" id=".service_locator.UoveXVI.App\Controller\AdminUserController::edit()"/>
         <argument key="App\Controller\AdminUserController::toggle" type="service_closure" id=".service_locator.kYAceIU.App\Controller\AdminUserController::toggle()"/>
         <argument key="App\Controller\AdminUserController::suspicionDetail" type="service_closure" id=".service_locator.kYAceIU.App\Controller\AdminUserController::suspicionDetail()"/>
+        <argument key="App\Controller\Api\EventApiController::list" type="service_closure" id=".service_locator.n60qnZK.App\Controller\Api\EventApiController::list()"/>
+        <argument key="App\Controller\Api\EventApiController::create" type="service_closure" id=".service_locator.PUfitXC.App\Controller\Api\EventApiController::create()"/>
+        <argument key="App\Controller\Api\EventApiController::update" type="service_closure" id=".service_locator.AJCrrkc.App\Controller\Api\EventApiController::update()"/>
+        <argument key="App\Controller\Api\EventApiController::delete" type="service_closure" id=".service_locator.AJCrrkc.App\Controller\Api\EventApiController::delete()"/>
+        <argument key="App\Controller\Api\TaskApiController::list" type="service_closure" id=".service_locator.e53I5WH.App\Controller\Api\TaskApiController::list()"/>
+        <argument key="App\Controller\Api\TaskApiController::create" type="service_closure" id=".service_locator.PUfitXC.App\Controller\Api\TaskApiController::create()"/>
+        <argument key="App\Controller\Api\TaskApiController::update" type="service_closure" id=".service_locator.0MKPK3c.App\Controller\Api\TaskApiController::update()"/>
+        <argument key="App\Controller\Api\TaskApiController::delete" type="service_closure" id=".service_locator.0MKPK3c.App\Controller\Api\TaskApiController::delete()"/>
         <argument key="App\Controller\BackController::dashboard" type="service_closure" id=".service_locator.ziqo37J.App\Controller\BackController::dashboard()"/>
         <argument key="App\Controller\BackController::categories" type="service_closure" id=".service_locator.Y_R0bCX.App\Controller\BackController::categories()"/>
         <argument key="App\Controller\BackController::deleteCategorie" type="service_closure" id=".service_locator.0pAqWtH.App\Controller\BackController::deleteCategorie()"/>
@@ -10180,6 +10283,14 @@
         <argument key="App\Controller\AdminUserController:edit" type="service_closure" id=".service_locator.UoveXVI.App\Controller\AdminUserController::edit()"/>
         <argument key="App\Controller\AdminUserController:toggle" type="service_closure" id=".service_locator.kYAceIU.App\Controller\AdminUserController::toggle()"/>
         <argument key="App\Controller\AdminUserController:suspicionDetail" type="service_closure" id=".service_locator.kYAceIU.App\Controller\AdminUserController::suspicionDetail()"/>
+        <argument key="App\Controller\Api\EventApiController:list" type="service_closure" id=".service_locator.n60qnZK.App\Controller\Api\EventApiController::list()"/>
+        <argument key="App\Controller\Api\EventApiController:create" type="service_closure" id=".service_locator.PUfitXC.App\Controller\Api\EventApiController::create()"/>
+        <argument key="App\Controller\Api\EventApiController:update" type="service_closure" id=".service_locator.AJCrrkc.App\Controller\Api\EventApiController::update()"/>
+        <argument key="App\Controller\Api\EventApiController:delete" type="service_closure" id=".service_locator.AJCrrkc.App\Controller\Api\EventApiController::delete()"/>
+        <argument key="App\Controller\Api\TaskApiController:list" type="service_closure" id=".service_locator.e53I5WH.App\Controller\Api\TaskApiController::list()"/>
+        <argument key="App\Controller\Api\TaskApiController:create" type="service_closure" id=".service_locator.PUfitXC.App\Controller\Api\TaskApiController::create()"/>
+        <argument key="App\Controller\Api\TaskApiController:update" type="service_closure" id=".service_locator.0MKPK3c.App\Controller\Api\TaskApiController::update()"/>
+        <argument key="App\Controller\Api\TaskApiController:delete" type="service_closure" id=".service_locator.0MKPK3c.App\Controller\Api\TaskApiController::delete()"/>
         <argument key="App\Controller\BackController:dashboard" type="service_closure" id=".service_locator.ziqo37J.App\Controller\BackController::dashboard()"/>
         <argument key="App\Controller\BackController:categories" type="service_closure" id=".service_locator.Y_R0bCX.App\Controller\BackController::categories()"/>
         <argument key="App\Controller\BackController:deleteCategorie" type="service_closure" id=".service_locator.0pAqWtH.App\Controller\BackController::deleteCategorie()"/>
@@ -10934,6 +11045,18 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.TJNRSaV" method="withContext"/>
     </service>
+    <service id=".service_locator.TJNRSaV.App\Controller\Api\EventApiController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\Api\EventApiController"/>
+      <argument>App\Controller\Api\EventApiController</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.TJNRSaV" method="withContext"/>
+    </service>
+    <service id=".service_locator.TJNRSaV.App\Controller\Api\TaskApiController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\Api\TaskApiController"/>
+      <argument>App\Controller\Api\TaskApiController</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.TJNRSaV" method="withContext"/>
+    </service>
     <service id=".service_locator.TJNRSaV.App\Controller\BackController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\BackController"/>
       <argument>App\Controller\BackController</argument>
@@ -11239,6 +11362,8 @@
           <argument>App\Controller\AdminSportController</argument>
           <argument>App\Controller\AdminTacheController</argument>
           <argument>App\Controller\AdminUserController</argument>
+          <argument>App\Controller\Api\EventApiController</argument>
+          <argument>App\Controller\Api\TaskApiController</argument>
           <argument>App\Controller\BackController</argument>
           <argument>App\Controller\ChatbotController</argument>
           <argument>App\Controller\EvenementsController</argument>
@@ -11515,6 +11640,12 @@
     </service>
     <service id=".errored..service_locator.UoveXVI.App\Entity\User" class="App\Entity\User">
       <tag name="container.error" message="Cannot autowire service &quot;.service_locator.UoveXVI&quot;: it needs an instance of &quot;App\Entity\User&quot; but this type has been excluded because it's a Doctrine entity."/>
+    </service>
+    <service id=".errored..service_locator.AJCrrkc.App\Entity\Evenement" class="App\Entity\Evenement">
+      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.AJCrrkc&quot;: it needs an instance of &quot;App\Entity\Evenement&quot; but this type has been excluded because it's a Doctrine entity."/>
+    </service>
+    <service id=".errored..service_locator.0MKPK3c.App\Entity\Tache" class="App\Entity\Tache">
+      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.0MKPK3c&quot;: it needs an instance of &quot;App\Entity\Tache&quot; but this type has been excluded because it's a Doctrine entity."/>
     </service>
     <service id=".errored..service_locator.j4Wlmfc.App\Entity\JournalHumeur" class="App\Entity\JournalHumeur">
       <tag name="container.error" message="Cannot autowire service &quot;.service_locator.j4Wlmfc&quot;: it needs an instance of &quot;App\Entity\JournalHumeur&quot; but this type has been excluded because it's a Doctrine entity."/>
@@ -12757,7 +12888,7 @@
     <service id="Psr\Log\LoggerInterface" alias="monolog.logger"/>
     <service id="container.env_var_processors_locator" alias=".service_locator.ryAvHi4" public="true"/>
     <service id="twig.loader.filesystem" alias="twig.loader.native_filesystem"/>
-    <service id="argument_resolver.controller_locator" alias=".service_locator.TLtyqPp"/>
+    <service id="argument_resolver.controller_locator" alias=".service_locator.HkbUFRz"/>
     <service id="doctrine.id_generator_locator" alias=".service_locator.W55Po6X"/>
     <service id="twig.loader" alias="twig.loader.native_filesystem"/>
     <service id=".Psr\Log\LoggerInterface $request" alias="monolog.logger.request"/>
@@ -12836,6 +12967,10 @@
     <service id=".service_locator.jlnNLuW" alias=".service_locator.z08WQKN"/>
     <service id=".service_locator.yFRapHK" alias=".service_locator.kYAceIU"/>
     <service id=".service_locator.pGrZ91r" alias=".service_locator.UoveXVI"/>
+    <service id=".service_locator.KNSic_m" alias=".service_locator.n60qnZK"/>
+    <service id=".service_locator.jyb8slm" alias=".service_locator.PUfitXC"/>
+    <service id=".service_locator.cQxy5hq" alias=".service_locator.AJCrrkc"/>
+    <service id=".service_locator.KsD8UyN" alias=".service_locator.0MKPK3c"/>
     <service id=".service_locator.rY1dfrx" alias=".service_locator.ziqo37J"/>
     <service id=".service_locator.lrLzzYc" alias=".service_locator.Y_R0bCX"/>
     <service id=".service_locator._wZi7jF" alias=".service_locator.0pAqWtH"/>
@@ -12845,7 +12980,6 @@
     <service id=".service_locator.Kfq7uaW" alias=".service_locator.6zL9Hzi"/>
     <service id=".service_locator.L.ivR_d" alias=".service_locator.OwMsx8r"/>
     <service id=".service_locator.23Ydx6f" alias=".service_locator.NgPr0wp"/>
-    <service id=".service_locator.KNSic_m" alias=".service_locator.n60qnZK"/>
     <service id=".service_locator.0ekWYPZ" alias=".service_locator.z0A7H.F"/>
     <service id=".service_locator.a4BGQuG" alias=".service_locator.j4Wlmfc"/>
     <service id=".service_locator.qG0FeeQ" alias=".service_locator.eTqhGjo"/>
