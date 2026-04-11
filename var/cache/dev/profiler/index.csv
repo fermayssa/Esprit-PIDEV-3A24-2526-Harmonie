@@ -826,3 +826,12 @@ d9f1aa,127.0.0.1,GET,http://127.0.0.1:8000/back/categories,1775906044,,200,reque
 7f3564,127.0.0.1,GET,http://127.0.0.1:8000/back/posts,1775906120,1b14c2,500,request
 1b14c2,127.0.0.1,GET,http://127.0.0.1:8000/back/posts,1775906120,,500,request
 cc90e2,127.0.0.1,GET,http://127.0.0.1:8000/back/posts,1775906131,,200,request
+920d9c,127.0.0.1,GET,http://127.0.0.1:8000/back,1775906215,,200,request
+3f737a,127.0.0.1,GET,http://127.0.0.1:8000/back/categories,1775906218,,200,request
+387bac,127.0.0.1,GET,http://127.0.0.1:8000/back/posts,1775906236,,200,request
+8ef27d,127.0.0.1,GET,http://127.0.0.1:8000/back/commentaires,1775906252,,200,request
+36ee07,127.0.0.1,GET,http://127.0.0.1:8000/back/commentaires,1775921108,,200,request
+a9be75,127.0.0.1,GET,http://127.0.0.1:8000/back/posts,1775922213,,200,request
+e80b5c,127.0.0.1,GET,http://127.0.0.1:8000/back/commentaires,1775922221,,200,request
+852346,127.0.0.1,GET,http://127.0.0.1:8000/back/categories,1775922234,,200,request
+3237d2,127.0.0.1,GET,http://127.0.0.1:8000/back,1775922245,,200,request

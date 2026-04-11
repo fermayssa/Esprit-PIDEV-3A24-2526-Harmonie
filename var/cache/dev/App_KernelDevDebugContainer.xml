@@ -898,7 +898,7 @@
     </service>
     <service id="argument_resolver.service" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver">
       <tag name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver" priority="-50">controller.argument_value_resolver</tag>
-      <argument type="service" id=".service_locator.xgQJLEA"/>
+      <argument type="service" id=".service_locator.4ZVKQ8i"/>
     </service>
     <service id="argument_resolver.default" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver">
       <tag name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver" priority="-100">controller.argument_value_resolver</tag>
@@ -4024,7 +4024,7 @@
     </service>
     <service id="argument_resolver.not_tagged_controller" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\NotTaggedControllerValueResolver">
       <tag name="controller.argument_value_resolver" priority="-200"/>
-      <argument type="service" id=".service_locator.xgQJLEA"/>
+      <argument type="service" id=".service_locator.4ZVKQ8i"/>
     </service>
     <service id="debug.log_processor" class="Symfony\Bridge\Monolog\Processor\DebugProcessor">
       <tag name="kernel.reset" method="reset"/>
@@ -9662,18 +9662,19 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.0pAqWtH" method="withContext"/>
     </service>
-    <service id=".service_locator.0qCImsD" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.GZDMP.2" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="postRepo" type="service_closure" id="App\Repository\PostRepository"/>
         <argument key="catRepo" type="service_closure" id="App\Repository\CategorieRepository"/>
+        <argument key="em" type="service_closure" id="doctrine.orm.default_entity_manager"/>
       </argument>
     </service>
-    <service id=".service_locator.0qCImsD.App\Controller\BackController::posts()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.GZDMP.2.App\Controller\BackController::posts()" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\BackController::posts()"/>
       <argument>App\Controller\BackController::posts()</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.0qCImsD" method="withContext"/>
+      <factory service=".service_locator.GZDMP.2" method="withContext"/>
     </service>
     <service id=".service_locator.M54_pAu" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
@@ -10118,7 +10119,7 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.z0A7H.F" method="withContext"/>
     </service>
-    <service id=".service_locator.xgQJLEA" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.4ZVKQ8i" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="kernel::registerContainerConfiguration" type="service_closure" id=".service_locator.1vYpZ1B.kernel::registerContainerConfiguration()"/>
@@ -10163,7 +10164,7 @@
         <argument key="App\Controller\BackController::dashboard" type="service_closure" id=".service_locator.ziqo37J.App\Controller\BackController::dashboard()"/>
         <argument key="App\Controller\BackController::categories" type="service_closure" id=".service_locator.Y_R0bCX.App\Controller\BackController::categories()"/>
         <argument key="App\Controller\BackController::deleteCategorie" type="service_closure" id=".service_locator.0pAqWtH.App\Controller\BackController::deleteCategorie()"/>
-        <argument key="App\Controller\BackController::posts" type="service_closure" id=".service_locator.0qCImsD.App\Controller\BackController::posts()"/>
+        <argument key="App\Controller\BackController::posts" type="service_closure" id=".service_locator.GZDMP.2.App\Controller\BackController::posts()"/>
         <argument key="App\Controller\BackController::deletePost" type="service_closure" id=".service_locator.M54_pAu.App\Controller\BackController::deletePost()"/>
         <argument key="App\Controller\BackController::commentaires" type="service_closure" id=".service_locator.b3Hj9j_.App\Controller\BackController::commentaires()"/>
         <argument key="App\Controller\BackController::deleteCommentaire" type="service_closure" id=".service_locator.6zL9Hzi.App\Controller\BackController::deleteCommentaire()"/>
@@ -10257,7 +10258,7 @@
         <argument key="App\Controller\BackController:dashboard" type="service_closure" id=".service_locator.ziqo37J.App\Controller\BackController::dashboard()"/>
         <argument key="App\Controller\BackController:categories" type="service_closure" id=".service_locator.Y_R0bCX.App\Controller\BackController::categories()"/>
         <argument key="App\Controller\BackController:deleteCategorie" type="service_closure" id=".service_locator.0pAqWtH.App\Controller\BackController::deleteCategorie()"/>
-        <argument key="App\Controller\BackController:posts" type="service_closure" id=".service_locator.0qCImsD.App\Controller\BackController::posts()"/>
+        <argument key="App\Controller\BackController:posts" type="service_closure" id=".service_locator.GZDMP.2.App\Controller\BackController::posts()"/>
         <argument key="App\Controller\BackController:deletePost" type="service_closure" id=".service_locator.M54_pAu.App\Controller\BackController::deletePost()"/>
         <argument key="App\Controller\BackController:commentaires" type="service_closure" id=".service_locator.b3Hj9j_.App\Controller\BackController::commentaires()"/>
         <argument key="App\Controller\BackController:deleteCommentaire" type="service_closure" id=".service_locator.6zL9Hzi.App\Controller\BackController::deleteCommentaire()"/>
@@ -12862,7 +12863,7 @@
     <service id="Psr\Log\LoggerInterface" alias="monolog.logger"/>
     <service id="container.env_var_processors_locator" alias=".service_locator.ryAvHi4" public="true"/>
     <service id="twig.loader.filesystem" alias="twig.loader.native_filesystem"/>
-    <service id="argument_resolver.controller_locator" alias=".service_locator.xgQJLEA"/>
+    <service id="argument_resolver.controller_locator" alias=".service_locator.4ZVKQ8i"/>
     <service id="doctrine.id_generator_locator" alias=".service_locator.W55Po6X"/>
     <service id="twig.loader" alias="twig.loader.native_filesystem"/>
     <service id=".Psr\Log\LoggerInterface $request" alias="monolog.logger.request"/>
@@ -12944,7 +12945,7 @@
     <service id=".service_locator.rY1dfrx" alias=".service_locator.ziqo37J"/>
     <service id=".service_locator.lrLzzYc" alias=".service_locator.Y_R0bCX"/>
     <service id=".service_locator._wZi7jF" alias=".service_locator.0pAqWtH"/>
-    <service id=".service_locator.e8j_usv" alias=".service_locator.0qCImsD"/>
+    <service id=".service_locator.y2WA6.u" alias=".service_locator.GZDMP.2"/>
     <service id=".service_locator.zx_pilI" alias=".service_locator.M54_pAu"/>
     <service id=".service_locator.2lyLBIc" alias=".service_locator.b3Hj9j_"/>
     <service id=".service_locator.Kfq7uaW" alias=".service_locator.6zL9Hzi"/>
