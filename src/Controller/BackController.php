@@ -95,12 +95,24 @@ class BackController extends AbstractController
     // ─── COMMENTAIRES ─────────────────────────────────────────────────────────
 
     #[Route('/commentaires', name: 'commentaires')]
-    public function commentaires(CommentaireRepository $comRepo): Response
-    {
-        return $this->render('back/commentaires.html.twig', [
-            'commentaires' => $comRepo->findAllWithPost(),
-        ]);
+    public function commentaires(CommentaireRepository $commentaireRepo, EntityManagerInterface $em): Response
+{
+    $commentaires = $commentaireRepo->findAllWithPost();
+
+    // Charger les posts associés manuellement
+    $postsMap = [];
+    foreach ($commentaires as $c) {
+        $pid = $c->getIdPost();
+        if (!isset($postsMap[$pid])) {
+            $postsMap[$pid] = $em->getRepository(\App\Entity\Post::class)->find($pid);
+        }
     }
+
+    return $this->render('back/commentaires.html.twig', [
+        'commentaires' => $commentaires,
+        'postsMap'     => $postsMap,
+    ]);
+}
 
     #[Route('/commentaires/{id}/delete', name: 'commentaire_delete', methods: ['POST'])]
     public function deleteCommentaire(

@@ -761,3 +761,16 @@ aaddaa,127.0.0.1,GET,http://127.0.0.1:8000/tache/index,1775901740,,200,request
 aa834a,127.0.0.1,GET,http://127.0.0.1:8000/back/commentaires,1775901975,4748e0,500,request
 4748e0,127.0.0.1,GET,http://127.0.0.1:8000/back/commentaires,1775901975,,500,request
 cfbdd9,127.0.0.1,GET,http://127.0.0.1:8000/back/categories,1775902335,,200,request
+6605e3,127.0.0.1,GET,http://127.0.0.1:8000/back,1775902650,,200,request
+c8e179,127.0.0.1,GET,http://127.0.0.1:8000/back,1775902751,,200,request
+0dbb9c,127.0.0.1,GET,http://127.0.0.1:8000/back,1775902859,,200,request
+a7847a,127.0.0.1,GET,http://127.0.0.1:8000/back/posts,1775902861,,200,request
+86cf57,127.0.0.1,GET,http://127.0.0.1:8000/back/commentaires,1775902870,7d5e43,500,request
+7d5e43,127.0.0.1,GET,http://127.0.0.1:8000/back/commentaires,1775902870,,500,request
+3584d7,127.0.0.1,GET,http://127.0.0.1:8000/back/categories,1775903226,,200,request
+e8882b,127.0.0.1,GET,http://127.0.0.1:8000/back,1775903231,,200,request
+8184c4,127.0.0.1,GET,http://127.0.0.1:8000/back/posts,1775903232,,200,request
+38472a,127.0.0.1,GET,http://127.0.0.1:8000/back,1775903236,,200,request
+2011cd,127.0.0.1,GET,http://127.0.0.1:8000/back/commentaires,1775903238,dd6bf9,500,request
+dd6bf9,127.0.0.1,GET,http://127.0.0.1:8000/back/commentaires,1775903238,,500,request
+c60e48,127.0.0.1,GET,http://127.0.0.1:8000/back/posts,1775903294,,200,request

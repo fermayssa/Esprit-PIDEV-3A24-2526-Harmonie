@@ -129,12 +129,16 @@
             <div class="sidebar-section" style="margin-top:8px;">Forum</div>
             <a href="{{ path('back_dashboard') }}"
              class="sidebar-link {{ app.request.attributes.get('_route') == 'back_dashboard' ? 'active' }}">
-                <span class="s-icon">🏠</span> Back Forum
+                <span class="s-icon">🏠</span> Forum
             </a>
             <a href="{{ path('back_categories') }}"
                 class="sidebar-link {{ app.request.attributes.get('_route') starts with 'back_categor' ? 'active' }}">
                 <span class="s-icon">🗂️</span> Catégories
             </a>
+            
+
+
+
 
             <div class="sidebar-section" style="margin-top:8px;">Sport & Nutrition</div>
             <a href="{{ path('admin_sport_index') }}" class="sidebar-link {% if app.request.attributes.get('_route') starts with 'admin_sport' %}active{% endif %}">
