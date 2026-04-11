@@ -252,9 +252,11 @@
             {# AUTEUR + CRUD #}
             <div class="post-author-row">
                 <div class="post-author-left">
-                    <div class="post-avatar">{{ post.userId }}</div>
-                    <div>
-                        <div class="post-author-name">Utilisateur #{{ post.userId }}</div>
+
+                    <div class="post-avatar">{{ (usersMap[post.userId] ?? 'U')|first|upper }}</div>
+<div>
+    <div class="post-author-name">{{ usersMap[post.userId] ?? 'Utilisateur #' ~ post.userId }}</div>
+
                         <div class="post-author-date">
                             {{ post.dateCreation ? post.dateCreation|date('d/m/Y à H:i') : '' }}
                         </div>
@@ -298,7 +300,9 @@
                       action="{{ path('forum_comment_new', {idPost: post.idPost}) }}"
                       class="add-comment-form"
                       onsubmit="return validateComment(this)">
-                    <div class="add-comment-avatar">U</div>
+                    <div class="add-comment-avatar">
+                        {{ app.user ? app.user.getUserPrenom()|first|upper : 'U' }}
+                    </div>
 
                  <div class="add-comment-right">
                     <textarea name="contenu"
@@ -321,8 +325,10 @@
                         <div class="comment-thread-line"></div>
                         <div class="comment-main">
                             <div class="comment-header">
-                                <div class="comment-avatar">U</div>
-                                <span class="comment-author">Utilisateur #{{ c.userId }}</span>
+
+                                <div class="comment-avatar">{{ (usersMap[c.userId] ?? 'U')|first|upper }}</div>
+                                <span class="comment-author">{{ usersMap[c.userId] ?? 'Utilisateur #' ~ c.userId }}</span>
+
                                 <span class="comment-date">
                                     • {{ c.dateCommentaire ? c.dateCommentaire|date('d/m/Y à H:i') : '' }}
                                 </span>

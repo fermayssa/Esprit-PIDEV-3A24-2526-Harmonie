@@ -17,7 +17,11 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ForumController extends AbstractController
 {
-    private int $currentUserId = 1; // remplace par user connecté
+    
+    private function getCurrentUserId(): int
+    {
+        return $this->getUser()->getUserId();
+    }
 
     // ════════════════════════════════════════════════
     //  CATÉGORIES
@@ -87,85 +91,109 @@ public function editCategorie(int $id, Request $request, EntityManagerInterface 
     // ════════════════════════════════════════════════
 
     #[Route('/forum/categorie/{id}', name: 'forum_posts')]
-    public function posts(int $id, Request $request, EntityManagerInterface $em): Response
-    {
-        $categorie = $em->getRepository(Categorie::class)->find($id);
-        if (!$categorie) throw $this->createNotFoundException();
+public function posts(int $id, Request $request, EntityManagerInterface $em): Response
+{
+    $categorie = $em->getRepository(Categorie::class)->find($id);
+    if (!$categorie) throw $this->createNotFoundException();
 
-        // ── Paramètres GET ──
-        $search  = trim($request->query->get('search', ''));
-        $tri     = $request->query->get('tri', 'date_desc'); // date_desc|date_asc|likes
-        $page    = max(1, (int) $request->query->get('page', 1));
-        $perPage = 5;
+    // ── Paramètres GET ──
+    $search  = trim($request->query->get('search', ''));
+    $tri     = $request->query->get('tri', 'date_desc');
+    $page    = max(1, (int) $request->query->get('page', 1));
+    $perPage = 5;
 
-        // ── Construction requête ──
-        $qb = $em->createQueryBuilder()
-            ->select('p')
-            ->from(Post::class, 'p')
-            ->where('p.idCategorie = :idCat')
-            ->setParameter('idCat', $id);
+    // ── Construction requête ──
+    $qb = $em->createQueryBuilder()
+        ->select('p')
+        ->from(Post::class, 'p')
+        ->where('p.idCategorie = :idCat')
+        ->setParameter('idCat', $id);
 
-        // Recherche
-        if ($search !== '') {
-            $qb->andWhere('p.titre LIKE :s OR p.contenu LIKE :s')
-               ->setParameter('s', '%' . $search . '%');
-        }
-
-        // Tri
-        match($tri) {
-            'date_asc'  => $qb->orderBy('p.dateCreation', 'ASC'),
-            'likes'     => $qb->orderBy('p.dateCreation', 'DESC'), // likes géré après
-            default     => $qb->orderBy('p.dateCreation', 'DESC'),
-        };
-
-        $allPosts = $qb->getQuery()->getResult();
-
-        // ── Données likes pour chaque post ──
-        $likesMap   = []; // idPost => count
-        $likedByMe  = []; // idPost => bool
-
-        foreach ($allPosts as $post) {
-            $pid = $post->getIdPost();
-            $reactions = $em->getRepository(Reaction::class)
-                ->findBy(['idPost' => $pid, 'typeReaction' => 'like']);
-            $likesMap[$pid]  = count($reactions);
-            $likedByMe[$pid] = (bool) $em->getRepository(Reaction::class)
-                ->findOneBy(['idPost' => $pid, 'userId' => $this->currentUserId, 'typeReaction' => 'like']);
-        }
-
-        // Tri par popularité (likes)
-        if ($tri === 'likes') {
-            usort($allPosts, fn($a, $b) =>
-                ($likesMap[$b->getIdPost()] ?? 0) <=> ($likesMap[$a->getIdPost()] ?? 0)
-            );
-        }
-
-        // ── Pagination ──
-        $total     = count($allPosts);
-        $totalPages = max(1, (int) ceil($total / $perPage));
-        $page      = min($page, $totalPages);
-        $posts     = array_slice($allPosts, ($page - 1) * $perPage, $perPage);
-
-        // ── Commentaires pour les posts affichés ──
-        $commentairesMap = [];
-        foreach ($posts as $post) {
-            $commentairesMap[$post->getIdPost()] = $em->getRepository(Commentaire::class)
-                ->findBy(['idPost' => $post->getIdPost()], ['dateCommentaire' => 'ASC']);
-        }
-
-        return $this->render('forum/posts.html.twig', [
-            'categorie'       => $categorie,
-            'posts'           => $posts,
-            'commentairesMap' => $commentairesMap,
-            'likesMap'        => $likesMap,
-            'likedByMe'       => $likedByMe,
-            'search'          => $search,
-            'tri'             => $tri,
-            'page'            => $page,
-            'totalPages'      => $totalPages,
-            'total'           => $total,
-        ]);
+    if ($search !== '') {
+        $qb->andWhere('p.titre LIKE :s OR p.contenu LIKE :s')
+           ->setParameter('s', '%' . $search . '%');
     }
+
+    match($tri) {
+        'date_asc' => $qb->orderBy('p.dateCreation', 'ASC'),
+        'likes'    => $qb->orderBy('p.dateCreation', 'DESC'),
+        default    => $qb->orderBy('p.dateCreation', 'DESC'),
+    };
+
+    $allPosts = $qb->getQuery()->getResult();
+
+    // ── Likes ──
+    $likesMap  = [];
+    $likedByMe = [];
+    foreach ($allPosts as $post) {
+        $pid = $post->getIdPost();
+        $reactions = $em->getRepository(Reaction::class)
+            ->findBy(['idPost' => $pid, 'typeReaction' => 'like']);
+        $likesMap[$pid]  = count($reactions);
+        $likedByMe[$pid] = (bool) $em->getRepository(Reaction::class)
+            ->findOneBy(['idPost' => $pid, 'userId' => $this->getCurrentUserId(), 'typeReaction' => 'like']);
+    }
+
+    if ($tri === 'likes') {
+        usort($allPosts, fn($a, $b) =>
+            ($likesMap[$b->getIdPost()] ?? 0) <=> ($likesMap[$a->getIdPost()] ?? 0)
+        );
+    }
+
+    // ── Pagination ──
+    $total      = count($allPosts);
+    $totalPages = max(1, (int) ceil($total / $perPage));
+    $page       = min($page, $totalPages);
+    $posts      = array_slice($allPosts, ($page - 1) * $perPage, $perPage);
+
+    // ── Commentaires ──
+    $commentairesMap = [];
+    foreach ($posts as $post) {
+        $commentairesMap[$post->getIdPost()] = $em->getRepository(Commentaire::class)
+            ->findBy(['idPost' => $post->getIdPost()], ['dateCommentaire' => 'ASC']);
+    }
+
+    // ── Récupérer les noms des users ──
+    $userIds = array_unique(array_map(fn($p) => $p->getUserId(), $posts));
+
+    $allCommentUserIds = [];
+    foreach ($commentairesMap as $comments) {
+        foreach ($comments as $c) {
+            $allCommentUserIds[] = $c->getUserId();
+        }
+    }
+
+    $allUserIds = array_unique(array_merge($userIds, $allCommentUserIds));
+
+    $usersMap = [];
+    if (!empty($allUserIds)) {
+        $users = $em->createQueryBuilder()
+            ->select('u')
+            ->from(\App\Entity\User::class, 'u')
+            ->where('u.userId IN (:ids)')
+            ->setParameter('ids', $allUserIds)
+            ->getQuery()
+            ->getResult();
+
+        foreach ($users as $u) {
+            $usersMap[$u->getUserId()] = $u->getUserPrenom() . ' ' . $u->getUserNom();
+        }
+    }
+
+    return $this->render('forum/posts.html.twig', [
+        'categorie'       => $categorie,
+        'posts'           => $posts,
+        'commentairesMap' => $commentairesMap,
+        'likesMap'        => $likesMap,
+        'likedByMe'       => $likedByMe,
+        'usersMap'        => $usersMap,    // ← ajouté
+        'search'          => $search,
+        'tri'             => $tri,
+        'page'            => $page,
+        'totalPages'      => $totalPages,
+        'total'           => $total,
+    ]);
+}
 
     // ── LIKE toggle (AJAX) ──────────────────────────
     #[Route('/forum/post/{id}/like', name: 'forum_post_like', methods: ['POST', 'GET'])]
@@ -176,7 +204,7 @@ public function editCategorie(int $id, Request $request, EntityManagerInterface 
 
         $existing = $em->getRepository(Reaction::class)->findOneBy([
             'idPost'       => $id,
-            'userId'       => $this->currentUserId,
+            'userId'       => $this->getCurrentUserId(),
             'typeReaction' => 'like',
         ]);
 
@@ -186,7 +214,7 @@ public function editCategorie(int $id, Request $request, EntityManagerInterface 
         } else {
             $r = new Reaction();
             $r->setIdPost($id);
-            $r->setUserId($this->currentUserId);
+            $r->setUserId($this->getCurrentUserId());
             $r->setTypeReaction('like');
             $r->setDateReaction(new \DateTime());
             $em->persist($r);
@@ -216,7 +244,7 @@ public function newPost(int $idCat, Request $request, EntityManagerInterface $em
 
     if ($form->isSubmitted() && $form->isValid()) {
         $post->setIdCategorie($idCat);
-        $post->setUserId($this->currentUserId);
+        $post->setUserId($this->getCurrentUserId());
         $post->setDateCreation(new \DateTime());
         $em->persist($post);
         $em->flush();
@@ -289,7 +317,7 @@ public function newComment(int $idPost, Request $request, EntityManagerInterface
     $c = new Commentaire();
     $c->setContenu($contenu);
     $c->setIdPost($idPost);
-    $c->setUserId($this->currentUserId);
+    $c->setUserId($this->getCurrentUserId());
     $c->setDateCommentaire(new \DateTime());
     $em->persist($c);
     $em->flush();
