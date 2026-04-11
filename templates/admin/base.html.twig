@@ -136,7 +136,14 @@
                 <span class="s-icon">🗂️</span> Catégories
             </a>
             
-
+            <a href="{{ path('back_posts') }}"
+                class="sidebar-link {{ app.request.attributes.get('_route') == 'back_posts' ? 'active' }}">
+                <span class="s-icon">📝</span> Posts
+            </a>
+            <a href="{{ path('back_commentaires') }}"
+            class="sidebar-link {{ app.request.attributes.get('_route') == 'back_commentaires' ? 'active' }}">
+                <span class="s-icon">💬</span> Commentaires
+            </a>
 
 
 

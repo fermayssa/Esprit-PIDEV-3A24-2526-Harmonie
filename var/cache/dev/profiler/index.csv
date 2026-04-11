@@ -774,3 +774,12 @@ e8882b,127.0.0.1,GET,http://127.0.0.1:8000/back,1775903231,,200,request
 2011cd,127.0.0.1,GET,http://127.0.0.1:8000/back/commentaires,1775903238,dd6bf9,500,request
 dd6bf9,127.0.0.1,GET,http://127.0.0.1:8000/back/commentaires,1775903238,,500,request
 c60e48,127.0.0.1,GET,http://127.0.0.1:8000/back/posts,1775903294,,200,request
+f72323,127.0.0.1,GET,http://127.0.0.1:8000/back,1775903528,,200,request
+24fe62,127.0.0.1,GET,http://127.0.0.1:8000/back/commentaires,1775903529,211c4d,500,request
+211c4d,127.0.0.1,GET,http://127.0.0.1:8000/back/commentaires,1775903529,,500,request
+4abe75,127.0.0.1,GET,http://127.0.0.1:8000/back/categories,1775903568,,200,request
+42fcb4,127.0.0.1,GET,http://127.0.0.1:8000/back/categories,1775903823,,200,request
+84fa02,127.0.0.1,GET,http://127.0.0.1:8000/back/commentaires,1775903825,8f9c09,500,request
+8f9c09,127.0.0.1,GET,http://127.0.0.1:8000/back/commentaires,1775903825,,500,request
+0134b1,127.0.0.1,GET,http://127.0.0.1:8000/back/posts,1775903829,,200,request
+7eaf63,127.0.0.1,GET,http://127.0.0.1:8000/back,1775903832,,200,request
