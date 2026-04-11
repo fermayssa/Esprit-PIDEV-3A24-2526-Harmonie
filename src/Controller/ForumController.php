@@ -194,8 +194,10 @@ public function posts(int $id, Request $request, EntityManagerInterface $em): Re
         'total'           => $total,
     ]);
 }
-
+    // ════════════════════════════════════════════════
     // ── LIKE toggle (AJAX) ──────────────────────────
+    // ════════════════════════════════════════════════
+
     #[Route('/forum/post/{id}/like', name: 'forum_post_like', methods: ['POST', 'GET'])]
     public function toggleLike(int $id, EntityManagerInterface $em): JsonResponse
     {
