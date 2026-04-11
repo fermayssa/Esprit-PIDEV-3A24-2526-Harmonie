@@ -59,8 +59,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         nullable: true,
         options: ['default' => null]
     )]
-    #[Assert\PositiveOrZero(message: 'Le poids doit être positif.', groups: ['Default', 'step2'])]
-    #[Assert\LessThanOrEqual(value: 300, message: 'Poids irréaliste.', groups: ['Default', 'step2'])]
     private ?string $userPoids = null;
 
     #[ORM\Column(
@@ -69,8 +67,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         nullable: true,
         options: ['default' => null]
     )]
-    #[Assert\PositiveOrZero(groups: ['Default', 'step2'])]
-    #[Assert\LessThanOrEqual(value: 300, groups: ['Default', 'step2'])]
     private ?int $userTaille = null;
 
     #[ORM\Column(
@@ -113,6 +109,26 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(name: 'face_id_enabled', type: Types::BOOLEAN, options: ['default' => false])]
     private bool $faceIdEnabled = false;
+
+    // ── NOUVEAUX CHAMPS OAUTH ──────────────────────────────────────────────
+
+    /**
+     * Identifiant Google (sub) — null si l'utilisateur n'a pas lié Google
+     */
+    #[ORM\Column(name: 'google_id', type: Types::STRING, length: 255, nullable: true, unique: true)]
+    private ?string $googleId = null;
+
+    /**
+     * Identifiant Facebook — null si l'utilisateur n'a pas lié Facebook
+     */
+    #[ORM\Column(name: 'facebook_id', type: Types::STRING, length: 255, nullable: true, unique: true)]
+    private ?string $facebookId = null;
+
+    /**
+     * Avatar récupéré depuis Google/Facebook (URL distante)
+     */
+    #[ORM\Column(name: 'oauth_avatar_url', type: Types::STRING, length: 500, nullable: true)]
+    private ?string $oauthAvatarUrl = null;
 
     // ── Symfony UserInterface ──────────────────────────────────────────────
 
@@ -189,4 +205,34 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function isFaceIdEnabled(): bool { return $this->faceIdEnabled; }
     public function getFaceIdEnabled(): bool { return $this->faceIdEnabled; }
     public function setFaceIdEnabled(bool $v): self { $this->faceIdEnabled = $v; return $this; }
+
+    // ── OAuth Getters / Setters ────────────────────────────────────────────
+    public function getGoogleId(): ?string { return $this->googleId; }
+    public function setGoogleId(?string $v): self { $this->googleId = $v; return $this; }
+
+    public function getFacebookId(): ?string { return $this->facebookId; }
+    public function setFacebookId(?string $v): self { $this->facebookId = $v; return $this; }
+
+    public function getOauthAvatarUrl(): ?string { return $this->oauthAvatarUrl; }
+    public function setOauthAvatarUrl(?string $v): self { $this->oauthAvatarUrl = $v; return $this; }
+
+    /**
+     * Retourne l'URL de l'avatar à afficher :
+     * priorité → avatar uploadé > avatar OAuth > null
+     */
+    public function getDisplayAvatar(): ?string
+    {
+        if ($this->userImagePath) {
+            return $this->userImagePath;
+        }
+        return $this->oauthAvatarUrl;
+    }
+
+    /**
+     * Indique si ce compte a été créé via OAuth (pas de mot de passe local)
+     */
+    public function isOAuthUser(): bool
+    {
+        return $this->googleId !== null || $this->facebookId !== null;
+    }
 }

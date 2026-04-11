@@ -22,6 +22,7 @@
             animation: fadeUp .4s ease both;
         }
         @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; } }
+
         .auth-logo {
             display: flex; align-items: center; gap: 10px;
             margin-bottom: 28px; justify-content: center;
@@ -29,8 +30,49 @@
         .auth-logo img { width: 36px; height: 36px; border-radius: 10px; object-fit: contain; }
         .auth-logo span { font-family: var(--font-head); font-size: 20px; font-weight: 800; color: var(--text); }
         .auth-title { font-family: var(--font-head); font-size: 26px; font-weight: 800; color: var(--text); margin-bottom: 6px; text-align: center; }
-        .auth-sub { font-size: 13.5px; color: var(--text-muted); text-align: center; margin-bottom: 28px; }
+        .auth-sub { font-size: 13.5px; color: var(--text-muted); text-align: center; margin-bottom: 24px; }
 
+        /* ── BOUTONS OAUTH ─────────────────────────────────────────── */
+        .oauth-section { margin-bottom: 20px; }
+        .oauth-title {
+            text-align: center; font-size: 12px; font-weight: 600;
+            color: var(--text-muted); text-transform: uppercase; letter-spacing: .8px;
+            margin-bottom: 12px;
+        }
+        .oauth-buttons { display: flex; flex-direction: column; gap: 10px; }
+
+        .btn-oauth {
+            width: 100%; padding: 12px 18px;
+            border-radius: 11px; border: 1.5px solid var(--border);
+            background: #fff; cursor: pointer; font-family: var(--font-body);
+            font-size: 14px; font-weight: 500; color: var(--text);
+            display: flex; align-items: center; justify-content: center; gap: 12px;
+            text-decoration: none; transition: border-color .15s, box-shadow .15s, background .15s;
+        }
+        .btn-oauth:hover {
+            border-color: rgba(106,90,205,.3);
+            box-shadow: 0 4px 16px rgba(0,0,0,.07);
+            background: var(--purple-ghost);
+        }
+        .btn-oauth svg { width: 20px; height: 20px; flex-shrink: 0; }
+
+        /* Google spécifique */
+        .btn-google:hover { border-color: #4285F4; }
+
+        /* Facebook spécifique */
+        .btn-facebook:hover { border-color: #1877F2; }
+
+        /* ── DIVIDER ────────────────────────────────────────────────── */
+        .divider {
+            display: flex; align-items: center; gap: 12px;
+            margin: 18px 0; color: var(--text-muted);
+        }
+        .divider::before, .divider::after {
+            content: ''; flex: 1; height: 1px; background: var(--border);
+        }
+        .divider span { font-size: 12px; font-weight: 500; white-space: nowrap; }
+
+        /* ── FORM ───────────────────────────────────────────────────── */
         .form-group { margin-bottom: 16px; }
         .form-group label {
             display: block; font-size: 13px; font-weight: 500;
@@ -43,7 +85,7 @@
         }
         .form-group input:focus { border-color: var(--purple); background: #fff; }
 
-        /* ── CAPTCHA ───────────────────────────── */
+        /* ── CAPTCHA ────────────────────────────────────────────────── */
         .captcha-wrap { margin-bottom: 16px; }
         .captcha-wrap label {
             display: block; font-size: 13px; font-weight: 500;
@@ -58,23 +100,17 @@
             font-family: var(--font-head); font-size: 24px; font-weight: 800;
             color: var(--purple); letter-spacing: 4px;
         }
-        .captcha-equals {
-            font-size: 13px; font-weight: 600; color: var(--text-muted);
-        }
+        .captcha-equals { font-size: 13px; font-weight: 600; color: var(--text-muted); }
         .captcha-input {
             width: 100%; padding: 11px 14px; border: 1.5px solid var(--border);
             border-radius: 10px; font-family: var(--font-head); font-size: 18px;
             font-weight: 700; color: var(--text); background: var(--purple-ghost);
-            outline: none; text-align: center; letter-spacing: 4px;
-            transition: border-color .15s;
+            outline: none; text-align: center; letter-spacing: 4px; transition: border-color .15s;
         }
         .captcha-input:focus { border-color: var(--purple); background: #fff; }
-        .captcha-hint {
-            font-size: 11px; color: var(--text-muted); text-align: center;
-            margin-top: 5px;
-        }
+        .captcha-hint { font-size: 11px; color: var(--text-muted); text-align: center; margin-top: 5px; }
 
-        /* ── ALERTS ────────────────────────────── */
+        /* ── ALERTS ─────────────────────────────────────────────────── */
         .alert-error {
             background: #FEE2E2; color: #991B1B; padding: 10px 14px;
             border-radius: 9px; font-size: 13px; margin-bottom: 14px;
@@ -99,12 +135,10 @@
             transition: background .15s, transform .15s;
         }
         .btn-submit:hover { background: var(--purple-dark); transform: translateY(-1px); }
+
         .auth-footer { text-align: center; margin-top: 22px; font-size: 13px; color: var(--text-muted); }
         .auth-footer a { color: var(--purple); text-decoration: none; font-weight: 500; }
         .auth-footer a:hover { text-decoration: underline; }
-        .divider { display: flex; align-items: center; gap: 12px; margin: 18px 0; }
-        .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
-        .divider span { font-size: 12px; color: var(--text-muted); }
         .session-info {
             display: flex; align-items: center; gap: 6px;
             font-size: 11px; color: var(--text-muted); margin-top: 12px;
@@ -122,24 +156,60 @@
         <div class="auth-title">Bon retour 👋</div>
         <div class="auth-sub">Connectez-vous à votre espace étudiant</div>
 
-        {# ── Erreur d'authentification Symfony (mauvais email/mdp) ── #}
+        {# ── Alertes ── #}
         {% if error %}
             <div class="alert-error">⚠ {{ error.messageKey|trans(error.messageData, 'security') }}</div>
         {% endif %}
-
-        {# ── Erreur CAPTCHA (flash injecté par CaptchaListener) ── #}
         {% for msg in app.flashes('captcha_error') %}
             <div class="alert-captcha">🔒 {{ msg }}</div>
         {% endfor %}
-
-        {# ── Message de succès (ex : après changement de mot de passe) ── #}
+        {% for msg in app.flashes('error') %}
+            <div class="alert-error">⚠ {{ msg }}</div>
+        {% endfor %}
         {% for msg in app.flashes('success') %}
             <div class="alert-success">✅ {{ msg }}</div>
         {% endfor %}
 
+        {# ═══════════════════════════════════════════════════════════
+           CONNEXION SOCIALE (OAuth)
+        ═══════════════════════════════════════════════════════════ #}
+        <div class="oauth-section">
+            <div class="oauth-title">Connexion rapide avec</div>
+            <div class="oauth-buttons">
+
+                {# ── Bouton Google ── #}
+                <a href="{{ path('connect_google') }}" class="btn-oauth btn-google">
+                    {# Logo Google officiel SVG #}
+                    <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                        <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+                        <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+                        <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+                        <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+                        <path fill="none" d="M0 0h48v48H0z"/>
+                    </svg>
+                    Continuer avec Google
+                </a>
+
+                {# ── Bouton Facebook ── #}
+                <a href="{{ path('connect_facebook') }}" class="btn-oauth btn-facebook">
+                    {# Logo Facebook SVG #}
+                    <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                        <path fill="#1877F2" d="M48 24C48 10.745 37.255 0 24 0S0 10.745 0 24c0 11.979 8.776 21.908 20.25 23.708V30.938h-6.094V24H20.25v-5.27c0-6.011 3.579-9.332 9.057-9.332 2.624 0 5.371.469 5.371.469v5.906h-3.026c-2.979 0-3.908 1.85-3.908 3.747V24h6.656l-1.064 6.938H27.75v16.77C39.224 45.908 48 35.979 48 24z"/>
+                        <path fill="#fff" d="M33.336 30.938 34.4 24H27.75v-4.48c0-1.897.929-3.747 3.908-3.747h3.025v-5.906s-2.747-.469-5.371-.469c-5.478 0-9.057 3.32-9.057 9.332V24h-6.094v6.938H20.25v16.77a24.21 24.21 0 0 0 7.5 0V30.938h5.586z"/>
+                    </svg>
+                    Continuer avec Facebook
+                </a>
+
+            </div>
+        </div>
+
+        <div class="divider"><span>ou connectez-vous avec votre email</span></div>
+
+        {# ═══════════════════════════════════════════════════════════
+           FORMULAIRE EMAIL / MOT DE PASSE CLASSIQUE
+        ═══════════════════════════════════════════════════════════ #}
         <form method="post" action="{{ path('app_login') }}">
 
-            {# ── Email ── #}
             <div class="form-group">
                 <label for="email">Adresse email</label>
                 <input type="email" id="email" name="email"
@@ -147,34 +217,25 @@
                        placeholder="votre@email.com">
             </div>
 
-            {# ── Mot de passe ── #}
             <div class="form-group">
                 <label for="password">Mot de passe</label>
                 <input type="password" id="password" name="password"
                        required placeholder="••••••••">
             </div>
 
-            {# ── CAPTCHA mathématique ── #}
             <div class="captcha-wrap">
                 <label>🔐 Vérification de sécurité</label>
                 <div class="captcha-question-box">
                     <span class="captcha-math">{{ captcha_question }}</span>
                     <span class="captcha-equals">= ?</span>
                 </div>
-                <input type="text"
-                       id="captcha"
-                       name="captcha"
-                       class="captcha-input"
-                       required
-                       autocomplete="off"
-                       inputmode="numeric"
-                       placeholder="?"
-                       maxlength="3">
+                <input type="text" id="captcha" name="captcha" class="captcha-input"
+                       required autocomplete="off" inputmode="numeric"
+                       placeholder="?" maxlength="3">
                 <p class="captcha-hint">Entrez le résultat du calcul ci-dessus</p>
             </div>
 
             <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-
             <button class="btn-submit" type="submit">Se connecter →</button>
         </form>
 
