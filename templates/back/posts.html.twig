@@ -125,12 +125,12 @@ tr:hover td{background:#FAFAFE;}
                 </td>
                 <td>
                     <div class="actions">
-                        <a href="{{ path('forum_posts', {id: post.idCategorie}) }}" class="btn-sm btn-view">👁️ Voir</a>
+                        
                         <form method="POST"
                               action="{{ path('back_post_delete', {id: post.idPost}) }}"
                               onsubmit="return confirm('Supprimer ce post ?')"
                               style="display:inline">
-                            <button type="submit" class="btn-sm btn-del">🗑</button>
+                            <button type="submit" class="btn-sm btn-del">🗑 Supprimer</button>
                         </form>
                     </div>
                 </td>
