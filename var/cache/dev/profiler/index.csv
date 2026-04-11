@@ -873,3 +873,13 @@ f87b89,127.0.0.1,GET,http://127.0.0.1:8000/uploads/posts/uploads/1772099525127_F
 960c20,127.0.0.1,GET,http://127.0.0.1:8000/forum/categorie/25,1775943821,,200,request
 ed1ac7,127.0.0.1,GET,http://127.0.0.1:8000/uploads/posts/uploads/1772099525127_F_SDG-goals_icons-individual-rgb-03.png,1775943821,c8d891,404,request
 c8d891,127.0.0.1,GET,http://127.0.0.1:8000/uploads/posts/uploads/1772099525127_F_SDG-goals_icons-individual-rgb-03.png,1775943821,,404,request
+00799a,127.0.0.1,GET,http://127.0.0.1:8000/forum/post/71/edit,1775944036,,200,request
+e5d37e,127.0.0.1,POST,http://127.0.0.1:8000/forum/post/71/edit,1775944046,,302,request
+05dd15,127.0.0.1,GET,http://127.0.0.1:8000/forum/categorie/25,1775944046,,200,request
+d13b37,127.0.0.1,GET,http://127.0.0.1:8000/uploads/posts/uploads/1772099525127_F_SDG-goals_icons-individual-rgb-03.png,1775944046,ea545c,404,request
+ea545c,127.0.0.1,GET,http://127.0.0.1:8000/uploads/posts/uploads/1772099525127_F_SDG-goals_icons-individual-rgb-03.png,1775944046,,404,request
+6ac9c4,127.0.0.1,GET,http://127.0.0.1:8000/forum/post/71/edit,1775944051,,200,request
+87c085,127.0.0.1,POST,http://127.0.0.1:8000/forum/post/71/edit,1775944062,,302,request
+524792,127.0.0.1,GET,http://127.0.0.1:8000/forum/categorie/25,1775944062,,200,request
+6b570b,127.0.0.1,GET,http://127.0.0.1:8000/uploads/posts/uploads/1772099525127_F_SDG-goals_icons-individual-rgb-03.png,1775944063,69be9e,404,request
+69be9e,127.0.0.1,GET,http://127.0.0.1:8000/uploads/posts/uploads/1772099525127_F_SDG-goals_icons-individual-rgb-03.png,1775944063,,404,request
