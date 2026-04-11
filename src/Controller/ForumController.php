@@ -18,6 +18,9 @@ use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use App\Service\ModerationService;
 use Knp\Component\Pager\PaginatorInterface;
+use App\Service\TranslationService;
+//use Symfony\Component\HttpFoundation\JsonResponse;
+
 
 class ForumController extends AbstractController
 {
@@ -25,6 +28,39 @@ class ForumController extends AbstractController
     private function getCurrentUserId(): int
     {
         return $this->getUser()->getUserId();
+    }
+
+    // ── TRADUCTION D'UN POST (AJAX) ──────────────────────
+    #[Route('/forum/post/{id}/translate', name: 'forum_post_translate', methods: ['POST'])]
+    public function translatePost(
+        int $id,
+        Request $request,
+        EntityManagerInterface $em,
+        TranslationService $translator
+    ): JsonResponse {
+        $post = $em->getRepository(Post::class)->find($id);
+        if (!$post) {
+            return new JsonResponse(['error' => 'Post introuvable'], 404);
+        }
+
+        // Récupère la langue cible depuis la requête AJAX
+        $targetLang = $request->request->get('lang', 'en');
+
+        // Langues supportées pour éviter les abus
+        $supportedLangs = ['en', 'ar', 'es', 'de', 'it'];
+        if (!in_array($targetLang, $supportedLangs)) {
+            return new JsonResponse(['error' => 'Langue non supportée'], 400);
+        }
+
+        // Traduit le titre et le contenu séparément
+        $translatedTitre   = $translator->translate($post->getTitre(), 'fr', $targetLang);
+        $translatedContenu = $translator->translate($post->getContenu(), 'fr', $targetLang);
+
+        return new JsonResponse([
+            'titre'   => $translatedTitre,
+            'contenu' => $translatedContenu,
+            'lang'    => $targetLang,
+        ]);
     }
 
     // ════════════════════════════════════════════════

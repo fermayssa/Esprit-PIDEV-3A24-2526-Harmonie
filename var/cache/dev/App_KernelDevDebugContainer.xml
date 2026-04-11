@@ -905,6 +905,9 @@
       <argument type="service" id="http_client.uri_template"/>
     </service>
     <service id="App\Service\SuspicionScoreService" class="App\Service\SuspicionScoreService" autowire="true" autoconfigure="true"/>
+    <service id="App\Service\TranslationService" class="App\Service\TranslationService" autowire="true" autoconfigure="true">
+      <argument type="service" id="http_client.uri_template"/>
+    </service>
     <service id="argument_metadata_factory" class="Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadataFactory"/>
     <service id="argument_resolver.backed_enum_resolver" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\BackedEnumValueResolver">
       <tag name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\BackedEnumValueResolver" priority="100">controller.argument_value_resolver</tag>
@@ -933,7 +936,7 @@
     </service>
     <service id="argument_resolver.service" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver">
       <tag name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver" priority="-50">controller.argument_value_resolver</tag>
-      <argument type="service" id=".service_locator..IBOzHV"/>
+      <argument type="service" id=".service_locator.hKEtTVh"/>
     </service>
     <service id="argument_resolver.default" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver">
       <tag name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver" priority="-100">controller.argument_value_resolver</tag>
@@ -4147,7 +4150,7 @@
     </service>
     <service id="argument_resolver.not_tagged_controller" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\NotTaggedControllerValueResolver">
       <tag name="controller.argument_value_resolver" priority="-200"/>
-      <argument type="service" id=".service_locator..IBOzHV"/>
+      <argument type="service" id=".service_locator.hKEtTVh"/>
     </service>
     <service id="debug.log_processor" class="Symfony\Bridge\Monolog\Processor\DebugProcessor">
       <tag name="kernel.reset" method="reset"/>
@@ -10012,6 +10015,19 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.NsUdOW3" method="withContext"/>
     </service>
+    <service id=".service_locator.ZQw413b" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="em" type="service_closure" id="doctrine.orm.default_entity_manager"/>
+        <argument key="translator" type="service_closure" id="App\Service\TranslationService"/>
+      </argument>
+    </service>
+    <service id=".service_locator.ZQw413b.App\Controller\ForumController::translatePost()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\ForumController::translatePost()"/>
+      <argument>App\Controller\ForumController::translatePost()</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.ZQw413b" method="withContext"/>
+    </service>
     <service id=".service_locator.z0A7H.F" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
@@ -10364,7 +10380,7 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.z0A7H.F" method="withContext"/>
     </service>
-    <service id=".service_locator..IBOzHV" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.hKEtTVh" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="kernel::registerContainerConfiguration" type="service_closure" id=".service_locator.1vYpZ1B.kernel::registerContainerConfiguration()"/>
@@ -10422,6 +10438,7 @@
         <argument key="App\Controller\EvenementsController::show" type="service_closure" id=".service_locator.ZILOSg7.App\Controller\EvenementsController::show()"/>
         <argument key="App\Controller\EvenementsController::edit" type="service_closure" id=".service_locator.NsUdOW3.App\Controller\EvenementsController::edit()"/>
         <argument key="App\Controller\EvenementsController::delete" type="service_closure" id=".service_locator.NsUdOW3.App\Controller\EvenementsController::delete()"/>
+        <argument key="App\Controller\ForumController::translatePost" type="service_closure" id=".service_locator.ZQw413b.App\Controller\ForumController::translatePost()"/>
         <argument key="App\Controller\ForumController::index" type="service_closure" id=".service_locator.z0A7H.F.App\Controller\ForumController::index()"/>
         <argument key="App\Controller\ForumController::newCategorie" type="service_closure" id=".service_locator.z0A7H.F.App\Controller\ForumController::newCategorie()"/>
         <argument key="App\Controller\ForumController::editCategorie" type="service_closure" id=".service_locator.z0A7H.F.App\Controller\ForumController::editCategorie()"/>
@@ -10516,6 +10533,7 @@
         <argument key="App\Controller\EvenementsController:show" type="service_closure" id=".service_locator.ZILOSg7.App\Controller\EvenementsController::show()"/>
         <argument key="App\Controller\EvenementsController:edit" type="service_closure" id=".service_locator.NsUdOW3.App\Controller\EvenementsController::edit()"/>
         <argument key="App\Controller\EvenementsController:delete" type="service_closure" id=".service_locator.NsUdOW3.App\Controller\EvenementsController::delete()"/>
+        <argument key="App\Controller\ForumController:translatePost" type="service_closure" id=".service_locator.ZQw413b.App\Controller\ForumController::translatePost()"/>
         <argument key="App\Controller\ForumController:index" type="service_closure" id=".service_locator.z0A7H.F.App\Controller\ForumController::index()"/>
         <argument key="App\Controller\ForumController:newCategorie" type="service_closure" id=".service_locator.z0A7H.F.App\Controller\ForumController::newCategorie()"/>
         <argument key="App\Controller\ForumController:editCategorie" type="service_closure" id=".service_locator.z0A7H.F.App\Controller\ForumController::editCategorie()"/>
@@ -13114,7 +13132,7 @@
     <service id="doctrine.fixtures.provider" alias="doctrine.fixtures.loader"/>
     <service id="container.env_var_processors_locator" alias=".service_locator.ryAvHi4" public="true"/>
     <service id="twig.loader.filesystem" alias="twig.loader.native_filesystem"/>
-    <service id="argument_resolver.controller_locator" alias=".service_locator..IBOzHV"/>
+    <service id="argument_resolver.controller_locator" alias=".service_locator.hKEtTVh"/>
     <service id="doctrine.id_generator_locator" alias=".service_locator.W55Po6X"/>
     <service id="twig.loader" alias="twig.loader.native_filesystem"/>
     <service id=".Psr\Log\LoggerInterface $request" alias="monolog.logger.request"/>
@@ -13203,6 +13221,7 @@
     <service id=".service_locator.L.ivR_d" alias=".service_locator.OwMsx8r"/>
     <service id=".service_locator.23Ydx6f" alias=".service_locator.NgPr0wp"/>
     <service id=".service_locator.KNSic_m" alias=".service_locator.n60qnZK"/>
+    <service id=".service_locator.qCBSz9Q" alias=".service_locator.ZQw413b"/>
     <service id=".service_locator.0ekWYPZ" alias=".service_locator.z0A7H.F"/>
     <service id=".service_locator.wSgjbAm" alias=".service_locator.OHw_Lh9"/>
     <service id=".service_locator.nTY_6xw" alias=".service_locator.DEL3pCd"/>

@@ -947,3 +947,7 @@ ef7ec0,127.0.0.1,GET,http://127.0.0.1:8000/forum/categorie/24?page=2,1775947653,
 129ff6,127.0.0.1,GET,http://127.0.0.1:8000/forum/categorie/24?page=3,1775947656,,200,request
 2ab1d2,127.0.0.1,GET,http://127.0.0.1:8000/forum/categorie/24?page=4,1775947657,,200,request
 c40170,127.0.0.1,GET,http://127.0.0.1:8000/forum/categorie/24?page=1,1775947660,,200,request
+c4f910,127.0.0.1,GET,http://127.0.0.1:8000/forum/categorie/24?page=4,1775948405,,200,request
+60ef1d,127.0.0.1,POST,http://127.0.0.1:8000/forum/post/57/translate,1775948416,,200,request
+ebd5ec,127.0.0.1,POST,http://127.0.0.1:8000/forum/post/57/translate,1775948423,,200,request
+644d62,127.0.0.1,POST,http://127.0.0.1:8000/forum/post/57/translate,1775948431,,200,request

@@ -276,8 +276,15 @@
 
             {# TITRE + CONTENU #}
             <div class="post-body">
-                <div class="post-title">{{ post.titre }}</div>
-                <div class="post-excerpt">{{ post.contenu }}</div>
+                {# Titre — avec version traduite cachée #}
+                <div class="post-title" id="titre-{{ post.idPost }}">
+                    {{ post.titre }}
+                </div>
+
+                {# Contenu — avec version traduite cachée #}
+                <div class="post-excerpt" id="contenu-{{ post.idPost }}">
+                    {{ post.contenu }}
+                </div>
 
                 {# IMAGE DU POST #}
                 {% if post.imagePath %}
@@ -288,22 +295,79 @@
                                     object-fit:cover;border:1px solid var(--border);">
                     </div>
                 {% endif %}
+
+                {# Badge langue active #}
+                <div id="lang-badge-{{ post.idPost }}" style="display:none;margin-top:8px;">
+                    <span style="font-size:11px;background:#EDE8FA;color:#6A5ACD;
+                                padding:3px 10px;border-radius:20px;font-weight:600;">
+                        🌍 Traduit en <span id="lang-name-{{ post.idPost }}"></span>
+                    </span>
+                    <button onclick="resetTranslation({{ post.idPost }}, '{{ post.titre|e('js') }}', '{{ post.contenu|e('js') }}')"
+                            style="font-size:11px;background:none;border:none;color:#9590B8;
+                                cursor:pointer;text-decoration:underline;margin-left:6px;">
+                        Voir original
+                    </button>
+                </div>
             </div>            
 
-            {# FOOTER : LIKE + COMMENTAIRES #}
+            {# FOOTER : LIKE + COMMENTAIRES + TRADUCTION #}
             <div class="post-footer">
                 <button type="button"
                     class="btn-like {{ liked ? 'liked' }}"
                     data-post-id="{{ post.idPost }}"
-                    data-liked="{{ liked ? '1' : '0' }}"
                     onclick="toggleLike(this)">
-                {{ liked ? ' ❤️' : '🤍' }} <span class="like-count">{{ nbLikes }}</span>
+                    {{ liked ? '❤️' : '🤍' }} <span class="like-count">{{ nbLikes }}</span>
                 </button>
+
                 <button type="button"
                     class="btn-comment-toggle"
                     onclick="toggleComments('comments-{{ post.idPost }}', this)">
-                💬 {{ postComments|length }} commentaire(s)
+                    💬 {{ postComments|length }} commentaire(s)
                 </button>
+
+                {# Bouton traduction avec dropdown #}
+                <div style="position:relative;display:inline-block;" id="translate-wrap-{{ post.idPost }}">
+                    <button type="button"
+                        onclick="toggleTranslateMenu({{ post.idPost }})"
+                        id="translate-btn-{{ post.idPost }}"
+                        style="display:inline-flex;align-items:center;gap:6px;padding:6px 16px;
+                            background:var(--purple-ghost);color:var(--text-muted);
+                            border:1px solid var(--border);border-radius:20px;font-size:13px;
+                            font-weight:600;cursor:pointer;transition:all .15s;
+                            font-family:var(--font-body);">
+                        🌍 Traduire
+                    </button>
+
+                    {# Menu dropdown des langues #}
+                    <div id="translate-menu-{{ post.idPost }}"
+                        style="display:none;position:absolute;bottom:calc(100% + 8px);left:0;
+                                background:white;border:1px solid var(--border);border-radius:12px;
+                                box-shadow:0 8px 24px rgba(0,0,0,.1);padding:8px;z-index:100;
+                                min-width:160px;">
+                        <div style="font-size:11px;color:var(--text-muted);
+                                    padding:4px 8px;margin-bottom:4px;font-weight:600;">
+                            Choisir la langue
+                        </div>
+                        {% set langs = {
+                            'en': '🇬🇧 Anglais',
+                            'ar': '🇸🇦 Arabe',
+                            'es': '🇪🇸 Espagnol',
+                            'de': '🇩🇪 Allemand',
+                            'it': '🇮🇹 Italien'
+                        } %}
+                        {% for code, label in langs %}
+                        <button onclick="translatePost({{ post.idPost }}, '{{ code }}', '{{ label }}')"
+                                style="display:block;width:100%;text-align:left;padding:7px 10px;
+                                    border:none;background:none;border-radius:8px;font-size:13px;
+                                    color:#1C1733;cursor:pointer;font-family:var(--font-body);
+                                    transition:background .15s;"
+                                onmouseover="this.style.background='#EDE8FA'"
+                                onmouseout="this.style.background='none'">
+                            {{ label }}
+                        </button>
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
 
             {# COMMENTAIRES STYLE REDDIT #}
@@ -413,102 +477,183 @@
 </main>
 
 <script>
-// ── LIKE AJAX ──────────────────────────────────────
-async function toggleLike(btn) {
-    const postId = btn.dataset.postId;
-    try {
-        const res = await fetch(`/forum/post/${postId}/like`, {
-            method: 'POST',
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest',
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: '_token='
+    // ── LIKE AJAX ──────────────────────────────────────
+    async function toggleLike(btn) {
+        const postId = btn.dataset.postId;
+        try {
+            const res = await fetch(`/forum/post/${postId}/like`, {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: '_token='
+            });
+            const data = await res.json();
+            if (data.liked) {
+                btn.classList.add('liked');
+                btn.innerHTML = '❤️ <span class="like-count">' + data.count + '</span>';
+            } else {
+                btn.classList.remove('liked');
+                btn.innerHTML = '🤍 <span class="like-count">' + data.count + '</span>';
+            }
+            btn.dataset.liked = data.liked ? '1' : '0';
+        } catch(e) { console.error('Like error', e); }
+    }
+    //--------------------------------------------------
+
+    // Auto-ouvrir la section commentaires si erreur flash
+    (function() {
+        const params = new URLSearchParams(window.location.search);
+        const openPost = params.get('open_post');
+        if (openPost) {
+            const section = document.getElementById('comments-' + openPost);
+            const btn = document.querySelector(`[onclick*="comments-${openPost}"]`);
+            if (section) {
+                section.classList.add('open');
+                if (btn) btn.classList.add('open');
+            }
+        }
+    })();
+
+    // ── TOGGLE COMMENTAIRES ────────────────────────────
+
+    function toggleComments(id, btn) {
+        const section = document.getElementById(id);
+        const isOpen  = section.classList.toggle('open');
+        btn.classList.toggle('open', isOpen);
+
+    }
+
+    // ── VALIDATION COMMENTAIRE ─────────────────────────
+    function validateComment(form) {
+        const ta = form.querySelector('textarea');
+        
+        // Supprimer l'ancien message d'erreur s'il existe
+        const oldError = form.querySelector('.comment-error-msg');
+        if (oldError) oldError.remove();
+
+        if (ta.value.trim().length < 3) {
+            ta.classList.add('error');
+            ta.focus();
+
+            // Créer et insérer le message d'erreur
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'comment-error-msg';
+            errorDiv.style.cssText = 'color:#E05252;font-size:12px;font-weight:600;margin-top:6px;';
+            errorDiv.textContent = '⚠️ Le commentaire doit contenir au moins 3 caractères.';
+            ta.insertAdjacentElement('afterend', errorDiv);
+
+            return false;
+        }
+
+        ta.classList.remove('error');
+        return true;
+    }
+    // ── MODALE DE CONFIRMATION ── ← AJOUTER ICI
+    let pendingForm = null;
+
+    function openModal(btn, title, message) {
+        pendingForm = btn.closest('form');
+        document.getElementById('modalTitle').textContent   = title;
+        document.getElementById('modalMessage').textContent = message;
+        const modal = document.getElementById('confirmModal');
+        modal.style.display = 'flex';
+    }
+
+    function closeModal() {
+        document.getElementById('confirmModal').style.display = 'none';
+        pendingForm = null;
+    }
+
+    document.getElementById('modalConfirmBtn').addEventListener('click', function() {
+        if (pendingForm) pendingForm.submit();
+        closeModal();
+    });
+
+    document.getElementById('confirmModal').addEventListener('click', function(e) {
+        if (e.target === this) closeModal();
+    });
+    // ── TRADUCTION ─────────────────────────────────────
+
+    // Ouvre/ferme le menu de sélection de langue
+    function toggleTranslateMenu(postId) {
+        const menu = document.getElementById('translate-menu-' + postId);
+        const isOpen = menu.style.display === 'block';
+        
+        // Ferme tous les menus ouverts
+        document.querySelectorAll('[id^="translate-menu-"]').forEach(m => {
+            m.style.display = 'none';
         });
-        const data = await res.json();
-        if (data.liked) {
-            btn.classList.add('liked');
-            btn.innerHTML = '❤️ <span class="like-count">' + data.count + '</span>';
-        } else {
-            btn.classList.remove('liked');
-            btn.innerHTML = '🤍 <span class="like-count">' + data.count + '</span>';
-        }
-        btn.dataset.liked = data.liked ? '1' : '0';
-    } catch(e) { console.error('Like error', e); }
-}
-//--------------------------------------------------
-
-// Auto-ouvrir la section commentaires si erreur flash
-(function() {
-    const params = new URLSearchParams(window.location.search);
-    const openPost = params.get('open_post');
-    if (openPost) {
-        const section = document.getElementById('comments-' + openPost);
-        const btn = document.querySelector(`[onclick*="comments-${openPost}"]`);
-        if (section) {
-            section.classList.add('open');
-            if (btn) btn.classList.add('open');
+        
+        // Ouvre le menu cliqué (si pas déjà ouvert)
+        if (!isOpen) {
+            menu.style.display = 'block';
         }
     }
-})();
 
-// ── TOGGLE COMMENTAIRES ────────────────────────────
+    // Ferme les menus si on clique ailleurs
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('[id^="translate-wrap-"]')) {
+            document.querySelectorAll('[id^="translate-menu-"]').forEach(m => {
+                m.style.display = 'none';
+            });
+        }
+    });
 
-function toggleComments(id, btn) {
-    const section = document.getElementById(id);
-    const isOpen  = section.classList.toggle('open');
-    btn.classList.toggle('open', isOpen);
+    // Appelle l'API de traduction via AJAX
+    async function translatePost(postId, langCode, langLabel) {
+        // Ferme le menu
+        document.getElementById('translate-menu-' + postId).style.display = 'none';
+        
+        // Change le bouton en "chargement"
+        const btn = document.getElementById('translate-btn-' + postId);
+        btn.textContent = '⏳ Traduction...';
+        btn.disabled = true;
 
-}
+        try {
+            const formData = new FormData();
+            formData.append('lang', langCode);
 
-// ── VALIDATION COMMENTAIRE ─────────────────────────
-function validateComment(form) {
-    const ta = form.querySelector('textarea');
-    
-    // Supprimer l'ancien message d'erreur s'il existe
-    const oldError = form.querySelector('.comment-error-msg');
-    if (oldError) oldError.remove();
+            const res = await fetch(`/forum/post/${postId}/translate`, {
+                method: 'POST',
+                body: formData,
+            });
 
-    if (ta.value.trim().length < 3) {
-        ta.classList.add('error');
-        ta.focus();
+            const data = await res.json();
 
-        // Créer et insérer le message d'erreur
-        const errorDiv = document.createElement('div');
-        errorDiv.className = 'comment-error-msg';
-        errorDiv.style.cssText = 'color:#E05252;font-size:12px;font-weight:600;margin-top:6px;';
-        errorDiv.textContent = '⚠️ Le commentaire doit contenir au moins 3 caractères.';
-        ta.insertAdjacentElement('afterend', errorDiv);
+            if (data.error) {
+                btn.textContent = '❌ Erreur';
+                btn.disabled = false;
+                return;
+            }
 
-        return false;
+            // Met à jour le titre et le contenu avec la traduction
+            document.getElementById('titre-' + postId).textContent   = data.titre;
+            document.getElementById('contenu-' + postId).textContent = data.contenu;
+
+            // Affiche le badge de langue
+            document.getElementById('lang-badge-' + postId).style.display = 'block';
+            document.getElementById('lang-name-' + postId).textContent = langLabel;
+
+            // Remet le bouton à la normale
+            btn.textContent = '🌍 Traduit';
+            btn.disabled = false;
+
+        } catch(e) {
+            btn.textContent = '❌ Erreur';
+            btn.disabled = false;
+            console.error('Translation error:', e);
+        }
     }
 
-    ta.classList.remove('error');
-    return true;
-}
-// ── MODALE DE CONFIRMATION ── ← AJOUTER ICI
-let pendingForm = null;
-
-function openModal(btn, title, message) {
-    pendingForm = btn.closest('form');
-    document.getElementById('modalTitle').textContent   = title;
-    document.getElementById('modalMessage').textContent = message;
-    const modal = document.getElementById('confirmModal');
-    modal.style.display = 'flex';
+    // Remet le texte original
+    function resetTranslation(postId, originalTitre, originalContenu) {
+        document.getElementById('titre-' + postId).textContent   = originalTitre;
+        document.getElementById('contenu-' + postId).textContent = originalContenu;
+        document.getElementById('lang-badge-' + postId).style.display = 'none';
+        document.getElementById('translate-btn-' + postId).textContent = '🌍 Traduire';
 }
 
-function closeModal() {
-    document.getElementById('confirmModal').style.display = 'none';
-    pendingForm = null;
-}
-
-document.getElementById('modalConfirmBtn').addEventListener('click', function() {
-    if (pendingForm) pendingForm.submit();
-    closeModal();
-});
-
-document.getElementById('confirmModal').addEventListener('click', function(e) {
-    if (e.target === this) closeModal();
-});
 </script>
 {% endblock %}
