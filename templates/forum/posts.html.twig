@@ -294,6 +294,7 @@
             </div>
 
             {# COMMENTAIRES STYLE REDDIT #}
+
             <div class="comments-section" id="comments-{{ post.idPost }}">
 
                 <form method="POST"
@@ -303,6 +304,7 @@
                     <div class="add-comment-avatar">
                         {{ app.user ? app.user.getUserPrenom()|first|upper : 'U' }}
                     </div>
+                    
 
                  <div class="add-comment-right">
                     <textarea name="contenu"
