@@ -17,6 +17,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use App\Service\ModerationService;
+use Knp\Component\Pager\PaginatorInterface;
 
 class ForumController extends AbstractController
 {
@@ -89,23 +90,37 @@ public function editCategorie(int $id, Request $request, EntityManagerInterface 
         return $this->redirectToRoute('forum');
     }
 
+
+
+
+
+
+
+
+
     // ════════════════════════════════════════════════
     //  POSTS — avec recherche, tri, pagination
     // ════════════════════════════════════════════════
 
-    #[Route('/forum/categorie/{id}', name: 'forum_posts')]
-public function posts(int $id, Request $request, EntityManagerInterface $em): Response
-{
+    
+
+#[Route('/forum/categorie/{id}', name: 'forum_posts')]
+public function posts(
+    int $id,
+    Request $request,
+    EntityManagerInterface $em,
+    PaginatorInterface $paginator    // ← KnpPaginator injecté automatiquement
+): Response {
     $categorie = $em->getRepository(Categorie::class)->find($id);
     if (!$categorie) throw $this->createNotFoundException();
 
     // ── Paramètres GET ──
-    $search  = trim($request->query->get('search', ''));
-    $tri     = $request->query->get('tri', 'date_desc');
-    $page    = max(1, (int) $request->query->get('page', 1));
-    $perPage = 5;
+    $search = trim($request->query->get('search', ''));
+    $tri    = $request->query->get('tri', 'date_desc');
 
-    // ── Construction requête ──
+    // ── Construction de la requête Doctrine (QueryBuilder) ──
+    // On passe le QueryBuilder au paginator, pas les résultats
+    // Le paginator s'occupe lui-même de LIMIT et OFFSET selon la page
     $qb = $em->createQueryBuilder()
         ->select('p')
         ->from(Post::class, 'p')
@@ -123,12 +138,23 @@ public function posts(int $id, Request $request, EntityManagerInterface $em): Re
         default    => $qb->orderBy('p.dateCreation', 'DESC'),
     };
 
-    $allPosts = $qb->getQuery()->getResult();
+    // ── KnpPaginator — remplace toute la logique manuelle ──
+    // paginate(requête, numéro de page, nombre d'éléments par page)
+    // Récupère automatiquement ?page=N dans l'URL
+    $pagination = $paginator->paginate(
+        $qb->getQuery(),                      // la requête Doctrine
+        $request->query->getInt('page', 1),   // page courante (défaut: 1)
+        5                                      // posts par page
+    );
+
+    // ── Les posts de la page courante ──
+    // $pagination->getItems() retourne uniquement les posts de la page
+    $posts = $pagination->getItems();
 
     // ── Likes ──
     $likesMap  = [];
     $likedByMe = [];
-    foreach ($allPosts as $post) {
+    foreach ($posts as $post) {
         $pid = $post->getIdPost();
         $reactions = $em->getRepository(Reaction::class)
             ->findBy(['idPost' => $pid, 'typeReaction' => 'like']);
@@ -137,47 +163,38 @@ public function posts(int $id, Request $request, EntityManagerInterface $em): Re
             ->findOneBy(['idPost' => $pid, 'userId' => $this->getCurrentUserId(), 'typeReaction' => 'like']);
     }
 
+    // Tri par likes (après pagination — uniquement sur la page courante)
     if ($tri === 'likes') {
-        usort($allPosts, fn($a, $b) =>
+        $postsArray = $posts;
+        usort($postsArray, fn($a, $b) =>
             ($likesMap[$b->getIdPost()] ?? 0) <=> ($likesMap[$a->getIdPost()] ?? 0)
         );
+        $posts = $postsArray;
     }
 
-    // ── Pagination ──
-    $total      = count($allPosts);
-    $totalPages = max(1, (int) ceil($total / $perPage));
-    $page       = min($page, $totalPages);
-    $posts      = array_slice($allPosts, ($page - 1) * $perPage, $perPage);
-
-    // ── Commentaires ──
+    // ── Commentaires pour les posts affichés ──
     $commentairesMap = [];
     foreach ($posts as $post) {
         $commentairesMap[$post->getIdPost()] = $em->getRepository(Commentaire::class)
             ->findBy(['idPost' => $post->getIdPost()], ['dateCommentaire' => 'ASC']);
     }
 
-    // ── Récupérer les noms des users ──
+    // ── Map userId => "Prénom Nom" ──
     $userIds = array_unique(array_map(fn($p) => $p->getUserId(), $posts));
-
     $allCommentUserIds = [];
     foreach ($commentairesMap as $comments) {
         foreach ($comments as $c) {
             $allCommentUserIds[] = $c->getUserId();
         }
     }
-
     $allUserIds = array_unique(array_merge($userIds, $allCommentUserIds));
 
     $usersMap = [];
     if (!empty($allUserIds)) {
         $users = $em->createQueryBuilder()
-            ->select('u')
-            ->from(\App\Entity\User::class, 'u')
-            ->where('u.userId IN (:ids)')
-            ->setParameter('ids', $allUserIds)
-            ->getQuery()
-            ->getResult();
-
+            ->select('u')->from(\App\Entity\User::class, 'u')
+            ->where('u.userId IN (:ids)')->setParameter('ids', $allUserIds)
+            ->getQuery()->getResult();
         foreach ($users as $u) {
             $usersMap[$u->getUserId()] = $u->getUserPrenom() . ' ' . $u->getUserNom();
         }
@@ -186,15 +203,17 @@ public function posts(int $id, Request $request, EntityManagerInterface $em): Re
     return $this->render('forum/posts.html.twig', [
         'categorie'       => $categorie,
         'posts'           => $posts,
+        'pagination'      => $pagination,    // ← objet pagination pour le template
         'commentairesMap' => $commentairesMap,
         'likesMap'        => $likesMap,
         'likedByMe'       => $likedByMe,
-        'usersMap'        => $usersMap,    // ← ajouté
+        'usersMap'        => $usersMap,
         'search'          => $search,
         'tri'             => $tri,
-        'page'            => $page,
-        'totalPages'      => $totalPages,
-        'total'           => $total,
+        // Ces variables ne sont plus nécessaires — KnpPaginator les gère
+        // 'page'       => supprimé
+        // 'totalPages' => supprimé
+        // 'total'      => supprimé
     ]);
 }
     // ════════════════════════════════════════════════

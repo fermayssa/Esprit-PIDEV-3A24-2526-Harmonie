@@ -232,11 +232,12 @@
         </div>
     </form>
 
+    {# APRÈS — KnpPaginator fournit ces infos via pagination #}
     <div class="results-info">
         {% if search %}
-            <strong>{{ total }}</strong> résultat(s) pour "<strong>{{ search }}</strong>"
+            <strong>{{ pagination.getTotalItemCount() }}</strong> résultat(s) pour "<strong>{{ search }}</strong>"
         {% else %}
-            <strong>{{ total }}</strong> post(s) • Page <strong>{{ page }}</strong>/{{ totalPages }}
+            <strong>{{ pagination.getTotalItemCount() }}</strong> post(s) au total
         {% endif %}
     </div>
 
@@ -373,28 +374,8 @@
     </div>
 
     {# ── PAGINATION ── #}
-    {% if totalPages > 1 %}
-    <div class="pagination">
-        {% if page > 1 %}
-            <a href="{{ path('forum_posts', {id: categorie.idCategorie, page: page-1, tri: tri, search: search}) }}"
-               class="pag-btn">← Précédent</a>
-        {% else %}
-            <span class="pag-btn disabled">← Précédent</span>
-        {% endif %}
-
-        {% for p in 1..totalPages %}
-            <a href="{{ path('forum_posts', {id: categorie.idCategorie, page: p, tri: tri, search: search}) }}"
-               class="pag-btn {{ p == page ? 'active' }}">{{ p }}</a>
-        {% endfor %}
-
-        {% if page < totalPages %}
-            <a href="{{ path('forum_posts', {id: categorie.idCategorie, page: page+1, tri: tri, search: search}) }}"
-               class="pag-btn">Suivant →</a>
-        {% else %}
-            <span class="pag-btn disabled">Suivant →</span>
-        {% endif %}
-    </div>
-    {% endif %}
+    {# APRÈS — remplacer par ces 2 lignes #}
+    {{ knp_pagination_render(pagination) }}
 
 {# MODALE #}
 <div id="confirmModal" style="display:none;position:fixed;inset:0;z-index:1000;

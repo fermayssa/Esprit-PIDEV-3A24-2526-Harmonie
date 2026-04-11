@@ -225,6 +225,11 @@ class ComposerStaticInitd98bd09117ca527cc5140ad21a61849a
             'Matrix\\' => 7,
             'Masterminds\\' => 12,
         ),
+        'K' => 
+        array (
+            'Knp\\Component\\' => 14,
+            'Knp\\Bundle\\PaginatorBundle\\' => 27,
+        ),
         'F' => 
         array (
             'FontLib\\' => 8,
@@ -638,6 +643,14 @@ class ComposerStaticInitd98bd09117ca527cc5140ad21a61849a
         'Masterminds\\' => 
         array (
             0 => __DIR__ . '/..' . '/masterminds/html5/src',
+        ),
+        'Knp\\Component\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/knplabs/knp-components/src/Knp/Component',
+        ),
+        'Knp\\Bundle\\PaginatorBundle\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/knplabs/knp-paginator-bundle/src',
         ),
         'FontLib\\' => 
         array (
