@@ -870,6 +870,9 @@
     <service id="App\Service\ImageGenerationService" class="App\Service\ImageGenerationService" autowire="true" autoconfigure="true">
       <argument type="service" id="http_client.uri_template"/>
     </service>
+    <service id="App\Service\ModerationService" class="App\Service\ModerationService" autowire="true" autoconfigure="true">
+      <argument type="service" id="http_client.uri_template"/>
+    </service>
     <service id="App\Service\SuspicionScoreService" class="App\Service\SuspicionScoreService" autowire="true" autoconfigure="true"/>
     <service id="argument_metadata_factory" class="Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadataFactory"/>
     <service id="argument_resolver.backed_enum_resolver" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\BackedEnumValueResolver">
@@ -899,7 +902,7 @@
     </service>
     <service id="argument_resolver.service" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver">
       <tag name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver" priority="-50">controller.argument_value_resolver</tag>
-      <argument type="service" id=".service_locator.AMoybbN"/>
+      <argument type="service" id=".service_locator.t3C2RC2"/>
     </service>
     <service id="argument_resolver.default" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver">
       <tag name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver" priority="-100">controller.argument_value_resolver</tag>
@@ -4025,7 +4028,7 @@
     </service>
     <service id="argument_resolver.not_tagged_controller" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\NotTaggedControllerValueResolver">
       <tag name="controller.argument_value_resolver" priority="-200"/>
-      <argument type="service" id=".service_locator.AMoybbN"/>
+      <argument type="service" id=".service_locator.t3C2RC2"/>
     </service>
     <service id="debug.log_processor" class="Symfony\Bridge\Monolog\Processor\DebugProcessor">
       <tag name="kernel.reset" method="reset"/>
@@ -9832,18 +9835,26 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.z0A7H.F" method="withContext"/>
     </service>
+    <service id=".service_locator.DEL3pCd" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="em" type="service_closure" id="doctrine.orm.default_entity_manager"/>
+        <argument key="slugger" type="service_closure" id="slugger"/>
+        <argument key="moderation" type="service_closure" id="App\Service\ModerationService"/>
+      </argument>
+    </service>
+    <service id=".service_locator.DEL3pCd.App\Controller\ForumController::newPost()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\ForumController::newPost()"/>
+      <argument>App\Controller\ForumController::newPost()</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.DEL3pCd" method="withContext"/>
+    </service>
     <service id=".service_locator.wEoPZVd" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="em" type="service_closure" id="doctrine.orm.default_entity_manager"/>
         <argument key="slugger" type="service_closure" id="slugger"/>
       </argument>
-    </service>
-    <service id=".service_locator.wEoPZVd.App\Controller\ForumController::newPost()" class="Symfony\Component\DependencyInjection\ServiceLocator">
-      <tag name="container.service_locator_context" id="App\Controller\ForumController::newPost()"/>
-      <argument>App\Controller\ForumController::newPost()</argument>
-      <argument type="service" id="service_container"/>
-      <factory service=".service_locator.wEoPZVd" method="withContext"/>
     </service>
     <service id=".service_locator.wEoPZVd.App\Controller\ForumController::editPost()" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\ForumController::editPost()"/>
@@ -9857,11 +9868,18 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.z0A7H.F" method="withContext"/>
     </service>
-    <service id=".service_locator.z0A7H.F.App\Controller\ForumController::newComment()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.tRH8wBJ" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="em" type="service_closure" id="doctrine.orm.default_entity_manager"/>
+        <argument key="moderation" type="service_closure" id="App\Service\ModerationService"/>
+      </argument>
+    </service>
+    <service id=".service_locator.tRH8wBJ.App\Controller\ForumController::newComment()" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\ForumController::newComment()"/>
       <argument>App\Controller\ForumController::newComment()</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.z0A7H.F" method="withContext"/>
+      <factory service=".service_locator.tRH8wBJ" method="withContext"/>
     </service>
     <service id=".service_locator.z0A7H.F.App\Controller\ForumController::editComment()" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\ForumController::editComment()"/>
@@ -10120,7 +10138,7 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.z0A7H.F" method="withContext"/>
     </service>
-    <service id=".service_locator.AMoybbN" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.t3C2RC2" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="kernel::registerContainerConfiguration" type="service_closure" id=".service_locator.1vYpZ1B.kernel::registerContainerConfiguration()"/>
@@ -10184,10 +10202,10 @@
         <argument key="App\Controller\ForumController::deleteCategorie" type="service_closure" id=".service_locator.z0A7H.F.App\Controller\ForumController::deleteCategorie()"/>
         <argument key="App\Controller\ForumController::posts" type="service_closure" id=".service_locator.z0A7H.F.App\Controller\ForumController::posts()"/>
         <argument key="App\Controller\ForumController::toggleLike" type="service_closure" id=".service_locator.z0A7H.F.App\Controller\ForumController::toggleLike()"/>
-        <argument key="App\Controller\ForumController::newPost" type="service_closure" id=".service_locator.wEoPZVd.App\Controller\ForumController::newPost()"/>
+        <argument key="App\Controller\ForumController::newPost" type="service_closure" id=".service_locator.DEL3pCd.App\Controller\ForumController::newPost()"/>
         <argument key="App\Controller\ForumController::editPost" type="service_closure" id=".service_locator.wEoPZVd.App\Controller\ForumController::editPost()"/>
         <argument key="App\Controller\ForumController::deletePost" type="service_closure" id=".service_locator.z0A7H.F.App\Controller\ForumController::deletePost()"/>
-        <argument key="App\Controller\ForumController::newComment" type="service_closure" id=".service_locator.z0A7H.F.App\Controller\ForumController::newComment()"/>
+        <argument key="App\Controller\ForumController::newComment" type="service_closure" id=".service_locator.tRH8wBJ.App\Controller\ForumController::newComment()"/>
         <argument key="App\Controller\ForumController::editComment" type="service_closure" id=".service_locator.z0A7H.F.App\Controller\ForumController::editComment()"/>
         <argument key="App\Controller\ForumController::deleteComment" type="service_closure" id=".service_locator.z0A7H.F.App\Controller\ForumController::deleteComment()"/>
         <argument key="App\Controller\JournalController::edit" type="service_closure" id=".service_locator.j4Wlmfc.App\Controller\JournalController::edit()"/>
@@ -10278,10 +10296,10 @@
         <argument key="App\Controller\ForumController:deleteCategorie" type="service_closure" id=".service_locator.z0A7H.F.App\Controller\ForumController::deleteCategorie()"/>
         <argument key="App\Controller\ForumController:posts" type="service_closure" id=".service_locator.z0A7H.F.App\Controller\ForumController::posts()"/>
         <argument key="App\Controller\ForumController:toggleLike" type="service_closure" id=".service_locator.z0A7H.F.App\Controller\ForumController::toggleLike()"/>
-        <argument key="App\Controller\ForumController:newPost" type="service_closure" id=".service_locator.wEoPZVd.App\Controller\ForumController::newPost()"/>
+        <argument key="App\Controller\ForumController:newPost" type="service_closure" id=".service_locator.DEL3pCd.App\Controller\ForumController::newPost()"/>
         <argument key="App\Controller\ForumController:editPost" type="service_closure" id=".service_locator.wEoPZVd.App\Controller\ForumController::editPost()"/>
         <argument key="App\Controller\ForumController:deletePost" type="service_closure" id=".service_locator.z0A7H.F.App\Controller\ForumController::deletePost()"/>
-        <argument key="App\Controller\ForumController:newComment" type="service_closure" id=".service_locator.z0A7H.F.App\Controller\ForumController::newComment()"/>
+        <argument key="App\Controller\ForumController:newComment" type="service_closure" id=".service_locator.tRH8wBJ.App\Controller\ForumController::newComment()"/>
         <argument key="App\Controller\ForumController:editComment" type="service_closure" id=".service_locator.z0A7H.F.App\Controller\ForumController::editComment()"/>
         <argument key="App\Controller\ForumController:deleteComment" type="service_closure" id=".service_locator.z0A7H.F.App\Controller\ForumController::deleteComment()"/>
         <argument key="App\Controller\JournalController:edit" type="service_closure" id=".service_locator.j4Wlmfc.App\Controller\JournalController::edit()"/>
@@ -12864,7 +12882,7 @@
     <service id="Psr\Log\LoggerInterface" alias="monolog.logger"/>
     <service id="container.env_var_processors_locator" alias=".service_locator.ryAvHi4" public="true"/>
     <service id="twig.loader.filesystem" alias="twig.loader.native_filesystem"/>
-    <service id="argument_resolver.controller_locator" alias=".service_locator.AMoybbN"/>
+    <service id="argument_resolver.controller_locator" alias=".service_locator.t3C2RC2"/>
     <service id="doctrine.id_generator_locator" alias=".service_locator.W55Po6X"/>
     <service id="twig.loader" alias="twig.loader.native_filesystem"/>
     <service id=".Psr\Log\LoggerInterface $request" alias="monolog.logger.request"/>
@@ -12954,7 +12972,9 @@
     <service id=".service_locator.23Ydx6f" alias=".service_locator.NgPr0wp"/>
     <service id=".service_locator.KNSic_m" alias=".service_locator.n60qnZK"/>
     <service id=".service_locator.0ekWYPZ" alias=".service_locator.z0A7H.F"/>
+    <service id=".service_locator.nTY_6xw" alias=".service_locator.DEL3pCd"/>
     <service id=".service_locator.jMHKBAi" alias=".service_locator.wEoPZVd"/>
+    <service id=".service_locator.0lTUlhL" alias=".service_locator.tRH8wBJ"/>
     <service id=".service_locator.a4BGQuG" alias=".service_locator.j4Wlmfc"/>
     <service id=".service_locator.qG0FeeQ" alias=".service_locator.eTqhGjo"/>
     <service id=".service_locator.HEogJwd" alias=".service_locator.Cz8IWeY"/>

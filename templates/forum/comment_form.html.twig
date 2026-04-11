@@ -100,6 +100,15 @@
 
     <div class="form-card">
         <div class="form-title">✏️ Modifier le commentaire</div>
+        {% for msg in app.flashes('error_moderation') %}
+            <div style="background:#FEF2F2;border:1px solid rgba(239,68,68,.2);
+                        border-radius:12px;padding:14px 18px;margin-bottom:20px;
+                        color:#E05252;font-size:14px;font-weight:500;
+                        display:flex;align-items:center;gap:10px;">
+                <span style="font-size:20px;">🚫</span>
+                {{ msg }}
+            </div>
+        {% endfor %}
 
         {{ form_start(form) }}
 

@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\String\Slugger\SluggerInterface;
-
+use App\Service\ModerationService;
 
 class ForumController extends AbstractController
 {
@@ -243,7 +243,8 @@ public function newPost(
     int $idCat,
     Request $request,
     EntityManagerInterface $em,
-    SluggerInterface $slugger
+    SluggerInterface $slugger,
+    ModerationService $moderation   // ← ajouter
 ): Response {
     $categorie = $em->getRepository(Categorie::class)->find($idCat);
     if (!$categorie) throw $this->createNotFoundException();
@@ -254,22 +255,28 @@ public function newPost(
 
     if ($form->isSubmitted() && $form->isValid()) {
 
+        // ── Vérification gros mots ──
+        $texteAVerifier = $post->getTitre() . ' ' . $post->getContenu();
+        if ($moderation->containsProfanity($texteAVerifier)) {
+            $this->addFlash('error_moderation', 
+                '🚫 Votre post contient des termes inappropriés. Merci de le reformuler.');
+            return $this->render('forum/post_form.html.twig', [
+                'form'      => $form->createView(),
+                'post'      => null,
+                'categorie' => $categorie,
+            ]);
+        }
+
         // ── Gestion upload image ──
         $imageFile = $form->get('imageFile')->getData();
         if ($imageFile) {
             $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
             $safeFilename     = $slugger->slug($originalFilename);
             $newFilename      = $safeFilename . '-' . uniqid() . '.' . $imageFile->guessExtension();
-
             try {
-                $imageFile->move(
-                    $this->getParameter('posts_images_directory'),
-                    $newFilename
-                );
+                $imageFile->move($this->getParameter('posts_images_directory'), $newFilename);
                 $post->setImagePath($newFilename);
-            } catch (FileException $e) {
-                // log si besoin
-            }
+            } catch (\Exception $e) {}
         }
 
         $post->setIdCategorie($idCat);
@@ -304,6 +311,7 @@ public function editPost(
 
     if ($form->isSubmitted() && $form->isValid()) {
 
+
         // ── Gestion upload image ──
         $imageFile = $form->get('imageFile')->getData();
         if ($imageFile) {
@@ -320,6 +328,17 @@ public function editPost(
             } catch (FileException $e) {
                 // log si besoin
             }
+        }
+        // ── Vérification gros mots ──
+        $texteAVerifier = $post->getTitre() . ' ' . $post->getContenu();
+        if ($moderation->containsProfanity($texteAVerifier)) {
+            $this->addFlash('error_moderation',
+                '🚫 Votre post contient des termes inappropriés. Merci de le reformuler.');
+            return $this->render('forum/post_form.html.twig', [
+                'form'      => $form->createView(),
+                'post'      => $post,
+                'categorie' => $categorie,
+            ]);
         }
 
         $em->flush();
@@ -352,14 +371,20 @@ public function editPost(
     //  COMMENTAIRES
     // ════════════════════════════════════════════════
 
+    // Après — ajouter ModerationService
     #[Route('/forum/post/{idPost}/comment/new', name: 'forum_comment_new', methods: ['POST'])]
-public function newComment(int $idPost, Request $request, EntityManagerInterface $em): Response
+    public function newComment(
+        int $idPost,
+        Request $request,
+        EntityManagerInterface $em,
+        ModerationService $moderation
+    ): Response
 {
     $post = $em->getRepository(Post::class)->find($idPost);
     if (!$post) throw $this->createNotFoundException();
 
     $contenu = trim($request->request->get('contenu', ''));
-
+    // ── Validation longueur ──
     if (strlen($contenu) < 3) {
         // Flash avec l'ID du post pour afficher l'erreur sur le bon post
         $this->addFlash('comment_error_' . $idPost, 'Le commentaire doit contenir au moins 3 caractères.');
@@ -368,6 +393,15 @@ public function newComment(int $idPost, Request $request, EntityManagerInterface
             'open_post' => $idPost,  // pour rouvrir la section commentaires
         ]);
     }
+    // ── Vérification gros mots ──
+    if ($moderation->containsProfanity($contenu)) {
+        $this->addFlash('comment_error_' . $idPost,
+            '🚫 Votre commentaire contient des termes inappropriés.');
+        return $this->redirectToRoute('forum_posts', [
+            'id'        => $post->getIdCategorie(),
+            'open_post' => $idPost,
+        ]);
+    } 
 
     $c = new Commentaire();
     $c->setContenu($contenu);
