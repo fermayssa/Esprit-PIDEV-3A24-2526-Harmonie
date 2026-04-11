@@ -24,6 +24,9 @@ class Tache
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $notes = null;
 
+    #[ORM\Column(length: 20, nullable: true)]
+    private ?string $priorite = null;
+
     #[ORM\Column(name: 'statut_tache', length: 20, options: ['default' => 'A_FAIRE'])]
     private string $statutTache = 'A_FAIRE';
 
@@ -68,6 +71,18 @@ class Tache
     public function setNotes(?string $notes): static
     {
         $this->notes = $notes;
+
+        return $this;
+    }
+
+    public function getPriorite(): ?string
+    {
+        return $this->priorite;
+    }
+
+    public function setPriorite(?string $priorite): static
+    {
+        $this->priorite = $priorite;
 
         return $this;
     }

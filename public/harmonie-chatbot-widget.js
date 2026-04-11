@@ -372,8 +372,46 @@
         }
     }
 
+    async function loadAllData() {
+        await Promise.all([
+            loadTasksFromApi(),
+            loadEventsFromApi()
+        ]);
+    }
+
+    async function refreshData() {
+        try {
+            await loadAllData();
+        } catch (e) {
+            console.error('Erreur refresh données:', e);
+        }
+    }
+
+    function formatTasksForPrompt() {
+        if (!state.tasks.length) return 'Aucune tâche.';
+        return state.tasks.map(t => {
+            const statut = t.statut || (t.completed ? 'TERMINEE' : 'A_FAIRE');
+            const due = t.dueDate || 'N/A';
+            const notes = t.notes ? ` — ${t.notes}` : '';
+            return `- ${t.title} | statut: ${statut} | date: ${due}${notes}`;
+        }).join('\n');
+    }
+
+    function formatEventsForPrompt() {
+        if (!state.events.length) return 'Aucun événement.';
+        return state.events.map(e => {
+            const start = e.startTime || 'N/A';
+            const end = e.endTime || 'N/A';
+            const lieu = e.location || 'N/A';
+            return `- ${e.title} | ${start} → ${end} | lieu: ${lieu}`;
+        }).join('\n');
+    }
+
     // ✅ APPEL API GROQ (format OpenAI compatible)
     async function callGroqAPI(userMessage) {
+        const now = new Date();
+        const nowIso = now.toISOString();
+        const nowFr = now.toLocaleString('fr-FR');
         const systemPrompt = `Tu es Harmonie Assistant, un assistant personnel bienveillant intégré dans l'application Harmonie.
 RÈGLES:
 - Réponds TOUJOURS en français
@@ -383,9 +421,16 @@ RÈGLES:
 - Ne jamais inventer de données
 - Pour hors sujet, rappelle poliment ton rôle
 
-ÉTAT ACTUEL:
-Événements: ${JSON.stringify(state.events)}
-Tâches: ${JSON.stringify(state.tasks)}
+    DATE/HEURE ACTUELLES:
+    - ISO: ${nowIso}
+    - Locale: ${nowFr}
+
+    DONNÉES UTILISATEUR:
+    Tâches:
+    ${formatTasksForPrompt()}
+
+    Événements:
+    ${formatEventsForPrompt()}
 
 Réponds de façon claire, concise et bienveillante avec des emojis appropriés.`;
 
@@ -432,8 +477,11 @@ Réponds de façon claire, concise et bienveillante avec des emojis appropriés.
     function handleLocalCommands(userMessage) {
         const msg = userMessage.toLowerCase();
         if (msg.includes('ajoute') && (msg.includes('événement') || msg.includes('réunion') || msg.includes('rendez-vous'))) return handleAddEvent(userMessage);
-        if ((msg.includes('affiche') || msg.includes('montre') || msg.includes("qu'est")) && (msg.includes('prévu') || msg.includes('événement'))) return handleShowEvents();
-        if ((msg.includes('supprim') || msg.includes('annule')) && (msg.includes('événement') || msg.includes('réunion'))) return handleDeleteEvent();
+        if ((msg.includes('affiche') || msg.includes('montre') || msg.includes("qu'est")) && (msg.includes('prévu') || msg.includes('événement'))) return handleShowEvents(msg);
+        if ((msg.includes('supprim') || msg.includes('annule')) && (msg.includes('événement') || msg.includes('réunion'))) return handleDeleteEvent(msg);
+        if (msg.includes('demain') && (msg.includes('événement') || msg.includes('réunion') || msg.includes('rendez-vous'))) return handleShowEvents(msg);
+        if (msg.includes('demain') && (msg.includes('annule') || msg.includes('supprim'))) return handleDeleteEvent(msg);
+        if (msg.includes('demain') && (msg.includes('ai') || msg.includes('j\'ai') || msg.includes('qu\'est') || msg.includes('quoi'))) return handleShowEvents(msg);
         if (msg.includes('ajoute') && (msg.includes('tâche') || msg.includes('task'))) return handleAddTask(userMessage);
         if ((msg.includes('affiche') || msg.includes('montre') || msg.includes('liste')) && (msg.includes('tâche') || msg.includes('urgent') || msg.includes('retard'))) return handleShowTasks(msg);
         if (msg.includes('marque') && msg.includes('terminée')) return handleCompleteTask();
@@ -467,22 +515,55 @@ Réponds de façon claire, concise et bienveillante avec des emojis appropriés.
         return null;
     }
 
-    function handleShowEvents() {
+    function handleShowEvents(msg) {
         if (!state.events.length) return '📭 Aucun événement programmé.';
+
+        let events = state.events.slice();
+        const today = new Date().toISOString().split('T')[0];
+        const tomorrow = new Date(Date.now() + 86400000).toISOString().split('T')[0];
+
+        if (msg && msg.includes('demain')) {
+            events = events.filter(e => e.startTime && e.startTime.substring(0, 10) === tomorrow);
+        } else if (msg && msg.includes('aujourd')) {
+            events = events.filter(e => e.startTime && e.startTime.substring(0, 10) === today);
+        } else {
+            events.sort((a, b) => new Date(a.startTime) - new Date(b.startTime));
+        }
+
+        if (!events.length) {
+            if (msg && msg.includes('demain')) return '📭 Aucun événement pour demain.';
+            if (msg && msg.includes('aujourd')) return '📭 Aucun événement pour aujourd\'hui.';
+            return '📭 Aucun événement programmé.';
+        }
+
         let html = '📅 <strong>Vos événements:</strong><br>';
-        state.events.forEach(e => {
+        events.slice(0, 10).forEach(e => {
             const startStr = e.startTime ? e.startTime.substring(0, 16) : 'N/A';
             html += `<div class="hcw-message-card event"><strong>${e.title}</strong><br>🕐 ${startStr}<br>📍 ${e.location || 'N/A'}</div>`;
         });
+        if (events.length > 10) html += `<div class="hcw-message-card"><em>... et ${events.length - 10} autres</em></div>`;
         return html;
     }
 
-    function handleDeleteEvent() {
+    function handleDeleteEvent(msg) {
         if (!state.events.length) return '📭 Aucun événement à supprimer.';
-        const last = state.events[state.events.length - 1];
-        if (!last.id) return '❌ Impossible de supprimer (ID manquant)';
-        deleteEventInApi(last.id).then(() => {
-            addMessage(`✅ <strong>Événement supprimé!</strong><div class="hcw-message-card event"><strong>❌ ${last.title}</strong></div>`, 'bot', true);
+
+        let events = state.events.slice();
+        const tomorrow = new Date(Date.now() + 86400000).toISOString().split('T')[0];
+
+        if (msg && msg.includes('demain')) {
+            events = events.filter(e => e.startTime && e.startTime.substring(0, 10) === tomorrow);
+        }
+
+        if (!events.length) {
+            if (msg && msg.includes('demain')) return '📭 Aucun événement pour demain à supprimer.';
+            return '📭 Aucun événement à supprimer.';
+        }
+
+        const eventToDelete = events[0];
+        if (!eventToDelete.id) return '❌ Impossible de supprimer (ID manquant)';
+        deleteEventInApi(eventToDelete.id).then(() => {
+            addMessage(`✅ <strong>Événement supprimé!</strong><div class="hcw-message-card event"><strong>❌ ${eventToDelete.title}</strong></div>`, 'bot', true);
         }).catch(err => {
             addMessage(`<div class="hcw-message-card error">❌ ${err.message}</div>`, 'bot', true);
         });
@@ -490,18 +571,14 @@ Réponds de façon claire, concise et bienveillante avec des emojis appropriés.
     }
 
     function handleAddTask(message) {
-        const priority = extractPriority(message);
-        const emoji = { haute:'🔴', moyenne:'🟡', basse:'🟢' }[priority];
         const taskData = {
             title: extractTaskTitle(message),
-            priority,
             dueDate: extractDueDate(message),
             notes: null,
             completed: false
         };
         createTaskInApi(taskData).then(task => {
-            const emoji = { haute:'🔴', moyenne:'🟡', basse:'🟢' }[task.priority];
-            addMessage(`✅ <strong>Tâche créée!</strong><div class="hcw-message-card task"><strong>${emoji} ${task.title}</strong><br>Priorité: <strong>${task.priority}</strong><br>📅 ${task.dueDate}</div>`, 'bot', true);
+            addMessage(`✅ <strong>Tâche créée!</strong><div class="hcw-message-card task"><strong>${task.title}</strong><br>📅 ${task.dueDate}</div>`, 'bot', true);
         }).catch(err => {
             addMessage(`<div class="hcw-message-card error">❌ <strong>Erreur:</strong> ${err.message}</div>`, 'bot', true);
         });
@@ -512,13 +589,11 @@ Réponds de façon claire, concise et bienveillante avec des emojis appropriés.
         let tasks = state.tasks;
         if (msg.includes('terminée'))    tasks = tasks.filter(t => t.completed);
         else if (msg.includes('retard')) tasks = tasks.filter(t => !t.completed && new Date(t.dueDate) < new Date());
-        else if (msg.includes('urgent')) tasks = tasks.filter(t => !t.completed && t.priority === 'haute');
         else                             tasks = tasks.filter(t => !t.completed);
         if (!tasks.length) return '✨ Aucune tâche dans cette catégorie!';
         let html = '✅ <strong>Vos tâches:</strong><br>';
         tasks.forEach(t => {
-            const emoji = { haute:'🔴', moyenne:'🟡', basse:'🟢' }[t.priority];
-            html += `<div class="hcw-message-card task"><strong>${emoji} ${t.title}</strong><br>Priorité: ${t.priority} • 📅 ${t.dueDate}</div>`;
+            html += `<div class="hcw-message-card task"><strong>${t.title}</strong><br>📅 ${t.dueDate}</div>`;
         });
         return html;
     }
@@ -564,6 +639,7 @@ Réponds de façon claire, concise et bienveillante avec des emojis appropriés.
 
     async function processUserMessage(userMessage, input, sendBtn) {
         try {
+            await refreshData();
             const local = handleLocalCommands(userMessage);
             if (local) {
                 removeTypingIndicator();
@@ -592,13 +668,15 @@ Réponds de façon claire, concise et bienveillante avec des emojis appropriés.
         const sendBtn  = chatbox.querySelector('.hcw-send-btn');
         const closeBtn = chatbox.querySelector('.hcw-header-close');
 
-        // Charger les données depuis les APIs
-        Promise.all([
-            loadTasksFromApi(),
-            loadEventsFromApi()
-        ]).catch(e => console.error('Erreur initialisation données:', e));
-
-        addMessage(getWelcomeHTML(detectPageContext()), 'bot', true);
+        // Charger les données depuis les APIs AVANT d'afficher le message de bienvenue
+        loadAllData().then(() => {
+            // Une fois les données chargées, afficher le message de bienvenue
+            addMessage(getWelcomeHTML(detectPageContext()), 'bot', true);
+        }).catch(e => {
+            console.error('Erreur initialisation données:', e);
+            // Afficher le message même en cas d'erreur
+            addMessage(getWelcomeHTML(detectPageContext()), 'bot', true);
+        });
 
         let isOpen = false;
         const openChat  = () => { chatbox.classList.add('hcw-open');    isOpen = true;  setTimeout(() => input.focus(), 200); };

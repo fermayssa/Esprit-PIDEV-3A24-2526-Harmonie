@@ -23,7 +23,6 @@ final class TaskApiController extends AbstractController
             $data[] = [
                 'id' => $task->getId(),
                 'title' => $task->getNom(),
-                'priority' => $task->getPriorite() ?? 'moyenne',
                 'dueDate' => $task->getDeadline() ? $task->getDeadline()->format('Y-m-d') : null,
                 'notes' => $task->getNotes(),
                 'completed' => $task->getStatutTache() === 'TERMINEE',
@@ -42,7 +41,6 @@ final class TaskApiController extends AbstractController
             $task = new Tache();
             $task->setNom($data['title'] ?? 'Nouvelle tâche');
             $task->setNotes($data['notes'] ?? null);
-            $task->setPriorite($data['priority'] ?? 'moyenne');
             
             if (!empty($data['dueDate'])) {
                 $task->setDeadline(new \DateTime($data['dueDate']));
@@ -61,7 +59,6 @@ final class TaskApiController extends AbstractController
             return $this->json([
                 'id' => $task->getId(),
                 'title' => $task->getNom(),
-                'priority' => $task->getPriorite() ?? 'moyenne',
                 'dueDate' => $task->getDeadline() ? $task->getDeadline()->format('Y-m-d') : null,
                 'completed' => $task->getStatutTache() === 'TERMINEE',
             ], 201);
