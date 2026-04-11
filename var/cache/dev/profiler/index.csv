@@ -783,3 +783,8 @@ f72323,127.0.0.1,GET,http://127.0.0.1:8000/back,1775903528,,200,request
 8f9c09,127.0.0.1,GET,http://127.0.0.1:8000/back/commentaires,1775903825,,500,request
 0134b1,127.0.0.1,GET,http://127.0.0.1:8000/back/posts,1775903829,,200,request
 7eaf63,127.0.0.1,GET,http://127.0.0.1:8000/back,1775903832,,200,request
+350d18,127.0.0.1,GET,http://127.0.0.1:8000/back,1775904018,,200,request
+63533d,127.0.0.1,GET,http://127.0.0.1:8000/back/commentaires,1775904020,,200,request
+2893ca,127.0.0.1,GET,http://127.0.0.1:8000/back/posts,1775904041,,200,request
+dcc7b8,127.0.0.1,GET,http://127.0.0.1:8000/back/commentaires,1775904045,,200,request
+373474,127.0.0.1,GET,http://127.0.0.1:8000/back/posts,1775904058,,200,request
