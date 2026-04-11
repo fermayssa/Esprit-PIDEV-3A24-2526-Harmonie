@@ -95,15 +95,17 @@ class BackController extends AbstractController
     // ─── COMMENTAIRES ─────────────────────────────────────────────────────────
 
     #[Route('/commentaires', name: 'commentaires')]
-    public function commentaires(CommentaireRepository $commentaireRepo, EntityManagerInterface $em): Response
-{
-    $commentaires = $commentaireRepo->findAllWithPost();
+    public function commentaires(
+    CommentaireRepository $commentaireRepo,
+    EntityManagerInterface $em          // ← ajouter
+): Response {
+    $commentaires = $commentaireRepo->findBy([], ['dateCommentaire' => 'DESC']);
 
     // Charger les posts associés manuellement
     $postsMap = [];
     foreach ($commentaires as $c) {
         $pid = $c->getIdPost();
-        if (!isset($postsMap[$pid])) {
+        if ($pid && !isset($postsMap[$pid])) {
             $postsMap[$pid] = $em->getRepository(\App\Entity\Post::class)->find($pid);
         }
     }

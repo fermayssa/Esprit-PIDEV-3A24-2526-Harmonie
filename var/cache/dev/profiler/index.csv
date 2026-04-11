@@ -788,3 +788,10 @@ f72323,127.0.0.1,GET,http://127.0.0.1:8000/back,1775903528,,200,request
 2893ca,127.0.0.1,GET,http://127.0.0.1:8000/back/posts,1775904041,,200,request
 dcc7b8,127.0.0.1,GET,http://127.0.0.1:8000/back/commentaires,1775904045,,200,request
 373474,127.0.0.1,GET,http://127.0.0.1:8000/back/posts,1775904058,,200,request
+3b22c7,127.0.0.1,GET,http://127.0.0.1:8000/back/posts,1775904476,,200,request
+dd1b13,127.0.0.1,GET,http://127.0.0.1:8000/back/commentaires,1775904478,,200,request
+30a464,127.0.0.1,GET,http://127.0.0.1:8000/back/commentaires,1775904480,,200,request
+f93ff1,127.0.0.1,GET,http://127.0.0.1:8000/back/categories,1775904490,,200,request
+51a383,127.0.0.1,GET,http://127.0.0.1:8000/back/posts,1775904618,,200,request
+cdf967,127.0.0.1,GET,http://127.0.0.1:8000/back/commentaires,1775904704,,200,request
+2be7bb,127.0.0.1,GET,http://127.0.0.1:8000/back/posts,1775905113,,200,request
