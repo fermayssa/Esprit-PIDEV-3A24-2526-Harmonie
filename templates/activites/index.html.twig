@@ -1829,46 +1829,83 @@ async function openQR(date) {
   waLink.href = '#';
   openModal('qrModal');
 
+  // ── CORRECTION BUG #3 ─────────────────────────────────────────────
+  // Ajout de credentials:'include' → la session Symfony est envoyée
+  //   Sans ça, si la session expire Symfony redirige vers /login (HTML),
+  //   le fetch suit la redirection, reçoit du HTML, JSON.parse() échoue
+  //   → catch → "Erreur réseau" (faux négatif)
+  // Ajout de Accept:'application/json' → Symfony sait que c'est une requête AJAX
+  // Ajout de X-Requested-With → permet de détecter côté serveur les appels AJAX
+  let res;
   try {
-    const res  = await fetch(API.qr(date));
-    
-    if (!res.ok) {
-      if (res.status === 401) {
-        wrap.innerHTML = '<div style="color:#EF4444;font-size:13px;text-align:center;padding:20px">⚠ Session expirée. Veuillez vous reconnecter.</div>';
-        showToast('error', '⚠ Session expirée. Veuillez vous reconnecter.');
-        return;
-      } else {
-        wrap.innerHTML = '<div style="color:#EF4444;font-size:13px;text-align:center;padding:20px">⚠ Erreur serveur (' + res.status + ')</div>';
-        showToast('error', '⚠ Erreur serveur.');
-        return;
-      }
-    }
-    
-    const data = await res.json();
-
-    if (!data.success) {
-      wrap.innerHTML = '<div style="color:#EF4444;font-size:13px;text-align:center;padding:20px">⚠ ' + (data.message || 'Séance introuvable') + '</div>';
-      return;
-    }
-
-    // Affiche le QR code (Data URI PNG généré par QrCodeService)
-    wrap.innerHTML = `<img src="${data.qr}" alt="QR Code séance ${data.dateLabel}" style="width:100%;height:100%;object-fit:contain">`;
-
-    // Met à jour les métadonnées de la modale
-    document.getElementById('qrDate').textContent = '📅 ' + data.dateLabel;
-    document.getElementById('qrMeta').textContent =
-      data.nbEx + ' exercice' + (data.nbEx !== 1 ? 's' : '') +
-      ' · ' + data.totalMin + ' min' +
-      (data.totalCal > 0 ? ' · ' + data.totalCal + ' kcal' : '');
-
-    // Lien WhatsApp direct (clic sur le bouton vert)
-    waLink.href = data.waUrl;
-
-    showToast('success', '📲 QR Code généré pour la séance du ' + data.dateLabel);
-  } catch (err) {
-    wrap.innerHTML = '<div style="color:#EF4444;font-size:13px;text-align:center;padding:20px">⚠ Erreur réseau</div>';
-    showToast('error', '⚠ Impossible de générer le QR code.');
+    res = await fetch(API.qr(date), {
+      method: 'GET',
+      credentials: 'include',
+      headers: {
+        'Accept': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest',
+      },
+    });
+  } catch (networkErr) {
+    // Vraie erreur réseau (serveur hors ligne, timeout, etc.)
+    wrap.innerHTML = '<div style="color:#EF4444;font-size:13px;text-align:center;padding:20px">⚠ Serveur injoignable.<br><small>Vérifiez que le serveur Symfony est lancé.</small></div>';
+    showToast('error', '⚠ Serveur injoignable.');
+    return;
   }
+
+  // ── Gestion des codes HTTP ─────────────────────────────────────────
+  if (res.status === 401) {
+    wrap.innerHTML = '<div style="color:#EF4444;font-size:13px;text-align:center;padding:20px">⚠ Session expirée.<br><a href="/login" style="color:#6A5ACD">→ Se reconnecter</a></div>';
+    showToast('error', '⚠ Session expirée. Veuillez vous reconnecter.');
+    return;
+  }
+
+  if (res.status === 404) {
+    wrap.innerHTML = '<div style="color:#F59E0B;font-size:13px;text-align:center;padding:20px">📭 Aucune activité pour cette date.</div>';
+    showToast('error', '📭 Aucune activité pour la séance du ' + date + '.');
+    return;
+  }
+
+  // ── Tentative de parsing JSON ──────────────────────────────────────
+  // On vérifie le Content-Type avant de tenter JSON.parse
+  // pour éviter de crasher si le serveur renvoie du HTML
+  let data;
+  const contentType = res.headers.get('Content-Type') || '';
+  if (!contentType.includes('application/json')) {
+    // Le serveur a renvoyé du HTML (page login ou page d'erreur Symfony)
+    wrap.innerHTML = '<div style="color:#EF4444;font-size:13px;text-align:center;padding:20px">⚠ Erreur serveur inattendue (' + res.status + ').<br><small>Vérifiez que endroid/qr-code est installé.</small></div>';
+    showToast('error', '⚠ Erreur serveur ' + res.status + '.');
+    return;
+  }
+
+  try {
+    data = await res.json();
+  } catch (parseErr) {
+    wrap.innerHTML = '<div style="color:#EF4444;font-size:13px;text-align:center;padding:20px">⚠ Réponse serveur invalide.</div>';
+    showToast('error', '⚠ Réponse serveur invalide.');
+    return;
+  }
+
+  if (!data.success) {
+    wrap.innerHTML = '<div style="color:#EF4444;font-size:13px;text-align:center;padding:20px">⚠ ' + (data.message || 'Séance introuvable') + '</div>';
+    showToast('error', '⚠ ' + (data.message || 'Impossible de générer le QR code.'));
+    return;
+  }
+
+  // ── Affichage du QR code (Data URI PNG généré par QrCodeService) ──
+  wrap.innerHTML = `<img src="${data.qr}" alt="QR Code séance ${data.dateLabel}" style="width:100%;height:100%;object-fit:contain">`;
+
+  // ── Métadonnées de la modale ───────────────────────────────────────
+  document.getElementById('qrDate').textContent = '📅 ' + data.dateLabel;
+  document.getElementById('qrMeta').textContent =
+    data.nbEx + ' exercice' + (data.nbEx !== 1 ? 's' : '') +
+    ' · ' + data.totalMin + ' min' +
+    (data.totalCal > 0 ? ' · ' + data.totalCal + ' kcal' : '');
+
+  // ── Lien WhatsApp direct ───────────────────────────────────────────
+  waLink.href = data.waUrl;
+
+  showToast('success', '📲 QR Code généré pour la séance du ' + data.dateLabel);
 }
 
 // ══════════════════════════════════════════════════════

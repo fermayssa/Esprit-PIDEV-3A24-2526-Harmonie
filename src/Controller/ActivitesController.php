@@ -15,6 +15,12 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+/**
+ * Contrôleur du Journal d'Activités — Harmony
+ *
+ * Toutes les routes nécessitent ROLE_USER (protège getUser()->getId()).
+ */
+#[IsGranted('ROLE_USER')]
 #[Route('/activites')]
 class ActivitesController extends AbstractController
 {
@@ -198,7 +204,23 @@ class ActivitesController extends AbstractController
         return new JsonResponse(['success' => true, 'stats' => $stats]);
     }
 
-    // ─── QR CODE : VERSION FINALE ULTRA-ROBUSTE (requête directe) ─────────────────────
+    // ─── QR CODE SESSION ─────────────────────────────────────────────
+    /**
+     * Génère un QR code PNG (Data URI) pour la séance d'une date donnée.
+     *
+     * CORRECTIONS APPORTÉES :
+     *  1. catch (\Throwable $e) au lieu de catch (\Exception $e)
+     *     → attrape AUSSI les \Error PHP (class not found, TypeError, etc.)
+     *     → était la cause principale des erreurs 500 non gérées
+     *
+     *  2. Chemins du logo : essaie plusieurs emplacements courants
+     *     → évite l'erreur ".png.png" et le dossier "images" vs "image"
+     *
+     *  3. Vérification de l'utilisateur déjà en place (inchangée)
+     *
+     * Route : GET /activites/qr/{date}  (ex: /activites/qr/2025-04-07)
+     * Protégée par : #[IsGranted('ROLE_USER')] sur la classe
+     */
     #[Route('/qr/{date}', name: 'activites_qr_session', methods: ['GET'],
         requirements: ['date' => '\d{4}-\d{2}-\d{2}'])]
     public function qrSession(
@@ -206,20 +228,31 @@ class ActivitesController extends AbstractController
         ActiviteRepository $activiteRepo,
         QrCodeService $qrCodeService
     ): JsonResponse {
+        // ── \Throwable couvre \Exception ET \Error (class not found, TypeError, etc.) ──
         try {
+            // ── Vérification de l'utilisateur ─────────────────────────────────
             $user = $this->getUser();
             if (!$user) {
                 return new JsonResponse([
                     'success' => false,
-                    'message' => 'Utilisateur non connecté'
+                    'message' => 'Utilisateur non connecté.',
                 ], 401);
             }
             $userId = $user->getId();
 
-            // Requête directe ultra-fiable (contourne tout problème de grouped)
-            $dateStart = new \DateTime($date . ' 00:00:00');
-            $dateEnd = new \DateTime($date . ' 23:59:59');
-            
+            // ── Validation de la date ──────────────────────────────────────────
+            $dateObj = \DateTime::createFromFormat('Y-m-d', $date);
+            if (!$dateObj) {
+                return new JsonResponse([
+                    'success' => false,
+                    'message' => 'Format de date invalide. Attendu : YYYY-MM-DD.',
+                ], 400);
+            }
+
+            // ── Requête directe sur la base ────────────────────────────────────
+            $dateStart = (clone $dateObj)->setTime(0, 0, 0);
+            $dateEnd   = (clone $dateObj)->setTime(23, 59, 59);
+
             $activites = $activiteRepo->createQueryBuilder('a')
                 ->join('a.exercice', 'e')
                 ->where('a.userId = :uid')
@@ -233,23 +266,51 @@ class ActivitesController extends AbstractController
             if (empty($activites)) {
                 return new JsonResponse([
                     'success' => false,
-                    'message' => 'Séance introuvable pour la date ' . $date
+                    'message' => 'Aucune activité trouvée pour la date ' . $date . '.',
                 ], 404);
             }
 
             $exercises = array_map([$this, 'activiteToArray'], $activites);
 
-            // Date en français
-            $dateObj = new \DateTime($date);
-            $months = [1 => 'janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
+            // ── Date en français ───────────────────────────────────────────────
+            $months    = [
+                1  => 'janvier',  2  => 'février',  3  => 'mars',
+                4  => 'avril',    5  => 'mai',       6  => 'juin',
+                7  => 'juillet',  8  => 'août',      9  => 'septembre',
+                10 => 'octobre',  11 => 'novembre',  12 => 'décembre',
+            ];
             $dateLabel = $dateObj->format('j') . ' ' . $months[(int)$dateObj->format('n')] . ' ' . $dateObj->format('Y');
 
-            $logoPath  = $this->getParameter('kernel.project_dir') . '/public/images/harmony-logo.png.png';
+            // ── Recherche du logo dans plusieurs emplacements possibles ────────
+            // CORRECTION BUG #2 : le chemin original avait ".png.png" et "images/"
+            $projectDir = $this->getParameter('kernel.project_dir');
+            $logoCandidates = [
+                $projectDir . '/public/image/logo.png',           // chemin du module nutrition
+                $projectDir . '/public/images/logo.png',          // chemin alternatif
+                $projectDir . '/public/images/harmony-logo.png',  // sans double extension
+                $projectDir . '/public/images/harmony.png',
+                $projectDir . '/public/img/logo.png',
+            ];
+            $logoPath = null;
+            foreach ($logoCandidates as $candidate) {
+                if (file_exists($candidate)) {
+                    $logoPath = $candidate;
+                    break;
+                }
+            }
+            // Si aucun logo trouvé, le QR code sera généré sans logo (pas bloquant)
+
+            // ── Construction du message WhatsApp et génération du QR ──────────
             $waUrl     = $qrCodeService->buildWhatsAppUrl($dateLabel, $exercises);
             $qrDataUri = $qrCodeService->generateSessionQrCode($waUrl, $logoPath);
 
-            $totalMin = array_sum(array_column($exercises, 'duree_minutes'));
-            $totalCal = array_sum(array_column($exercises, 'calories_brulees')) ?: 0;
+            // ── Statistiques de la séance ──────────────────────────────────────
+            $totalMin = 0;
+            $totalCal = 0;
+            foreach ($exercises as $ex) {
+                $totalMin += (int) ($ex['duree_minutes'] ?? 0);
+                $totalCal += (int) ($ex['calories_brulees'] ?? 0);
+            }
 
             return new JsonResponse([
                 'success'   => true,
@@ -261,10 +322,21 @@ class ActivitesController extends AbstractController
                 'totalMin'  => $totalMin,
                 'totalCal'  => $totalCal,
             ]);
-        } catch (\Exception $e) {
+
+        } catch (\Throwable $e) {
+            // ── CORRECTION BUG #1 : catch \Throwable attrape \Error aussi ─────
+            // Avant : catch (\Exception $e) → ratait les \Error de PHP
+            // (class not found, TypeError, etc.) → 500 HTML → "Erreur réseau" JS
+
+            // En production, on log et on retourne un message propre
+            // En dev, on peut activer le message complet
+            $isDev = $this->getParameter('kernel.environment') === 'dev';
+
             return new JsonResponse([
                 'success' => false,
-                'message' => 'Erreur QR Code : ' . $e->getMessage()
+                'message' => $isDev
+                    ? 'Erreur QR Code : ' . $e->getMessage() . ' [' . get_class($e) . ']'
+                    : 'Impossible de générer le QR code. Vérifiez que endroid/qr-code est installé.',
             ], 500);
         }
     }

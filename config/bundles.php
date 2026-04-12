@@ -15,6 +15,5 @@ return [
     Symfony\Bundle\MakerBundle\MakerBundle::class => ['dev' => true],
     Knp\Bundle\SnappyBundle\KnpSnappyBundle::class => ['all' => true],
     Knp\Bundle\PaginatorBundle\KnpPaginatorBundle::class => ['all' => true],
-    // ── Symfony UX Chart.js ─────────────────────────────────────────────
     Symfony\UX\Chartjs\ChartjsBundle::class => ['all' => true],
 ];
