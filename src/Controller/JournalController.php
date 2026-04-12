@@ -48,6 +48,10 @@ class JournalController extends AbstractController
 
         return $this->render('journal/index.html.twig', compact('entries', 'humeurs', 'stats', 'trend', 'dist'));
     }
+    /**
+     * Recherche des entrées par mot-clé et/ou humeur (AJAX)
+     */
+
 
     #[Route('/search', name: 'journal_search', methods: ['GET'])]
     public function search(Request $request): JsonResponse
