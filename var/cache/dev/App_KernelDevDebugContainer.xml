@@ -9,8 +9,8 @@
     <parameter key="kernel.runtime_mode.cli">%env(not:default:kernel.runtime_mode.web:)%</parameter>
     <parameter key="kernel.runtime_mode.worker">%env(bool:default::key:worker:default:kernel.runtime_mode:)%</parameter>
     <parameter key="kernel.debug">true</parameter>
-    <parameter key="kernel.build_dir">C:/xampp/htdocs/integration-finale-web/var/cache/dev</parameter>
-    <parameter key="kernel.cache_dir">C:/xampp/htdocs/integration-finale-web/var/cache/dev</parameter>
+    <parameter key="kernel.build_dir">C:\xampp\htdocs\integration-finale-web\var\cache\dev</parameter>
+    <parameter key="kernel.cache_dir">C:\xampp\htdocs\integration-finale-web\var\cache\dev</parameter>
     <parameter key="kernel.logs_dir">C:\xampp\htdocs\integration-finale-web\var\log</parameter>
     <parameter key="kernel.bundles" type="collection">
       <parameter key="FrameworkBundle">Symfony\Bundle\FrameworkBundle\FrameworkBundle</parameter>
@@ -27,6 +27,7 @@
       <parameter key="MakerBundle">Symfony\Bundle\MakerBundle\MakerBundle</parameter>
       <parameter key="KnpSnappyBundle">Knp\Bundle\SnappyBundle\KnpSnappyBundle</parameter>
       <parameter key="KnpPaginatorBundle">Knp\Bundle\PaginatorBundle\KnpPaginatorBundle</parameter>
+      <parameter key="ChartjsBundle">Symfony\UX\Chartjs\ChartjsBundle</parameter>
     </parameter>
     <parameter key="kernel.bundles_metadata" type="collection">
       <parameter key="FrameworkBundle" type="collection">
@@ -85,6 +86,10 @@
         <parameter key="path">C:\xampp\htdocs\integration-finale-web\vendor\knplabs\knp-paginator-bundle</parameter>
         <parameter key="namespace">Knp\Bundle\PaginatorBundle</parameter>
       </parameter>
+      <parameter key="ChartjsBundle" type="collection">
+        <parameter key="path">C:\xampp\htdocs\integration-finale-web\vendor\symfony\ux-chartjs</parameter>
+        <parameter key="namespace">Symfony\UX\Chartjs</parameter>
+      </parameter>
     </parameter>
     <parameter key="kernel.charset">UTF-8</parameter>
     <parameter key="kernel.container_class">App_KernelDevDebugContainer</parameter>
@@ -140,6 +145,9 @@
       <parameter key="Knp\Bundle\PaginatorBundle\KnpPaginatorBundle" type="collection">
         <parameter key="all">true</parameter>
       </parameter>
+      <parameter key="Symfony\UX\Chartjs\ChartjsBundle" type="collection">
+        <parameter key="all">true</parameter>
+      </parameter>
     </parameter>
     <parameter key="event_dispatcher.event_aliases" type="collection">
       <parameter key="Symfony\Component\Console\Event\ConsoleCommandEvent">console.command</parameter>
@@ -181,15 +189,15 @@
     <parameter key="translator.logging">false</parameter>
     <parameter key="translator.default_path">C:\xampp\htdocs\integration-finale-web/translations</parameter>
     <parameter key="debug.error_handler.throw_at">-1</parameter>
-    <parameter key="debug.container.dump">C:/xampp/htdocs/integration-finale-web/var/cache/dev/App_KernelDevDebugContainer.xml</parameter>
+    <parameter key="debug.container.dump">C:\xampp\htdocs\integration-finale-web\var\cache\dev/App_KernelDevDebugContainer.xml</parameter>
     <parameter key="router.request_context.host">localhost</parameter>
     <parameter key="router.request_context.scheme">http</parameter>
     <parameter key="router.request_context.base_url">%env(DEFAULT_URI)%</parameter>
     <parameter key="router.resource">kernel::loadRoutes</parameter>
-    <parameter key="router.cache_dir">C:/xampp/htdocs/integration-finale-web/var/cache/dev</parameter>
+    <parameter key="router.cache_dir">C:\xampp\htdocs\integration-finale-web\var\cache\dev</parameter>
     <parameter key="request_listener.http_port">80</parameter>
     <parameter key="request_listener.https_port">443</parameter>
-    <parameter key="serializer.mapping.cache.file">C:/xampp/htdocs/integration-finale-web/var/cache/dev/serialization.php</parameter>
+    <parameter key="serializer.mapping.cache.file">C:\xampp\htdocs\integration-finale-web\var\cache\dev/serialization.php</parameter>
     <parameter key=".serializer.named_serializers" type="collection"/>
     <parameter key="cache.prefix.seed">_C:\xampp\htdocs\integration-finale-web.App_KernelDevDebugContainer</parameter>
     <parameter key="session.metadata.storage_key">_sf2_meta</parameter>
@@ -208,11 +216,11 @@
       <parameter key="data-controller">csrf-protection</parameter>
     </parameter>
     <parameter key=".form.type_extension.csrf.token_id">submit</parameter>
-    <parameter key="validator.mapping.cache.file">C:/xampp/htdocs/integration-finale-web/var/cache/dev/validation.php</parameter>
+    <parameter key="validator.mapping.cache.file">C:\xampp\htdocs\integration-finale-web\var\cache\dev/validation.php</parameter>
     <parameter key="validator.translation_domain">validators</parameter>
     <parameter key="profiler_listener.only_exceptions">false</parameter>
     <parameter key="profiler_listener.only_main_requests">false</parameter>
-    <parameter key="profiler.storage.dsn">file:C:/xampp/htdocs/integration-finale-web/var/cache/dev/profiler</parameter>
+    <parameter key="profiler.storage.dsn">file:C:\xampp\htdocs\integration-finale-web\var\cache\dev/profiler</parameter>
     <parameter key="doctrine.dbal.configuration.class">Doctrine\DBAL\Configuration</parameter>
     <parameter key="doctrine.data_collector.class">Doctrine\Bundle\DoctrineBundle\DataCollector\DoctrineDataCollector</parameter>
     <parameter key="doctrine.dbal.connection.event_manager.class">Symfony\Bridge\Doctrine\ContainerAwareEventManager</parameter>
@@ -289,7 +297,7 @@
     <parameter key="doctrine.orm.auto_generate_proxy_classes">true</parameter>
     <parameter key="doctrine.orm.enable_lazy_ghost_objects">true</parameter>
     <parameter key="doctrine.orm.enable_native_lazy_objects">false</parameter>
-    <parameter key="doctrine.orm.proxy_dir">C:/xampp/htdocs/integration-finale-web/var/cache/dev/doctrine/orm/Proxies</parameter>
+    <parameter key="doctrine.orm.proxy_dir">C:\xampp\htdocs\integration-finale-web\var\cache\dev/doctrine/orm/Proxies</parameter>
     <parameter key="doctrine.orm.proxy_namespace">Proxies</parameter>
     <parameter key="doctrine.migrations.preferred_em">null</parameter>
     <parameter key="doctrine.migrations.preferred_connection">null</parameter>
@@ -518,6 +526,7 @@
       <tag name="container.service_subscriber"/>
       <argument type="service" id="App\Repository\ExerciceRepository"/>
       <argument type="service" id="doctrine.orm.default_entity_manager"/>
+      <argument type="service" id="App\Service\ExerciceStatsService"/>
       <call method="setContainer">
         <argument type="service" id=".service_locator.TJNRSaV.App\Controller\AdminSportController"/>
       </call>
@@ -817,6 +826,9 @@
       <argument type="service" id="App\Repository\DemandeReservationRepository"/>
       <argument type="service" id="App\Repository\CalendrierRepository"/>
     </service>
+    <service id="App\Service\ExerciceStatsService" class="App\Service\ExerciceStatsService" autowire="true" autoconfigure="true">
+      <argument type="service" id="App\Repository\ExerciceRepository"/>
+    </service>
     <service id="App\Service\Export\CalendarExportService" class="App\Service\Export\CalendarExportService" autowire="true" autoconfigure="true"/>
     <service id="App\Service\Export\KanbanExportService" class="App\Service\Export\KanbanExportService" autowire="true" autoconfigure="true"/>
     <service id="App\Service\ImageGenerationService" class="App\Service\ImageGenerationService" autowire="true" autoconfigure="true">
@@ -960,7 +972,7 @@
       <tag name="container.no_preload"/>
       <argument type="tagged_iterator" tag="kernel.cache_warmer"/>
       <argument>true</argument>
-      <argument>C:/xampp/htdocs/integration-finale-web/var/cache/dev/App_KernelDevDebugContainerDeprecations.log</argument>
+      <argument>C:\xampp\htdocs\integration-finale-web\var\cache\dev/App_KernelDevDebugContainerDeprecations.log</argument>
     </service>
     <service id="cache_clearer" class="Symfony\Component\HttpKernel\CacheClearer\ChainCacheClearer">
       <argument type="tagged_iterator" tag="kernel.cache_clearer"/>
@@ -2064,7 +2076,7 @@
       <argument/>
       <argument>0</argument>
       <argument>%container.build_id%</argument>
-      <argument>C:/xampp/htdocs/integration-finale-web/var/cache/dev/pools/system</argument>
+      <argument>C:\xampp\htdocs\integration-finale-web\var\cache\dev/pools/system</argument>
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
     </service>
@@ -2256,11 +2268,12 @@
     <service id="asset_mapper.cached_mapped_asset_factory" class="Symfony\Component\AssetMapper\Factory\CachedMappedAssetFactory">
       <tag name="container.decorator" id="asset_mapper.mapped_asset_factory" inner="asset_mapper.cached_mapped_asset_factory.inner"/>
       <argument type="service" id="asset_mapper.cached_mapped_asset_factory.inner"/>
-      <argument>C:/xampp/htdocs/integration-finale-web/var/cache/dev/asset_mapper</argument>
+      <argument>C:\xampp\htdocs\integration-finale-web\var\cache\dev/asset_mapper</argument>
       <argument>true</argument>
     </service>
     <service id="asset_mapper.repository" class="Symfony\Component\AssetMapper\AssetMapperRepository">
       <argument type="collection">
+        <argument key="C:\xampp\htdocs\integration-finale-web\vendor\symfony\ux-chartjs\src\DependencyInjection/../../assets/dist">@symfony/ux-chartjs</argument>
         <argument key="C:\xampp\htdocs\integration-finale-web\vendor\symfony\ux-turbo\src\DependencyInjection/../../assets/dist">@symfony/ux-turbo</argument>
         <argument key="C:\xampp\htdocs\integration-finale-web\vendor\symfony\stimulus-bundle\src\DependencyInjection/../../assets/dist">@symfony/stimulus-bundle</argument>
         <argument key="assets/"/>
@@ -2654,7 +2667,7 @@
         </argument>
       </argument>
       <argument type="collection">
-        <argument key="cache_dir">C:/xampp/htdocs/integration-finale-web/var/cache/dev/translations</argument>
+        <argument key="cache_dir">C:\xampp\htdocs\integration-finale-web\var\cache\dev/translations</argument>
         <argument key="debug">true</argument>
         <argument key="resource_files" type="collection">
           <argument key="af" type="collection">
@@ -2996,6 +3009,7 @@
           <argument>C:\xampp\htdocs\integration-finale-web\vendor\symfony\monolog-bundle\src/translations</argument>
           <argument>C:\xampp\htdocs\integration-finale-web\vendor\symfony\maker-bundle/translations</argument>
           <argument>C:/xampp/htdocs/integration-finale-web/vendor/knplabs/knp-snappy-bundle/src/translations</argument>
+          <argument>C:\xampp\htdocs\integration-finale-web\vendor\symfony\ux-chartjs/translations</argument>
         </argument>
         <argument key="cache_vary" type="collection">
           <argument key="scanned_directories" type="collection">
@@ -3017,6 +3031,7 @@
             <argument>C:\xampp\htdocs\integration-finale-web\vendor\symfony\monolog-bundle\src/translations</argument>
             <argument>C:\xampp\htdocs\integration-finale-web\vendor\symfony\maker-bundle/translations</argument>
             <argument>C:/xampp/htdocs/integration-finale-web/vendor/knplabs/knp-snappy-bundle/src/translations</argument>
+            <argument>C:\xampp\htdocs\integration-finale-web\vendor\symfony\ux-chartjs/translations</argument>
           </argument>
         </argument>
       </argument>
@@ -4207,7 +4222,7 @@
       <argument type="service" id=".service_locator.xdLQ5FJ.router.default"/>
       <argument>kernel::loadRoutes</argument>
       <argument type="collection">
-        <argument key="cache_dir">C:/xampp/htdocs/integration-finale-web/var/cache/dev</argument>
+        <argument key="cache_dir">C:\xampp\htdocs\integration-finale-web\var\cache\dev</argument>
         <argument key="debug">true</argument>
         <argument key="generator_class">Symfony\Component\Routing\Generator\CompiledUrlGenerator</argument>
         <argument key="generator_dumper_class">Symfony\Component\Routing\Generator\Dumper\CompiledUrlGeneratorDumper</argument>
@@ -4408,10 +4423,10 @@
       <argument type="collection">
         <argument type="service" id="serializer.mapping.attribute_loader"/>
       </argument>
-      <argument>C:/xampp/htdocs/integration-finale-web/var/cache/dev/serialization.php</argument>
+      <argument>C:\xampp\htdocs\integration-finale-web\var\cache\dev/serialization.php</argument>
     </service>
     <service id="serializer.mapping.cache.symfony" class="Psr\Cache\CacheItemPoolInterface">
-      <argument>C:/xampp/htdocs/integration-finale-web/var/cache/dev/serialization.php</argument>
+      <argument>C:\xampp\htdocs\integration-finale-web\var\cache\dev/serialization.php</argument>
       <argument type="service" id="cache.serializer"/>
       <factory class="Symfony\Component\Cache\Adapter\PhpArrayAdapter" method="create"/>
     </service>
@@ -4635,7 +4650,7 @@
       <argument>true</argument>
     </service>
     <service id="session.storage.factory.mock_file" class="Symfony\Component\HttpFoundation\Session\Storage\MockFileSessionStorageFactory">
-      <argument>C:/xampp/htdocs/integration-finale-web/var/cache/dev/sessions</argument>
+      <argument>C:\xampp\htdocs\integration-finale-web\var\cache\dev/sessions</argument>
       <argument>MOCKSESSID</argument>
       <argument type="service">
         <service class="Symfony\Component\HttpFoundation\Session\Storage\MetadataBag">
@@ -4877,10 +4892,10 @@
     <service id="validator.mapping.cache_warmer" class="Symfony\Bundle\FrameworkBundle\CacheWarmer\ValidatorCacheWarmer">
       <tag name="kernel.cache_warmer"/>
       <argument type="service" id="validator.builder"/>
-      <argument>C:/xampp/htdocs/integration-finale-web/var/cache/dev/validation.php</argument>
+      <argument>C:\xampp\htdocs\integration-finale-web\var\cache\dev/validation.php</argument>
     </service>
     <service id="validator.mapping.cache.adapter" class="Symfony\Component\Cache\Adapter\PhpArrayAdapter" constructor="create">
-      <argument>C:/xampp/htdocs/integration-finale-web/var/cache/dev/validation.php</argument>
+      <argument>C:\xampp\htdocs\integration-finale-web\var\cache\dev/validation.php</argument>
       <argument type="service" id="cache.validator"/>
     </service>
     <service id="validator.validator_factory" class="Symfony\Component\Validator\ContainerConstraintValidatorFactory">
@@ -5610,7 +5625,7 @@
       </call>
     </service>
     <service id="profiler.storage" class="Symfony\Component\HttpKernel\Profiler\FileProfilerStorage">
-      <argument>file:C:/xampp/htdocs/integration-finale-web/var/cache/dev/profiler</argument>
+      <argument>file:C:\xampp\htdocs\integration-finale-web\var\cache\dev/profiler</argument>
     </service>
     <service id="profiler_listener" class="Symfony\Component\HttpKernel\EventListener\ProfilerListener">
       <tag name="kernel.reset" method="?reset"/>
@@ -5691,7 +5706,7 @@
       <tag name="monolog.logger" channel="profiler"/>
       <tag name="data_collector" template="@WebProfiler/Collector/logger.html.twig" id="logger" priority="300"/>
       <argument type="service" id="monolog.logger.profiler" on-invalid="ignore"/>
-      <argument>C:/xampp/htdocs/integration-finale-web/var/cache/dev/App_KernelDevDebugContainer</argument>
+      <argument>C:\xampp\htdocs\integration-finale-web\var\cache\dev/App_KernelDevDebugContainer</argument>
       <argument type="service" id=".virtual_request_stack" on-invalid="ignore"/>
     </service>
     <service id="data_collector.time" class="Symfony\Component\HttpKernel\DataCollector\TimeDataCollector">
@@ -6308,7 +6323,7 @@
         <argument type="service" id=".doctrine.orm.default_metadata_driver"/>
       </call>
       <call method="setProxyDir">
-        <argument>C:/xampp/htdocs/integration-finale-web/var/cache/dev/doctrine/orm/Proxies</argument>
+        <argument>C:\xampp\htdocs\integration-finale-web\var\cache\dev/doctrine/orm/Proxies</argument>
       </call>
       <call method="setProxyNamespace">
         <argument>Proxies</argument>
@@ -6737,7 +6752,7 @@
       <tag name="kernel.reset" method="resetGlobals"/>
       <argument type="service" id="twig.loader.native_filesystem"/>
       <argument type="collection">
-        <argument key="cache">C:/xampp/htdocs/integration-finale-web/var/cache/dev/twig</argument>
+        <argument key="cache">C:\xampp\htdocs\integration-finale-web\var\cache\dev/twig</argument>
         <argument key="charset">UTF-8</argument>
         <argument key="debug">true</argument>
         <argument key="strict_variables">true</argument>
@@ -6811,6 +6826,9 @@
       </call>
       <call method="addExtension">
         <argument type="service" id="knp_paginator.twig.extension.pagination"/>
+      </call>
+      <call method="addExtension">
+        <argument type="service" id="chartjs.twig_extension"/>
       </call>
       <call method="addExtension">
         <argument type="service" id="stimulus.twig_extension"/>
@@ -8604,6 +8622,11 @@
       <argument type="service" id="knp_paginator.helper.processor"/>
       <argument>page</argument>
       <argument>false</argument>
+    </service>
+    <service id="chartjs.builder" class="Symfony\UX\Chartjs\Builder\ChartBuilder"/>
+    <service id="chartjs.twig_extension" class="Symfony\UX\Chartjs\Twig\ChartExtension">
+      <tag name="twig.extension"/>
+      <argument type="service" id="stimulus.helper"/>
     </service>
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\ActivitesController" class="App\Controller\ActivitesController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\ActivitesController" class="App\Controller\ActivitesController" autowire="true" abstract="true"/>
@@ -12750,7 +12773,7 @@
       <argument>s3azDzUsD6</argument>
       <argument>0</argument>
       <argument>%container.build_id%</argument>
-      <argument>C:/xampp/htdocs/integration-finale-web/var/cache/dev/pools/system</argument>
+      <argument>C:\xampp\htdocs\integration-finale-web\var\cache\dev/pools/system</argument>
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
     </service>
@@ -12758,7 +12781,7 @@
       <argument>bsYmWHooyq</argument>
       <argument>0</argument>
       <argument>%container.build_id%</argument>
-      <argument>C:/xampp/htdocs/integration-finale-web/var/cache/dev/pools/system</argument>
+      <argument>C:\xampp\htdocs\integration-finale-web\var\cache\dev/pools/system</argument>
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
     </service>
@@ -12766,7 +12789,7 @@
       <argument>yS2Ug-4JLi</argument>
       <argument>0</argument>
       <argument>%container.build_id%</argument>
-      <argument>C:/xampp/htdocs/integration-finale-web/var/cache/dev/pools/system</argument>
+      <argument>C:\xampp\htdocs\integration-finale-web\var\cache\dev/pools/system</argument>
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
     </service>
@@ -12774,7 +12797,7 @@
       <argument>qFVDSqQDpB</argument>
       <argument>0</argument>
       <argument>%container.build_id%</argument>
-      <argument>C:/xampp/htdocs/integration-finale-web/var/cache/dev/pools/system</argument>
+      <argument>C:\xampp\htdocs\integration-finale-web\var\cache\dev/pools/system</argument>
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
     </service>
@@ -12782,7 +12805,7 @@
       <argument>ghld7e2zFI</argument>
       <argument>0</argument>
       <argument>%container.build_id%</argument>
-      <argument>C:/xampp/htdocs/integration-finale-web/var/cache/dev/pools/system</argument>
+      <argument>C:\xampp\htdocs\integration-finale-web\var\cache\dev/pools/system</argument>
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
     </service>
@@ -12808,7 +12831,7 @@
       <argument>72p3lE9hnS</argument>
       <argument>0</argument>
       <argument>%container.build_id%</argument>
-      <argument>C:/xampp/htdocs/integration-finale-web/var/cache/dev/pools/system</argument>
+      <argument>C:\xampp\htdocs\integration-finale-web\var\cache\dev/pools/system</argument>
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
     </service>
@@ -12818,7 +12841,7 @@
       <argument>CDIaF8Wb-t</argument>
       <argument>0</argument>
       <argument>%container.build_id%</argument>
-      <argument>C:/xampp/htdocs/integration-finale-web/var/cache/dev/pools/system</argument>
+      <argument>C:\xampp\htdocs\integration-finale-web\var\cache\dev/pools/system</argument>
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
     </service>
@@ -12826,7 +12849,7 @@
       <argument>esoUobT5lq</argument>
       <argument>0</argument>
       <argument>%container.build_id%</argument>
-      <argument>C:/xampp/htdocs/integration-finale-web/var/cache/dev/pools/system</argument>
+      <argument>C:\xampp\htdocs\integration-finale-web\var\cache\dev/pools/system</argument>
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
     </service>
@@ -12834,7 +12857,7 @@
       <argument>Ppy+Kc-uLD</argument>
       <argument>0</argument>
       <argument>%container.build_id%</argument>
-      <argument>C:/xampp/htdocs/integration-finale-web/var/cache/dev/pools/system</argument>
+      <argument>C:\xampp\htdocs\integration-finale-web\var\cache\dev/pools/system</argument>
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
     </service>
@@ -12842,7 +12865,7 @@
       <argument>nbPWlMl2Me</argument>
       <argument>0</argument>
       <argument>%container.build_id%</argument>
-      <argument>C:/xampp/htdocs/integration-finale-web/var/cache/dev/pools/system</argument>
+      <argument>C:\xampp\htdocs\integration-finale-web\var\cache\dev/pools/system</argument>
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
     </service>
@@ -13012,6 +13035,7 @@
     <service id="knp_snappy.pdf" alias="Knp\Snappy\Pdf" public="true"/>
     <service id="Knp\Component\Pager\PaginatorInterface" alias="knp_paginator"/>
     <service id="Knp\Component\Pager\ArgumentAccess\ArgumentAccessInterface" alias="Knp\Component\Pager\ArgumentAccess\RequestArgumentAccess"/>
+    <service id="Symfony\UX\Chartjs\Builder\ChartBuilderInterface" alias="chartjs.builder"/>
     <service id="container.env_var_processors_locator" alias=".service_locator.ryAvHi4" public="true"/>
     <service id="twig.loader.filesystem" alias="twig.loader.native_filesystem"/>
     <service id="argument_resolver.controller_locator" alias=".service_locator.Hs8wB8r"/>

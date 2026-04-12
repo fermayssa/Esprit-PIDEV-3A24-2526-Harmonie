@@ -19,6 +19,9 @@ class NutritionController extends AbstractController
 {
     private const DEMO_USER_ID  = 3;
     private const CAL_GOAL      = 2000;
+    private const PROT_GOAL     = 150;
+    private const GLUC_GOAL     = 250;
+    private const LIP_GOAL      = 70;
     private const WATER_GOAL_ML = 2000;
 
     // ─── Journal principal ───────────────────────────────────────────
@@ -44,6 +47,19 @@ class NutritionController extends AbstractController
         $totalGluc     = $consRepo->sumGlucByUserAndDate($userId, $dt);
         $totalLip      = $consRepo->sumLipByUserAndDate($userId, $dt);
 
+        $session = $request->getSession();
+        $goalSettings = $session->get('nutrition_goals', [
+            'cal'  => self::CAL_GOAL,
+            'prot' => self::PROT_GOAL,
+            'gluc' => self::GLUC_GOAL,
+            'lip'  => self::LIP_GOAL,
+        ]);
+
+        $calGoal  = (int) ($goalSettings['cal']  ?? self::CAL_GOAL);
+        $protGoal = (int) ($goalSettings['prot'] ?? self::PROT_GOAL);
+        $glucGoal = (int) ($goalSettings['gluc'] ?? self::GLUC_GOAL);
+        $lipGoal  = (int) ($goalSettings['lip']  ?? self::LIP_GOAL);
+
         $prevDate = (clone $dt)->modify('-1 day')->format('Y-m-d');
         $nextDate = (clone $dt)->modify('+1 day')->format('Y-m-d');
         $today    = (new \DateTime())->format('Y-m-d');
@@ -59,7 +75,10 @@ class NutritionController extends AbstractController
             'totalProt'  => $totalProt,
             'totalGluc'  => $totalGluc,
             'totalLip'   => $totalLip,
-            'calGoal'    => self::CAL_GOAL,
+            'calGoal'    => $calGoal,
+            'goalProt'   => $protGoal,
+            'goalGluc'   => $glucGoal,
+            'goalLip'    => $lipGoal,
             'waterGoal'  => self::WATER_GOAL_ML,
             'userId'     => $userId,
             'repasTypes' => $this->repasTypes(),
@@ -109,6 +128,33 @@ class NutritionController extends AbstractController
             'repas'      => $repas,
             'repasTypes' => $this->repasTypes(),
         ]);
+    }
+
+    #[Route('/api/objectif', name: 'nutrition_api_objectif', methods: ['POST'])]
+    public function apiObjectif(Request $request): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+        if (!is_array($data)) {
+            return new JsonResponse(['success' => false, 'message' => 'Données invalides.'], Response::HTTP_BAD_REQUEST);
+        }
+
+        $calGoal  = max(1, (int) ($data['calGoal']  ?? 0));
+        $protGoal = max(1, (int) ($data['protGoal'] ?? 0));
+        $glucGoal = max(1, (int) ($data['glucGoal'] ?? 0));
+        $lipGoal  = max(1, (int) ($data['lipGoal']  ?? 0));
+
+        if ($calGoal <= 0 || $protGoal <= 0 || $glucGoal <= 0 || $lipGoal <= 0) {
+            return new JsonResponse(['success' => false, 'message' => 'Tous les objectifs doivent être des valeurs valides supérieures à zéro.'], Response::HTTP_BAD_REQUEST);
+        }
+
+        $request->getSession()->set('nutrition_goals', [
+            'cal'  => $calGoal,
+            'prot' => $protGoal,
+            'gluc' => $glucGoal,
+            'lip'  => $lipGoal,
+        ]);
+
+        return new JsonResponse(['success' => true, 'message' => 'Objectifs enregistrés.']);
     }
 
     /**

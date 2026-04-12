@@ -79,6 +79,8 @@ html,body{font-family:var(--font-b);background:var(--pu-ghost);color:var(--tx);o
 .meal-actions{display:flex;align-items:center;gap:8px}
 .btn-add-food{display:inline-flex;align-items:center;gap:5px;padding:7px 14px;border-radius:9px;border:1.5px solid var(--border);background:var(--white);font-family:var(--font-b);font-size:12px;font-weight:600;color:var(--pu);cursor:pointer;text-decoration:none;transition:all .15s}
 .btn-add-food:hover{background:var(--pu);color:white;border-color:var(--pu)}
+.goal-edit-btn{padding:8px 14px;border-radius:11px;border:1.5px solid rgba(106,90,205,.2);background:rgba(106,90,205,.08);color:var(--pu);font-family:var(--font-b);font-size:12px;font-weight:700;cursor:pointer;transition:all .2s}
+.goal-edit-btn:hover{background:var(--pu);color:white;border-color:var(--pu)}
 .meal-body{padding:8px 16px 12px}
 
 /* ── FOOD ITEMS ── */
@@ -149,6 +151,35 @@ html,body{font-family:var(--font-b);background:var(--pu-ghost);color:var(--tx);o
 .summary-val.green{color:var(--green)}
 .summary-val.orange{color:var(--orange)}
 .summary-val.red{color:var(--red)}
+.card-subtitle{font-size:12px;color:var(--tx-muted);margin-top:4px}
+.goal-card-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.goal-target{position:relative;overflow:hidden;border-radius:18px;padding:18px 16px;min-height:112px;color:white;display:flex;flex-direction:column;justify-content:center;gap:6px;box-shadow:0 18px 44px rgba(0,0,0,.08);transition:transform .25s,box-shadow .25s}
+.goal-target:hover{transform:translateY(-2px);box-shadow:0 20px 50px rgba(0,0,0,.12)}
+.goal-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.16em;opacity:.85}
+.goal-value{font-family:var(--font-h);font-size:22px;font-weight:800}
+.goal-cal{background:linear-gradient(135deg,#8B5CF6,#A78BFA)}
+.goal-prot{background:linear-gradient(135deg,#F97316,#FB923C)}
+.goal-gluc{background:linear-gradient(135deg,#22C55E,#4ADE80)}
+.goal-lip{background:linear-gradient(135deg,#2563EB,#93C5FD)}
+.goal-target::after{content:'';position:absolute;right:-10px;top:-18px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.12);filter:blur(1px);}
+.macro-panel{display:flex;flex-direction:column;gap:18px}
+.macro-hero{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:22px;border-radius:24px;background:linear-gradient(135deg,rgba(83,64,255,.12),rgba(139,92,246,.08));box-shadow:0 18px 36px rgba(74,47,212,.14);border:1px solid rgba(255,255,255,.18);position:relative;overflow:hidden}
+.macro-hero::before{content:'';position:absolute;right:-20px;bottom:-20px;width:120px;height:120px;background:rgba(255,255,255,.16);border-radius:50%}
+.macro-hero::after{content:'';position:absolute;left:-24px;top:-24px;width:80px;height:80px;background:rgba(255,255,255,.1);border-radius:50%}
+.macro-hero-label{font-size:12px;color:var(--tx-mid);text-transform:uppercase;letter-spacing:.24em}
+.macro-hero-value{font-family:var(--font-h);font-size:26px;font-weight:800;color:var(--pu-deep);line-height:1}
+.macro-hero-badge{padding:12px 16px;border-radius:999px;background:rgba(255,255,255,.88);color:var(--pu-deep);font-size:12px;font-weight:700;text-align:center;min-width:170px;box-shadow:0 8px 18px rgba(106,90,205,.12)}
+.macro-grid{display:grid;gap:14px}
+.macro-card{padding:20px;border-radius:22px;background:linear-gradient(180deg,rgba(255,255,255,.95),rgba(248,246,255,.95));box-shadow:0 22px 44px rgba(63,42,155,.08);border:1px solid rgba(106,90,205,.12);position:relative;overflow:hidden}
+.macro-card::before{content:'';position:absolute;right:-10px;top:-22px;width:90px;height:90px;border-radius:50%;background:rgba(106,90,205,.06)}
+.macro-card-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px;font-size:13px;font-weight:700;color:var(--tx)}
+.macro-card-value{font-family:var(--font-h);font-size:20px;color:var(--tx);letter-spacing:.01em}
+.macro-meta{font-size:11.5px;color:var(--tx-mid);margin-top:12px}
+.macro-track{height:12px;background:rgba(106,90,205,.1);border-radius:999px;overflow:hidden}
+.macro-fill{height:100%;border-radius:999px;transition:width .75s ease}
+.macro-fill.prot{background:linear-gradient(90deg,#F59E0B,#F97316)}
+.macro-fill.gluc{background:linear-gradient(90deg,#10B981,#2DD4BF)}
+.macro-fill.lip{background:linear-gradient(90deg,#6366F1,#8B5CF6)}
 
 /* ── MODALS ── */
 .modal-overlay{position:fixed;inset:0;background:rgba(20,15,50,.6);backdrop-filter:blur(6px);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px}
@@ -513,52 +544,53 @@ input.err,select.err{border-color:var(--red)}
   <!-- ══ SIDE COLUMN ══ -->
   <div class="side-col">
 
-    <!-- RÉSUMÉ DU JOUR -->
+    <!-- OBJECTIFS NUTRITIONNELS -->
     <div class="card fade">
       <div class="card-head">
-        <div class="card-title">📊 Résumé du jour</div>
-        <span style="font-size:11px;color:var(--tx-muted)">{{ date|date('d/m/Y') }}</span>
+        <div>
+          <div class="card-title">🎯 Objectifs nutritionnels</div>
+          <div class="card-subtitle">Valeurs cibles pour la journée</div>
+        </div>
+        <button type="button" class="goal-edit-btn" onclick="openGoalModal()">Modifier</button>
       </div>
-      <div class="card-body" style="padding:12px 16px">
-        <div class="summary-row">
-          <span class="summary-lbl">🔥 Calories</span>
-          <span class="summary-val {{ totalCal > calGoal ? 'red' : (totalCal > calGoal * 0.85 ? 'orange' : 'green') }}" id="sideTotalCal">
-            {{ totalCal|number_format(0,'.','') }} kcal
-          </span>
+      <div class="card-body goal-card-grid">
+        <div class="goal-target goal-cal">
+          <div class="goal-label">Calories</div>
+          <div class="goal-value">{{ calGoal|number_format(0,'.','') }} kcal</div>
         </div>
-        <div class="summary-row">
-          <span class="summary-lbl">🎯 Objectif</span>
-          <span class="summary-val">{{ calGoal }} kcal</span>
+        <div class="goal-target goal-prot">
+          <div class="goal-label">Protéines</div>
+          <div class="goal-value">{{ goalProt|number_format(0,'.','') }} g</div>
         </div>
-        <div class="summary-row">
-          <span class="summary-lbl">📉 Restant</span>
-          <span class="summary-val {{ (calGoal - totalCal) < 0 ? 'red' : 'green' }}" id="sideRestant">
+        <div class="goal-target goal-gluc">
+          <div class="goal-label">Glucides</div>
+          <div class="goal-value">{{ goalGluc|number_format(0,'.','') }} g</div>
+        </div>
+        <div class="goal-target goal-lip">
+          <div class="goal-label">Lipides</div>
+          <div class="goal-value">{{ goalLip|number_format(0,'.','') }} g</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MACROS DU JOUR -->
+    <div class="card fade d1">
+      <div class="card-head"><div class="card-title">📈 Macros du jour</div></div>
+      <div class="card-body macro-panel">
+        <div class="macro-hero">
+          <div>
+            <div class="macro-hero-label">Apport total aujourd'hui</div>
+            <div class="macro-hero-value" id="sideTotalCal">{{ totalCal|number_format(0,'.','') }} kcal</div>
+          </div>
+          <div class="macro-hero-badge" id="sideRestant">
             {% if totalCal > calGoal %}
               +{{ (totalCal - calGoal)|number_format(0,'.','') }} kcal dépassé
             {% else %}
               {{ (calGoal - totalCal)|number_format(0,'.','') }} kcal restants
             {% endif %}
-          </span>
+          </div>
         </div>
-        <div class="summary-row">
-          <span class="summary-lbl">🥩 Protéines</span>
-          <span class="summary-val" id="sideProt">{{ totalProt|number_format(1,'.','') }} g</span>
-        </div>
-        <div class="summary-row">
-          <span class="summary-lbl">🌾 Glucides</span>
-          <span class="summary-val" id="sideGluc">{{ totalGluc|number_format(1,'.','') }} g</span>
-        </div>
-        <div class="summary-row">
-          <span class="summary-lbl">💧 Lipides</span>
-          <span class="summary-val" id="sideLip">{{ totalLip|number_format(1,'.','') }} g</span>
-        </div>
-      </div>
-    </div>
 
-    <!-- MACROS BREAKDOWN -->
-    <div class="card fade d1">
-      <div class="card-head"><div class="card-title">📈 Répartition Macros</div></div>
-      <div class="card-body">
         {% set macroTotal = totalProt + totalGluc + totalLip %}
         {% set protRaw = macroTotal > 0 ? (totalProt / macroTotal * 100)|round : 0 %}
         {% set glucRaw = macroTotal > 0 ? (totalGluc / macroTotal * 100)|round : 0 %}
@@ -567,26 +599,31 @@ input.err,select.err{border-color:var(--red)}
         {% set glucPct = glucRaw > 100 ? 100 : glucRaw %}
         {% set lipPct  = lipRaw  > 100 ? 100 : lipRaw %}
 
-        <div class="macro-row">
-          <div class="macro-label">
-            <span class="macro-name"><span class="macro-dot" style="background:#F59E0B"></span>Protéines</span>
-            <span class="macro-val" id="macroProt">{{ totalProt|number_format(1,'.','') }}g · {{ protPct }}%</span>
+        <div class="macro-grid">
+          <div class="macro-card">
+            <div class="macro-card-head">
+              <span>🥩 Protéines</span>
+              <span class="macro-card-value" id="macroProt">{{ totalProt|number_format(1,'.','') }}g</span>
+            </div>
+            <div class="macro-track"><div class="macro-fill prot" id="macroProtBar" style="width:{{ protPct }}%"></div></div>
+            <div class="macro-meta">{{ protPct }}% de la part totale</div>
           </div>
-          <div class="macro-track"><div class="macro-fill prot" id="macroProtBar" style="width:{{ protPct }}%"></div></div>
-        </div>
-        <div class="macro-row">
-          <div class="macro-label">
-            <span class="macro-name"><span class="macro-dot" style="background:#10B981"></span>Glucides</span>
-            <span class="macro-val" id="macroGluc">{{ totalGluc|number_format(1,'.','') }}g · {{ glucPct }}%</span>
+          <div class="macro-card">
+            <div class="macro-card-head">
+              <span>🌾 Glucides</span>
+              <span class="macro-card-value" id="macroGluc">{{ totalGluc|number_format(1,'.','') }}g</span>
+            </div>
+            <div class="macro-track"><div class="macro-fill gluc" id="macroGlucBar" style="width:{{ glucPct }}%"></div></div>
+            <div class="macro-meta">{{ glucPct }}% de la part totale</div>
           </div>
-          <div class="macro-track"><div class="macro-fill gluc" id="macroGlucBar" style="width:{{ glucPct }}%"></div></div>
-        </div>
-        <div class="macro-row">
-          <div class="macro-label">
-            <span class="macro-name"><span class="macro-dot" style="background:#6366F1"></span>Lipides</span>
-            <span class="macro-val" id="macroLip">{{ totalLip|number_format(1,'.','') }}g · {{ lipPct }}%</span>
+          <div class="macro-card">
+            <div class="macro-card-head">
+              <span>💧 Lipides</span>
+              <span class="macro-card-value" id="macroLip">{{ totalLip|number_format(1,'.','') }}g</span>
+            </div>
+            <div class="macro-track"><div class="macro-fill lip" id="macroLipBar" style="width:{{ lipPct }}%"></div></div>
+            <div class="macro-meta">{{ lipPct }}% de la part totale</div>
           </div>
-          <div class="macro-track"><div class="macro-fill lip" id="macroLipBar" style="width:{{ lipPct }}%"></div></div>
         </div>
       </div>
     </div>
@@ -654,6 +691,34 @@ input.err,select.err{border-color:var(--red)}
   </div>
 </div>
 
+<div class="modal-overlay" id="goalModal">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title">🎯 Modifier les objectifs</div>
+      <button class="modal-close" onclick="closeModal('goalModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Objectif calories (kcal)</label>
+        <input type="number" id="goalCal" min="1" step="50" value="{{ calGoal }}">
+      </div>
+      <div class="form-group">
+        <label>Objectif protéines (g)</label>
+        <input type="number" id="goalProt" min="1" step="1" value="{{ goalProt }}">
+      </div>
+      <div class="form-group">
+        <label>Objectif glucides (g)</label>
+        <input type="number" id="goalGluc" min="1" step="1" value="{{ goalGluc }}">
+      </div>
+      <div class="form-group">
+        <label>Objectif lipides (g)</label>
+        <input type="number" id="goalLip" min="1" step="1" value="{{ goalLip }}">
+      </div>
+      <button class="btn-primary" id="goalSubmitBtn" onclick="submitGoals()">💾 Enregistrer</button>
+    </div>
+  </div>
+</div>
+
 <!-- ═══ DELETE MODAL ═══ -->
 <div class="modal-overlay" id="deleteModal">
   <div class="modal" style="max-width:400px">
@@ -684,6 +749,7 @@ input.err,select.err{border-color:var(--red)}
 const API = {
   supprimer: id => `/nutrition/api/supprimer/${id}`,
   modifier:  id => `/nutrition/api/modifier/${id}`,
+  objectifs: () => '/nutrition/api/objectif',
 };
 const WATER_KEY  = 'harmony_water_{{ date }}';
 const WATER_GOAL = {{ waterGoal }};
@@ -830,6 +896,48 @@ async function confirmDelete() {
 // ═══════════════════════════════════════════════════════
 // UPDATE MACROS IN HERO + SIDEBAR
 // ═══════════════════════════════════════════════════════
+function openGoalModal() {
+  openModal('goalModal');
+}
+
+async function submitGoals() {
+  const calGoal  = parseInt(document.getElementById('goalCal').value, 10);
+  const protGoal = parseInt(document.getElementById('goalProt').value, 10);
+  const glucGoal = parseInt(document.getElementById('goalGluc').value, 10);
+  const lipGoal  = parseInt(document.getElementById('goalLip').value, 10);
+  const btn = document.getElementById('goalSubmitBtn');
+
+  if (!calGoal || !protGoal || !glucGoal || !lipGoal) {
+    showToast('error', 'Remplis tous les objectifs avec des valeurs valides.');
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = '⏳ Enregistrement...';
+
+  try {
+    const res  = await fetch(API.objectifs(), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ calGoal, protGoal, glucGoal, lipGoal }),
+    });
+    const data = await res.json();
+
+    if (data.success) {
+      showToast('success', '🎯 Objectifs mis à jour !');
+      closeModal('goalModal');
+      setTimeout(() => location.reload(), 500);
+    } else {
+      showToast('error', data.message || 'Erreur lors de la sauvegarde.');
+    }
+  } catch (e) {
+    showToast('error', '⚠ Erreur réseau.');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '💾 Enregistrer';
+  }
+}
+
 function updateMacros(data) {
   if (!data) return;
   const cal  = data.totalCal  ?? 0;

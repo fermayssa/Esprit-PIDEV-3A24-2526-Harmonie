@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Exercice;
 use App\Repository\ExerciceRepository;
+use App\Service\ExerciceStatsService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -19,6 +20,7 @@ class AdminSportController extends AbstractController
     public function __construct(
         private readonly ExerciceRepository     $repo,
         private readonly EntityManagerInterface $em,
+        private readonly ExerciceStatsService   $statsService,
     ) {}
 
     // ── Page principale ──────────────────────────────────────────────
@@ -34,6 +36,23 @@ class AdminSportController extends AbstractController
     {
         $exercices = $this->repo->findAllOrdered();
         return $this->json(array_map([$this, 'serialize'], $exercices));
+    }
+
+    // ── STATS (JSON) — pour le graphique Chart.js ────────────────────
+    #[Route('/api/stats', name: 'admin_sport_stats', methods: ['GET'])]
+    public function stats(): JsonResponse
+    {
+        $byType  = $this->statsService->getExercicesByType();
+        $labels  = array_keys($byType);
+        $values  = array_values($byType);
+        $colors  = $this->statsService->getPalette(count($labels));
+
+        return $this->json([
+            'labels'          => $labels,
+            'values'          => $values,
+            'backgroundColors'=> $colors,
+            'total'           => array_sum($values),
+        ]);
     }
 
     // ── CREATE ───────────────────────────────────────────────────────
