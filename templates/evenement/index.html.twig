@@ -383,5 +383,21 @@
         }
     })();
     </script>
+    <script>
+        document.addEventListener('harmonie_data_updated', function() {
+            fetch(window.location.href, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+                .then(function(r) { return r.text(); })
+                .then(function(html) {
+                    var parser = new DOMParser();
+                    var doc = parser.parseFromString(html, 'text/html');
+                    var newGrid = doc.getElementById('cal-grid-root');
+                    var oldGrid = document.getElementById('cal-grid-root');
+                    if (newGrid && oldGrid) {
+                        oldGrid.innerHTML = newGrid.innerHTML;
+                    }
+                })
+                .catch(function(e) { console.error('Erreur rafraîchissement calendrier', e); });
+        });
+    </script>
 <script src="{{ asset('harmonie-chatbot-widget.js') }}"></script>
 {% endblock %}

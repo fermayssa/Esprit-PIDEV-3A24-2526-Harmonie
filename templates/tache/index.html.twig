@@ -406,76 +406,79 @@ window.HARMONIE_TASKS = [
             }
         });
 
-        document.querySelectorAll('.kan-col-list').forEach(function (list) {
-            new Sortable(list, {
-                group: 'taches-kanban',
-                animation: 160,
-                draggable: '.kan-card',
-                filter: '.kan-card-actions, .kan-card-actions *',
-                preventOnFilter: false,
-                distance: 8,
-                ghostClass: 'sortable-ghost',
-                dragClass: 'sortable-drag',
-                emptyInsertThreshold: 40,
-                fallbackTolerance: 4,
-                onEnd: function (evt) {
-                    suppressCardClickUntil = Date.now() + 400;
-                    if (evt.from === evt.to) {
-                        return;
+        function bindBoardEvents() {
+            var board = document.getElementById('kan-board-root');
+            if (!board || typeof Sortable === 'undefined') return;
+
+            document.querySelectorAll('.kan-col-list').forEach(function (list) {
+                new Sortable(list, {
+                    group: 'taches-kanban',
+                    animation: 160,
+                    draggable: '.kan-card',
+                    filter: '.kan-card-actions, .kan-card-actions *',
+                    preventOnFilter: false,
+                    distance: 8,
+                    ghostClass: 'sortable-ghost',
+                    dragClass: 'sortable-drag',
+                    emptyInsertThreshold: 40,
+                    fallbackTolerance: 4,
+                    onEnd: function (evt) {
+                        suppressCardClickUntil = Date.now() + 400;
+                        if (evt.from === evt.to) {
+                            return;
+                        }
+
+                        var item = evt.item;
+                        var id = item.getAttribute('data-tache-id');
+                        var newStatut = evt.to.getAttribute('data-statut');
+                        if (!id || !newStatut) return;
+
+                        fetch(updateUrl(id), {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-Requested-With': 'XMLHttpRequest'
+                            },
+                            body: JSON.stringify({ statut: newStatut, _token: csrf })
+                        }).then(function (res) {
+                            if (!res.ok) {
+                                throw new Error('HTTP ' + res.status);
+                            }
+                            return res.json();
+                        }).then(function (data) {
+                            if (!data.ok) {
+                                throw new Error(data.error || 'Erreur');
+                            }
+                        }).catch(function () {
+                            alert('Impossible d’enregistrer le déplacement. La page va se recharger.');
+                            window.location.reload();
+                        });
                     }
-
-                    var item = evt.item;
-                    var id = item.getAttribute('data-tache-id');
-                    var newStatut = evt.to.getAttribute('data-statut');
-                    if (!id || !newStatut) return;
-
-                    fetch(updateUrl(id), {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-Requested-With': 'XMLHttpRequest'
-                        },
-                        body: JSON.stringify({ statut: newStatut, _token: csrf })
-                    }).then(function (res) {
-                        if (!res.ok) {
-                            throw new Error('HTTP ' + res.status);
-                        }
-                        return res.json();
-                    }).then(function (data) {
-                        if (!data.ok) {
-                            throw new Error(data.error || 'Erreur');
-                        }
-                    }).catch(function () {
-                        alert('Impossible d’enregistrer le déplacement. La page va se recharger.');
-                        window.location.reload();
-                    });
-                }
+                });
             });
-        });
 
-        /* Clic « ajouter » : phase capture pour passer avant Sortable (qui bloquait le click sur la liste). */
-        board.querySelectorAll('.js-kan-col-zone').forEach(function (zone) {
-            zone.addEventListener('click', function (e) {
-                if (e.target.closest('.kan-card')) return;
-                if (e.target.closest('a')) return;
-                if (e.target.closest('button')) return;
-                var col = zone.closest('.kan-col');
-                var st = col ? col.getAttribute('data-statut') : null;
-                if (st) {
-                    e.stopPropagation();
-                    openNew(st);
-                }
-            }, true);
-            zone.addEventListener('keydown', function (e) {
-                if (e.key !== 'Enter' && e.key !== ' ') return;
-                e.preventDefault();
-                var col = zone.closest('.kan-col');
-                var st = col ? col.getAttribute('data-statut') : null;
-                if (st) openNew(st);
+            /* Clic « ajouter » : phase capture pour passer avant Sortable (qui bloquait le click sur la liste). */
+            board.querySelectorAll('.js-kan-col-zone').forEach(function (zone) {
+                zone.addEventListener('click', function (e) {
+                    if (e.target.closest('.kan-card')) return;
+                    if (e.target.closest('a')) return;
+                    if (e.target.closest('button')) return;
+                    var col = zone.closest('.kan-col');
+                    var st = col ? col.getAttribute('data-statut') : null;
+                    if (st) {
+                        e.stopPropagation();
+                        openNew(st);
+                    }
+                }, true);
+                zone.addEventListener('keydown', function (e) {
+                    if (e.key !== 'Enter' && e.key !== ' ') return;
+                    e.preventDefault();
+                    var col = zone.closest('.kan-col');
+                    var st = col ? col.getAttribute('data-statut') : null;
+                    if (st) openNew(st);
+                });
             });
-        });
 
-        if (board) {
             board.addEventListener('click', function (e) {
                 if (e.target.closest('.kan-card-actions a')) return;
                 var card = e.target.closest('.kan-card');
@@ -484,6 +487,24 @@ window.HARMONIE_TASKS = [
                 if (id) openEdit(id);
             });
         }
+
+        bindBoardEvents();
+
+        document.addEventListener('harmonie_data_updated', function() {
+            fetch(window.location.href, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+                .then(function(r) { return r.text(); })
+                .then(function(html) {
+                    var parser = new DOMParser();
+                    var doc = parser.parseFromString(html, 'text/html');
+                    var newBoard = doc.getElementById('kan-board-root');
+                    var oldBoard = document.getElementById('kan-board-root');
+                    if (newBoard && oldBoard) {
+                        oldBoard.innerHTML = newBoard.innerHTML;
+                        bindBoardEvents();
+                    }
+                })
+                .catch(function(e) { console.error('Erreur rafraîchissement kanban', e); });
+        });
     })();
     </script>
 {% endblock %}

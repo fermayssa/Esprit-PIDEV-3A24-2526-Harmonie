@@ -597,76 +597,79 @@ window.HARMONIE_TASKS = [
             }
         });
 
-        document.querySelectorAll('.kan-col-list').forEach(function (list) {
-            new Sortable(list, {
-                group: 'taches-kanban',
-                animation: 160,
-                draggable: '.kan-card',
-                filter: '.kan-card-actions, .kan-card-actions *',
-                preventOnFilter: false,
-                distance: 8,
-                ghostClass: 'sortable-ghost',
-                dragClass: 'sortable-drag',
-                emptyInsertThreshold: 40,
-                fallbackTolerance: 4,
-                onEnd: function (evt) {
-                    suppressCardClickUntil = Date.now() + 400;
-                    if (evt.from === evt.to) {
-                        return;
+        function bindBoardEvents() {
+            var board = document.getElementById('kan-board-root');
+            if (!board || typeof Sortable === 'undefined') return;
+
+            document.querySelectorAll('.kan-col-list').forEach(function (list) {
+                new Sortable(list, {
+                    group: 'taches-kanban',
+                    animation: 160,
+                    draggable: '.kan-card',
+                    filter: '.kan-card-actions, .kan-card-actions *',
+                    preventOnFilter: false,
+                    distance: 8,
+                    ghostClass: 'sortable-ghost',
+                    dragClass: 'sortable-drag',
+                    emptyInsertThreshold: 40,
+                    fallbackTolerance: 4,
+                    onEnd: function (evt) {
+                        suppressCardClickUntil = Date.now() + 400;
+                        if (evt.from === evt.to) {
+                            return;
+                        }
+
+                        var item = evt.item;
+                        var id = item.getAttribute('data-tache-id');
+                        var newStatut = evt.to.getAttribute('data-statut');
+                        if (!id || !newStatut) return;
+
+                        fetch(updateUrl(id), {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-Requested-With': 'XMLHttpRequest'
+                            },
+                            body: JSON.stringify({ statut: newStatut, _token: csrf })
+                        }).then(function (res) {
+                            if (!res.ok) {
+                                throw new Error('HTTP ' + res.status);
+                            }
+                            return res.json();
+                        }).then(function (data) {
+                            if (!data.ok) {
+                                throw new Error(data.error || 'Erreur');
+                            }
+                        }).catch(function () {
+                            alert('Impossible d’enregistrer le déplacement. La page va se recharger.');
+                            window.location.reload();
+                        });
                     }
-
-                    var item = evt.item;
-                    var id = item.getAttribute('data-tache-id');
-                    var newStatut = evt.to.getAttribute('data-statut');
-                    if (!id || !newStatut) return;
-
-                    fetch(updateUrl(id), {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-Requested-With': 'XMLHttpRequest'
-                        },
-                        body: JSON.stringify({ statut: newStatut, _token: csrf })
-                    }).then(function (res) {
-                        if (!res.ok) {
-                            throw new Error('HTTP ' + res.status);
-                        }
-                        return res.json();
-                    }).then(function (data) {
-                        if (!data.ok) {
-                            throw new Error(data.error || 'Erreur');
-                        }
-                    }).catch(function () {
-                        alert('Impossible d’enregistrer le déplacement. La page va se recharger.');
-                        window.location.reload();
-                    });
-                }
+                });
             });
-        });
 
-        /* Clic « ajouter » : phase capture pour passer avant Sortable (qui bloquait le click sur la liste). */
-        board.querySelectorAll('.js-kan-col-zone').forEach(function (zone) {
-            zone.addEventListener('click', function (e) {
-                if (e.target.closest('.kan-card')) return;
-                if (e.target.closest('a')) return;
-                if (e.target.closest('button')) return;
-                var col = zone.closest('.kan-col');
-                var st = col ? col.getAttribute('data-statut') : null;
-                if (st) {
-                    e.stopPropagation();
-                    openNew(st);
-                }
-            }, true);
-            zone.addEventListener('keydown', function (e) {
-                if (e.key !== 'Enter' && e.key !== ' ') return;
-                e.preventDefault();
-                var col = zone.closest('.kan-col');
-                var st = col ? col.getAttribute('data-statut') : null;
-                if (st) openNew(st);
+            /* Clic « ajouter » : phase capture pour passer avant Sortable (qui bloquait le click sur la liste). */
+            board.querySelectorAll('.js-kan-col-zone').forEach(function (zone) {
+                zone.addEventListener('click', function (e) {
+                    if (e.target.closest('.kan-card')) return;
+                    if (e.target.closest('a')) return;
+                    if (e.target.closest('button')) return;
+                    var col = zone.closest('.kan-col');
+                    var st = col ? col.getAttribute('data-statut') : null;
+                    if (st) {
+                        e.stopPropagation();
+                        openNew(st);
+                    }
+                }, true);
+                zone.addEventListener('keydown', function (e) {
+                    if (e.key !== 'Enter' && e.key !== ' ') return;
+                    e.preventDefault();
+                    var col = zone.closest('.kan-col');
+                    var st = col ? col.getAttribute('data-statut') : null;
+                    if (st) openNew(st);
+                });
             });
-        });
 
-        if (board) {
             board.addEventListener('click', function (e) {
                 if (e.target.closest('.kan-card-actions a')) return;
                 var card = e.target.closest('.kan-card');
@@ -675,6 +678,24 @@ window.HARMONIE_TASKS = [
                 if (id) openEdit(id);
             });
         }
+
+        bindBoardEvents();
+
+        document.addEventListener('harmonie_data_updated', function() {
+            fetch(window.location.href, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+                .then(function(r) { return r.text(); })
+                .then(function(html) {
+                    var parser = new DOMParser();
+                    var doc = parser.parseFromString(html, 'text/html');
+                    var newBoard = doc.getElementById('kan-board-root');
+                    var oldBoard = document.getElementById('kan-board-root');
+                    if (newBoard && oldBoard) {
+                        oldBoard.innerHTML = newBoard.innerHTML;
+                        bindBoardEvents();
+                    }
+                })
+                .catch(function(e) { console.error('Erreur rafraîchissement kanban', e); });
+        });
     })();
     </script>
 ";
@@ -799,7 +820,7 @@ window.HARMONIE_TASKS = [
      */
     public function getDebugInfo(): array
     {
-        return array (  764 => 23,  758 => 20,  755 => 19,  749 => 17,  746 => 16,  740 => 13,  727 => 9,  725 => 8,  721 => 7,  716 => 6,  713 => 5,  710 => 4,  691 => 3,  459 => 269,  456 => 268,  443 => 267,  430 => 264,  418 => 255,  408 => 248,  398 => 241,  390 => 235,  388 => 234,  367 => 215,  358 => 213,  354 => 212,  344 => 204,  335 => 202,  331 => 201,  321 => 193,  312 => 191,  308 => 190,  295 => 180,  286 => 174,  281 => 172,  277 => 171,  273 => 170,  268 => 167,  266 => 166,  253 => 165,  114 => 36,  110 => 35,  105 => 34,  92 => 33,  69 => 31,  58 => 1,  56 => 29,  43 => 1,);
+        return array (  785 => 23,  779 => 20,  776 => 19,  770 => 17,  767 => 16,  761 => 13,  748 => 9,  746 => 8,  742 => 7,  737 => 6,  734 => 5,  731 => 4,  712 => 3,  459 => 269,  456 => 268,  443 => 267,  430 => 264,  418 => 255,  408 => 248,  398 => 241,  390 => 235,  388 => 234,  367 => 215,  358 => 213,  354 => 212,  344 => 204,  335 => 202,  331 => 201,  321 => 193,  312 => 191,  308 => 190,  295 => 180,  286 => 174,  281 => 172,  277 => 171,  273 => 170,  268 => 167,  266 => 166,  253 => 165,  114 => 36,  110 => 35,  105 => 34,  92 => 33,  69 => 31,  58 => 1,  56 => 29,  43 => 1,);
     }
 
     public function getSourceContext(): Source
@@ -1212,76 +1233,79 @@ window.HARMONIE_TASKS = [
             }
         });
 
-        document.querySelectorAll('.kan-col-list').forEach(function (list) {
-            new Sortable(list, {
-                group: 'taches-kanban',
-                animation: 160,
-                draggable: '.kan-card',
-                filter: '.kan-card-actions, .kan-card-actions *',
-                preventOnFilter: false,
-                distance: 8,
-                ghostClass: 'sortable-ghost',
-                dragClass: 'sortable-drag',
-                emptyInsertThreshold: 40,
-                fallbackTolerance: 4,
-                onEnd: function (evt) {
-                    suppressCardClickUntil = Date.now() + 400;
-                    if (evt.from === evt.to) {
-                        return;
+        function bindBoardEvents() {
+            var board = document.getElementById('kan-board-root');
+            if (!board || typeof Sortable === 'undefined') return;
+
+            document.querySelectorAll('.kan-col-list').forEach(function (list) {
+                new Sortable(list, {
+                    group: 'taches-kanban',
+                    animation: 160,
+                    draggable: '.kan-card',
+                    filter: '.kan-card-actions, .kan-card-actions *',
+                    preventOnFilter: false,
+                    distance: 8,
+                    ghostClass: 'sortable-ghost',
+                    dragClass: 'sortable-drag',
+                    emptyInsertThreshold: 40,
+                    fallbackTolerance: 4,
+                    onEnd: function (evt) {
+                        suppressCardClickUntil = Date.now() + 400;
+                        if (evt.from === evt.to) {
+                            return;
+                        }
+
+                        var item = evt.item;
+                        var id = item.getAttribute('data-tache-id');
+                        var newStatut = evt.to.getAttribute('data-statut');
+                        if (!id || !newStatut) return;
+
+                        fetch(updateUrl(id), {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-Requested-With': 'XMLHttpRequest'
+                            },
+                            body: JSON.stringify({ statut: newStatut, _token: csrf })
+                        }).then(function (res) {
+                            if (!res.ok) {
+                                throw new Error('HTTP ' + res.status);
+                            }
+                            return res.json();
+                        }).then(function (data) {
+                            if (!data.ok) {
+                                throw new Error(data.error || 'Erreur');
+                            }
+                        }).catch(function () {
+                            alert('Impossible d’enregistrer le déplacement. La page va se recharger.');
+                            window.location.reload();
+                        });
                     }
-
-                    var item = evt.item;
-                    var id = item.getAttribute('data-tache-id');
-                    var newStatut = evt.to.getAttribute('data-statut');
-                    if (!id || !newStatut) return;
-
-                    fetch(updateUrl(id), {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-Requested-With': 'XMLHttpRequest'
-                        },
-                        body: JSON.stringify({ statut: newStatut, _token: csrf })
-                    }).then(function (res) {
-                        if (!res.ok) {
-                            throw new Error('HTTP ' + res.status);
-                        }
-                        return res.json();
-                    }).then(function (data) {
-                        if (!data.ok) {
-                            throw new Error(data.error || 'Erreur');
-                        }
-                    }).catch(function () {
-                        alert('Impossible d’enregistrer le déplacement. La page va se recharger.');
-                        window.location.reload();
-                    });
-                }
+                });
             });
-        });
 
-        /* Clic « ajouter » : phase capture pour passer avant Sortable (qui bloquait le click sur la liste). */
-        board.querySelectorAll('.js-kan-col-zone').forEach(function (zone) {
-            zone.addEventListener('click', function (e) {
-                if (e.target.closest('.kan-card')) return;
-                if (e.target.closest('a')) return;
-                if (e.target.closest('button')) return;
-                var col = zone.closest('.kan-col');
-                var st = col ? col.getAttribute('data-statut') : null;
-                if (st) {
-                    e.stopPropagation();
-                    openNew(st);
-                }
-            }, true);
-            zone.addEventListener('keydown', function (e) {
-                if (e.key !== 'Enter' && e.key !== ' ') return;
-                e.preventDefault();
-                var col = zone.closest('.kan-col');
-                var st = col ? col.getAttribute('data-statut') : null;
-                if (st) openNew(st);
+            /* Clic « ajouter » : phase capture pour passer avant Sortable (qui bloquait le click sur la liste). */
+            board.querySelectorAll('.js-kan-col-zone').forEach(function (zone) {
+                zone.addEventListener('click', function (e) {
+                    if (e.target.closest('.kan-card')) return;
+                    if (e.target.closest('a')) return;
+                    if (e.target.closest('button')) return;
+                    var col = zone.closest('.kan-col');
+                    var st = col ? col.getAttribute('data-statut') : null;
+                    if (st) {
+                        e.stopPropagation();
+                        openNew(st);
+                    }
+                }, true);
+                zone.addEventListener('keydown', function (e) {
+                    if (e.key !== 'Enter' && e.key !== ' ') return;
+                    e.preventDefault();
+                    var col = zone.closest('.kan-col');
+                    var st = col ? col.getAttribute('data-statut') : null;
+                    if (st) openNew(st);
+                });
             });
-        });
 
-        if (board) {
             board.addEventListener('click', function (e) {
                 if (e.target.closest('.kan-card-actions a')) return;
                 var card = e.target.closest('.kan-card');
@@ -1290,6 +1314,24 @@ window.HARMONIE_TASKS = [
                 if (id) openEdit(id);
             });
         }
+
+        bindBoardEvents();
+
+        document.addEventListener('harmonie_data_updated', function() {
+            fetch(window.location.href, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+                .then(function(r) { return r.text(); })
+                .then(function(html) {
+                    var parser = new DOMParser();
+                    var doc = parser.parseFromString(html, 'text/html');
+                    var newBoard = doc.getElementById('kan-board-root');
+                    var oldBoard = document.getElementById('kan-board-root');
+                    if (newBoard && oldBoard) {
+                        oldBoard.innerHTML = newBoard.innerHTML;
+                        bindBoardEvents();
+                    }
+                })
+                .catch(function(e) { console.error('Erreur rafraîchissement kanban', e); });
+        });
     })();
     </script>
 {% endblock %}

@@ -640,8 +640,24 @@ class __TwigTemplate_d30d2fd6cc02ff8e350be72f2b38f1d1 extends Template
         }
     })();
     </script>
+    <script>
+        document.addEventListener('harmonie_data_updated', function() {
+            fetch(window.location.href, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+                .then(function(r) { return r.text(); })
+                .then(function(html) {
+                    var parser = new DOMParser();
+                    var doc = parser.parseFromString(html, 'text/html');
+                    var newGrid = doc.getElementById('cal-grid-root');
+                    var oldGrid = document.getElementById('cal-grid-root');
+                    if (newGrid && oldGrid) {
+                        oldGrid.innerHTML = newGrid.innerHTML;
+                    }
+                })
+                .catch(function(e) { console.error('Erreur rafraîchissement calendrier', e); });
+        });
+    </script>
 <script src=\"";
-        // line 386
+        // line 402
         yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl("harmonie-chatbot-widget.js"), "html", null, true);
         yield "\"></script>
 ";
@@ -737,7 +753,7 @@ class __TwigTemplate_d30d2fd6cc02ff8e350be72f2b38f1d1 extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  706 => 15,  702 => 14,  699 => 13,  696 => 12,  693 => 11,  691 => 10,  687 => 8,  684 => 7,  681 => 6,  678 => 5,  676 => 4,  658 => 3,  645 => 386,  477 => 221,  473 => 220,  468 => 219,  455 => 218,  441 => 213,  439 => 212,  420 => 195,  413 => 193,  407 => 192,  402 => 189,  394 => 186,  384 => 184,  382 => 183,  378 => 182,  374 => 181,  370 => 180,  363 => 177,  359 => 176,  350 => 174,  346 => 173,  340 => 170,  330 => 169,  326 => 167,  323 => 166,  319 => 165,  316 => 164,  312 => 163,  309 => 162,  300 => 160,  296 => 159,  288 => 154,  283 => 152,  279 => 151,  275 => 150,  268 => 146,  254 => 135,  250 => 134,  245 => 131,  243 => 130,  230 => 129,  118 => 27,  114 => 26,  110 => 25,  105 => 24,  92 => 23,  69 => 21,  58 => 1,  56 => 19,  43 => 1,);
+        return array (  722 => 15,  718 => 14,  715 => 13,  712 => 12,  709 => 11,  707 => 10,  703 => 8,  700 => 7,  697 => 6,  694 => 5,  692 => 4,  674 => 3,  661 => 402,  477 => 221,  473 => 220,  468 => 219,  455 => 218,  441 => 213,  439 => 212,  420 => 195,  413 => 193,  407 => 192,  402 => 189,  394 => 186,  384 => 184,  382 => 183,  378 => 182,  374 => 181,  370 => 180,  363 => 177,  359 => 176,  350 => 174,  346 => 173,  340 => 170,  330 => 169,  326 => 167,  323 => 166,  319 => 165,  316 => 164,  312 => 163,  309 => 162,  300 => 160,  296 => 159,  288 => 154,  283 => 152,  279 => 151,  275 => 150,  268 => 146,  254 => 135,  250 => 134,  245 => 131,  243 => 130,  230 => 129,  118 => 27,  114 => 26,  110 => 25,  105 => 24,  92 => 23,  69 => 21,  58 => 1,  56 => 19,  43 => 1,);
     }
 
     public function getSourceContext(): Source
@@ -1126,6 +1142,22 @@ class __TwigTemplate_d30d2fd6cc02ff8e350be72f2b38f1d1 extends Template
             });
         }
     })();
+    </script>
+    <script>
+        document.addEventListener('harmonie_data_updated', function() {
+            fetch(window.location.href, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+                .then(function(r) { return r.text(); })
+                .then(function(html) {
+                    var parser = new DOMParser();
+                    var doc = parser.parseFromString(html, 'text/html');
+                    var newGrid = doc.getElementById('cal-grid-root');
+                    var oldGrid = document.getElementById('cal-grid-root');
+                    if (newGrid && oldGrid) {
+                        oldGrid.innerHTML = newGrid.innerHTML;
+                    }
+                })
+                .catch(function(e) { console.error('Erreur rafraîchissement calendrier', e); });
+        });
     </script>
 <script src=\"{{ asset('harmonie-chatbot-widget.js') }}\"></script>
 {% endblock %}
