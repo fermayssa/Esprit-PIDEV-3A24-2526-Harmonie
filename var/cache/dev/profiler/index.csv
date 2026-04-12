@@ -37,3 +37,12 @@ d20288,127.0.0.1,GET,http://127.0.0.1:8000/admin/sport/api/list,1775964796,,200,
 f0a98f,127.0.0.1,GET,http://127.0.0.1:8000/admin/sport/api/stats,1775964818,,200,request
 13a205,127.0.0.1,GET,http://127.0.0.1:8000/admin/sport/api/stats,1775964820,,200,request
 c1fea8,127.0.0.1,GET,http://127.0.0.1:8000/admin/sport/api/stats,1775964827,,200,request
+6f174e,127.0.0.1,GET,http://127.0.0.1:8000/logout,1775966072,,302,request
+88ceb7,127.0.0.1,GET,http://127.0.0.1:8000/login,1775966072,,200,request
+ad403a,127.0.0.1,POST,http://127.0.0.1:8000/login,1775966078,,302,request
+4932c4,127.0.0.1,GET,http://127.0.0.1:8000/,1775966078,,200,request
+f59eb4,127.0.0.1,GET,http://127.0.0.1:8000/activites,1775966083,,200,request
+8d8c72,127.0.0.1,GET,http://127.0.0.1:8000/activites,1775966328,,200,request
+4570ff,127.0.0.1,GET,http://127.0.0.1:8000/activites,1775966477,,200,request
+3c1bec,127.0.0.1,GET,http://127.0.0.1:8000/activites/qr/2026-04-11,1775966490,,500,request
+a4fefb,127.0.0.1,GET,http://127.0.0.1:8000/activites,1775966797,,200,request

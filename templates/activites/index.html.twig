@@ -4,6 +4,7 @@
 
 {% block stylesheets %}
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-o9N1j7kG8bChx9cArCdZUrw2s2tRoSI6eR7X9tUuCPk=" crossorigin="" />
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 
@@ -254,6 +255,15 @@ textarea.finput{resize:vertical;min-height:72px;line-height:1.55}
 .btn-log:hover::after{left:120%}
 .btn-log:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(106,90,205,.45)}
 .btn-log:disabled{background:var(--tx-muted);cursor:not-allowed;transform:none;box-shadow:none}
+
+.map-card .map-actions{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.map-control-btn{width:42px;height:42px;border:none;border-radius:14px;background:rgba(106,90,205,.1);color:var(--pu-deep);font-size:18px;cursor:pointer;display:grid;place-items:center;box-shadow:0 8px 18px rgba(106,90,205,.08);transition:all .18s}
+.map-control-btn:hover{background:rgba(106,90,205,.16);transform:translateY(-1px)}
+.map-control-btn.active{background:linear-gradient(135deg,#6A5ACD,#8B7FD4);color:white}
+.map-meta{display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--tx-mid)}
+.map-meta strong{color:var(--tx)}
+#activityMap{width:100%;height:380px;min-height:380px;border-radius:20px;box-shadow:0 18px 36px rgba(106,90,205,.12);background:#eef2ff;position:relative;display:block;}
+#activityMap .leaflet-container{width:100% !important;height:100% !important;display:block !important;border-radius:20px;overflow:hidden}
 
 /* ─── SESSIONS HISTORY (timeline) ─── */
 .timeline{display:flex;flex-direction:column;gap:0;position:relative}
@@ -748,6 +758,30 @@ textarea.finput{resize:vertical;min-height:72px;line-height:1.55}
       </div>
     </div>
 
+    {# CARTE D'ENTRAÎNEMENT #}
+    <div class="card fade d3 map-card">
+      <div class="card-head">
+        <div>
+          <div class="card-title">🗺️ Carte d'entraînement</div>
+          <div class="card-subtitle">Localisation, tracé de parcours et parcs sportifs</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="map-actions">
+          <button type="button" class="map-control-btn" onclick="locateUser()" title="Se localiser">📍</button>
+          <button type="button" class="map-control-btn" id="routeToggleBtn" onclick="toggleRouteMode()" title="Tracer mon parcours">✍️</button>
+          <button type="button" class="map-control-btn" onclick="searchParks()" title="Afficher les parcs de sport">🏟️</button>
+          <button type="button" class="map-control-btn" onclick="resetRoute()" title="Réinitialiser le parcours">♻️</button>
+        </div>
+        <div class="map-meta">
+          <span id="routeInfo"><strong>Parcours :</strong> Aucun tracé</span>
+          <span id="parkStatus"><strong>Parcs :</strong> Appuyez sur '🏟️' pour afficher les parcs sportifs autour de votre position.</span>
+          <span><strong>Astuce :</strong> cliquez sur la carte pour ajouter des points de parcours.</span>
+        </div>
+        <div id="activityMap"></div>
+      </div>
+    </div>
+
     {# SESSIONS HISTORY #}
     <div class="card fade d3">
       <div class="card-head">
@@ -1030,6 +1064,7 @@ textarea.finput{resize:vertical;min-height:72px;line-height:1.55}
 
 {# ══ SCRIPTS ══ #}
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-o9N1j7kG8bChx9cArCdZUrw2s2tRoSI6eR7X9tUuCPk=" crossorigin=""></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
 // ══════════════════════════════════════════════════════
@@ -1086,13 +1121,234 @@ document.addEventListener('DOMContentLoaded', () => {
 
   initFavs();
   initChart();
+  initActivityMap();
   updateSideTotal();
   animateCounters();
 });
 
+window.addEventListener('load', () => {
+  if (activityMap) {
+    activityMap.invalidateSize(true);
+  } else {
+    initActivityMap();
+  }
+});
+
+// ══════════════════════════════════════════════════════════════════
+// LEAFLET MAP — DÉPLACEMENT, PARCOURS ET PARCS SPORTIFS
 // ══════════════════════════════════════════════════════
+let activityMap = null;
+let routePolyline = null;
+let routeCoords = [];
+let routeMarkers = [];
+let parkMarkers = [];
+let routeMode = false;
+const DEFAULT_MAP_CENTER = [48.8566, 2.3522];
+const DEFAULT_MAP_ZOOM = 13;
+
+function initActivityMap() {
+  const mapEl = document.getElementById('activityMap');
+  if (!mapEl || typeof L === 'undefined') return;
+
+  activityMap = L.map(mapEl, { zoomControl: false, scrollWheelZoom: false }).setView(DEFAULT_MAP_CENTER, DEFAULT_MAP_ZOOM);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors',
+    maxZoom: 19,
+  }).addTo(activityMap);
+
+  routePolyline = L.polyline([], {
+    color: '#5B8DEF',
+    weight: 5,
+    opacity: 0.85,
+    dashArray: '8 6',
+    lineJoin: 'round',
+  }).addTo(activityMap);
+
+  const zoomControl = L.control.zoom({ position: 'bottomright' });
+  zoomControl.addTo(activityMap);
+
+  activityMap.on('click', e => {
+    if (!routeMode) return;
+    addRoutePoint(e.latlng);
+  });
+
+  activityMap.whenReady(() => {
+    activityMap.invalidateSize(true);
+    activityMap.setView(DEFAULT_MAP_CENTER, DEFAULT_MAP_ZOOM);
+  });
+
+  setTimeout(() => {
+    if (activityMap) {
+      activityMap.invalidateSize(true);
+      activityMap.setView(DEFAULT_MAP_CENTER, DEFAULT_MAP_ZOOM);
+    }
+  }, 600);
+
+  window.addEventListener('resize', () => {
+    if (activityMap) activityMap.invalidateSize(true);
+  });
+
+  requestAnimationFrame(() => {
+    if (activityMap) {
+      activityMap.invalidateSize(true);
+      activityMap.setView(DEFAULT_MAP_CENTER, DEFAULT_MAP_ZOOM);
+    }
+  });
+
+  setTimeout(() => {
+    if (activityMap) {
+      activityMap.invalidateSize(true);
+      activityMap.setView(DEFAULT_MAP_CENTER, DEFAULT_MAP_ZOOM);
+    }
+  }, 1200);
+
+  locateUser(true);
+}
+
+function showMapError(message) {
+  const mapEl = document.getElementById('activityMap');
+  if (!mapEl) return;
+  mapEl.innerHTML = `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;padding:20px;color:#5B5B7B;background:#eef2ff;border-radius:20px;text-align:center;">
+    <div><strong>Carte non chargée</strong><div style="margin-top:8px;font-size:13px;">${message}</div></div>
+  </div>`;
+}
+
+function locateUser(silent = false) {
+  if (!navigator.geolocation) {
+    if (!silent) showToast('error', '🌍 Géolocalisation non supportée par votre navigateur.');
+    return;
+  }
+
+  const status = document.getElementById('parkStatus');
+  if (status) status.textContent = '⏳ Recherche de votre position…';
+
+  navigator.geolocation.getCurrentPosition(position => {
+    const { latitude, longitude } = position.coords;
+    if (activityMap) {
+      activityMap.setView([latitude, longitude], DEFAULT_MAP_ZOOM);
+      L.circle([latitude, longitude], { radius: 80, color: '#5B8DEF', fillColor: 'rgba(91, 138, 239, .12)', fillOpacity: 0.6 }).addTo(activityMap);
+      if (status) status.textContent = '📍 Vous êtes localisé. Cliquez sur 🏟️ pour afficher les parcs de sport.';
+    }
+  }, error => {
+    if (status) status.textContent = '⚠ Impossible de localiser. Utilisez la carte manuellement.';
+    if (!silent) showToast('error', '⚠ Permission de localisation refusée ou indisponible.');
+  }, { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 });
+}
+
+function toggleRouteMode() {
+  routeMode = !routeMode;
+  const btn = document.getElementById('routeToggleBtn');
+  if (!btn) return;
+  btn.classList.toggle('active', routeMode);
+  btn.textContent = routeMode ? '🛑 Terminer' : '✍️';
+  const info = document.getElementById('routeInfo');
+  if (routeMode) {
+    if (info) info.innerHTML = '<strong>Parcours :</strong> Cliquez sur la carte pour ajouter des points.';
+    showToast('info', 'Cliquez sur la carte pour tracer votre parcours.');
+  } else {
+    updateRouteMetrics();
+    showToast('success', 'Parcours enregistré localement.');
+  }
+}
+
+function addRoutePoint(latlng) {
+  if (!activityMap) return;
+  routeCoords.push([latlng.lat, latlng.lng]);
+  const marker = L.circleMarker(latlng, {
+    radius: 8,
+    fillColor: '#5B8DEF',
+    color: '#fff',
+    weight: 2,
+    fillOpacity: 1,
+  }).addTo(activityMap);
+  routeMarkers.push(marker);
+  routePolyline.setLatLngs(routeCoords);
+  updateRouteMetrics();
+}
+
+function resetRoute() {
+  routeCoords = [];
+  routeMarkers.forEach(m => activityMap && activityMap.removeLayer(m));
+  routeMarkers = [];
+  if (routePolyline) routePolyline.setLatLngs([]);
+  const info = document.getElementById('routeInfo');
+  if (info) info.innerHTML = '<strong>Parcours :</strong> Aucun tracé';
+  showToast('info', 'Le parcours a été réinitialisé.');
+}
+
+function updateRouteMetrics() {
+  if (!activityMap || routeCoords.length < 2) {
+    const info = document.getElementById('routeInfo');
+    if (info) info.innerHTML = '<strong>Parcours :</strong> Aucun tracé';
+    return;
+  }
+
+  let distance = 0;
+  for (let i = 1; i < routeCoords.length; i++) {
+    distance += activityMap.distance(routeCoords[i - 1], routeCoords[i]);
+  }
+
+  const info = document.getElementById('routeInfo');
+  if (info) info.innerHTML = `<strong>Parcours :</strong> ${(distance / 1000).toFixed(2)} km · ${routeCoords.length} point${routeCoords.length > 1 ? 's' : ''}`;
+}
+
+async function searchParks() {
+  if (!activityMap) return;
+  const center = activityMap.getCenter();
+  const status = document.getElementById('parkStatus');
+  if (status) status.textContent = '⏳ Recherche des parcs sportifs aux alentours…';
+  clearParks();
+  try {
+    const query = `[out:json][timeout:25];(node["leisure"="park"](around:3000,${center.lat},${center.lng});way["leisure"="park"](around:3000,${center.lat},${center.lng});relation["leisure"="park"](around:3000,${center.lat},${center.lng});node["sport"](around:3000,${center.lat},${center.lng});way["sport"](around:3000,${center.lat},${center.lng});relation["sport"](around:3000,${center.lat},${center.lng}););out center;`;
+    const response = await fetch('https://overpass-api.de/api/interpreter', {
+      method: 'POST',
+      body: query,
+      headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
+    });
+    const result = await response.json();
+    addParkMarkers(result.elements || []);
+  } catch (err) {
+    if (status) status.textContent = '⚠ Impossible de charger les parcs.';
+    showToast('error', 'Erreur lors de la recherche des parcs sportifs.');
+  }
+}
+
+function clearParks() {
+  parkMarkers.forEach(m => activityMap && activityMap.removeLayer(m));
+  parkMarkers = [];
+  const status = document.getElementById('parkStatus');
+  if (status) status.textContent = '<strong>Parcs :</strong> Aucun parc affiché.';
+}
+
+function addParkMarkers(elements) {
+  if (!activityMap) return;
+  const unique = new Map();
+  elements.forEach(el => {
+    const center = el.type === 'node' ? { lat: el.lat, lon: el.lon } : (el.center || {});
+    if (!center.lat || !center.lon) return;
+    const id = `${el.type}-${el.id}`;
+    if (unique.has(id)) return;
+    unique.set(id, true);
+
+    const label = el.tags?.name || (el.tags?.sport ? `Parc ${el.tags.sport}` : 'Parc sportif');
+    const marker = L.marker([center.lat, center.lon], {
+      title: label,
+      alt: label,
+    }).addTo(activityMap);
+    marker.bindPopup(`<strong>${label}</strong><br>${el.tags?.leisure || el.tags?.sport || ''}`);
+    parkMarkers.push(marker);
+  });
+
+  const count = parkMarkers.length;
+  const status = document.getElementById('parkStatus');
+  if (status) status.innerHTML = `<strong>Parcs :</strong> ${count} lieu${count !== 1 ? 'x' : ''} trouvé${count !== 1 ? 's' : ''}.`;
+  if (count === 0) showToast('info', 'Aucun parc sportif trouvé autour de cette zone.');
+}
+
+// ═════════════════════════════════════════════════════=
 // ANIMATED COUNTERS (hero stats on load)
-// ══════════════════════════════════════════════════════
+// ═════════════════════════════════════════════════════=
 function animateCounters() {
   ['statSeances','statMinutes','statCalories','sideSeances','sideMin','sideCal'].forEach(id => {
     const el = document.getElementById(id);
