@@ -1,0 +1,68 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Journaux étudiants - Admin{% endblock %}
+{% block page_title %}📔 Journaux étudiants{% endblock %}
+
+{% block stylesheets %}
+<style>
+    .students-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:20px; }
+    .student-card {
+        background:var(--white); border:1px solid var(--border); border-radius:16px;
+        padding:24px; transition:box-shadow .2s;
+    }
+    .student-card:hover { box-shadow:0 8px 30px rgba(106,90,205,.1); }
+    .student-name { font-family:var(--font-head); font-size:18px; font-weight:700; color:var(--text); margin-bottom:4px; }
+    .student-email { font-size:12px; color:var(--text-muted); margin-bottom:16px; }
+    .stat-row { display:flex; justify-content:space-between; font-size:13px; margin-bottom:8px; }
+    .stat-label { color:var(--text-muted); }
+    .stat-value { font-weight:600; color:var(--text); }
+    .score-bar { height:6px; background:var(--purple-pale); border-radius:3px; margin:12px 0; overflow:hidden; }
+    .score-fill { height:100%; background:var(--purple); border-radius:3px; transition:width .3s; }
+    .card-actions { display:flex; gap:8px; margin-top:16px; }
+    .action-btn {
+        padding:7px 14px; border-radius:9px; font-size:12px; font-weight:500;
+        text-decoration:none; border:1px solid var(--border); background:var(--white);
+        color:var(--text-mid); cursor:pointer; transition:.15s; font-family:var(--font-body);
+        display:inline-flex; align-items:center; gap:5px;
+    }
+    .action-btn:hover { background:var(--purple-pale); color:var(--purple); }
+    .btn-pdf { background:#E05252; color:white; border-color:#E05252; }
+    .btn-pdf:hover { background:#c93c3c; color:white; }
+    .empty-state { text-align:center; padding:60px; color:var(--text-muted); }
+</style>
+{% endblock %}
+
+{% block body %}
+    {% if userData is empty %}
+        <div class="empty-state">
+            <div style="font-size:48px;margin-bottom:12px">📔</div>
+            <p>Aucun étudiant n'a encore écrit dans son journal.</p>
+        </div>
+    {% else %}
+        <div class="students-grid">
+            {% for item in userData %}
+                {% set user = item.user %}
+                {% set stats = item.stats %}
+                <div class="student-card">
+                    <div class="student-name">{{ user.firstName }} {{ user.lastName }}</div>
+                    <div class="student-email">{{ user.email }}</div>
+                    <div class="stat-row">
+                        <span class="stat-label">Entrées</span>
+                        <span class="stat-value">{{ stats.total }}</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Score moyen</span>
+                        <span class="stat-value">{{ stats.avgScore }}/5</span>
+                    </div>
+                    <div class="score-bar">
+                        <div class="score-fill" style="width:{{ (stats.avgScore / 5 * 100)|round }}%"></div>
+                    </div>
+                    <div class="card-actions">
+                        <a href="{{ path('admin_journal_user', {id: user.id}) }}" class="action-btn">👁 Voir</a>
+                        <a href="{{ path('admin_journal_rapport', {id: user.id}) }}" class="action-btn btn-pdf" target="_blank">🤖 Rapport PDF</a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endblock %}

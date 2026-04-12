@@ -1,0 +1,121 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ post ? 'Modifier' : 'Nouveau' }} post — Harmony{% endblock %}
+
+{% block stylesheets %}
+<style>
+    .page{max-width:680px;margin:0 auto;padding:48px 40px 80px;}
+    .breadcrumb{display:flex;align-items:center;gap:8px;font-size:13px;
+        color:var(--text-muted);margin-bottom:24px;}
+    .breadcrumb a{color:var(--purple);text-decoration:none;font-weight:500;}
+
+    .form-card{background:var(--white);border:1px solid var(--border);
+        border-radius:20px;padding:40px;}
+    .form-title{font-family:var(--font-head);font-size:24px;font-weight:800;
+        color:var(--text);margin-bottom:28px;}
+    .cat-badge{display:inline-flex;align-items:center;gap:6px;
+        background:var(--purple-pale);color:var(--purple);
+        padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;
+        margin-bottom:20px;}
+
+    .form-group{margin-bottom:20px;}
+    .form-label{display:block;font-size:13px;font-weight:600;color:var(--text-mid);margin-bottom:7px;}
+    .form-input,.form-textarea{width:100%;padding:11px 14px;border:1.5px solid var(--border);
+        border-radius:10px;font-family:var(--font-body);font-size:14px;color:var(--text);
+        background:var(--white);transition:border-color .15s,box-shadow .15s;outline:none;}
+    .form-input:focus,.form-textarea:focus{border-color:var(--purple);
+        box-shadow:0 0 0 3px rgba(106,90,205,.1);}
+    .form-input.error,.form-textarea.error{border-color:#E05252;}
+    .form-textarea{resize:vertical;min-height:160px;}
+    .char-count{font-size:11px;color:var(--text-muted);text-align:right;margin-top:4px;}
+
+    .error-box{background:#FEF2F2;border:1px solid rgba(239,68,68,.2);
+        border-radius:10px;padding:12px 16px;margin-bottom:20px;
+        color:#E05252;font-size:13px;display:flex;align-items:center;gap:8px;}
+
+    .form-actions{display:flex;gap:12px;margin-top:28px;}
+    .btn-submit{flex:1;padding:12px;background:var(--purple);color:white;border:none;
+        border-radius:11px;font-family:var(--font-body);font-size:14px;font-weight:600;
+        cursor:pointer;transition:background .15s;}
+    .btn-submit:hover{background:var(--purple-dark);}
+    .btn-cancel{padding:12px 24px;background:var(--purple-ghost);color:var(--text-mid);
+        border:1.5px solid var(--border);border-radius:11px;font-family:var(--font-body);
+        font-size:14px;font-weight:500;cursor:pointer;text-decoration:none;
+        display:inline-flex;align-items:center;}
+</style>
+{% endblock %}
+
+{% block body %}
+{% include '_planning_topbar.html.twig' %}
+
+<main class="page">
+    <div class="breadcrumb">
+        <a href="{{ path('forum') }}">💬 Forum</a>
+        <span>›</span>
+        <a href="{{ path('forum_posts', {id: categorie.idCategorie}) }}">{{ categorie.nomCategorie }}</a>
+        <span>›</span>
+        <span>{{ post ? 'Modifier le post' : 'Nouveau post' }}</span>
+    </div>
+
+    <div class="form-card">
+        <div class="form-title">{{ post ? '✏️ Modifier le post' : '📝 Nouveau post' }}</div>
+        <div class="cat-badge">🗂 {{ categorie.nomCategorie }}</div>
+
+        {% if error %}
+        <div class="error-box">⚠️ {{ error }}</div>
+        {% endif %}
+
+        <form method="POST" action="{{ action }}" id="postForm">
+            <div class="form-group">
+                <label class="form-label">Titre *</label>
+                <input type="text" name="titre" id="titreInput"
+                    class="form-input {{ error and 'titre' in error ? 'error' }}"
+                    value="{{ post ? post.titre : '' }}"
+                    placeholder="Un titre clair et précis..."
+                    maxlength="150" required>
+                <div class="char-count"><span id="titreCount">0</span>/150</div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Contenu *</label>
+                <textarea name="contenu" id="contenuInput"
+                    class="form-textarea {{ error and 'contenu' in error ? 'error' }}"
+                    placeholder="Développe ta question ou ton sujet..."
+                    required>{{ post ? post.contenu : '' }}</textarea>
+                <div class="char-count"><span id="contenuCount">0</span> caractères</div>
+            </div>
+
+            <div class="form-actions">
+                <a href="{{ path('forum_posts', {id: categorie.idCategorie}) }}" class="btn-cancel">Annuler</a>
+                <button type="submit" class="btn-submit">
+                    {{ post ? '💾 Enregistrer' : '📤 Publier le post' }}
+                </button>
+            </div>
+        </form>
+    </div>
+</main>
+
+<script>
+    const titreInput   = document.getElementById('titreInput');
+    const titreCount   = document.getElementById('titreCount');
+    const contenuInput = document.getElementById('contenuInput');
+    const contenuCount = document.getElementById('contenuCount');
+
+    function updateTitre()   { titreCount.textContent   = titreInput.value.length; }
+    function updateContenu() { contenuCount.textContent = contenuInput.value.length; }
+
+    titreInput.addEventListener('input', updateTitre);
+    contenuInput.addEventListener('input', updateContenu);
+    updateTitre(); updateContenu();
+
+    document.getElementById('postForm').addEventListener('submit', function(e) {
+        let ok = true;
+        if (titreInput.value.trim().length < 3) {
+            titreInput.classList.add('error'); ok = false;
+        }
+        if (contenuInput.value.trim().length < 10) {
+            contenuInput.classList.add('error'); ok = false;
+        }
+        if (!ok) e.preventDefault();
+    });
+</script>
+{% endblock %}
