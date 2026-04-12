@@ -823,6 +823,10 @@
       <argument type="service" id="http_client.uri_template"/>
     </service>
     <service id="App\Service\QrCodeService" class="App\Service\QrCodeService" public="true" autowire="true" autoconfigure="true"/>
+    <service id="App\Service\SpoonacularService" class="App\Service\SpoonacularService" autowire="true" autoconfigure="true">
+      <argument type="service" id="http_client.uri_template"/>
+      <argument>%env(SPOONACULAR_API_KEY)%</argument>
+    </service>
     <service id="App\Service\SuspicionScoreService" class="App\Service\SuspicionScoreService" autowire="true" autoconfigure="true"/>
     <service id="argument_metadata_factory" class="Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadataFactory"/>
     <service id="argument_resolver.backed_enum_resolver" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\BackedEnumValueResolver">
@@ -852,7 +856,7 @@
     </service>
     <service id="argument_resolver.service" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver">
       <tag name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver" priority="-50">controller.argument_value_resolver</tag>
-      <argument type="service" id=".service_locator.TGVX72L"/>
+      <argument type="service" id=".service_locator.Hs8wB8r"/>
     </service>
     <service id="argument_resolver.default" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver">
       <tag name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver" priority="-100">controller.argument_value_resolver</tag>
@@ -4063,7 +4067,7 @@
     </service>
     <service id="argument_resolver.not_tagged_controller" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\NotTaggedControllerValueResolver">
       <tag name="controller.argument_value_resolver" priority="-200"/>
-      <argument type="service" id=".service_locator.TGVX72L"/>
+      <argument type="service" id=".service_locator.Hs8wB8r"/>
     </service>
     <service id="debug.log_processor" class="Symfony\Bridge\Monolog\Processor\DebugProcessor">
       <tag name="kernel.reset" method="reset"/>
@@ -10009,6 +10013,37 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.Cz8IWeY" method="withContext"/>
     </service>
+    <service id=".service_locator.B_rP9ks" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="spoonacular" type="service_closure" id="App\Service\SpoonacularService"/>
+      </argument>
+    </service>
+    <service id=".service_locator.B_rP9ks.App\Controller\NutritionController::apiRecettes()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\NutritionController::apiRecettes()"/>
+      <argument>App\Controller\NutritionController::apiRecettes()</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.B_rP9ks" method="withContext"/>
+    </service>
+    <service id=".service_locator.B_rP9ks.App\Controller\NutritionController::apiRecetteDetail()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\NutritionController::apiRecetteDetail()"/>
+      <argument>App\Controller\NutritionController::apiRecetteDetail()</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.B_rP9ks" method="withContext"/>
+    </service>
+    <service id=".service_locator.U5qhPBr" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="alimentRepo" type="service_closure" id="App\Repository\AlimentRepository"/>
+        <argument key="em" type="service_closure" id="doctrine.orm.default_entity_manager"/>
+      </argument>
+    </service>
+    <service id=".service_locator.U5qhPBr.App\Controller\NutritionController::apiAjouterRecette()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\NutritionController::apiAjouterRecette()"/>
+      <argument>App\Controller\NutritionController::apiAjouterRecette()</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.U5qhPBr" method="withContext"/>
+    </service>
     <service id=".service_locator.eTqhGjo.App\Controller\NutritionController::apiJournal()" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\NutritionController::apiJournal()"/>
       <argument>App\Controller\NutritionController::apiJournal()</argument>
@@ -10213,7 +10248,7 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.z0A7H.F" method="withContext"/>
     </service>
-    <service id=".service_locator.TGVX72L" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.Hs8wB8r" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="kernel::registerContainerConfiguration" type="service_closure" id=".service_locator.1vYpZ1B.kernel::registerContainerConfiguration()"/>
@@ -10290,6 +10325,9 @@
         <argument key="App\Controller\MeditationController::show" type="service_closure" id=".service_locator.DS21UbZ.App\Controller\MeditationController::show()"/>
         <argument key="App\Controller\NutritionController::index" type="service_closure" id=".service_locator.eTqhGjo.App\Controller\NutritionController::index()"/>
         <argument key="App\Controller\NutritionController::ajouter" type="service_closure" id=".service_locator.Cz8IWeY.App\Controller\NutritionController::ajouter()"/>
+        <argument key="App\Controller\NutritionController::apiRecettes" type="service_closure" id=".service_locator.B_rP9ks.App\Controller\NutritionController::apiRecettes()"/>
+        <argument key="App\Controller\NutritionController::apiRecetteDetail" type="service_closure" id=".service_locator.B_rP9ks.App\Controller\NutritionController::apiRecetteDetail()"/>
+        <argument key="App\Controller\NutritionController::apiAjouterRecette" type="service_closure" id=".service_locator.U5qhPBr.App\Controller\NutritionController::apiAjouterRecette()"/>
         <argument key="App\Controller\NutritionController::apiJournal" type="service_closure" id=".service_locator.eTqhGjo.App\Controller\NutritionController::apiJournal()"/>
         <argument key="App\Controller\NutritionController::apiAliments" type="service_closure" id=".service_locator.jFG7qVJ.App\Controller\NutritionController::apiAliments()"/>
         <argument key="App\Controller\NutritionController::apiAjouter" type="service_closure" id=".service_locator.9SYQ8z3.App\Controller\NutritionController::apiAjouter()"/>
@@ -10386,6 +10424,9 @@
         <argument key="App\Controller\MeditationController:show" type="service_closure" id=".service_locator.DS21UbZ.App\Controller\MeditationController::show()"/>
         <argument key="App\Controller\NutritionController:index" type="service_closure" id=".service_locator.eTqhGjo.App\Controller\NutritionController::index()"/>
         <argument key="App\Controller\NutritionController:ajouter" type="service_closure" id=".service_locator.Cz8IWeY.App\Controller\NutritionController::ajouter()"/>
+        <argument key="App\Controller\NutritionController:apiRecettes" type="service_closure" id=".service_locator.B_rP9ks.App\Controller\NutritionController::apiRecettes()"/>
+        <argument key="App\Controller\NutritionController:apiRecetteDetail" type="service_closure" id=".service_locator.B_rP9ks.App\Controller\NutritionController::apiRecetteDetail()"/>
+        <argument key="App\Controller\NutritionController:apiAjouterRecette" type="service_closure" id=".service_locator.U5qhPBr.App\Controller\NutritionController::apiAjouterRecette()"/>
         <argument key="App\Controller\NutritionController:apiJournal" type="service_closure" id=".service_locator.eTqhGjo.App\Controller\NutritionController::apiJournal()"/>
         <argument key="App\Controller\NutritionController:apiAliments" type="service_closure" id=".service_locator.jFG7qVJ.App\Controller\NutritionController::apiAliments()"/>
         <argument key="App\Controller\NutritionController:apiAjouter" type="service_closure" id=".service_locator.9SYQ8z3.App\Controller\NutritionController::apiAjouter()"/>
@@ -12973,7 +13014,7 @@
     <service id="Knp\Component\Pager\ArgumentAccess\ArgumentAccessInterface" alias="Knp\Component\Pager\ArgumentAccess\RequestArgumentAccess"/>
     <service id="container.env_var_processors_locator" alias=".service_locator.ryAvHi4" public="true"/>
     <service id="twig.loader.filesystem" alias="twig.loader.native_filesystem"/>
-    <service id="argument_resolver.controller_locator" alias=".service_locator.TGVX72L"/>
+    <service id="argument_resolver.controller_locator" alias=".service_locator.Hs8wB8r"/>
     <service id="doctrine.id_generator_locator" alias=".service_locator.W55Po6X"/>
     <service id="twig.loader" alias="twig.loader.native_filesystem"/>
     <service id=".Psr\Log\LoggerInterface $request" alias="monolog.logger.request"/>
@@ -13070,6 +13111,8 @@
     <service id=".service_locator.a4BGQuG" alias=".service_locator.j4Wlmfc"/>
     <service id=".service_locator.qG0FeeQ" alias=".service_locator.eTqhGjo"/>
     <service id=".service_locator.HEogJwd" alias=".service_locator.Cz8IWeY"/>
+    <service id=".service_locator.mZEjAtj" alias=".service_locator.B_rP9ks"/>
+    <service id=".service_locator.7Q28oLc" alias=".service_locator.U5qhPBr"/>
     <service id=".service_locator.RCAnKOx" alias=".service_locator.jFG7qVJ"/>
     <service id=".service_locator.zZLgE7T" alias=".service_locator.9SYQ8z3"/>
     <service id=".service_locator.h.3.LVM" alias=".service_locator.Uw2k5kr"/>

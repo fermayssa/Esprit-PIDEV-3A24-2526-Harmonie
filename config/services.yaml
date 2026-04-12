@@ -16,3 +16,10 @@ services:
     # QrCodeService déclaré manuellement (stable avec Symfony 7.4)
     App\Service\QrCodeService:
         public: true
+
+    # ── Spoonacular API Service ────────────────────────────────────────────────
+    # Lie la variable d'environnement SPOONACULAR_API_KEY à l'argument $spoonacularApiKey
+    # du constructeur de SpoonacularService.
+    App\Service\SpoonacularService:
+        arguments:
+            $spoonacularApiKey: '%env(SPOONACULAR_API_KEY)%'

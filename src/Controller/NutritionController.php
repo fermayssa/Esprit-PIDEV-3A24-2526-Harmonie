@@ -2,9 +2,11 @@
 
 namespace App\Controller;
 
+use App\Entity\Aliment;
 use App\Entity\Consommation;
 use App\Repository\AlimentRepository;
 use App\Repository\ConsommationRepository;
+use App\Service\SpoonacularService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -85,6 +87,247 @@ class NutritionController extends AbstractController
             'aliments'   => $aliments,
             'repasTypes' => $this->repasTypes(),
         ]);
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // ══ NOUVEAU : Page Recettes Spoonacular ══════════════════════════════════
+    // ─────────────────────────────────────────────────────────────────────────
+
+    /**
+     * Page principale du chercheur de recettes.
+     * Route : GET /nutrition/recettes
+     * Nom   : nutrition_recettes
+     */
+    #[Route('/recettes', name: 'nutrition_recettes', methods: ['GET'])]
+    public function recettes(Request $request): Response
+    {
+        $date  = $request->query->get('date', (new \DateTime())->format('Y-m-d'));
+        $repas = $request->query->get('repas', 'Déjeuner');
+
+        return $this->render('nutrition/recettes.html.twig', [
+            'date'       => $date,
+            'repas'      => $repas,
+            'repasTypes' => $this->repasTypes(),
+        ]);
+    }
+
+    /**
+     * API JSON : cherche des recettes par ingrédients via Spoonacular.
+     * Route : GET /nutrition/api/recettes?ingredients=apple,oats,milk&number=8
+     * Nom   : nutrition_api_recettes
+     *
+     * Réponse JSON :
+     *   { success: true, recettes: [...] }
+     *   { success: false, message: "..." }
+     */
+    #[Route('/api/recettes', name: 'nutrition_api_recettes', methods: ['GET'])]
+    public function apiRecettes(
+        Request $request,
+        SpoonacularService $spoonacular
+    ): JsonResponse {
+        $ingredients = trim($request->query->get('ingredients', ''));
+        $number      = min((int) $request->query->get('number', 8), 20); // max 20
+
+        if ($ingredients === '') {
+            return new JsonResponse([
+                'success' => false,
+                'message' => 'Veuillez saisir au moins un ingrédient.',
+            ], 400);
+        }
+
+        try {
+            $results  = $spoonacular->findByIngredients($ingredients, $number);
+            $recettes = [];
+
+            foreach ($results as $r) {
+                // Extraire les noms des ingrédients utilisés / manquants
+                $used    = array_map(fn($i) => $i['name'], $r['usedIngredients']    ?? []);
+                $missed  = array_map(fn($i) => $i['name'], $r['missedIngredients']  ?? []);
+
+                $recettes[] = [
+                    'id'             => $r['id'],
+                    'titre'          => $r['title'],
+                    'image'          => $r['image'] ?? null,
+                    'usedCount'      => $r['usedIngredientCount']   ?? 0,
+                    'missedCount'    => $r['missedIngredientCount']  ?? 0,
+                    'usedIngredients'   => $used,
+                    'missedIngredients' => $missed,
+                    'likes'          => $r['likes'] ?? 0,
+                ];
+            }
+
+            return new JsonResponse([
+                'success'  => true,
+                'recettes' => $recettes,
+                'total'    => count($recettes),
+            ]);
+
+        } catch (\RuntimeException $e) {
+            return new JsonResponse([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 503);
+        }
+    }
+
+    /**
+     * API JSON : détails complets d'une recette (nutrition incluse).
+     * Route : GET /nutrition/api/recette/{id}
+     * Nom   : nutrition_api_recette_detail
+     *
+     * Réponse JSON :
+     *   { success: true, recette: { id, titre, image, temps, portions, calories, proteines, glucides, lipides, ingredients: [...], sourceUrl } }
+     *   { success: false, message: "..." }
+     */
+    #[Route('/api/recette/{id}', name: 'nutrition_api_recette_detail', methods: ['GET'])]
+    public function apiRecetteDetail(
+        int $id,
+        SpoonacularService $spoonacular
+    ): JsonResponse {
+        if ($id <= 0) {
+            return new JsonResponse(['success' => false, 'message' => 'ID de recette invalide.'], 400);
+        }
+
+        try {
+            $data   = $spoonacular->getRecipeDetails($id);
+            $macros = $spoonacular->extractMacros($data);
+
+            // Liste des ingrédients formatée
+            $ingredients = array_map(function ($ing) {
+                return [
+                    'nom'      => $ing['nameClean'] ?? $ing['name'] ?? '',
+                    'quantite' => round($ing['amount'] ?? 0, 1),
+                    'unite'    => $ing['unit'] ?? '',
+                    'original' => $ing['original'] ?? '',
+                ];
+            }, $data['extendedIngredients'] ?? []);
+
+            // Résumé HTML → texte simple (strip_tags côté PHP)
+            $resume = strip_tags($data['summary'] ?? '');
+            // Limiter à 300 caractères pour l'affichage dans la modal
+            if (strlen($resume) > 300) {
+                $resume = substr($resume, 0, 300) . '…';
+            }
+
+            return new JsonResponse([
+                'success' => true,
+                'recette' => [
+                    'id'          => $data['id'],
+                    'titre'       => $data['title'],
+                    'image'       => $data['image'] ?? null,
+                    'temps'       => $data['readyInMinutes'] ?? null,
+                    'portions'    => $data['servings']       ?? 1,
+                    'calories'    => $macros['calories'],
+                    'proteines'   => $macros['proteines'],
+                    'glucides'    => $macros['glucides'],
+                    'lipides'     => $macros['lipides'],
+                    'ingredients' => $ingredients,
+                    'resume'      => $resume,
+                    'sourceUrl'   => $data['sourceUrl'] ?? null,
+                    'instructions'=> $data['sourceUrl'] ?? null,  // Redirige vers la source
+                ],
+            ]);
+
+        } catch (\RuntimeException $e) {
+            return new JsonResponse([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 503);
+        }
+    }
+
+    // ─── API : ajouter une recette Spoonacular au journal ────────────
+    #[Route('/api/ajouter-recette', name: 'nutrition_api_ajouter_recette', methods: ['POST'])]
+    public function apiAjouterRecette(
+        Request $request,
+        AlimentRepository $alimentRepo,
+        EntityManagerInterface $em
+    ): JsonResponse {
+        try {
+            $data = json_decode($request->getContent(), true);
+
+            // Validation des données
+            $required = ['recipe_id', 'recipe_title', 'calories', 'meal_type', 'date'];
+            foreach ($required as $field) {
+                if (!isset($data[$field]) || trim($data[$field]) === '') {
+                    return new JsonResponse([
+                        'success' => false,
+                        'message' => "Champ manquant: {$field}",
+                    ], 400);
+                }
+            }
+
+            $recipeId = (int)$data['recipe_id'];
+            $recipeTitle = trim($data['recipe_title']);
+            $calories = (float)$data['calories'];
+            $mealType = trim($data['meal_type']);
+            $dateStr = $data['date'];
+
+            // Valider la date
+            try {
+                $dateConsommation = new \DateTime($dateStr);
+            } catch (\Exception $e) {
+                return new JsonResponse([
+                    'success' => false,
+                    'message' => 'Date invalide.',
+                ], 400);
+            }
+
+            // Valider le type de repas
+            $allowedMeals = array_keys($this->repasTypes());
+            if (!in_array($mealType, $allowedMeals)) {
+                return new JsonResponse([
+                    'success' => false,
+                    'message' => 'Type de repas invalide.',
+                ], 400);
+            }
+
+            // Chercher ou créer un aliment "Recette Spoonacular - [titre]"
+            $alimentName = "🍳 Recette: " . substr($recipeTitle, 0, 40);
+            $aliment = $alimentRepo->findByName($alimentName);
+
+            if (!$aliment) {
+                // Créer un nouvel aliment pour la recette
+                $aliment = new Aliment();
+                $aliment->setNomAliment($alimentName);
+                
+                // Calculer les calories pour 100g en fonction des calories totales
+                // Supposons 1 portion = 300g (valeur par défaut)
+                $caloriesPer100g = round(($calories * 100) / 300);
+                $aliment->setCaloriesPour100g($caloriesPer100g);
+                
+                // Macros : stocker une moyenne basée sur la portion
+                $aliment->setProteines((float)($data['proteines'] ?? 20));
+                $aliment->setGlucides((float)($data['glucides'] ?? 50));
+                $aliment->setLipides((float)($data['lipides'] ?? 15));
+
+                $em->persist($aliment);
+                $em->flush();
+            }
+
+            // Créer une Consommation
+            $consommation = new Consommation();
+            $consommation->setAliment($aliment);
+            $consommation->setTypeRepas($mealType);
+            $consommation->setDateConsommation($dateConsommation);
+            $consommation->setPoidsGrammes(300); // Supposé : 1 portion = 300g
+            $consommation->setUserId(self::DEMO_USER_ID);
+
+            $em->persist($consommation);
+            $em->flush();
+
+            return new JsonResponse([
+                'success' => true,
+                'message' => 'Recette ajoutée au journal avec succès.',
+                'consommation_id' => $consommation->getId(),
+            ]);
+
+        } catch (\Exception $e) {
+            return new JsonResponse([
+                'success' => false,
+                'message' => 'Erreur: ' . $e->getMessage(),
+            ], 500);
+        }
     }
 
     // ─── API : données journal pour une date ─────────────────────────
@@ -178,7 +421,6 @@ class NutritionController extends AbstractController
             return new JsonResponse(['success' => false, 'errors' => ['date' => 'Date invalide.']], 400);
         }
 
-        // Validate type_repas
         if (!in_array($data['type_repas'], array_keys($this->repasTypes()))) {
             return new JsonResponse(['success' => false, 'errors' => ['repas' => 'Type de repas invalide.']], 422);
         }

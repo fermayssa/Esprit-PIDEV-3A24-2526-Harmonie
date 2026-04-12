@@ -1,5 +1,4 @@
-92a5a7,127.0.0.1,GET,http://127.0.0.1:8000/admin/nutrition?cal_max=30&cal_min=25&direction=ASC&id_from=11&id_to=15&limit=20&page=1&prot_max=1.1&prot_min=0.8&search=&sort=nomAliment,1775951839,,200,request
-69a909,127.0.0.1,GET,http://127.0.0.1:8000/admin/nutrition?cal_max=100&cal_min=59&id_from=3&id_to=100&limit=20&orderby=nomAliment&orderdir=ASC&page=1&prot_max=30&prot_min=0.8&search=,1775951868,,200,request
-bb9886,127.0.0.1,GET,http://127.0.0.1:8000/admin/nutrition?cal_max=500&cal_min=59&id_from=3&id_to=100&limit=20&orderby=nomAliment&orderdir=ASC&page=1&prot_max=30&prot_min=0.8&search=,1775951882,,200,request
-ac91ea,127.0.0.1,GET,http://127.0.0.1:8000/admin/nutrition,1775951902,,200,request
-dd6d79,127.0.0.1,GET,http://127.0.0.1:8000/admin/nutrition?cal_max=241&cal_min=9&id_from=1&id_to=1000&limit=20&orderby=nomAliment&orderdir=ASC&page=1&prot_max=3.5&prot_min=3.3&search=,1775951952,,200,request
+75d921,127.0.0.1,GET,http://127.0.0.1:8000/nutrition?date=2026-04-12,1775961969,,200,request
+629dea,127.0.0.1,GET,http://127.0.0.1:8000/nutrition/recettes?date=2026-04-12&repas=D%C3%A9jeuner,1775961972,,200,request
+27d935,127.0.0.1,GET,http://127.0.0.1:8000/nutrition?date=2026-04-12,1775962568,,200,request
+967838,127.0.0.1,GET,http://127.0.0.1:8000/nutrition/recettes?date=2026-04-12&repas=D%C3%A9jeuner,1775962576,,200,request
