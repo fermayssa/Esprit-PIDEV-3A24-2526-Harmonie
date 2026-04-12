@@ -17,7 +17,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-
+/* "feat: ajout gestion admin des sessions de méditation avec IA et PDF"
+git commit -m "feat(admin): gestion des sessions de méditation + génération IA + export PDF"
+git commit -m "feat: ajout CRUD des sessions de méditation côté admin"
+git commit -m "feat: ajout CRUD des sessions de méditation côté admin"*/
 #[IsGranted('ROLE_ADMIN')]
 #[Route('/admin/meditation')]
 class AdminMeditationController extends AbstractController

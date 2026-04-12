@@ -1,8 +1,45 @@
 <?php
-/* "feat: ajout gestion admin des sessions de méditation avec IA et PDF"
-git commit -m "feat(admin): gestion des sessions de méditation + génération IA + export PDF"
-git commit -m "feat: ajout CRUD des sessions de méditation côté admin"
-git commit -m "feat: ajout CRUD des sessions de méditation côté admin"*/
+// Contrôleur admin pour gérer les sessions de méditation
+
+// Injection des dépendances (repository, entity manager, service IA)
+
+// Affiche la liste des sessions avec recherche et tri
+
+// Recherche des sessions en AJAX et retourne un JSON
+
+// Création d'une nouvelle session de méditation
+
+// Association de la session à l'utilisateur connecté
+
+// Ajout des conseils générés par l'IA
+
+// Validation du contenu des conseils avant insertion
+
+// Sauvegarde des données en base
+
+// Affichage d'une session de méditation
+
+// Modification d'une session existante
+
+// Sauvegarde après modification
+
+// Suppression d'une session avec vérification CSRF
+
+// Génération d'une session via intelligence artificielle
+
+// Vérification du thème avant génération IA
+
+// Gestion des erreurs lors de l'appel à l'IA
+
+// Régénération des conseils via IA
+
+// Suppression des anciens conseils
+
+// Ajout des nouveaux conseils générés
+
+// Génération d'un PDF contenant la liste des sessions
+
+// Génération d'un PDF détaillé pour une session
 namespace App\Controller;
 
 use App\Entity\User;
