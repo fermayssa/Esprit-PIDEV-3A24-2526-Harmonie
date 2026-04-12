@@ -1,5 +1,5 @@
 <?php
-
+/* "feat: ajout gestion admin des sessions de méditation avec IA et PDF"*/
 namespace App\Controller;
 
 use App\Entity\User;
