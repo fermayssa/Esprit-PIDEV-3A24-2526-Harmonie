@@ -16,14 +16,16 @@ class QrCodeService
     {
         $writer = new PngWriter();
 
-        $qrCode = QrCode::create($text)
-            ->setEncoding(new Encoding('UTF-8'))
-            ->setErrorCorrectionLevel(ErrorCorrectionLevel::High)
-            ->setSize(300)
-            ->setMargin(12)
-            ->setRoundBlockSizeMode(RoundBlockSizeMode::Margin)
-            ->setForegroundColor(new Color(106, 27, 154))   // Violet Harmony
-            ->setBackgroundColor(new Color(255, 255, 255));
+        $qrCode = new QrCode(
+            $text,
+            new Encoding('UTF-8'),
+            ErrorCorrectionLevel::High,
+            300,
+            12,
+            RoundBlockSizeMode::Margin,
+            new Color(106, 27, 154),   // Violet Harmony
+            new Color(255, 255, 255)
+        );
 
         $logo = null;
         if ($logoPath !== null && file_exists($logoPath)) {

@@ -1831,10 +1831,23 @@ async function openQR(date) {
 
   try {
     const res  = await fetch(API.qr(date));
+    
+    if (!res.ok) {
+      if (res.status === 401) {
+        wrap.innerHTML = '<div style="color:#EF4444;font-size:13px;text-align:center;padding:20px">⚠ Session expirée. Veuillez vous reconnecter.</div>';
+        showToast('error', '⚠ Session expirée. Veuillez vous reconnecter.');
+        return;
+      } else {
+        wrap.innerHTML = '<div style="color:#EF4444;font-size:13px;text-align:center;padding:20px">⚠ Erreur serveur (' + res.status + ')</div>';
+        showToast('error', '⚠ Erreur serveur.');
+        return;
+      }
+    }
+    
     const data = await res.json();
 
     if (!data.success) {
-      wrap.innerHTML = '<div style="color:#EF4444;font-size:13px;text-align:center;padding:20px">⚠ Séance introuvable</div>';
+      wrap.innerHTML = '<div style="color:#EF4444;font-size:13px;text-align:center;padding:20px">⚠ ' + (data.message || 'Séance introuvable') + '</div>';
       return;
     }
 
