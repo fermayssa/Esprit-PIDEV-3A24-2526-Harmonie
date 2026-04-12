@@ -24,6 +24,12 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[Route('/journal')]
 class JournalController extends AbstractController
 {
+     /**
+     * Injection des dépendances :
+     * - Repository pour accéder aux données
+     * - EntityManager pour gérer la persistance
+     * - Service Groq pour transcription et analyse IA
+     */
     public function __construct(
         private readonly JournalHumeurRepository $repo,
         private readonly EntityManagerInterface  $em,
