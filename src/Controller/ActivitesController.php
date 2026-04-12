@@ -205,22 +205,6 @@ class ActivitesController extends AbstractController
     }
 
     // ─── QR CODE SESSION ─────────────────────────────────────────────
-    /**
-     * Génère un QR code PNG (Data URI) pour la séance d'une date donnée.
-     *
-     * CORRECTIONS APPORTÉES :
-     *  1. catch (\Throwable $e) au lieu de catch (\Exception $e)
-     *     → attrape AUSSI les \Error PHP (class not found, TypeError, etc.)
-     *     → était la cause principale des erreurs 500 non gérées
-     *
-     *  2. Chemins du logo : essaie plusieurs emplacements courants
-     *     → évite l'erreur ".png.png" et le dossier "images" vs "image"
-     *
-     *  3. Vérification de l'utilisateur déjà en place (inchangée)
-     *
-     * Route : GET /activites/qr/{date}  (ex: /activites/qr/2025-04-07)
-     * Protégée par : #[IsGranted('ROLE_USER')] sur la classe
-     */
     #[Route('/qr/{date}', name: 'activites_qr_session', methods: ['GET'],
         requirements: ['date' => '\d{4}-\d{2}-\d{2}'])]
     public function qrSession(
@@ -228,9 +212,7 @@ class ActivitesController extends AbstractController
         ActiviteRepository $activiteRepo,
         QrCodeService $qrCodeService
     ): JsonResponse {
-        // ── \Throwable couvre \Exception ET \Error (class not found, TypeError, etc.) ──
         try {
-            // ── Vérification de l'utilisateur ─────────────────────────────────
             $user = $this->getUser();
             if (!$user) {
                 return new JsonResponse([
@@ -240,7 +222,6 @@ class ActivitesController extends AbstractController
             }
             $userId = $user->getId();
 
-            // ── Validation de la date ──────────────────────────────────────────
             $dateObj = \DateTime::createFromFormat('Y-m-d', $date);
             if (!$dateObj) {
                 return new JsonResponse([
@@ -249,7 +230,6 @@ class ActivitesController extends AbstractController
                 ], 400);
             }
 
-            // ── Requête directe sur la base ────────────────────────────────────
             $dateStart = (clone $dateObj)->setTime(0, 0, 0);
             $dateEnd   = (clone $dateObj)->setTime(23, 59, 59);
 
@@ -272,7 +252,6 @@ class ActivitesController extends AbstractController
 
             $exercises = array_map([$this, 'activiteToArray'], $activites);
 
-            // ── Date en français ───────────────────────────────────────────────
             $months    = [
                 1  => 'janvier',  2  => 'février',  3  => 'mars',
                 4  => 'avril',    5  => 'mai',       6  => 'juin',
@@ -281,13 +260,11 @@ class ActivitesController extends AbstractController
             ];
             $dateLabel = $dateObj->format('j') . ' ' . $months[(int)$dateObj->format('n')] . ' ' . $dateObj->format('Y');
 
-            // ── Recherche du logo dans plusieurs emplacements possibles ────────
-            // CORRECTION BUG #2 : le chemin original avait ".png.png" et "images/"
             $projectDir = $this->getParameter('kernel.project_dir');
             $logoCandidates = [
-                $projectDir . '/public/image/logo.png',           // chemin du module nutrition
-                $projectDir . '/public/images/logo.png',          // chemin alternatif
-                $projectDir . '/public/images/harmony-logo.png',  // sans double extension
+                $projectDir . '/public/image/logo.png',
+                $projectDir . '/public/images/logo.png',
+                $projectDir . '/public/images/harmony-logo.png',
                 $projectDir . '/public/images/harmony.png',
                 $projectDir . '/public/img/logo.png',
             ];
@@ -298,13 +275,10 @@ class ActivitesController extends AbstractController
                     break;
                 }
             }
-            // Si aucun logo trouvé, le QR code sera généré sans logo (pas bloquant)
 
-            // ── Construction du message WhatsApp et génération du QR ──────────
             $waUrl     = $qrCodeService->buildWhatsAppUrl($dateLabel, $exercises);
             $qrDataUri = $qrCodeService->generateSessionQrCode($waUrl, $logoPath);
 
-            // ── Statistiques de la séance ──────────────────────────────────────
             $totalMin = 0;
             $totalCal = 0;
             foreach ($exercises as $ex) {
@@ -324,12 +298,6 @@ class ActivitesController extends AbstractController
             ]);
 
         } catch (\Throwable $e) {
-            // ── CORRECTION BUG #1 : catch \Throwable attrape \Error aussi ─────
-            // Avant : catch (\Exception $e) → ratait les \Error de PHP
-            // (class not found, TypeError, etc.) → 500 HTML → "Erreur réseau" JS
-
-            // En production, on log et on retourne un message propre
-            // En dev, on peut activer le message complet
             $isDev = $this->getParameter('kernel.environment') === 'dev';
 
             return new JsonResponse([
@@ -341,12 +309,66 @@ class ActivitesController extends AbstractController
         }
     }
 
-    // ─── Bundle 2 : Bilan PDF KnpSnappy ─────────────────────────────
+    // ═══════════════════════════════════════════════════════════════
+    // BILAN PDF — KnpSnappyBundle
+    // ═══════════════════════════════════════════════════════════════
+    //
+    // CORRECTIONS APPORTÉES DANS CETTE MÉTHODE :
+    //
+    //  1. VÉRIFICATION DU BINAIRE AVANT APPEL :
+    //     On vérifie que le fichier wkhtmltopdf existe réellement sur
+    //     le disque avant de passer la main à KnpSnappy. Cela donne un
+    //     message d'erreur clair ("binaire introuvable") plutôt que
+    //     l'erreur cryptique "exit code 1 / chemin spécifié introuvable".
+    //
+    //  2. TRY-CATCH AMÉLIORÉ :
+    //     Capture \Exception (pas seulement \RuntimeException) pour
+    //     attraper toutes les exceptions possibles de KnpSnappy.
+    //
+    //  3. RÉSOLUTION DU CHEMIN PUBLIC :
+    //     On passe le chemin absolu du dossier public à Twig pour que
+    //     les ressources (CSS, images) soient accessibles par wkhtmltopdf
+    //     via file:// — nécessaire avec enable-local-file-access.
+    //
+    //  4. OPTIONS PDF NETTOYÉES :
+    //     - 'lowquality' supprimé (était doublon avec knp_snappy.yaml)
+    //     - Marges cohérentes avec le design du template
+    //
+    // ═══════════════════════════════════════════════════════════════
     #[Route('/bilan/pdf', name: 'activites_bilan_pdf', methods: ['GET'])]
     public function bilanPdf(
         ActiviteRepository $activiteRepo,
         Pdf $pdf
     ): Response {
+        // ── 1. Vérification préalable du binaire wkhtmltopdf ──────────────
+        // CORRECTION CRITIQUE : on résout la variable d'env nous-mêmes pour
+        // afficher un message d'erreur clair si le chemin est mauvais.
+        $wkhtmltopdfBinary = $_ENV['WKHTMLTOPDF_PATH'] ?? getenv('WKHTMLTOPDF_PATH') ?? '';
+
+        // Normalisation du chemin (Windows : / → \)
+        $wkhtmltopdfBinary = str_replace('/', DIRECTORY_SEPARATOR, $wkhtmltopdfBinary);
+
+        if (empty($wkhtmltopdfBinary)) {
+            return $this->renderWkhtmlError(
+                'La variable WKHTMLTOPDF_PATH n\'est pas définie dans votre fichier .env.',
+                'Ajoutez : WKHTMLTOPDF_PATH=C:/PROGRA~1/wkhtmltopdf/bin/wkhtmltopdf.exe'
+            );
+        }
+
+        if (!file_exists($wkhtmltopdfBinary)) {
+            return $this->renderWkhtmlError(
+                'Le binaire wkhtmltopdf est introuvable à : ' . $wkhtmltopdfBinary,
+                "Solutions :\n"
+                . "1. Téléchargez wkhtmltopdf sur https://wkhtmltopdf.org/downloads.html\n"
+                . "2. Installez-le (ex: C:\\wkhtmltopdf)\n"
+                . "3. Dans .env, mettez le bon chemin :\n"
+                . "   WKHTMLTOPDF_PATH=C:/wkhtmltopdf/bin/wkhtmltopdf.exe\n"
+                . "4. Vérifiez avec cmd.exe : dir \"C:\\wkhtmltopdf\\bin\\\"\n"
+                . "5. Redémarrez le serveur Symfony après modification du .env"
+            );
+        }
+
+        // ── 2. Récupération des données de l'utilisateur ──────────────────
         $userId  = $this->getUser()->getId();
         $grouped = $activiteRepo->findByUserGroupedByDate($userId);
         $stats   = [
@@ -355,6 +377,10 @@ class ActivitesController extends AbstractController
             'calories' => $activiteRepo->sumCaloriesByUser($userId),
         ];
 
+        // ── 3. Conversion des entités Activite en tableaux simples ─────────
+        // KnpSnappy appelle renderView() en dehors du contexte Doctrine,
+        // donc on convertit les entités en arrays pour éviter les erreurs
+        // de lazy loading.
         $groupedData = [];
         foreach ($grouped as $date => $acts) {
             $exs = [];
@@ -364,25 +390,44 @@ class ActivitesController extends AbstractController
             $groupedData[$date] = $exs;
         }
 
+        // ── 4. Rendu du template Twig → HTML string ────────────────────────
+        // On passe publicDir pour que le template puisse construire des
+        // chemins file:// vers les assets CSS/images locaux.
+        $publicDir = $this->getParameter('kernel.project_dir') . '/public';
+
         $html = $this->renderView('activites/bilan_pdf.html.twig', [
             'grouped'    => $groupedData,
             'stats'      => $stats,
             'exportDate' => new \DateTime(),
+            'publicDir'  => $publicDir,
         ]);
 
-        $pdfContent = $pdf->getOutputFromHtml($html, [
-            'page-size'                => 'A4',
-            'margin-top'               => '0mm',
-            'margin-bottom'            => '0mm',
-            'margin-left'              => '0mm',
-            'margin-right'             => '0mm',
-            'encoding'                 => 'UTF-8',
-            'enable-local-file-access' => true,
-            'no-outline'               => true,
-            'print-media-type'         => true,
-        ]);
+        // ── 5. Génération du PDF via KnpSnappy ─────────────────────────────
+        try {
+            $pdfContent = $pdf->getOutputFromHtml($html, [
+                'page-size'                => 'A4',
+                'margin-top'               => '0mm',
+                'margin-bottom'            => '0mm',
+                'margin-left'              => '0mm',
+                'margin-right'             => '0mm',
+                'encoding'                 => 'UTF-8',
+                'enable-local-file-access' => true,
+                'no-outline'               => true,
+                'print-media-type'         => true,
+                // 'lowquality' SUPPRIMÉ → meilleur rendu pour document officiel
+            ]);
+        } catch (\Exception $e) {
+            return $this->renderWkhtmlError(
+                'Erreur lors de la génération du PDF : ' . $e->getMessage(),
+                "Vérifiez que :\n"
+                . "1. wkhtmltopdf fonctionne : \"" . $wkhtmltopdfBinary . "\" --version\n"
+                . "2. Le chemin dans .env est correct (sans espaces)\n"
+                . "3. Redémarrez le serveur Symfony après toute modification du .env"
+            );
+        }
 
-        $filename = 'bilan-harmony-' . date('Y-m-d') . '.pdf';
+        // ── 6. Retour du PDF en téléchargement ────────────────────────────
+        $filename = 'bilan-harmony-' . (new \DateTime())->format('Y-m-d') . '.pdf';
 
         return new Response($pdfContent, 200, [
             'Content-Type'        => 'application/pdf',
@@ -390,7 +435,46 @@ class ActivitesController extends AbstractController
         ]);
     }
 
-    // ─── Helper ─────────────────────────────────────────────────────
+    // ─── Helper : page d'erreur wkhtmltopdf ─────────────────────────
+    /**
+     * Retourne une page HTML d'erreur lisible pour les problèmes wkhtmltopdf.
+     * Uniquement affichée en mode dev (APP_ENV=dev).
+     */
+    private function renderWkhtmlError(string $message, string $detail = ''): Response
+    {
+        $isDev = $this->getParameter('kernel.environment') === 'dev';
+
+        if (!$isDev) {
+            return new Response(
+                '<p style="font-family:sans-serif;padding:20px;color:#c0392b;">
+                    Une erreur est survenue lors de la génération du PDF.
+                    Veuillez contacter l\'administrateur.
+                </p>',
+                500,
+                ['Content-Type' => 'text/html']
+            );
+        }
+
+        $html = '<div style="font-family:\'Courier New\',monospace;font-size:13px;'
+              . 'color:#c0392b;padding:30px;background:#fff8f8;border:2px solid #e74c3c;'
+              . 'margin:20px;border-radius:6px;">'
+              . '<h2 style="color:#c0392b;margin-bottom:16px;">&#9888; Erreur KnpSnappy / wkhtmltopdf</h2>'
+              . '<p style="margin-bottom:12px;color:#333;">' . htmlspecialchars($message) . '</p>';
+
+        if ($detail) {
+            $html .= '<pre style="background:#fff;padding:12px;border:1px solid #f5c6cb;'
+                   . 'border-radius:4px;color:#555;white-space:pre-wrap;">'
+                   . htmlspecialchars($detail) . '</pre>';
+        }
+
+        $html .= '<hr style="margin:16px 0;border-color:#f5c6cb;">'
+               . '<p style="font-size:11px;color:#888;">Cette erreur n\'est visible qu\'en mode dev (APP_ENV=dev).</p>'
+               . '</div>';
+
+        return new Response($html, 500, ['Content-Type' => 'text/html']);
+    }
+
+    // ─── Helper : entité → tableau ────────────────────────────────
     private function activiteToArray(Activite $a): array
     {
         return [

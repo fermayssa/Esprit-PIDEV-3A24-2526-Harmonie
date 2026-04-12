@@ -345,6 +345,7 @@
     <parameter key="knp_snappy.pdf.options" type="collection">
       <parameter key="encoding">UTF-8</parameter>
       <parameter key="no-outline">true</parameter>
+      <parameter key="enable-local-file-access">true</parameter>
     </parameter>
     <parameter key="knp_snappy.pdf.env" type="collection"/>
     <parameter key="knp_paginator.template.pagination">@KnpPaginator/Pagination/bootstrap_v5_pagination.html.twig</parameter>

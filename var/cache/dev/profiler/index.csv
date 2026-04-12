@@ -1,10 +1,3 @@
-834110,127.0.0.1,GET,http://127.0.0.1:8000/admin/nutrition,1775998415,,200,request
-0121a7,127.0.0.1,GET,http://127.0.0.1:8000/logout,1775998444,,302,request
-44ce0a,127.0.0.1,GET,http://127.0.0.1:8000/login,1775998444,,200,request
-574790,127.0.0.1,POST,http://127.0.0.1:8000/login,1775998449,,302,request
-095e0a,127.0.0.1,GET,http://127.0.0.1:8000/,1775998449,,200,request
-d12a4c,127.0.0.1,GET,http://127.0.0.1:8000/activites,1775998454,,200,request
-a7c49c,127.0.0.1,GET,http://127.0.0.1:8000/activites/qr/2026-04-19,1775998459,,200,request
-b2e8e9,127.0.0.1,GET,http://127.0.0.1:8000/activites/qr/2026-04-19,1775998501,,200,request
-ee3a75,127.0.0.1,GET,http://127.0.0.1:8000/activites/bilan/pdf,1775998816,888837,500,request
-888837,127.0.0.1,GET,http://127.0.0.1:8000/activites/bilan/pdf,1775998816,,500,request
+d4d501,127.0.0.1,GET,http://127.0.0.1:8000/activites,1776001629,,200,request
+fe4de0,127.0.0.1,GET,http://127.0.0.1:8000/activites/bilan/pdf,1776001633,,500,request
+1d38b8,127.0.0.1,GET,http://127.0.0.1:8000/activites/bilan/pdf,1776001674,,200,request
