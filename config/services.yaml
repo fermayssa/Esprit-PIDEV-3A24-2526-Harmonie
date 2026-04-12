@@ -23,3 +23,11 @@ services:
     App\Service\SpoonacularService:
         arguments:
             $spoonacularApiKey: '%env(SPOONACULAR_API_KEY)%'
+
+    # ── YouTube Data API v3 Service ───────────────────────────────────────────
+    # Lie la variable d'environnement YOUTUBE_API_KEY à l'argument $youtubeApiKey
+    # du constructeur de YouTubeService.
+    # Le HttpClientInterface est injecté automatiquement par autowire.
+    App\Service\YouTubeService:
+        arguments:
+            $youtubeApiKey: '%env(YOUTUBE_API_KEY)%'

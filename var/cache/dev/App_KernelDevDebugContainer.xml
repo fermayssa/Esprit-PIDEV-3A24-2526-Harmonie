@@ -531,6 +531,15 @@
         <argument type="service" id=".service_locator.TJNRSaV.App\Controller\AdminSportController"/>
       </call>
     </service>
+    <service id="App\Controller\AdminSportYouTubeController" class="App\Controller\AdminSportYouTubeController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
+      <tag name="routing.controller"/>
+      <tag name="container.service_subscriber"/>
+      <argument type="service" id="App\Service\YouTubeService"/>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.TJNRSaV.App\Controller\AdminSportYouTubeController"/>
+      </call>
+    </service>
     <service id="App\Controller\AdminTacheController" class="App\Controller\AdminTacheController" public="true" autowire="true" autoconfigure="true">
       <tag name="controller.service_arguments"/>
       <tag name="routing.controller"/>
@@ -840,6 +849,10 @@
       <argument>%env(SPOONACULAR_API_KEY)%</argument>
     </service>
     <service id="App\Service\SuspicionScoreService" class="App\Service\SuspicionScoreService" autowire="true" autoconfigure="true"/>
+    <service id="App\Service\YouTubeService" class="App\Service\YouTubeService" autowire="true" autoconfigure="true">
+      <argument type="service" id="http_client.uri_template"/>
+      <argument>%env(YOUTUBE_API_KEY)%</argument>
+    </service>
     <service id="argument_metadata_factory" class="Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadataFactory"/>
     <service id="argument_resolver.backed_enum_resolver" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\BackedEnumValueResolver">
       <tag name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\BackedEnumValueResolver" priority="100">controller.argument_value_resolver</tag>
@@ -4172,6 +4185,7 @@
         <argument>App\Controller\AdminNutritionController</argument>
         <argument>App\Controller\AdminSalleController</argument>
         <argument>App\Controller\AdminSportController</argument>
+        <argument>App\Controller\AdminSportYouTubeController</argument>
         <argument>App\Controller\AdminTacheController</argument>
         <argument>App\Controller\AdminUserController</argument>
         <argument>App\Controller\BackController</argument>
@@ -8660,6 +8674,10 @@
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\AdminSportController" class="App\Controller\AdminSportController" autowire="true" abstract="true"/>
     <service id=".instanceof.App\Controller\AdminSportController.0.App\Controller\AdminSportController" class="App\Controller\AdminSportController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\AdminSportController" class="App\Controller\AdminSportController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\AdminSportYouTubeController" class="App\Controller\AdminSportYouTubeController" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\AdminSportYouTubeController" class="App\Controller\AdminSportYouTubeController" autowire="true" abstract="true"/>
+    <service id=".instanceof.App\Controller\AdminSportYouTubeController.0.App\Controller\AdminSportYouTubeController" class="App\Controller\AdminSportYouTubeController" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Controller\AdminSportYouTubeController" class="App\Controller\AdminSportYouTubeController" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\AdminTacheController" class="App\Controller\AdminTacheController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\AdminTacheController" class="App\Controller\AdminTacheController" autowire="true" abstract="true"/>
     <service id=".instanceof.App\Controller\AdminTacheController.0.App\Controller\AdminTacheController" class="App\Controller\AdminTacheController" autowire="true" abstract="true"/>
@@ -11170,6 +11188,12 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.TJNRSaV" method="withContext"/>
     </service>
+    <service id=".service_locator.TJNRSaV.App\Controller\AdminSportYouTubeController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\AdminSportYouTubeController"/>
+      <argument>App\Controller\AdminSportYouTubeController</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.TJNRSaV" method="withContext"/>
+    </service>
     <service id=".service_locator.TJNRSaV.App\Controller\AdminTacheController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\AdminTacheController"/>
       <argument>App\Controller\AdminTacheController</argument>
@@ -11509,6 +11533,7 @@
           <argument>App\Controller\AdminNutritionController</argument>
           <argument>App\Controller\AdminSalleController</argument>
           <argument>App\Controller\AdminSportController</argument>
+          <argument>App\Controller\AdminSportYouTubeController</argument>
           <argument>App\Controller\AdminTacheController</argument>
           <argument>App\Controller\AdminUserController</argument>
           <argument>App\Controller\BackController</argument>

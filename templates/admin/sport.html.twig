@@ -188,6 +188,74 @@
     .req-star { color: var(--spt-red); }
     .url-preview-box { margin-top: 8px; padding: 9px 12px; background: var(--purple-ghost); border-radius: 9px; font-size: 12px; color: var(--text-muted); word-break: break-all; display: none; border: 1px dashed var(--border); }
     .url-preview-box.show { display: block; }
+
+    /* ── YOUTUBE SEARCH PANEL ── */
+    .yt-search-row { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
+    .btn-yt-search {
+        display: inline-flex; align-items: center; gap: 6px;
+        padding: 8px 14px; border-radius: 9px; font-size: 12.5px; font-weight: 600;
+        border: 1.5px solid #FF0000; color: #FF0000; background: none;
+        font-family: var(--font-body); cursor: pointer; transition: .15s; white-space: nowrap;
+        flex-shrink: 0;
+    }
+    .btn-yt-search:hover { background: #FFF0F0; }
+    .btn-yt-search:disabled { opacity: .5; cursor: not-allowed; }
+    .btn-yt-search svg { width: 16px; height: 16px; fill: #FF0000; }
+
+    /* Panneau résultats */
+    .yt-results-panel {
+        margin-top: 12px; border: 1.5px solid #FFE0E0; border-radius: 14px;
+        background: #FFF8F8; overflow: hidden;
+        display: none; /* caché par défaut */
+    }
+    .yt-results-panel.open { display: block; }
+    .yt-results-header {
+        padding: 10px 14px; background: #FF0000; display: flex;
+        align-items: center; justify-content: space-between;
+    }
+    .yt-results-header span { color: #fff; font-size: 12.5px; font-weight: 700; }
+    .btn-yt-close {
+        background: none; border: none; color: #fff; cursor: pointer;
+        font-size: 16px; line-height: 1; padding: 0 2px;
+    }
+    .yt-results-list { padding: 10px; display: flex; flex-direction: column; gap: 8px; }
+    .yt-result-item {
+        display: flex; align-items: center; gap: 10px;
+        padding: 9px 11px; border-radius: 10px; background: #fff;
+        border: 1.5px solid #FFD5D5; cursor: pointer;
+        transition: border-color .15s, box-shadow .15s;
+    }
+    .yt-result-item:hover { border-color: #FF0000; box-shadow: 0 3px 12px rgba(255,0,0,.12); }
+    .yt-result-item.selected { border-color: #10B981; background: #F0FDF4; }
+    .yt-thumb {
+        width: 80px; height: 52px; object-fit: cover; border-radius: 7px;
+        flex-shrink: 0; background: #eee;
+    }
+    .yt-result-info { flex: 1; min-width: 0; }
+    .yt-result-title {
+        font-size: 12.5px; font-weight: 600; color: #111;
+        overflow: hidden; text-overflow: ellipsis;
+        display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+        line-height: 1.35;
+    }
+    .yt-result-channel { font-size: 11px; color: #888; margin-top: 3px; }
+    .yt-select-badge {
+        font-size: 10.5px; font-weight: 700; color: #10B981;
+        background: #D1FAE5; padding: 3px 8px; border-radius: 20px;
+        white-space: nowrap; flex-shrink: 0;
+    }
+    .yt-result-item.selected .yt-select-badge { background: #10B981; color: #fff; }
+    .yt-loading {
+        padding: 22px; text-align: center; font-size: 13px; color: #888;
+        display: flex; align-items: center; justify-content: center; gap: 10px;
+    }
+    .yt-spinner {
+        width: 22px; height: 22px;
+        border: 3px solid #FFD5D5; border-top-color: #FF0000;
+        border-radius: 50%; animation: spin .7s linear infinite; flex-shrink: 0;
+    }
+    .yt-empty { padding: 18px; text-align: center; font-size: 13px; color: #888; }
+    .yt-error { padding: 14px; background: #FEE2E2; color: #B91C1C; font-size: 12.5px; border-radius: 8px; margin: 8px; }
     .s-modal-footer { padding: 16px 26px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 10px; background: var(--purple-ghost); border-radius: 0 0 22px 22px; }
     .btn-s-cancel { padding: 10px 20px; background: var(--white); border: 1.5px solid var(--border); border-radius: 10px; font-family: var(--font-body); font-size: 13px; cursor: pointer; color: var(--text-mid); }
     .btn-s-save { padding: 10px 24px; background: linear-gradient(135deg, var(--spt-green), var(--spt-green-dark)); color: #fff; border: none; border-radius: 10px; font-family: var(--font-body); font-size: 13px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 14px rgba(16,185,129,.35); transition: .15s; }
@@ -351,8 +419,27 @@
             </div>
             <div class="s-form-group" id="efg-url">
                 <label>URL Vidéo (YouTube / Vimeo / autre)</label>
-                <input type="text" id="ef-url" placeholder="https://youtube.com/watch?v=… ou nom de vidéo" oninput="updateUrlPreview()">
+                <div class="yt-search-row">
+                    <input type="text" id="ef-url" placeholder="https://youtube.com/watch?v=… ou collez l'URL" oninput="updateUrlPreview()" style="flex:1;">
+                    <button type="button" class="btn-yt-search" id="btnYtSearch" onclick="searchYouTube()" title="Rechercher sur YouTube">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                        </svg>
+                        Rechercher
+                    </button>
+                </div>
                 <div class="url-preview-box" id="urlPreviewBox"></div>
+
+                {# ── Panneau résultats YouTube ── #}
+                <div class="yt-results-panel" id="ytResultsPanel">
+                    <div class="yt-results-header">
+                        <span>🎬 Résultats YouTube — cliquez pour sélectionner</span>
+                        <button type="button" class="btn-yt-close" onclick="closeYtPanel()" title="Fermer">✕</button>
+                    </div>
+                    <div id="ytResultsBody">
+                        <div class="yt-loading"><div class="yt-spinner"></div> Recherche en cours…</div>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="s-modal-footer">
@@ -406,6 +493,8 @@ const API = {
     delete: (id) => `/admin/sport/api/delete/${id}`,
     // ── Nouvelle route stats ──
     stats:  '/admin/sport/api/stats',
+    // ── YouTube Data API v3 ──
+    youtube: (q) => `/admin/sport/api/youtube-search?q=${encodeURIComponent(q)}`,
 };
 
 // ═══════════════════════════════════════════════════════════
@@ -715,7 +804,11 @@ function openExModal(ex = null) {
     setTimeout(() => document.getElementById('ef-nom').focus(), 100);
 }
 
-function closeExModal() { document.getElementById('exModalOverlay').classList.remove('open'); }
+function closeExModal() {
+    document.getElementById('exModalOverlay').classList.remove('open');
+    // Fermer et réinitialiser le panneau YouTube à chaque fermeture du modal
+    closeYtPanel();
+}
 
 function editEx(id) {
     const ex = exercises.find(e => e.id === id);
@@ -812,6 +905,108 @@ function showToastEx(msg, type) {
 
 // ── UTILS ─────────────────────────────────────────────────────────────────
 function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// ── YOUTUBE SEARCH ────────────────────────────────────────────────────────
+
+/**
+ * Lance une recherche YouTube basée sur le nom de l'exercice saisi.
+ * Affiche les 3 meilleures vidéos dans le panneau sous le champ URL.
+ */
+async function searchYouTube() {
+    const query = document.getElementById('ef-nom').value.trim();
+
+    // Vérifie que l'admin a bien saisi un nom d'exercice
+    if (!query) {
+        showToastEx('⚠️ Entrez d\'abord le nom de l\'exercice pour rechercher des vidéos.', 'error');
+        document.getElementById('ef-nom').focus();
+        return;
+    }
+
+    const panel  = document.getElementById('ytResultsPanel');
+    const body   = document.getElementById('ytResultsBody');
+    const btnYt  = document.getElementById('btnYtSearch');
+
+    // Afficher le panneau avec le spinner de chargement
+    panel.classList.add('open');
+    body.innerHTML = '<div class="yt-loading"><div class="yt-spinner"></div> Recherche en cours…</div>';
+    btnYt.disabled = true;
+
+    try {
+        const videos = await apiFetch(API.youtube(query));
+
+        if (!videos || videos.length === 0) {
+            body.innerHTML = '<div class="yt-empty">😕 Aucune vidéo trouvée pour « ' + esc(query) + ' ».<br>Essayez un terme différent.</div>';
+            return;
+        }
+
+        // Construire les cartes de résultats
+        body.innerHTML = '<div class="yt-results-list">' +
+            videos.map((v, i) => `
+                <div class="yt-result-item" id="ytItem-${i}" onclick="selectYtVideo(${i}, '${escJs(v.url)}', '${escJs(v.title)}')" title="${esc(v.title)}">
+                    <img class="yt-thumb" src="${esc(v.thumbnail)}" alt="${esc(v.title)}" loading="lazy" onerror="this.style.display='none'">
+                    <div class="yt-result-info">
+                        <div class="yt-result-title">${esc(v.title)}</div>
+                        <div class="yt-result-channel">📺 ${esc(v.channelTitle)}</div>
+                    </div>
+                    <span class="yt-select-badge">Choisir ✓</span>
+                </div>
+            `).join('') +
+        '</div>';
+
+    } catch(e) {
+        // Afficher l'erreur dans le panneau (clé manquante, quota, etc.)
+        body.innerHTML = `<div class="yt-error">⚠️ ${esc(e.message)}</div>`;
+    } finally {
+        btnYt.disabled = false;
+    }
+}
+
+/**
+ * Sélectionne une vidéo YouTube : remplit le champ URL et met à jour la prévisualisation.
+ *
+ * @param {number} index  Index de l'item dans la liste (pour la mise en surbrillance)
+ * @param {string} url    URL complète YouTube
+ * @param {string} title  Titre de la vidéo (pour le toast de confirmation)
+ */
+function selectYtVideo(index, url, title) {
+    // Remplir le champ URL du formulaire
+    document.getElementById('ef-url').value = url;
+
+    // Mettre à jour la prévisualisation
+    updateUrlPreview();
+
+    // Marquer visuellement l'item sélectionné
+    document.querySelectorAll('.yt-result-item').forEach((el, i) => {
+        el.classList.toggle('selected', i === index);
+    });
+
+    // Toast de confirmation
+    showToastEx('✅ Vidéo sélectionnée : ' + title.substring(0, 50) + (title.length > 50 ? '…' : ''), 'success');
+
+    // Fermer le panneau après un court délai pour laisser voir la sélection
+    setTimeout(closeYtPanel, 800);
+}
+
+/**
+ * Ferme le panneau de résultats YouTube et réinitialise son contenu.
+ */
+function closeYtPanel() {
+    const panel = document.getElementById('ytResultsPanel');
+    panel.classList.remove('open');
+    // Réinitialiser le contenu pour la prochaine ouverture
+    setTimeout(() => {
+        document.getElementById('ytResultsBody').innerHTML =
+            '<div class="yt-loading"><div class="yt-spinner"></div> Recherche en cours…</div>';
+    }, 300);
+}
+
+/**
+ * Échappe une chaîne pour l'insertion dans un attribut HTML onclick (guillemets simples).
+ * Complète la fonction esc() qui cible les guillemets doubles.
+ */
+function escJs(s) {
+    return String(s || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+}
 
 // ── INIT ──────────────────────────────────────────────────────────────────
 // Charger la liste ET les graphiques au démarrage
