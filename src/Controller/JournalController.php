@@ -35,6 +35,7 @@ class JournalController extends AbstractController
         private readonly EntityManagerInterface  $em,
         private readonly GroqService             $groq,
     ) {}
+    /*Affiche la liste des entrées du journal + statistiques*/
 
     #[Route('', name: 'journal', methods: ['GET'])]
     public function index(): Response
