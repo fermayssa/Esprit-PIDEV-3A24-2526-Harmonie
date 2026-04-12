@@ -16,7 +16,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-
+/**
+ * Contrôleur pour gérer le journal d'humeur de l'utilisateur
+ * Accès réservé aux utilisateurs connectés
+ */
 #[IsGranted('ROLE_USER')]
 #[Route('/journal')]
 class JournalController extends AbstractController
