@@ -1,5 +1,6 @@
 <?php
-/* "feat: ajout gestion admin des sessions de méditation avec IA et PDF"*/
+/* "feat: ajout gestion admin des sessions de méditation avec IA et PDF"
+git commit -m "feat(admin): gestion des sessions de méditation + génération IA + export PDF"*/
 namespace App\Controller;
 
 use App\Entity\User;
