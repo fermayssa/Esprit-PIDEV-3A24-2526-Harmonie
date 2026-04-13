@@ -53,13 +53,22 @@ final class ChatApiController extends AbstractController
         $events = $this->serializeEvents();
 
         $systemPrompt = "Tu es Harmonie Assistant. Réponds toujours en français.\n"
+            ."Formate tes réponses de manière lisible et structurée avec du Markdown.\n"
+            ."Pour les événements, affiche-les comme des cartes ou des lignes formatées ainsi :\n"
+            ."📅 **[Date]**\n🕐 <span style=\"color:#667eea;font-weight:bold;\">[Heure]</span>\n📌 **[Titre]**\n"
+            ."Séparé par une ligne.\n"
+            ."Pour les tâches Kanban, liste-les scrupuleusement avec exactement ce format pour chaque tâche : `[STATUS]` **Titre de la tâche** (Échéance: Date).\n"
+            ."Exemple: `[TODO]` **Faire les courses** (Échéance: 2026-04-15)\n"
+            ."Les statuts exacts à écrire entre crochets sont `[TODO]`, `[DOING]`, ou `[DONE]`.\n"
+            ."Pour tes confirmations d'action, commence toujours la toute première ligne de ta réponse par ✅ pour un succès, ❌ pour une erreur, et ℹ️ pour une info.\n"
+            ."Sois concis, direct et bien organisé.\n"
             ."Voici toutes les données actuelles de l'utilisateur :\n"
             ."ÉVÉNEMENTS : ".json_encode($events, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)."\n"
             ."TÂCHES KANBAN : ".json_encode($tasks, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)."\n"
             ."Tu as la permission complète de lire, ajouter, modifier et supprimer ces données.\n"
             ."Si une action est nécessaire, réponds STRICTEMENT en JSON :\n"
             ."{\"action\":\"ADD_EVENT|UPDATE_EVENT|DELETE_EVENT|ADD_TASK|UPDATE_TASK|DELETE_TASK|NONE\",\"data\":{},\"message\":\"...\"}.\n"
-            ."Si aucune action n'est nécessaire, utilise action=NONE et une réponse utile dans message.";
+            ."Si aucune action n'est nécessaire, utilise action=NONE et une réponse utile avec le message formaté comme demandé.";
 
         $contents = $this->normalizeHistory($history);
         $contents[] = [

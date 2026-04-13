@@ -190,6 +190,18 @@
         .hcw-message-card.event { border-left-color: #10b981; }
         .hcw-message-card.task  { border-left-color: #f59e0b; }
         .hcw-message-card.error { border-left-color: #ef4444; background: #fef2f2; }
+        .hcw-message-card.hcw-card-success { border-left-color: #10b981; background: #d1fae5; color: #065f46; padding: 10px; border-radius: 6px; margin: 8px 0; }
+        .hcw-message-card.hcw-card-error { border-left-color: #ef4444; background: #fee2e2; color: #991b1b; padding: 10px; border-radius: 6px; margin: 8px 0; }
+        .hcw-message-card.hcw-card-info { border-left-color: #3b82f6; background: #dbeafe; color: #1e40af; padding: 10px; border-radius: 6px; margin: 8px 0; }
+        .hcw-badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: bold; color: white; margin-right: 5px; }
+        .hcw-badge-todo { background: #6b7280; }
+        .hcw-badge-doing { background: #3b82f6; }
+        .hcw-badge-done { background: #10b981; }
+        .hcw-event-item { border: 1px solid #e5e7eb; border-radius: 8px; padding: 10px; margin-bottom: 8px; background: #fafafa; }
+        .hcw-bot .hcw-message-content p { margin: 0 0 8px 0; }
+        .hcw-bot .hcw-message-content p:last-child { margin-bottom: 0; }
+        .hcw-bot .hcw-message-content ul { padding-left: 20px; margin: 5px 0 10px 0; }
+        .hcw-bot .hcw-message-content li { margin-bottom: 4px; }
         .hcw-typing-indicator { display: flex; gap: 4px; padding: 10px 14px; }
         .hcw-typing-dot {
             width: 8px; height: 8px; background: #667eea; border-radius: 50%;
@@ -275,8 +287,8 @@
     function getWelcomeHTML(context) {
         let title, desc;
         if (context === 'evenements') {
-            title = 'Bonjour ! Je gère vos événements 📅';
-            desc  = 'Créez, modifiez ou supprimez des événements facilement.';
+            title = 'Bonjour ! je suis à votre disposition 📅';
+            desc  = 'Planifiez tarnquilement!';
         } else if (context === 'taches') {
             title = 'Bonjour ! Je gère vos tâches ✅';
             desc  = 'Organisez, priorisez et complétez vos tâches facilement.';
@@ -305,8 +317,27 @@
         div.className = `hcw-message hcw-${sender}`;
         const content = document.createElement('div');
         content.className = 'hcw-message-content';
-        if (isHTML) content.innerHTML = text;
-        else        content.textContent = text;
+
+        if (sender === 'bot' && window.marked && !isHTML) {
+            let html = window.marked.parse(text);
+
+            html = html.replace(/(?:<code>)?\[TODO\](?:<\/code>)?/gi, '<span class="hcw-badge hcw-badge-todo">TODO</span>');
+            html = html.replace(/(?:<code>)?\[DOING\](?:<\/code>)?/gi, '<span class="hcw-badge hcw-badge-doing">DOING</span>');
+            html = html.replace(/(?:<code>)?\[EN_COURS\](?:<\/code>)?/gi, '<span class="hcw-badge hcw-badge-doing">EN_COURS</span>');
+            html = html.replace(/(?:<code>)?\[DONE\](?:<\/code>)?/gi, '<span class="hcw-badge hcw-badge-done">DONE</span>');
+            html = html.replace(/(?:<code>)?\[TERMINEE\](?:<\/code>)?/gi, '<span class="hcw-badge hcw-badge-done">TERMINE</span>');
+
+            html = html.replace(/<p>(✅.*?)<\/p>/gs, '<div class="hcw-message-card hcw-card-success">$1</div>');
+            html = html.replace(/<p>(❌.*?)<\/p>/gs, '<div class="hcw-message-card hcw-card-error">$1</div>');
+            html = html.replace(/<p>(ℹ️.*?)<\/p>/gs, '<div class="hcw-message-card hcw-card-info">$1</div>');
+
+            content.innerHTML = html;
+        } else if (isHTML) {
+            content.innerHTML = text;
+        } else {
+            content.textContent = text;
+        }
+
         div.appendChild(content);
         messages.appendChild(div);
         messages.scrollTop = messages.scrollHeight;
@@ -549,7 +580,7 @@
             const response = await callGeminiAPI(userMessage);
             removeTypingIndicator();
             if (response.success) {
-                addMessage(response.message, 'bot', true);
+                addMessage(response.message, 'bot', false); // Pass isHTML=false so marked parses it
             } else {
                 addMessage(`<div class="hcw-message-card error">❌ <strong>Erreur:</strong> ${response.error}</div>`, 'bot', true);
             }
@@ -577,6 +608,10 @@
 
     function init() {
         injectStyles();
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/marked/marked.min.js';
+        document.head.appendChild(script);
+
         const { fab, chatbox } = createWidgetDOM();
         const input    = chatbox.querySelector('.hcw-input');
         const sendBtn  = chatbox.querySelector('.hcw-send-btn');
