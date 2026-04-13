@@ -1,18 +1,11 @@
 // harmonie-chatbot-widget.js
-const response = await fetch(
-  `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${GEMINI_API_KEY}`,
-  {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      contents: [{ parts: [{ text: userMessage }] }]
-    })
-  }
-)
-const data = await response.json()
-const reply = data.candidates[0].content.parts[0].text
+(function () {
+        const CONFIG = {
+        MODEL: 'gemini-2.5-flash-lite',
+        CHAT_ENDPOINT: '/api/chat'
+        };
 
-    const state = {
+        const state = {
         events: [], tasks: [],
         eventCounter: 1, taskCounter: 1,
         isWaitingForResponse: false,
@@ -255,7 +248,7 @@ const reply = data.candidates[0].content.parts[0].text
             <div class="hcw-header">
                 <div>
                     <div class="hcw-header-title">🎯 Harmonie Assistant</div>
-                    <div class="hcw-header-sub">⚡ Powered by Groq AI (Llama 3)</div>
+                    <div class="hcw-header-sub">✨ Powered by Google Gemini</div>
                 </div>
                 <button class="hcw-header-close">✕</button>
             </div>
@@ -478,225 +471,82 @@ const reply = data.candidates[0].content.parts[0].text
         }).join('\n');
     }
 
-    // ✅ APPEL API GROQ AVEC FUNCTION CALLING
-    async function callGroqAPI(userMessage = null) {
-        if (userMessage) {
-            state.conversationHistory.push({ role: 'user', content: userMessage });
+    function extractJsonFromText(text) {
+        if (!text || typeof text !== 'string') return null;
+        try { return JSON.parse(text); } catch (_) {}
+
+        const fenced = text.match(/```json\s*([\s\S]*?)```/i);
+        if (fenced && fenced[1]) {
+            try { return JSON.parse(fenced[1]); } catch (_) {}
         }
 
-        const now = new Date();
-        const nowIso = now.toISOString();
-        const nowFr = now.toLocaleString('fr-FR');
-        const systemPrompt = `Tu es Harmonie Assistant, un assistant personnel bienveillant intégré dans l'application Harmonie.
-RÈGLES:
-- Réponds TOUJOURS en français
-- Gère UNIQUEMENT: Événements et Tâches
-- Si une info vitale est manquante (nom de la tâche, date de l'événement), pose UNE question.
-- Utilise toujours les outils (tools) à ta disposition pour effectuer les actions (ajouter, modifier, supprimer). 
-- Ne confirme pas au présent si tu n'as pas encore appelé l'outil. Par exemple, si l'utilisateur dit "ajoute", appelle l'outil d'abord sans dire "Je vais ajouter". La réponse complète sera générée après.
-- Ne jamais inventer de fausses données ou d'ID.
+        const raw = text.match(/\{[\s\S]*\}/);
+        if (raw && raw[0]) {
+            try { return JSON.parse(raw[0]); } catch (_) {}
+        }
+        return null;
+    }
 
-    DATE/HEURE ACTUELLES:
-    - ISO: ${nowIso}
-    - Locale: ${nowFr}
+    async function executeAiAction(action, args) {
+        if (!action) return { changed: false, result: null };
 
-    DONNÉES UTILISATEUR:
-    Tâches:
-    ${formatTasksForPrompt()}
+        if (action === 'create_task') return { changed: true, result: await createTaskInApi(args || {}) };
+        if (action === 'update_task_status') return { changed: true, result: await updateTaskInApi(args.id, args || {}) };
+        if (action === 'delete_task') {
+            await deleteTaskInApi(args.id);
+            return { changed: true, result: { status: 'deleted', id: args.id } };
+        }
+        if (action === 'create_event') return { changed: true, result: await createEventInApi(args || {}) };
+        if (action === 'update_event') return { changed: true, result: await updateEventInApi(args.id, args || {}) };
+        if (action === 'delete_event') {
+            await deleteEventInApi(args.id);
+            return { changed: true, result: { status: 'deleted', id: args.id } };
+        }
+        return { changed: false, result: null };
+    }
 
-    Événements:
-    ${formatEventsForPrompt()}
-`;
+    // ✅ APPEL API GEMINI
+    async function callGeminiAPI(userMessage = null) {
+        if (userMessage) {
+            state.conversationHistory.push({ role: 'user', parts: [{ text: userMessage }] });
+        }
 
-        const tools = [
-            {
-                type: "function",
-                function: {
-                    name: "create_task",
-                    description: "Ajoute une nouvelle tâche",
-                    parameters: {
-                        type: "object",
-                        properties: {
-                            title: { type: "string", description: "Titre abrégé de la tâche" },
-                            priority: { type: "string", enum: ["haute", "moyenne", "basse"] },
-                            dueDate: { type: "string", description: "Format: YYYY-MM-DD" },
-                            notes: { type: "string", description: "Notes supplémentaires optionnelles" }
-                        },
-                        required: ["title"]
-                    }
-                }
-            },
-            {
-                type: "function",
-                function: {
-                    name: "update_task_status",
-                    description: "Marque une tâche comme terminée, à faire, ou en cours",
-                    parameters: {
-                        type: "object",
-                        properties: {
-                            id: { type: "integer", description: "ID numérique de la tâche" },
-                            statut: { type: "string", enum: ["A_FAIRE", "EN_COURS", "TERMINEE"] },
-                            completed: { type: "boolean", description: "True si TERMINEE" }
-                        },
-                        required: ["id", "statut"]
-                    }
-                }
-            },
-            {
-                type: "function",
-                function: {
-                    name: "delete_task",
-                    description: "Supprime définitivement une tâche",
-                    parameters: {
-                        type: "object",
-                        properties: {
-                            id: { type: "integer", description: "ID de la tâche à supprimer" }
-                        },
-                        required: ["id"]
-                    }
-                }
-            },
-            {
-                type: "function",
-                function: {
-                    name: "create_event",
-                    description: "Ajoute un événement ou une réunion au calendrier",
-                    parameters: {
-                        type: "object",
-                        properties: {
-                            title: { type: "string", description: "Titre de l'événement" },
-                            startTime: { type: "string", description: "Date et heure de début, format YYYY-MM-DD HH:MM:SS" },
-                            endTime: { type: "string", description: "Date et heure de fin, format YYYY-MM-DD HH:MM:SS" },
-                            location: { type: "string", description: "Lieu" }
-                        },
-                        required: ["title", "startTime", "endTime"]
-                    }
-                }
-            },
-            {
-                type: "function",
-                function: {
-                    name: "update_event",
-                    description: "Modifie l'heure, la date ou les informations d'un événement",
-                    parameters: {
-                        type: "object",
-                        properties: {
-                            id: { type: "integer", description: "ID de l'événement" },
-                            title: { type: "string" },
-                            startTime: { type: "string", description: "YYYY-MM-DD HH:MM:SS" },
-                            endTime: { type: "string", description: "YYYY-MM-DD HH:MM:SS" },
-                            location: { type: "string" }
-                        },
-                        required: ["id"]
-                    }
-                }
-            },
-            {
-                type: "function",
-                function: {
-                    name: "delete_event",
-                    description: "Annule ou supprime un événement/réunion",
-                    parameters: {
-                        type: "object",
-                        properties: {
-                            id: { type: "integer", description: "ID de l'événement" }
-                        },
-                        required: ["id"]
-                    }
-                }
-            }
-        ];
-
-        const messages = [
-            { role: 'system', content: systemPrompt },
-            ...state.conversationHistory
-        ];
-
-        const res = await fetch(CONFIG.API_URL, {
+        const res = await fetch(CONFIG.CHAT_ENDPOINT, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${CONFIG.API_KEY}`
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 model: CONFIG.MODEL,
-                messages: messages,
-                tools: tools,
-                tool_choice: "auto",
-                temperature: 0.1,
-                max_tokens: 1024
+                userMessage: userMessage || '',
+                history: state.conversationHistory
             })
         });
 
         if (!res.ok) {
-            const err = await res.json();
-            return { success: false, error: err.error?.message || 'Erreur API Groq' };
+            if (res.status === 429) {
+                return { success: false, error: 'Limite de requêtes atteinte, réessayez dans quelques secondes.' };
+            }
+            const err = await res.json().catch(() => ({}));
+            return { success: false, error: err.error?.message || err.error || 'Erreur API Gemini' };
         }
 
         const data = await res.json();
-        const messageResponse = data.choices[0].message;
-        
-        state.conversationHistory.push(messageResponse);
+        const replyText = data?.message || 'Aucune réponse Gemini.';
 
-        if (messageResponse.tool_calls) {
-            let dataChanged = false;
-            for (const toolCall of messageResponse.tool_calls) {
-                const funcName = toolCall.function.name;
-                const args = JSON.parse(toolCall.function.arguments);
-                let funcResult = null;
-
-                try {
-                    if (funcName === "create_task") {
-                        funcResult = await createTaskInApi(args);
-                        dataChanged = true;
-                    } else if (funcName === "update_task_status") {
-                        funcResult = await updateTaskInApi(args.id, args);
-                        dataChanged = true;
-                    } else if (funcName === "delete_task") {
-                        await deleteTaskInApi(args.id);
-                        funcResult = { status: "deleted", id: args.id };
-                        dataChanged = true;
-                    } else if (funcName === "create_event") {
-                        funcResult = await createEventInApi(args);
-                        dataChanged = true;
-                    } else if (funcName === "update_event") {
-                        funcResult = await updateEventInApi(args.id, args);
-                        dataChanged = true;
-                    } else if (funcName === "delete_event") {
-                        await deleteEventInApi(args.id);
-                        funcResult = { status: "deleted", id: args.id };
-                        dataChanged = true;
-                    }
-                } catch (e) {
-                    funcResult = { error: e.message };
-                }
-
-                state.conversationHistory.push({
-                    role: "tool",
-                    tool_call_id: toolCall.id,
-                    name: funcName,
-                    content: JSON.stringify(funcResult)
-                });
-            }
-
-            if (dataChanged) {
-                document.dispatchEvent(new CustomEvent('harmonie_data_updated'));
-            }
-
-            return callGroqAPI(); // Recall to let model summarize the action results
+        if (data?.dataChanged) {
+            await refreshData();
+            document.dispatchEvent(new CustomEvent('harmonie_data_updated'));
         }
 
-        if (state.conversationHistory.length > 30) {
-            state.conversationHistory = state.conversationHistory.slice(-30);
-        }
+        state.conversationHistory.push({ role: 'model', parts: [{ text: replyText }] });
+        if (state.conversationHistory.length > 30) state.conversationHistory = state.conversationHistory.slice(-30);
 
-        return { success: true, message: messageResponse.content };
+        return { success: true, message: replyText };
     }
 
     async function processUserMessage(userMessage, input, sendBtn) {
         try {
             await refreshData();
-            const response = await callGroqAPI(userMessage);
+            const response = await callGeminiAPI(userMessage);
             removeTypingIndicator();
             if (response.success) {
                 addMessage(response.message, 'bot', true);

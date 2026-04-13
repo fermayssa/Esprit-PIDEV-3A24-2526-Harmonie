@@ -39,6 +39,7 @@ return [
         '/admin/users' => [[['_route' => 'admin_users_index', '_controller' => 'App\\Controller\\AdminUserController::index'], null, ['GET' => 0], null, false, false, null]],
         '/admin/users/search' => [[['_route' => 'admin_users_search', '_controller' => 'App\\Controller\\AdminUserController::search'], null, ['GET' => 0], null, false, false, null]],
         '/admin/users/suspended' => [[['_route' => 'admin_users_suspended', '_controller' => 'App\\Controller\\AdminUserController::suspended'], null, ['GET' => 0], null, false, false, null]],
+        '/api/chat' => [[['_route' => 'api_chat', '_controller' => 'App\\Controller\\Api\\ChatApiController'], null, ['POST' => 0], null, false, false, null]],
         '/api/events' => [
             [['_route' => 'api_events_list', '_controller' => 'App\\Controller\\Api\\EventApiController::list'], null, ['GET' => 0], null, false, false, null],
             [['_route' => 'api_events_create', '_controller' => 'App\\Controller\\Api\\EventApiController::create'], null, ['POST' => 0], null, false, false, null],

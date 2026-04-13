@@ -524,6 +524,21 @@
         <argument type="service" id=".service_locator.TJNRSaV.App\Controller\AdminUserController"/>
       </call>
     </service>
+    <service id="App\Controller\Api\ChatApiController" class="App\Controller\Api\ChatApiController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
+      <tag name="routing.controller"/>
+      <tag name="container.service_subscriber"/>
+      <argument type="service" id="http_client.uri_template"/>
+      <argument type="service" id="App\Repository\TacheRepository"/>
+      <argument type="service" id="App\Repository\EvenementRepository"/>
+      <argument type="service" id="App\Repository\CalendrierRepository"/>
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
+      <argument type="service" id="App\Service\Kanban\KanbanRealtimeNotifier"/>
+      <argument>%env(string:GEMINI_API_KEY)%</argument>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.TJNRSaV.App\Controller\Api\ChatApiController"/>
+      </call>
+    </service>
     <service id="App\Controller\Api\EventApiController" class="App\Controller\Api\EventApiController" public="true" autowire="true" autoconfigure="true">
       <tag name="controller.service_arguments"/>
       <tag name="routing.controller"/>
@@ -4160,6 +4175,7 @@
         <argument>App\Controller\AdminSportController</argument>
         <argument>App\Controller\AdminTacheController</argument>
         <argument>App\Controller\AdminUserController</argument>
+        <argument>App\Controller\Api\ChatApiController</argument>
         <argument>App\Controller\Api\EventApiController</argument>
         <argument>App\Controller\Api\GithubSettingsController</argument>
         <argument>App\Controller\Api\GithubWebhookController</argument>
@@ -8587,6 +8603,10 @@
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\AdminUserController" class="App\Controller\AdminUserController" autowire="true" abstract="true"/>
     <service id=".instanceof.App\Controller\AdminUserController.0.App\Controller\AdminUserController" class="App\Controller\AdminUserController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\AdminUserController" class="App\Controller\AdminUserController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\Api\ChatApiController" class="App\Controller\Api\ChatApiController" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\Api\ChatApiController" class="App\Controller\Api\ChatApiController" autowire="true" abstract="true"/>
+    <service id=".instanceof.App\Controller\Api\ChatApiController.0.App\Controller\Api\ChatApiController" class="App\Controller\Api\ChatApiController" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Controller\Api\ChatApiController" class="App\Controller\Api\ChatApiController" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\Api\EventApiController" class="App\Controller\Api\EventApiController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\Api\EventApiController" class="App\Controller\Api\EventApiController" autowire="true" abstract="true"/>
     <service id=".instanceof.App\Controller\Api\EventApiController.0.App\Controller\Api\EventApiController" class="App\Controller\Api\EventApiController" autowire="true" abstract="true"/>
@@ -11254,6 +11274,12 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.TJNRSaV" method="withContext"/>
     </service>
+    <service id=".service_locator.TJNRSaV.App\Controller\Api\ChatApiController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\Api\ChatApiController"/>
+      <argument>App\Controller\Api\ChatApiController</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.TJNRSaV" method="withContext"/>
+    </service>
     <service id=".service_locator.TJNRSaV.App\Controller\Api\EventApiController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\Api\EventApiController"/>
       <argument>App\Controller\Api\EventApiController</argument>
@@ -11595,6 +11621,7 @@
           <argument>App\Controller\AdminSportController</argument>
           <argument>App\Controller\AdminTacheController</argument>
           <argument>App\Controller\AdminUserController</argument>
+          <argument>App\Controller\Api\ChatApiController</argument>
           <argument>App\Controller\Api\EventApiController</argument>
           <argument>App\Controller\Api\GithubSettingsController</argument>
           <argument>App\Controller\Api\GithubWebhookController</argument>
