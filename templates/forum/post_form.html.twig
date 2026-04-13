@@ -4,6 +4,72 @@
 {% block stylesheets %}
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
+    /* Styles correction orthographique */
+    .spell-container { position: relative; }
+
+    .spell-errors {
+        margin-top: 8px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .spell-error-item {
+        background: #FFF8E7;
+        border: 1px solid rgba(245,158,11,.2);
+        border-radius: 10px;
+        padding: 10px 14px;
+        font-size: 12.5px;
+        color: #92400E;
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .spell-error-word {
+        font-weight: 700;
+        background: rgba(245,158,11,.15);
+        padding: 1px 6px;
+        border-radius: 4px;
+    }
+
+    .spell-suggestions {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+        margin-top: 6px;
+    }
+
+    .spell-suggestion-btn {
+        padding: 3px 10px;
+        background: #6A5ACD;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 11px;
+        font-weight: 600;
+        cursor: pointer;
+        font-family: var(--font-body);
+        transition: background .15s;
+    }
+
+    .spell-suggestion-btn:hover { background: #4B3B9E; }
+
+    .spell-checking {
+        font-size: 11px;
+        color: var(--text-muted);
+        margin-top: 6px;
+        display: none;
+    }
+
+    .spell-ok {
+        font-size: 11px;
+        color: #16A34A;
+        margin-top: 6px;
+        display: none;
+    }
+
+
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
     :root{--purple:#6A5ACD;--purple-dark:#4B3B9E;--purple-soft:#8B7FD4;
         --purple-pale:#EDE8FA;--purple-ghost:#F7F5FD;--text:#1C1733;
@@ -120,7 +186,12 @@
 
             <div class="form-group">
                 <label class="form-label">Titre *</label>
-                {{ form_widget(form.titre) }}
+                <div class="spell-container">
+                    {{ form_widget(form.titre, {'attr': {'id': 'post_titre', 'oninput': 'scheduleSpellCheck("post_titre", "titre-errors", "titre-status")'}}) }}
+                    <div class="spell-checking" id="titre-status">✏️ Vérification...</div>
+                    <div class="spell-ok" id="titre-ok">✅ Aucune faute détectée</div>
+                    <div class="spell-errors" id="titre-errors"></div>
+                </div>
                 {% for error in form.titre.vars.errors %}
                     <div class="error-box">⚠️ {{ error.message }}</div>
                 {% endfor %}
@@ -129,7 +200,12 @@
 
             <div class="form-group">
                 <label class="form-label">Contenu *</label>
-                {{ form_widget(form.contenu) }}
+                <div class="spell-container">
+                    {{ form_widget(form.contenu, {'attr': {'id': 'post_contenu', 'oninput': 'scheduleSpellCheck("post_contenu", "contenu-errors", "contenu-status")'}}) }}
+                    <div class="spell-checking" id="contenu-status">✏️ Vérification...</div>
+                    <div class="spell-ok" id="contenu-ok">✅ Aucune faute détectée</div>
+                    <div class="spell-errors" id="contenu-errors"></div>
+                </div>
                 {% for error in form.contenu.vars.errors %}
                     <div class="error-box">⚠️ {{ error.message }}</div>
                 {% endfor %}
@@ -175,30 +251,162 @@
 
 {% block javascripts %}
 <script>
-    const titreInput   = document.getElementById('post_titre');
-    const titreCount   = document.getElementById('titreCount');
-    const contenuInput = document.getElementById('post_contenu');
-    const contenuCount = document.getElementById('contenuCount');
+// ── COMPTEUR DE CARACTÈRES ──────────────────────────
+const titreInput   = document.getElementById('post_titre');
+const titreCount   = document.getElementById('titreCount');
 
-    function updateTitre()   { if(titreCount)   titreCount.textContent   = titreInput.value.length; }
-    function updateContenu() { if(contenuCount) contenuCount.textContent = contenuInput.value.length; }
-
-    if (titreInput)   titreInput.addEventListener('input', updateTitre);
-    if (contenuInput) contenuInput.addEventListener('input', updateContenu);
-    updateTitre(); updateContenu();
-
-    document.getElementById('imageFileInput').addEventListener('change', function(e) {
-    const file = e.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(ev) {
-            document.getElementById('previewImg').src = ev.target.result;
-            document.getElementById('imagePreview').style.display = 'block';
-        };
-        reader.readAsDataURL(file);
+function updateTitre() {
+    if (titreCount && titreInput) {
+        titreCount.textContent = titreInput.value.length;
     }
-});
+}
+if (titreInput) titreInput.addEventListener('input', updateTitre);
+updateTitre();
 
+// ── APERÇU IMAGE ───────────────────────────────────
+const imageInput = document.getElementById('imageFileInput');
+if (imageInput) {
+    imageInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(ev) {
+                document.getElementById('previewImg').src = ev.target.result;
+                document.getElementById('imagePreview').style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+}
+
+// ── CORRECTION ORTHOGRAPHIQUE ──────────────────────
+
+// Timer pour le debounce — attend 1s après que l'user arrête de taper
+let spellTimers = {};
+
+/**
+ * Planifie une vérification orthographique après 1 seconde de pause
+ * @param {string} inputId   - ID du champ textarea/input
+ * @param {string} errorsId  - ID du div où afficher les erreurs
+ * @param {string} statusId  - ID du div de statut (checking/ok)
+ */
+function scheduleSpellCheck(inputId, errorsId, statusId) {
+    // Annule le timer précédent pour ce champ
+    if (spellTimers[inputId]) {
+        clearTimeout(spellTimers[inputId]);
+    }
+
+    const input = document.getElementById(inputId);
+    const text  = input.value.trim();
+
+    // Efface les erreurs si texte vide
+    if (text.length < 5) {
+        document.getElementById(errorsId).innerHTML = '';
+        document.getElementById(statusId).style.display = 'none';
+        return;
+    }
+
+    // Affiche "Vérification..."
+    document.getElementById(statusId).style.display = 'block';
+    document.getElementById(statusId).textContent = '✏️ Vérification...';
+
+    // Lance la vérification après 1 seconde
+    spellTimers[inputId] = setTimeout(() => {
+        doSpellCheck(text, inputId, errorsId, statusId);
+    }, 1000);
+}
+
+/**
+ * Envoie le texte au controller Symfony qui appelle LanguageTool API
+ */
+async function doSpellCheck(text, inputId, errorsId, statusId) {
+    try {
+        const formData = new FormData();
+        formData.append('text', text);
+        formData.append('language', 'fr');
+
+        const res  = await fetch('/forum/spellcheck', {
+            method: 'POST',
+            body: formData,
+        });
+        const data = await res.json();
+
+        const errorsDiv  = document.getElementById(errorsId);
+        const statusDiv  = document.getElementById(statusId);
+
+        // Cache le statut
+        statusDiv.style.display = 'none';
+
+        if (!data.errors || data.errors.length === 0) {
+            // Aucune faute
+            statusDiv.textContent   = '✅ Aucune faute détectée';
+            statusDiv.style.color   = '#16A34A';
+            statusDiv.style.display = 'block';
+            errorsDiv.innerHTML     = '';
+            return;
+        }
+
+        // Remet la couleur normale du statut
+        statusDiv.style.color = '#9590B8';
+
+        // Affiche chaque erreur avec ses suggestions
+        errorsDiv.innerHTML = data.errors.map(err => `
+            <div class="spell-error-item">
+                <span style="font-size:16px;">⚠️</span>
+                <div style="flex:1;">
+                    <div>
+                        <span class="spell-error-word">${escHtml(err.word)}</span>
+                        — ${escHtml(err.message)}
+                    </div>
+                    ${err.suggestions.length > 0 ? `
+                    <div class="spell-suggestions">
+                        <span style="font-size:11px;color:#92400E;">Suggestions :</span>
+                        ${err.suggestions.map(s => `
+                            <button class="spell-suggestion-btn"
+                                onclick="applySuggestion('${inputId}', '${escHtml(err.word)}', '${escHtml(s)}', ${err.offset}, ${err.length})">
+                                ${escHtml(s)}
+                            </button>
+                        `).join('')}
+                    </div>
+                    ` : ''}
+                </div>
+            </div>
+        `).join('');
+
+    } catch(e) {
+        console.error('SpellCheck error:', e);
+        document.getElementById(statusId).style.display = 'none';
+    }
+}
+
+/**
+ * Applique une suggestion — remplace le mot erroné dans le textarea
+ * @param {string} inputId    - ID du champ
+ * @param {string} wrongWord  - Le mot erroné
+ * @param {string} suggestion - La correction proposée
+ * @param {number} offset     - Position du mot dans le texte
+ * @param {number} length     - Longueur du mot erroné
+ */
+function applySuggestion(inputId, wrongWord, suggestion, offset, length) {
+    const input = document.getElementById(inputId);
+    const text  = input.value;
+
+    // Remplace le mot erroné à la position exacte
+    input.value = text.substring(0, offset) + suggestion + text.substring(offset + length);
+
+    // Relance la vérification après correction
+    scheduleSpellCheck(inputId, inputId === 'post_titre' ? 'titre-errors' : 'contenu-errors',
+                                inputId === 'post_titre' ? 'titre-status' : 'contenu-status');
+}
+
+/**
+ * Échappe le HTML pour éviter les injections XSS
+ */
+function escHtml(str) {
+    const d = document.createElement('div');
+    d.textContent = str || '';
+    return d.innerHTML;
+}
 </script>
 {% endblock %}
 {% endblock %}
