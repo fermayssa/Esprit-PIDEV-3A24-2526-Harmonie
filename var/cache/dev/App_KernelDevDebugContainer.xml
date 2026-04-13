@@ -534,6 +534,7 @@
       <argument type="service" id="App\Repository\CalendrierRepository"/>
       <argument type="service" id="doctrine.orm.default_entity_manager"/>
       <argument type="service" id="App\Service\Kanban\KanbanRealtimeNotifier"/>
+      <argument type="service" id="App\Service\Telegram\TelegramNotifier"/>
       <argument>%env(string:GEMINI_API_KEY)%</argument>
       <call method="setContainer">
         <argument type="service" id=".service_locator.TJNRSaV.App\Controller\Api\ChatApiController"/>
@@ -901,6 +902,7 @@
       <argument type="service" id="App\Service\GoogleCalendarService"/>
       <argument type="service" id="App\Service\Github\GithubIssueService"/>
       <argument type="service" id="App\Service\Kanban\KanbanRealtimeNotifier"/>
+      <argument type="service" id="App\Service\Telegram\TelegramNotifier"/>
     </service>
     <service id="App\Service\Export\CalendarExportService" class="App\Service\Export\CalendarExportService" autowire="true" autoconfigure="true"/>
     <service id="App\Service\Export\KanbanExportService" class="App\Service\Export\KanbanExportService" autowire="true" autoconfigure="true"/>
@@ -919,6 +921,12 @@
       <argument type="service" id="cache.app"/>
     </service>
     <service id="App\Service\SuspicionScoreService" class="App\Service\SuspicionScoreService" autowire="true" autoconfigure="true"/>
+    <service id="App\Service\Telegram\TelegramNotifier" class="App\Service\Telegram\TelegramNotifier" autowire="true" autoconfigure="true">
+      <argument type="service" id="http_client.uri_template"/>
+      <argument type="service" id="monolog.logger"/>
+      <argument>%env(string:TELEGRAM_BOT_TOKEN)%</argument>
+      <argument>%env(string:TELEGRAM_CHAT_ID)%</argument>
+    </service>
     <service id="argument_metadata_factory" class="Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadataFactory"/>
     <service id="argument_resolver.backed_enum_resolver" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\BackedEnumValueResolver">
       <tag name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\BackedEnumValueResolver" priority="100">controller.argument_value_resolver</tag>
@@ -947,7 +955,7 @@
     </service>
     <service id="argument_resolver.service" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver">
       <tag name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver" priority="-50">controller.argument_value_resolver</tag>
-      <argument type="service" id=".service_locator.VOcI_l8"/>
+      <argument type="service" id=".service_locator.f_NdXe6"/>
     </service>
     <service id="argument_resolver.default" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver">
       <tag name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver" priority="-100">controller.argument_value_resolver</tag>
@@ -4083,7 +4091,7 @@
     </service>
     <service id="argument_resolver.not_tagged_controller" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\NotTaggedControllerValueResolver">
       <tag name="controller.argument_value_resolver" priority="-200"/>
-      <argument type="service" id=".service_locator.VOcI_l8"/>
+      <argument type="service" id=".service_locator.f_NdXe6"/>
     </service>
     <service id="debug.log_processor" class="Symfony\Bridge\Monolog\Processor\DebugProcessor">
       <tag name="kernel.reset" method="reset"/>
@@ -9714,39 +9722,41 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.n60qnZK" method="withContext"/>
     </service>
-    <service id=".service_locator.0FPZQH5" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.N84JZPo" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="em" type="service_closure" id="doctrine.orm.default_entity_manager"/>
         <argument key="calendrierRepository" type="service_closure" id="App\Repository\CalendrierRepository"/>
         <argument key="googleService" type="service_closure" id="App\Service\GoogleCalendarService"/>
+        <argument key="telegramNotifier" type="service_closure" id="App\Service\Telegram\TelegramNotifier"/>
       </argument>
     </service>
-    <service id=".service_locator.0FPZQH5.App\Controller\Api\EventApiController::create()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.N84JZPo.App\Controller\Api\EventApiController::create()" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\Api\EventApiController::create()"/>
       <argument>App\Controller\Api\EventApiController::create()</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.0FPZQH5" method="withContext"/>
+      <factory service=".service_locator.N84JZPo" method="withContext"/>
     </service>
-    <service id=".service_locator.GsKU6fY" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.IM4O4EN" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
-        <argument key="event" type="service_closure" id=".errored..service_locator.GsKU6fY.App\Entity\Evenement"/>
+        <argument key="event" type="service_closure" id=".errored..service_locator.IM4O4EN.App\Entity\Evenement"/>
         <argument key="em" type="service_closure" id="doctrine.orm.default_entity_manager"/>
         <argument key="googleService" type="service_closure" id="App\Service\GoogleCalendarService"/>
+        <argument key="telegramNotifier" type="service_closure" id="App\Service\Telegram\TelegramNotifier"/>
       </argument>
     </service>
-    <service id=".service_locator.GsKU6fY.App\Controller\Api\EventApiController::update()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.IM4O4EN.App\Controller\Api\EventApiController::update()" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\Api\EventApiController::update()"/>
       <argument>App\Controller\Api\EventApiController::update()</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.GsKU6fY" method="withContext"/>
+      <factory service=".service_locator.IM4O4EN" method="withContext"/>
     </service>
-    <service id=".service_locator.GsKU6fY.App\Controller\Api\EventApiController::delete()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.IM4O4EN.App\Controller\Api\EventApiController::delete()" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\Api\EventApiController::delete()"/>
       <argument>App\Controller\Api\EventApiController::delete()</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.GsKU6fY" method="withContext"/>
+      <factory service=".service_locator.IM4O4EN" method="withContext"/>
     </service>
     <service id=".service_locator.3JdX6zi" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
@@ -10349,7 +10359,7 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.z0A7H.F" method="withContext"/>
     </service>
-    <service id=".service_locator.VOcI_l8" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.f_NdXe6" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="kernel::registerContainerConfiguration" type="service_closure" id=".service_locator.1vYpZ1B.kernel::registerContainerConfiguration()"/>
@@ -10392,9 +10402,9 @@
         <argument key="App\Controller\AdminUserController::toggle" type="service_closure" id=".service_locator.kYAceIU.App\Controller\AdminUserController::toggle()"/>
         <argument key="App\Controller\AdminUserController::suspicionDetail" type="service_closure" id=".service_locator.kYAceIU.App\Controller\AdminUserController::suspicionDetail()"/>
         <argument key="App\Controller\Api\EventApiController::list" type="service_closure" id=".service_locator.n60qnZK.App\Controller\Api\EventApiController::list()"/>
-        <argument key="App\Controller\Api\EventApiController::create" type="service_closure" id=".service_locator.0FPZQH5.App\Controller\Api\EventApiController::create()"/>
-        <argument key="App\Controller\Api\EventApiController::update" type="service_closure" id=".service_locator.GsKU6fY.App\Controller\Api\EventApiController::update()"/>
-        <argument key="App\Controller\Api\EventApiController::delete" type="service_closure" id=".service_locator.GsKU6fY.App\Controller\Api\EventApiController::delete()"/>
+        <argument key="App\Controller\Api\EventApiController::create" type="service_closure" id=".service_locator.N84JZPo.App\Controller\Api\EventApiController::create()"/>
+        <argument key="App\Controller\Api\EventApiController::update" type="service_closure" id=".service_locator.IM4O4EN.App\Controller\Api\EventApiController::update()"/>
+        <argument key="App\Controller\Api\EventApiController::delete" type="service_closure" id=".service_locator.IM4O4EN.App\Controller\Api\EventApiController::delete()"/>
         <argument key="App\Controller\Api\GithubSettingsController::getSettings" type="service_closure" id=".service_locator.3JdX6zi.App\Controller\Api\GithubSettingsController::getSettings()"/>
         <argument key="App\Controller\Api\GithubSettingsController::saveSettings" type="service_closure" id=".service_locator.3JdX6zi.App\Controller\Api\GithubSettingsController::saveSettings()"/>
         <argument key="App\Controller\Api\GithubWebhookController::__invoke" type="service_closure" id=".service_locator.l310bRk.App\Controller\Api\GithubWebhookController::__invoke()"/>
@@ -10503,9 +10513,9 @@
         <argument key="App\Controller\AdminUserController:toggle" type="service_closure" id=".service_locator.kYAceIU.App\Controller\AdminUserController::toggle()"/>
         <argument key="App\Controller\AdminUserController:suspicionDetail" type="service_closure" id=".service_locator.kYAceIU.App\Controller\AdminUserController::suspicionDetail()"/>
         <argument key="App\Controller\Api\EventApiController:list" type="service_closure" id=".service_locator.n60qnZK.App\Controller\Api\EventApiController::list()"/>
-        <argument key="App\Controller\Api\EventApiController:create" type="service_closure" id=".service_locator.0FPZQH5.App\Controller\Api\EventApiController::create()"/>
-        <argument key="App\Controller\Api\EventApiController:update" type="service_closure" id=".service_locator.GsKU6fY.App\Controller\Api\EventApiController::update()"/>
-        <argument key="App\Controller\Api\EventApiController:delete" type="service_closure" id=".service_locator.GsKU6fY.App\Controller\Api\EventApiController::delete()"/>
+        <argument key="App\Controller\Api\EventApiController:create" type="service_closure" id=".service_locator.N84JZPo.App\Controller\Api\EventApiController::create()"/>
+        <argument key="App\Controller\Api\EventApiController:update" type="service_closure" id=".service_locator.IM4O4EN.App\Controller\Api\EventApiController::update()"/>
+        <argument key="App\Controller\Api\EventApiController:delete" type="service_closure" id=".service_locator.IM4O4EN.App\Controller\Api\EventApiController::delete()"/>
         <argument key="App\Controller\Api\GithubSettingsController:getSettings" type="service_closure" id=".service_locator.3JdX6zi.App\Controller\Api\GithubSettingsController::getSettings()"/>
         <argument key="App\Controller\Api\GithubSettingsController:saveSettings" type="service_closure" id=".service_locator.3JdX6zi.App\Controller\Api\GithubSettingsController::saveSettings()"/>
         <argument key="App\Controller\Api\GithubWebhookController:__invoke" type="service_closure" id=".service_locator.l310bRk.App\Controller\Api\GithubWebhookController::__invoke()"/>
@@ -11905,8 +11915,8 @@
     <service id=".errored..service_locator.UoveXVI.App\Entity\User" class="App\Entity\User">
       <tag name="container.error" message="Cannot autowire service &quot;.service_locator.UoveXVI&quot;: it needs an instance of &quot;App\Entity\User&quot; but this type has been excluded because it's a Doctrine entity."/>
     </service>
-    <service id=".errored..service_locator.GsKU6fY.App\Entity\Evenement" class="App\Entity\Evenement">
-      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.GsKU6fY&quot;: it needs an instance of &quot;App\Entity\Evenement&quot; but this type has been excluded because it's a Doctrine entity."/>
+    <service id=".errored..service_locator.IM4O4EN.App\Entity\Evenement" class="App\Entity\Evenement">
+      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.IM4O4EN&quot;: it needs an instance of &quot;App\Entity\Evenement&quot; but this type has been excluded because it's a Doctrine entity."/>
     </service>
     <service id=".errored..service_locator.3DuEe5o.App\Entity\Tache" class="App\Entity\Tache">
       <tag name="container.error" message="Cannot autowire service &quot;.service_locator.3DuEe5o&quot;: it needs an instance of &quot;App\Entity\Tache&quot; but this type has been excluded because it's a Doctrine entity."/>
@@ -13153,7 +13163,7 @@
     <service id="Psr\Log\LoggerInterface" alias="monolog.logger"/>
     <service id="container.env_var_processors_locator" alias=".service_locator.ryAvHi4" public="true"/>
     <service id="twig.loader.filesystem" alias="twig.loader.native_filesystem"/>
-    <service id="argument_resolver.controller_locator" alias=".service_locator.VOcI_l8"/>
+    <service id="argument_resolver.controller_locator" alias=".service_locator.f_NdXe6"/>
     <service id="doctrine.id_generator_locator" alias=".service_locator.W55Po6X"/>
     <service id="twig.loader" alias="twig.loader.native_filesystem"/>
     <service id=".Psr\Log\LoggerInterface $request" alias="monolog.logger.request"/>
@@ -13233,8 +13243,8 @@
     <service id=".service_locator.yFRapHK" alias=".service_locator.kYAceIU"/>
     <service id=".service_locator.pGrZ91r" alias=".service_locator.UoveXVI"/>
     <service id=".service_locator.KNSic_m" alias=".service_locator.n60qnZK"/>
-    <service id=".service_locator._q2H952" alias=".service_locator.0FPZQH5"/>
-    <service id=".service_locator.58sSNTL" alias=".service_locator.GsKU6fY"/>
+    <service id=".service_locator.9MlLIuY" alias=".service_locator.N84JZPo"/>
+    <service id=".service_locator.HtxrMCr" alias=".service_locator.IM4O4EN"/>
     <service id=".service_locator.FTKAQHX" alias=".service_locator.3JdX6zi"/>
     <service id=".service_locator.3t1LHNM" alias=".service_locator.l310bRk"/>
     <service id=".service_locator.Xlc1lXD" alias=".service_locator.9XNXc6E"/>

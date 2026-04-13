@@ -8,6 +8,7 @@ use App\Repository\CalendrierRepository;
 use App\Repository\EvenementRepository;
 use App\Repository\TacheRepository;
 use App\Service\Kanban\KanbanRealtimeNotifier;
+use App\Service\Telegram\TelegramNotifier;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
@@ -28,6 +29,7 @@ final class ChatApiController extends AbstractController
         private readonly CalendrierRepository $calendrierRepository,
         private readonly EntityManagerInterface $em,
         private readonly KanbanRealtimeNotifier $realtimeNotifier,
+        private readonly TelegramNotifier $telegramNotifier,
         #[Autowire('%env(string:GEMINI_API_KEY)%')]
         private readonly string $geminiApiKey,
     ) {
@@ -286,6 +288,7 @@ final class ChatApiController extends AbstractController
                 }
                 $this->em->persist($task);
                 $this->em->flush();
+                $this->telegramNotifier->notifyTaskCreated($task, true);
 
                 return;
 
@@ -294,6 +297,7 @@ final class ChatApiController extends AbstractController
                 if (!$task) {
                     return;
                 }
+                $oldStatus = (string) $task->getStatutTache();
                 if (isset($data['title'])) $task->setNom((string) $data['title']);
                 if (array_key_exists('notes', $data)) $task->setNotes((string) $data['notes']);
                 if (isset($data['priority'])) $task->setPriorite((string) $data['priority']);
@@ -303,6 +307,17 @@ final class ChatApiController extends AbstractController
                 }
                 $this->em->flush();
 
+                $newStatus = (string) $task->getStatutTache();
+                if ($oldStatus !== $newStatus) {
+                    if ('TERMINEE' === strtoupper($newStatus)) {
+                        $this->telegramNotifier->notifyTaskDone($task, true);
+                    } else {
+                        $this->telegramNotifier->notifyTaskMoved($task, $oldStatus, $newStatus, true);
+                    }
+                } else {
+                    $this->telegramNotifier->notifyTaskUpdated($task, true);
+                }
+
                 return;
 
             case 'DELETE_TASK':
@@ -310,8 +325,10 @@ final class ChatApiController extends AbstractController
                 if (!$task) {
                     return;
                 }
+                $taskTitle = (string) ($task->getNom() ?? 'Tâche');
                 $this->em->remove($task);
                 $this->em->flush();
+                $this->telegramNotifier->notifyTaskDeleted($taskTitle, true);
 
                 return;
 
@@ -327,6 +344,7 @@ final class ChatApiController extends AbstractController
                 }
                 $this->em->persist($event);
                 $this->em->flush();
+                $this->telegramNotifier->notifyEventCreated($event, true);
 
                 return;
 
@@ -341,6 +359,7 @@ final class ChatApiController extends AbstractController
                 if (!empty($data['startTime'])) $event->setDateDebut(new \DateTime((string) $data['startTime']));
                 if (!empty($data['endTime'])) $event->setDateFin(new \DateTime((string) $data['endTime']));
                 $this->em->flush();
+                $this->telegramNotifier->notifyEventUpdated($event, true);
 
                 return;
 
@@ -349,8 +368,11 @@ final class ChatApiController extends AbstractController
                 if (!$event) {
                     return;
                 }
+                $eventTitle = (string) ($event->getTitre() ?? 'Événement');
+                $eventStartAt = $event->getDateDebut();
                 $this->em->remove($event);
                 $this->em->flush();
+                $this->telegramNotifier->notifyEventDeleted($eventTitle, $eventStartAt, true);
 
                 return;
         }

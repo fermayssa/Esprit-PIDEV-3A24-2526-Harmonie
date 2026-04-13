@@ -15,6 +15,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use App\Service\Github\GithubIssueService;
 use App\Service\Kanban\KanbanRealtimeNotifier;
 use App\Service\GoogleCalendarService;
+use App\Service\Telegram\TelegramNotifier;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 final class PlanningDomainService
@@ -29,6 +30,7 @@ final class PlanningDomainService
         private readonly GoogleCalendarService $googleCalendarService,
         private readonly GithubIssueService $githubIssueService,
         private readonly KanbanRealtimeNotifier $kanbanRealtimeNotifier,
+        private readonly TelegramNotifier $telegramNotifier,
     ) {
     }
 
@@ -57,6 +59,7 @@ final class PlanningDomainService
 
     public function saveEvenement(Evenement $evenement, ?User $demandeur = null): void
     {
+        $isCreate = null === $evenement->getId();
         $debut = $evenement->getDateDebut();
         $fin = $evenement->getDateFin();
         if ($debut && $fin && $fin < $debut) {
@@ -96,6 +99,12 @@ final class PlanningDomainService
                 $this->entityManager->flush();
             }
         }
+
+        if ($isCreate) {
+            $this->telegramNotifier->notifyEventCreated($evenement);
+        } else {
+            $this->telegramNotifier->notifyEventUpdated($evenement);
+        }
     }
 
     private function syncEvenementChamps(Evenement $e): void
@@ -123,6 +132,13 @@ final class PlanningDomainService
 
     public function saveTache(Tache $tache): void
     {
+        $isCreate = null === $tache->getId();
+        $oldStatus = null;
+        if (!$isCreate) {
+            $original = $this->entityManager->getUnitOfWork()->getOriginalEntityData($tache);
+            $oldStatus = isset($original['statutTache']) ? (string) $original['statutTache'] : null;
+        }
+
         $this->normalizeTacheCalendrier($tache);
         $this->validateEntity($tache);
 
@@ -137,6 +153,19 @@ final class PlanningDomainService
             'id' => $tache->getId(),
             'statut' => $tache->getStatutTache(),
         ]);
+
+        $newStatus = (string) $tache->getStatutTache();
+        if ($isCreate) {
+            $this->telegramNotifier->notifyTaskCreated($tache);
+        } elseif (null !== $oldStatus && $oldStatus !== $newStatus) {
+            if ('TERMINEE' === strtoupper($newStatus)) {
+                $this->telegramNotifier->notifyTaskDone($tache);
+            } else {
+                $this->telegramNotifier->notifyTaskMoved($tache, $oldStatus, $newStatus);
+            }
+        } else {
+            $this->telegramNotifier->notifyTaskUpdated($tache);
+        }
     }
 
     public function saveCalendrier(Calendrier $calendrier): void
@@ -161,12 +190,16 @@ final class PlanningDomainService
 
     public function removeEvenement(Evenement $evenement): void
     {
+        $title = (string) ($evenement->getTitre() ?? 'Événement');
+        $startAt = $evenement->getDateDebut();
         $this->googleCalendarService->deleteEventFromGoogle($evenement);
         $this->removeAndFlush($evenement);
+        $this->telegramNotifier->notifyEventDeleted($title, $startAt);
     }
 
     public function removeTache(Tache $tache): void
     {
+        $title = (string) ($tache->getNom() ?? 'Tâche');
         try {
             $this->githubIssueService->closeTaskIssueAsCancelled($tache);
         } catch (\RuntimeException $e) {
@@ -177,6 +210,7 @@ final class PlanningDomainService
         $this->kanbanRealtimeNotifier->dispatch('task.deleted', [
             'id' => $tache->getId(),
         ]);
+        $this->telegramNotifier->notifyTaskDeleted($title);
     }
 
     public function removeCalendrier(Calendrier $calendrier): void

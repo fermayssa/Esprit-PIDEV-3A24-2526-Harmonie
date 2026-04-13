@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 use App\Service\GoogleCalendarService;
+use App\Service\Telegram\TelegramNotifier;
 
 #[Route('/api/events')]
 final class EventApiController extends AbstractController
@@ -38,7 +39,7 @@ final class EventApiController extends AbstractController
     }
 
     #[Route('', name: 'api_events_create', methods: ['POST'])]
-    public function create(Request $request, EntityManagerInterface $em, CalendrierRepository $calendrierRepository, GoogleCalendarService $googleService): JsonResponse
+    public function create(Request $request, EntityManagerInterface $em, CalendrierRepository $calendrierRepository, GoogleCalendarService $googleService, TelegramNotifier $telegramNotifier): JsonResponse
     {
         try {
             $data = json_decode($request->getContent(), true);
@@ -69,6 +70,7 @@ final class EventApiController extends AbstractController
             // On sauvegarde localement pour avoir un ID (bien que Google Service gère aussi le persist/flush si nouveau google id)
             $em->flush();
             $googleService->syncEventToGoogle($event);
+            $telegramNotifier->notifyEventCreated($event);
             
             return $this->json([
                 'id' => $event->getId(),
@@ -82,7 +84,7 @@ final class EventApiController extends AbstractController
     }
 
     #[Route('/{id}', name: 'api_events_update', methods: ['PUT'])]
-    public function update(Evenement $event, Request $request, EntityManagerInterface $em, GoogleCalendarService $googleService): JsonResponse
+    public function update(Evenement $event, Request $request, EntityManagerInterface $em, GoogleCalendarService $googleService, TelegramNotifier $telegramNotifier): JsonResponse
     {
         try {
             $data = json_decode($request->getContent(), true);
@@ -108,6 +110,7 @@ final class EventApiController extends AbstractController
             
             $em->flush();
             $googleService->syncEventToGoogle($event);
+            $telegramNotifier->notifyEventUpdated($event);
             
             return $this->json([
                 'id' => $event->getId(),
@@ -121,12 +124,15 @@ final class EventApiController extends AbstractController
     }
 
     #[Route('/{id}', name: 'api_events_delete', methods: ['DELETE'])]
-    public function delete(Evenement $event, EntityManagerInterface $em, GoogleCalendarService $googleService): JsonResponse
+    public function delete(Evenement $event, EntityManagerInterface $em, GoogleCalendarService $googleService, TelegramNotifier $telegramNotifier): JsonResponse
     {
         try {
+            $title = (string) ($event->getTitre() ?? 'Événement');
+            $startAt = $event->getDateDebut();
             $googleService->deleteEventFromGoogle($event);
             $em->remove($event);
             $em->flush();
+            $telegramNotifier->notifyEventDeleted($title, $startAt);
             return $this->json(null, 204);
         } catch (\Exception $e) {
             return $this->json(['error' => $e->getMessage()], 400);

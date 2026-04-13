@@ -278,7 +278,7 @@ class __TwigTemplate_d30d2fd6cc02ff8e350be72f2b38f1d1 extends Template
                 // line 149
                 yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_google_calendar_disconnect");
                 yield "\" style=\"display:inline-flex; align-items:center; gap:4px; font-size:12px; color:#ef4444; background: rgba(239, 68, 68, 0.1); padding:4px 8px; border-radius:6px; text-decoration:none; font-weight:600; transition:all 0.2s;\" onmouseover=\"this.style.background='rgba(239, 68, 68, 0.2)'\" onmouseout=\"this.style.background='rgba(239, 68, 68, 0.1)'\">
-                                Déconnecter
+                                Déconnecter de Google Calendar
                             </a>
                         </div>
                     ";
@@ -955,7 +955,7 @@ class __TwigTemplate_d30d2fd6cc02ff8e350be72f2b38f1d1 extends Template
                                 <svg width=\"12\" height=\"12\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M21 2v6h-6\"/><path d=\"M3 12a9 9 0 1015-6.7L21 8\"/><path d=\"M3 22v-6h6\"/><path d=\"M21 12A9 9 0 106 18.7L3 16\"/></svg> Importer
                             </a>
                             <a href=\"{{ path('app_google_calendar_disconnect') }}\" style=\"display:inline-flex; align-items:center; gap:4px; font-size:12px; color:#ef4444; background: rgba(239, 68, 68, 0.1); padding:4px 8px; border-radius:6px; text-decoration:none; font-weight:600; transition:all 0.2s;\" onmouseover=\"this.style.background='rgba(239, 68, 68, 0.2)'\" onmouseout=\"this.style.background='rgba(239, 68, 68, 0.1)'\">
-                                Déconnecter
+                                Déconnecter de Google Calendar
                             </a>
                         </div>
                     {% else %}
