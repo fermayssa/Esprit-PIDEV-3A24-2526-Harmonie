@@ -48,6 +48,7 @@ return [
             [['_route' => 'api_github_settings_get', '_controller' => 'App\\Controller\\Api\\GithubSettingsController::getSettings'], null, ['GET' => 0], null, false, false, null],
             [['_route' => 'api_github_settings_put', '_controller' => 'App\\Controller\\Api\\GithubSettingsController::saveSettings'], null, ['PUT' => 0], null, false, false, null],
         ],
+        '/api/github/settings/sync-doing' => [[['_route' => 'api_github_settings_sync_doing', '_controller' => 'App\\Controller\\Api\\GithubSettingsController::syncDoing'], null, ['POST' => 0], null, false, false, null]],
         '/api/webhooks/github' => [[['_route' => 'api_webhooks_github', '_controller' => 'App\\Controller\\Api\\GithubWebhookController'], null, ['POST' => 0], null, false, false, null]],
         '/api/kanban/stream' => [[['_route' => 'api_kanban_stream', '_controller' => 'App\\Controller\\Api\\KanbanStreamController::events'], null, ['GET' => 0], null, false, false, null]],
         '/api/tasks' => [

@@ -369,6 +369,7 @@ class __TwigTemplate_4401aa8db7481547c6babf2a9ded752f extends Template
                 </div>
             </details>
             <button type=\"button\" id=\"kan-github-settings-open\" class=\"kan-settings-btn\">GitHub ⚙</button>
+            <button type=\"button\" id=\"kan-github-sync-open\" class=\"kan-settings-btn\" style=\"opacity:.9;\">Sync GitHub</button>
         </div>
     </div>
 
@@ -377,32 +378,32 @@ class __TwigTemplate_4401aa8db7481547c6babf2a9ded752f extends Template
         <div class=\"kan-col\" data-statut=\"A_FAIRE\">
             <div class=\"kan-col-header\">
                 <h2 class=\"kan-col-title\">TODO <span class=\"kan-col-count\" id=\"count-todo\">";
-        // line 247
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["columns"]) || array_key_exists("columns", $context) ? $context["columns"] : (function () { throw new RuntimeError('Variable "columns" does not exist.', 247, $this->source); })()), "A_FAIRE", [], "any", false, false, false, 247)), "html", null, true);
+        // line 248
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["columns"]) || array_key_exists("columns", $context) ? $context["columns"] : (function () { throw new RuntimeError('Variable "columns" does not exist.', 248, $this->source); })()), "A_FAIRE", [], "any", false, false, false, 248)), "html", null, true);
         yield "</span></h2>
                 <button class=\"kan-col-add-btn js-kan-col-add\" data-statut=\"A_FAIRE\" title=\"Ajouter une tâche\">+</button>
             </div>
             <div class=\"kan-col-body js-kan-col-zone\" tabindex=\"0\">
                 <ul class=\"kan-col-list\" data-statut=\"A_FAIRE\">
                     ";
-        // line 252
+        // line 253
         $context['_parent'] = $context;
-        $context['_seq'] = CoreExtension::ensureTraversable(CoreExtension::getAttribute($this->env, $this->source, (isset($context["columns"]) || array_key_exists("columns", $context) ? $context["columns"] : (function () { throw new RuntimeError('Variable "columns" does not exist.', 252, $this->source); })()), "A_FAIRE", [], "any", false, false, false, 252));
+        $context['_seq'] = CoreExtension::ensureTraversable(CoreExtension::getAttribute($this->env, $this->source, (isset($context["columns"]) || array_key_exists("columns", $context) ? $context["columns"] : (function () { throw new RuntimeError('Variable "columns" does not exist.', 253, $this->source); })()), "A_FAIRE", [], "any", false, false, false, 253));
         foreach ($context['_seq'] as $context["_key"] => $context["tache"]) {
-            // line 253
+            // line 254
             yield "                        ";
-            yield $macros["kan"]->getTemplateForMacro("macro_kan_card", $context, 253, $this->getSourceContext())->macro_kan_card(...[$context["tache"], (isset($context["today"]) || array_key_exists("today", $context) ? $context["today"] : (function () { throw new RuntimeError('Variable "today" does not exist.', 253, $this->source); })())]);
+            yield $macros["kan"]->getTemplateForMacro("macro_kan_card", $context, 254, $this->getSourceContext())->macro_kan_card(...[$context["tache"], (isset($context["today"]) || array_key_exists("today", $context) ? $context["today"] : (function () { throw new RuntimeError('Variable "today" does not exist.', 254, $this->source); })())]);
             yield "
                     ";
         }
         $_parent = $context['_parent'];
         unset($context['_seq'], $context['_key'], $context['tache'], $context['_parent']);
         $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 255
+        // line 256
         yield "                </ul>
                 <div class=\"kan-empty-state\" style=\"display:";
-        // line 256
-        if ((Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["columns"]) || array_key_exists("columns", $context) ? $context["columns"] : (function () { throw new RuntimeError('Variable "columns" does not exist.', 256, $this->source); })()), "A_FAIRE", [], "any", false, false, false, 256)) > 0)) {
+        // line 257
+        if ((Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["columns"]) || array_key_exists("columns", $context) ? $context["columns"] : (function () { throw new RuntimeError('Variable "columns" does not exist.', 257, $this->source); })()), "A_FAIRE", [], "any", false, false, false, 257)) > 0)) {
             yield "none";
         } else {
             yield "flex";
@@ -418,32 +419,32 @@ class __TwigTemplate_4401aa8db7481547c6babf2a9ded752f extends Template
         <div class=\"kan-col kan-col--doing\" data-statut=\"EN_COURS\">
             <div class=\"kan-col-header\">
                 <h2 class=\"kan-col-title\">DOING <span class=\"kan-col-count\" id=\"count-doing\">";
-        // line 266
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["columns"]) || array_key_exists("columns", $context) ? $context["columns"] : (function () { throw new RuntimeError('Variable "columns" does not exist.', 266, $this->source); })()), "EN_COURS", [], "any", false, false, false, 266)), "html", null, true);
+        // line 267
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["columns"]) || array_key_exists("columns", $context) ? $context["columns"] : (function () { throw new RuntimeError('Variable "columns" does not exist.', 267, $this->source); })()), "EN_COURS", [], "any", false, false, false, 267)), "html", null, true);
         yield "</span></h2>
                 <button class=\"kan-col-add-btn js-kan-col-add\" data-statut=\"EN_COURS\" title=\"Ajouter une tâche\">+</button>
             </div>
             <div class=\"kan-col-body js-kan-col-zone\" tabindex=\"0\">
                 <ul class=\"kan-col-list kan-col-list--doing\" data-statut=\"EN_COURS\">
                     ";
-        // line 271
+        // line 272
         $context['_parent'] = $context;
-        $context['_seq'] = CoreExtension::ensureTraversable(CoreExtension::getAttribute($this->env, $this->source, (isset($context["columns"]) || array_key_exists("columns", $context) ? $context["columns"] : (function () { throw new RuntimeError('Variable "columns" does not exist.', 271, $this->source); })()), "EN_COURS", [], "any", false, false, false, 271));
+        $context['_seq'] = CoreExtension::ensureTraversable(CoreExtension::getAttribute($this->env, $this->source, (isset($context["columns"]) || array_key_exists("columns", $context) ? $context["columns"] : (function () { throw new RuntimeError('Variable "columns" does not exist.', 272, $this->source); })()), "EN_COURS", [], "any", false, false, false, 272));
         foreach ($context['_seq'] as $context["_key"] => $context["tache"]) {
-            // line 272
+            // line 273
             yield "                        ";
-            yield $macros["kan"]->getTemplateForMacro("macro_kan_card", $context, 272, $this->getSourceContext())->macro_kan_card(...[$context["tache"], (isset($context["today"]) || array_key_exists("today", $context) ? $context["today"] : (function () { throw new RuntimeError('Variable "today" does not exist.', 272, $this->source); })())]);
+            yield $macros["kan"]->getTemplateForMacro("macro_kan_card", $context, 273, $this->getSourceContext())->macro_kan_card(...[$context["tache"], (isset($context["today"]) || array_key_exists("today", $context) ? $context["today"] : (function () { throw new RuntimeError('Variable "today" does not exist.', 273, $this->source); })())]);
             yield "
                     ";
         }
         $_parent = $context['_parent'];
         unset($context['_seq'], $context['_key'], $context['tache'], $context['_parent']);
         $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 274
+        // line 275
         yield "                </ul>
                 <div class=\"kan-empty-state\" style=\"display:";
-        // line 275
-        if ((Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["columns"]) || array_key_exists("columns", $context) ? $context["columns"] : (function () { throw new RuntimeError('Variable "columns" does not exist.', 275, $this->source); })()), "EN_COURS", [], "any", false, false, false, 275)) > 0)) {
+        // line 276
+        if ((Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["columns"]) || array_key_exists("columns", $context) ? $context["columns"] : (function () { throw new RuntimeError('Variable "columns" does not exist.', 276, $this->source); })()), "EN_COURS", [], "any", false, false, false, 276)) > 0)) {
             yield "none";
         } else {
             yield "flex";
@@ -459,32 +460,32 @@ class __TwigTemplate_4401aa8db7481547c6babf2a9ded752f extends Template
         <div class=\"kan-col\" data-statut=\"TERMINEE\">
             <div class=\"kan-col-header\">
                 <h2 class=\"kan-col-title\">DONE <span class=\"kan-col-count\" id=\"count-done\">";
-        // line 285
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["columns"]) || array_key_exists("columns", $context) ? $context["columns"] : (function () { throw new RuntimeError('Variable "columns" does not exist.', 285, $this->source); })()), "TERMINEE", [], "any", false, false, false, 285)), "html", null, true);
+        // line 286
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["columns"]) || array_key_exists("columns", $context) ? $context["columns"] : (function () { throw new RuntimeError('Variable "columns" does not exist.', 286, $this->source); })()), "TERMINEE", [], "any", false, false, false, 286)), "html", null, true);
         yield "</span></h2>
                 <button class=\"kan-col-add-btn js-kan-col-add\" data-statut=\"TERMINEE\" title=\"Ajouter une tâche\">+</button>
             </div>
             <div class=\"kan-col-body js-kan-col-zone\" tabindex=\"0\">
                 <ul class=\"kan-col-list\" data-statut=\"TERMINEE\">
                     ";
-        // line 290
+        // line 291
         $context['_parent'] = $context;
-        $context['_seq'] = CoreExtension::ensureTraversable(CoreExtension::getAttribute($this->env, $this->source, (isset($context["columns"]) || array_key_exists("columns", $context) ? $context["columns"] : (function () { throw new RuntimeError('Variable "columns" does not exist.', 290, $this->source); })()), "TERMINEE", [], "any", false, false, false, 290));
+        $context['_seq'] = CoreExtension::ensureTraversable(CoreExtension::getAttribute($this->env, $this->source, (isset($context["columns"]) || array_key_exists("columns", $context) ? $context["columns"] : (function () { throw new RuntimeError('Variable "columns" does not exist.', 291, $this->source); })()), "TERMINEE", [], "any", false, false, false, 291));
         foreach ($context['_seq'] as $context["_key"] => $context["tache"]) {
-            // line 291
+            // line 292
             yield "                        ";
-            yield $macros["kan"]->getTemplateForMacro("macro_kan_card", $context, 291, $this->getSourceContext())->macro_kan_card(...[$context["tache"], (isset($context["today"]) || array_key_exists("today", $context) ? $context["today"] : (function () { throw new RuntimeError('Variable "today" does not exist.', 291, $this->source); })())]);
+            yield $macros["kan"]->getTemplateForMacro("macro_kan_card", $context, 292, $this->getSourceContext())->macro_kan_card(...[$context["tache"], (isset($context["today"]) || array_key_exists("today", $context) ? $context["today"] : (function () { throw new RuntimeError('Variable "today" does not exist.', 292, $this->source); })())]);
             yield "
                     ";
         }
         $_parent = $context['_parent'];
         unset($context['_seq'], $context['_key'], $context['tache'], $context['_parent']);
         $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 293
+        // line 294
         yield "                </ul>
                 <div class=\"kan-empty-state\" style=\"display:";
-        // line 294
-        if ((Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["columns"]) || array_key_exists("columns", $context) ? $context["columns"] : (function () { throw new RuntimeError('Variable "columns" does not exist.', 294, $this->source); })()), "TERMINEE", [], "any", false, false, false, 294)) > 0)) {
+        // line 295
+        if ((Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["columns"]) || array_key_exists("columns", $context) ? $context["columns"] : (function () { throw new RuntimeError('Variable "columns" does not exist.', 295, $this->source); })()), "TERMINEE", [], "any", false, false, false, 295)) > 0)) {
             yield "none";
         } else {
             yield "flex";
@@ -513,9 +514,9 @@ class __TwigTemplate_4401aa8db7481547c6babf2a9ded752f extends Template
 
     <template id=\"harmony-tpl-tache-form-new\">
         ";
-        // line 317
-        yield from $this->load("tache/_form_panel.html.twig", 317)->unwrap()->yield(CoreExtension::toArray(["form" => (isset($context["tacheFormNew"]) || array_key_exists("tacheFormNew", $context) ? $context["tacheFormNew"] : (function () { throw new RuntimeError('Variable "tacheFormNew" does not exist.', 317, $this->source); })()), "panel_mode" => "new"]));
         // line 318
+        yield from $this->load("tache/_form_panel.html.twig", 318)->unwrap()->yield(CoreExtension::toArray(["form" => (isset($context["tacheFormNew"]) || array_key_exists("tacheFormNew", $context) ? $context["tacheFormNew"] : (function () { throw new RuntimeError('Variable "tacheFormNew" does not exist.', 318, $this->source); })()), "panel_mode" => "new"]));
+        // line 319
         yield "    </template>
 </div>
 
@@ -546,8 +547,8 @@ class __TwigTemplate_4401aa8db7481547c6babf2a9ded752f extends Template
 <script>
 window.HARMONIE_TASKS = [
     ...(";
-        // line 347
-        yield json_encode(CoreExtension::getAttribute($this->env, $this->source, (isset($context["columns"]) || array_key_exists("columns", $context) ? $context["columns"] : (function () { throw new RuntimeError('Variable "columns" does not exist.', 347, $this->source); })()), "A_FAIRE", [], "any", false, false, false, 347));
+        // line 348
+        yield json_encode(CoreExtension::getAttribute($this->env, $this->source, (isset($context["columns"]) || array_key_exists("columns", $context) ? $context["columns"] : (function () { throw new RuntimeError('Variable "columns" does not exist.', 348, $this->source); })()), "A_FAIRE", [], "any", false, false, false, 348));
         yield ").map(t => ({
         id: t.id,
         title: t.nom,
@@ -558,8 +559,8 @@ window.HARMONIE_TASKS = [
         completed: false
     })),
     ...(";
-        // line 356
-        yield json_encode(CoreExtension::getAttribute($this->env, $this->source, (isset($context["columns"]) || array_key_exists("columns", $context) ? $context["columns"] : (function () { throw new RuntimeError('Variable "columns" does not exist.', 356, $this->source); })()), "EN_COURS", [], "any", false, false, false, 356));
+        // line 357
+        yield json_encode(CoreExtension::getAttribute($this->env, $this->source, (isset($context["columns"]) || array_key_exists("columns", $context) ? $context["columns"] : (function () { throw new RuntimeError('Variable "columns" does not exist.', 357, $this->source); })()), "EN_COURS", [], "any", false, false, false, 357));
         yield ").map(t => ({
         id: t.id,
         title: t.nom,
@@ -570,8 +571,8 @@ window.HARMONIE_TASKS = [
         completed: false
     })),
     ...(";
-        // line 365
-        yield json_encode(CoreExtension::getAttribute($this->env, $this->source, (isset($context["columns"]) || array_key_exists("columns", $context) ? $context["columns"] : (function () { throw new RuntimeError('Variable "columns" does not exist.', 365, $this->source); })()), "TERMINEE", [], "any", false, false, false, 365));
+        // line 366
+        yield json_encode(CoreExtension::getAttribute($this->env, $this->source, (isset($context["columns"]) || array_key_exists("columns", $context) ? $context["columns"] : (function () { throw new RuntimeError('Variable "columns" does not exist.', 366, $this->source); })()), "TERMINEE", [], "any", false, false, false, 366));
         yield ").map(t => ({
         id: t.id,
         title: t.nom,
@@ -584,7 +585,7 @@ window.HARMONIE_TASKS = [
 ];
 </script>
 <script src=\"";
-        // line 376
+        // line 377
         yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl("harmonie-chatbot-widget.js"), "html", null, true);
         yield "\"></script>
 ";
@@ -597,7 +598,7 @@ window.HARMONIE_TASKS = [
         yield from [];
     }
 
-    // line 379
+    // line 380
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -610,10 +611,10 @@ window.HARMONIE_TASKS = [
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "body_javascripts"));
 
-        // line 380
+        // line 381
         yield "    <script src=\"https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js\" crossorigin=\"anonymous\"></script>
     <script src=\"";
-        // line 381
+        // line 382
         yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl("harmonie/js/export-handler.js"), "html", null, true);
         yield "\"></script>
     <script>
@@ -645,6 +646,7 @@ window.HARMONIE_TASKS = [
         var ghStatus = document.getElementById('kan-github-status');
         var ghSave = document.getElementById('kan-github-save');
         var ghCancel = document.getElementById('kan-github-cancel');
+        var ghSyncBtn = document.getElementById('kan-github-sync-open');
 
         function editUrl(id) {
             return editTpl.replace('888888888', String(id)) + '?panel=1';
@@ -775,7 +777,7 @@ window.HARMONIE_TASKS = [
         function loadGithubSettings() {
             if (!ghRepo || !ghStatus || !ghBranch) return;
             fetch('";
-        // line 540
+        // line 542
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("api_github_settings_get");
         yield "', { credentials: 'same-origin' })
                 .then(function (r) { return r.json(); })
@@ -807,11 +809,49 @@ window.HARMONIE_TASKS = [
         if (ghCancel && ghModal) {
             ghCancel.addEventListener('click', function () { ghModal.classList.remove('is-open'); });
         }
+
+        if (ghSyncBtn) {
+            ghSyncBtn.addEventListener('click', function () {
+                ghSyncBtn.disabled = true;
+                var previousText = ghSyncBtn.textContent;
+                ghSyncBtn.textContent = 'Sync...';
+
+                fetch('";
+        // line 579
+        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("api_github_settings_sync_doing");
+        yield "', {
+                    method: 'POST',
+                    credentials: 'same-origin',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ scope: 'doing' })
+                }).then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
+                  .then(function (res) {
+                    if (!res.ok || !res.d.ok) {
+                        throw new Error((res.d && res.d.error) ? res.d.error : 'Erreur de synchronisation');
+                    }
+
+                    var message = 'Sync GitHub DOING terminée — vérifiées: ' + (res.d.checked || 0)
+                        + ', mises à jour: ' + (res.d.updated || 0)
+                        + ', déjà alignées: ' + (res.d.skipped || 0);
+                    if ((res.d.errors || []).length > 0) {
+                        console.warn('Sync GitHub erreurs:', res.d.errors);
+                        message += ' (avec erreurs, voir console)';
+                    }
+                    alert(message);
+                }).catch(function (e) {
+                    alert(e.message || 'Erreur de synchronisation GitHub');
+                }).finally(function () {
+                    ghSyncBtn.disabled = false;
+                    ghSyncBtn.textContent = previousText;
+                });
+            });
+        }
+
                 if (ghSave && ghToken && ghRepo && ghBranch && ghStatus) {
             ghSave.addEventListener('click', function () {
                 ghStatus.textContent = 'Enregistrement...';
                 fetch('";
-        // line 573
+        // line 610
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("api_github_settings_put");
         yield "', {
                     method: 'PUT',
@@ -1003,7 +1043,7 @@ window.HARMONIE_TASKS = [
         if (window.EventSource) {
             try {
                 var es = new EventSource('";
-        // line 762
+        // line 799
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("api_kanban_stream");
         yield "');
                 es.addEventListener('kanban-update', function () {
@@ -1161,7 +1201,7 @@ window.HARMONIE_TASKS = [
      */
     public function getDebugInfo(): array
     {
-        return array (  1131 => 28,  1121 => 26,  1119 => 25,  1114 => 23,  1110 => 22,  1107 => 21,  1101 => 19,  1098 => 18,  1092 => 15,  1082 => 13,  1080 => 12,  1076 => 11,  1069 => 9,  1057 => 7,  1054 => 6,  1051 => 5,  1048 => 4,  1029 => 3,  1007 => 762,  815 => 573,  779 => 540,  617 => 381,  614 => 380,  601 => 379,  588 => 376,  574 => 365,  562 => 356,  550 => 347,  519 => 318,  517 => 317,  487 => 294,  484 => 293,  475 => 291,  471 => 290,  463 => 285,  446 => 275,  443 => 274,  434 => 272,  430 => 271,  422 => 266,  405 => 256,  402 => 255,  393 => 253,  389 => 252,  381 => 247,  367 => 236,  350 => 222,  343 => 218,  335 => 217,  332 => 216,  329 => 215,  326 => 214,  324 => 213,  320 => 212,  316 => 211,  312 => 210,  307 => 207,  305 => 206,  292 => 205,  114 => 37,  110 => 36,  105 => 35,  92 => 34,  69 => 32,  58 => 1,  56 => 30,  43 => 1,);
+        return array (  1171 => 28,  1161 => 26,  1159 => 25,  1154 => 23,  1150 => 22,  1147 => 21,  1141 => 19,  1138 => 18,  1132 => 15,  1122 => 13,  1120 => 12,  1116 => 11,  1109 => 9,  1097 => 7,  1094 => 6,  1091 => 5,  1088 => 4,  1069 => 3,  1047 => 799,  855 => 610,  821 => 579,  781 => 542,  618 => 382,  615 => 381,  602 => 380,  589 => 377,  575 => 366,  563 => 357,  551 => 348,  520 => 319,  518 => 318,  488 => 295,  485 => 294,  476 => 292,  472 => 291,  464 => 286,  447 => 276,  444 => 275,  435 => 273,  431 => 272,  423 => 267,  406 => 257,  403 => 256,  394 => 254,  390 => 253,  382 => 248,  367 => 236,  350 => 222,  343 => 218,  335 => 217,  332 => 216,  329 => 215,  326 => 214,  324 => 213,  320 => 212,  316 => 211,  312 => 210,  307 => 207,  305 => 206,  292 => 205,  114 => 37,  110 => 36,  105 => 35,  92 => 34,  69 => 32,  58 => 1,  56 => 30,  43 => 1,);
     }
 
     public function getSourceContext(): Source
@@ -1405,6 +1445,7 @@ window.HARMONIE_TASKS = [
                 </div>
             </details>
             <button type=\"button\" id=\"kan-github-settings-open\" class=\"kan-settings-btn\">GitHub ⚙</button>
+            <button type=\"button\" id=\"kan-github-sync-open\" class=\"kan-settings-btn\" style=\"opacity:.9;\">Sync GitHub</button>
         </div>
     </div>
 
@@ -1576,6 +1617,7 @@ window.HARMONIE_TASKS = [
         var ghStatus = document.getElementById('kan-github-status');
         var ghSave = document.getElementById('kan-github-save');
         var ghCancel = document.getElementById('kan-github-cancel');
+        var ghSyncBtn = document.getElementById('kan-github-sync-open');
 
         function editUrl(id) {
             return editTpl.replace('888888888', String(id)) + '?panel=1';
@@ -1735,6 +1777,41 @@ window.HARMONIE_TASKS = [
         if (ghCancel && ghModal) {
             ghCancel.addEventListener('click', function () { ghModal.classList.remove('is-open'); });
         }
+
+        if (ghSyncBtn) {
+            ghSyncBtn.addEventListener('click', function () {
+                ghSyncBtn.disabled = true;
+                var previousText = ghSyncBtn.textContent;
+                ghSyncBtn.textContent = 'Sync...';
+
+                fetch('{{ path('api_github_settings_sync_doing') }}', {
+                    method: 'POST',
+                    credentials: 'same-origin',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ scope: 'doing' })
+                }).then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
+                  .then(function (res) {
+                    if (!res.ok || !res.d.ok) {
+                        throw new Error((res.d && res.d.error) ? res.d.error : 'Erreur de synchronisation');
+                    }
+
+                    var message = 'Sync GitHub DOING terminée — vérifiées: ' + (res.d.checked || 0)
+                        + ', mises à jour: ' + (res.d.updated || 0)
+                        + ', déjà alignées: ' + (res.d.skipped || 0);
+                    if ((res.d.errors || []).length > 0) {
+                        console.warn('Sync GitHub erreurs:', res.d.errors);
+                        message += ' (avec erreurs, voir console)';
+                    }
+                    alert(message);
+                }).catch(function (e) {
+                    alert(e.message || 'Erreur de synchronisation GitHub');
+                }).finally(function () {
+                    ghSyncBtn.disabled = false;
+                    ghSyncBtn.textContent = previousText;
+                });
+            });
+        }
+
                 if (ghSave && ghToken && ghRepo && ghBranch && ghStatus) {
             ghSave.addEventListener('click', function () {
                 ghStatus.textContent = 'Enregistrement...';

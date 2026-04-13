@@ -2,6 +2,7 @@
 
 namespace App\Controller\Api;
 
+use App\Repository\TacheRepository;
 use App\Service\Github\GithubIssueService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -46,6 +47,21 @@ final class GithubSettingsController extends AbstractController
             'repo' => $repo,
             'branch' => '' === $branch ? 'main' : $branch,
             'tokenValid' => $github->validateToken($token),
+        ]);
+    }
+
+    #[Route('/sync-doing', name: 'api_github_settings_sync_doing', methods: ['POST'])]
+    public function syncDoing(GithubIssueService $github, TacheRepository $tacheRepository): JsonResponse
+    {
+        $doingTasks = $tacheRepository->findBy(['statutTache' => 'EN_COURS']);
+        $summary = $github->forceResyncDoingTasks($doingTasks);
+
+        return $this->json([
+            'ok' => true,
+            'checked' => $summary['checked'],
+            'updated' => $summary['updated'],
+            'skipped' => $summary['skipped'],
+            'errors' => $summary['errors'],
         ]);
     }
 }

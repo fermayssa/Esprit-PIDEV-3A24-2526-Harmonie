@@ -237,6 +237,7 @@
                 </div>
             </details>
             <button type="button" id="kan-github-settings-open" class="kan-settings-btn">GitHub ⚙</button>
+            <button type="button" id="kan-github-sync-open" class="kan-settings-btn" style="opacity:.9;">Sync GitHub</button>
         </div>
     </div>
 
@@ -408,6 +409,7 @@ window.HARMONIE_TASKS = [
         var ghStatus = document.getElementById('kan-github-status');
         var ghSave = document.getElementById('kan-github-save');
         var ghCancel = document.getElementById('kan-github-cancel');
+        var ghSyncBtn = document.getElementById('kan-github-sync-open');
 
         function editUrl(id) {
             return editTpl.replace('888888888', String(id)) + '?panel=1';
@@ -567,6 +569,41 @@ window.HARMONIE_TASKS = [
         if (ghCancel && ghModal) {
             ghCancel.addEventListener('click', function () { ghModal.classList.remove('is-open'); });
         }
+
+        if (ghSyncBtn) {
+            ghSyncBtn.addEventListener('click', function () {
+                ghSyncBtn.disabled = true;
+                var previousText = ghSyncBtn.textContent;
+                ghSyncBtn.textContent = 'Sync...';
+
+                fetch('{{ path('api_github_settings_sync_doing') }}', {
+                    method: 'POST',
+                    credentials: 'same-origin',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ scope: 'doing' })
+                }).then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
+                  .then(function (res) {
+                    if (!res.ok || !res.d.ok) {
+                        throw new Error((res.d && res.d.error) ? res.d.error : 'Erreur de synchronisation');
+                    }
+
+                    var message = 'Sync GitHub DOING terminée — vérifiées: ' + (res.d.checked || 0)
+                        + ', mises à jour: ' + (res.d.updated || 0)
+                        + ', déjà alignées: ' + (res.d.skipped || 0);
+                    if ((res.d.errors || []).length > 0) {
+                        console.warn('Sync GitHub erreurs:', res.d.errors);
+                        message += ' (avec erreurs, voir console)';
+                    }
+                    alert(message);
+                }).catch(function (e) {
+                    alert(e.message || 'Erreur de synchronisation GitHub');
+                }).finally(function () {
+                    ghSyncBtn.disabled = false;
+                    ghSyncBtn.textContent = previousText;
+                });
+            });
+        }
+
                 if (ghSave && ghToken && ghRepo && ghBranch && ghStatus) {
             ghSave.addEventListener('click', function () {
                 ghStatus.textContent = 'Enregistrement...';

@@ -3,6 +3,7 @@
         const CONFIG = {
         MODEL: 'gemini-2.5-flash-lite',
         CHAT_ENDPOINT: '/api/chat'
+        
         };
 
         const state = {

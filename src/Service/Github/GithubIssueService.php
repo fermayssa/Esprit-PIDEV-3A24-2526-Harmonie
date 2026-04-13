@@ -3,6 +3,7 @@
 namespace App\Service\Github;
 
 use App\Entity\Tache;
+use Psr\Log\LoggerInterface;
 use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
@@ -12,6 +13,7 @@ final class GithubIssueService
 
     public function __construct(
         private readonly HttpClientInterface $httpClient,
+        private readonly LoggerInterface $logger,
         private readonly string $projectDir,
         private readonly ?string $defaultToken = null,
         private readonly ?string $defaultRepo = null,
@@ -96,6 +98,12 @@ final class GithubIssueService
             $tache->setGithubIssueNumber((int) $created['number']);
             $tache->setGithubRepo($this->resolveRepo($tache));
 
+            try {
+                $this->syncProjectStatusForIssue($this->resolveRepo($tache), (int) $created['number'], (string) $tache->getStatutTache());
+            } catch (\Throwable $e) {
+                $this->logger->warning('GitHub Project status sync failed on create.', ['error' => $e->getMessage()]);
+            }
+
             return;
         }
 
@@ -116,6 +124,92 @@ final class GithubIssueService
                 'labels' => ['cancelled'],
             ]
         );
+    }
+
+    /**
+     * @param list<Tache> $tasks
+     * @return array{checked:int,updated:int,skipped:int,errors:array<int,string>}
+     */
+    public function forceResyncDoingTasks(array $tasks): array
+    {
+        $result = ['checked' => 0, 'updated' => 0, 'skipped' => 0, 'errors' => []];
+
+        if (!$this->hasConfig()) {
+            $result['errors'][] = 'GitHub non configuré.';
+
+            return $result;
+        }
+
+        foreach ($tasks as $task) {
+            if (!$task instanceof Tache || 'EN_COURS' !== (string) $task->getStatutTache()) {
+                continue;
+            }
+
+            ++$result['checked'];
+            if (null === $task->getGithubIssueNumber() || !$task->getGithubRepo()) {
+                ++$result['skipped'];
+                continue;
+            }
+
+            try {
+                $snapshot = $this->fetchIssueSnapshot($task->getGithubRepo(), (int) $task->getGithubIssueNumber());
+                if (null !== $snapshot && $this->isAlignedWithStatus($snapshot, 'EN_COURS')) {
+                    ++$result['skipped'];
+                    continue;
+                }
+
+                $this->updateIssue($task, false);
+                ++$result['updated'];
+            } catch (\Throwable $e) {
+                $result['errors'][] = sprintf('Task #%d: %s', (int) $task->getId(), $e->getMessage());
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * @return array{repo:string,number:int,title:string}|null
+     */
+    public function resolveIssueByNodeId(string $nodeId): ?array
+    {
+        if ('' === trim($nodeId) || !$this->hasConfig()) {
+            return null;
+        }
+
+        $query = <<<'GQL'
+query($id: ID!) {
+  node(id: $id) {
+    ... on Issue {
+      number
+      title
+      repository {
+        name
+        owner { login }
+      }
+    }
+  }
+}
+GQL;
+
+        $res = $this->graphQlRequest($query, ['id' => $nodeId]);
+        $issue = $res['data']['node'] ?? null;
+        if (!is_array($issue)) {
+            return null;
+        }
+
+        $owner = (string) ($issue['repository']['owner']['login'] ?? '');
+        $name = (string) ($issue['repository']['name'] ?? '');
+        $number = (int) ($issue['number'] ?? 0);
+        if ('' === $owner || '' === $name || 0 === $number) {
+            return null;
+        }
+
+        return [
+            'repo' => $owner.'/'.$name,
+            'number' => $number,
+            'title' => (string) ($issue['title'] ?? ''),
+        ];
     }
 
     /**
@@ -158,6 +252,8 @@ final class GithubIssueService
                 'labels' => $labels,
             ]
         );
+
+        $this->syncProjectStatusForIssue($this->resolveRepo($tache), (int) $tache->getGithubIssueNumber(), (string) $tache->getStatutTache());
     }
 
     /**
@@ -171,6 +267,271 @@ final class GithubIssueService
             default => ['open', ['todo']],
         };
     }
+
+        private function statusToProjectName(string $statut): string
+        {
+                return match ($statut) {
+                        'EN_COURS' => 'In Progress',
+                        'TERMINEE' => 'Done',
+                        default => 'Todo',
+                };
+        }
+
+        /**
+         * @return array{state:string,labels:array<int,string>,projectStatus:?string}|null
+         */
+        private function fetchIssueSnapshot(string $repoFullName, int $issueNumber): ?array
+        {
+                [$owner, $repo] = $this->splitRepo($repoFullName);
+
+                $query = <<<'GQL'
+query($owner: String!, $repo: String!, $number: Int!) {
+    repository(owner: $owner, name: $repo) {
+        issue(number: $number) {
+            state
+            labels(first: 50) {
+                nodes { name }
+            }
+            projectItems(first: 20) {
+                nodes {
+                    fieldValueByName(name: "Status") {
+                        ... on ProjectV2ItemFieldSingleSelectValue {
+                            name
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+GQL;
+
+                $res = $this->graphQlRequest($query, [
+                        'owner' => $owner,
+                        'repo' => $repo,
+                        'number' => $issueNumber,
+                ]);
+
+                $issue = $res['data']['repository']['issue'] ?? null;
+                if (!is_array($issue)) {
+                        return null;
+                }
+
+                $labels = [];
+                foreach (($issue['labels']['nodes'] ?? []) as $node) {
+                        if (is_array($node) && isset($node['name'])) {
+                                $labels[] = strtolower((string) $node['name']);
+                        }
+                }
+
+                $projectStatus = null;
+                foreach (($issue['projectItems']['nodes'] ?? []) as $item) {
+                        if (!is_array($item)) {
+                                continue;
+                        }
+                        $status = (string) ($item['fieldValueByName']['name'] ?? '');
+                        if ('' !== $status) {
+                                $projectStatus = $status;
+                                break;
+                        }
+                }
+
+                return [
+                        'state' => strtolower((string) ($issue['state'] ?? 'open')),
+                        'labels' => $labels,
+                        'projectStatus' => $projectStatus,
+                ];
+        }
+
+        /**
+         * @param array{state:string,labels:array<int,string>,projectStatus:?string} $snapshot
+         */
+        private function isAlignedWithStatus(array $snapshot, string $appStatus): bool
+        {
+                $state = strtolower((string) ($snapshot['state'] ?? 'open'));
+                $labels = $snapshot['labels'] ?? [];
+                $projectStatus = strtolower((string) ($snapshot['projectStatus'] ?? ''));
+
+                return match ($appStatus) {
+                        'EN_COURS' => 'open' === $state
+                                && in_array('doing', $labels, true)
+                                && 'in progress' === $projectStatus,
+                        'TERMINEE' => 'closed' === $state
+                                && ('done' === $projectStatus || '' === $projectStatus),
+                        default => 'open' === $state
+                                && in_array('todo', $labels, true)
+                                && ('todo' === $projectStatus || '' === $projectStatus),
+                };
+        }
+
+        private function syncProjectStatusForIssue(string $repoFullName, int $issueNumber, string $appStatus): void
+        {
+                if (0 === $issueNumber) {
+                        return;
+                }
+
+                [$owner, $repo] = $this->splitRepo($repoFullName);
+                $targetStatus = $this->statusToProjectName($appStatus);
+
+                $query = <<<'GQL'
+query($owner: String!, $repo: String!, $number: Int!) {
+    repository(owner: $owner, name: $repo) {
+        issue(number: $number) {
+            projectItems(first: 20) {
+                nodes {
+                    id
+                    fieldValueByName(name: "Status") {
+                        ... on ProjectV2ItemFieldSingleSelectValue {
+                            name
+                        }
+                    }
+                    project {
+                        id
+                        fields(first: 50) {
+                            nodes {
+                                ... on ProjectV2SingleSelectField {
+                                    id
+                                    name
+                                    options {
+                                        id
+                                        name
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+GQL;
+
+                $res = $this->graphQlRequest($query, [
+                        'owner' => $owner,
+                        'repo' => $repo,
+                        'number' => $issueNumber,
+                ]);
+
+                $items = $res['data']['repository']['issue']['projectItems']['nodes'] ?? [];
+                if (!is_array($items) || [] === $items) {
+                        return;
+                }
+
+                foreach ($items as $item) {
+                        if (!is_array($item)) {
+                                continue;
+                        }
+
+                        $currentStatus = strtolower((string) ($item['fieldValueByName']['name'] ?? ''));
+                        if ($currentStatus === strtolower($targetStatus)) {
+                                continue;
+                        }
+
+                        $projectId = (string) ($item['project']['id'] ?? '');
+                        $itemId = (string) ($item['id'] ?? '');
+                        if ('' === $projectId || '' === $itemId) {
+                                continue;
+                        }
+
+                        $statusFieldId = '';
+                        $targetOptionId = '';
+                        foreach (($item['project']['fields']['nodes'] ?? []) as $field) {
+                                if (!is_array($field)) {
+                                        continue;
+                                }
+                                if ('Status' !== (string) ($field['name'] ?? '')) {
+                                        continue;
+                                }
+                                $statusFieldId = (string) ($field['id'] ?? '');
+                                foreach (($field['options'] ?? []) as $option) {
+                                        if (!is_array($option)) {
+                                                continue;
+                                        }
+                                        if (strtolower((string) ($option['name'] ?? '')) === strtolower($targetStatus)) {
+                                                $targetOptionId = (string) ($option['id'] ?? '');
+                                                break;
+                                        }
+                                }
+                                break;
+                        }
+
+                        if ('' === $statusFieldId || '' === $targetOptionId) {
+                                continue;
+                        }
+
+                        $mutation = <<<'GQL'
+mutation($projectId: ID!, $itemId: ID!, $fieldId: ID!, $optionId: String!) {
+    updateProjectV2ItemFieldValue(input: {
+        projectId: $projectId,
+        itemId: $itemId,
+        fieldId: $fieldId,
+        value: { singleSelectOptionId: $optionId }
+    }) {
+        projectV2Item { id }
+    }
+}
+GQL;
+
+                        $this->graphQlRequest($mutation, [
+                                'projectId' => $projectId,
+                                'itemId' => $itemId,
+                                'fieldId' => $statusFieldId,
+                                'optionId' => $targetOptionId,
+                        ]);
+                }
+        }
+
+        /**
+         * @return array{0:string,1:string}
+         */
+        private function splitRepo(string $repoFullName): array
+        {
+                $parts = explode('/', trim($repoFullName), 2);
+                if (2 !== count($parts) || '' === $parts[0] || '' === $parts[1]) {
+                        throw new \RuntimeException('Repo GitHub invalide: '.$repoFullName);
+                }
+
+                return [$parts[0], $parts[1]];
+        }
+
+        /**
+         * @param array<string,mixed> $variables
+         * @return array<string,mixed>
+         */
+        private function graphQlRequest(string $query, array $variables = []): array
+        {
+                $cfg = $this->getConfig();
+                $token = (string) ($cfg['token'] ?? '');
+                if ('' === $token) {
+                        throw new \RuntimeException('GitHub non configuré.');
+                }
+
+                $response = $this->httpClient->request('POST', 'https://api.github.com/graphql', [
+                        'headers' => $this->headers($token),
+                        'json' => [
+                                'query' => $query,
+                                'variables' => $variables,
+                        ],
+                        'timeout' => 12,
+                ]);
+
+                $status = $response->getStatusCode();
+                $data = $response->toArray(false);
+
+                if ($status < 200 || $status >= 300) {
+                        $message = (string) ($data['message'] ?? 'Erreur GraphQL GitHub');
+                        throw new \RuntimeException($message);
+                }
+
+                if (!empty($data['errors']) && is_array($data['errors'])) {
+                        $first = $data['errors'][0];
+                        $msg = is_array($first) ? (string) ($first['message'] ?? 'Erreur GraphQL GitHub') : 'Erreur GraphQL GitHub';
+                        throw new \RuntimeException($msg);
+                }
+
+                return is_array($data) ? $data : [];
+        }
 
     private function resolveRepo(Tache $tache): string
     {
