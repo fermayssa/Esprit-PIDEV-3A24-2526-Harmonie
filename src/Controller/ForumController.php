@@ -20,11 +20,32 @@ use App\Service\ModerationService;
 use Knp\Component\Pager\PaginatorInterface;
 use App\Service\TranslationService;
 //use Symfony\Component\HttpFoundation\JsonResponse;
+use App\Service\SpellCheckService;
 
 
 class ForumController extends AbstractController
 {
-    
+
+
+    // ── CORRECTION ORTHOGRAPHIQUE (AJAX temps réel) ──────
+    #[Route('/forum/spellcheck', name: 'forum_spellcheck', methods: ['POST'])]
+    public function spellcheck(
+        Request $request,
+        SpellCheckService $spellCheck
+    ): JsonResponse {
+        $text     = $request->request->get('text', '');
+        $language = $request->request->get('language', 'fr');
+
+        // Sécurité — texte trop long
+        if (strlen($text) > 2000) {
+            return new JsonResponse(['errors' => []]);
+        }
+
+        $errors = $spellCheck->check($text, $language);
+
+        return new JsonResponse(['errors' => $errors]);
+    }
+
     private function getCurrentUserId(): int
     {
         return $this->getUser()->getUserId();
