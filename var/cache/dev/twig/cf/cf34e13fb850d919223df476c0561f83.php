@@ -52,7 +52,7 @@ class __TwigTemplate_4401aa8db7481547c6babf2a9ded752f extends Template
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "template", "tache/index.html.twig"));
 
-        // line 37
+        // line 30
         $macros["kan"] = $this->macros["kan"] = $this;
         // line 1
         $this->parent = $this->load("base.html.twig", 1);
@@ -65,7 +65,7 @@ class __TwigTemplate_4401aa8db7481547c6babf2a9ded752f extends Template
 
     }
 
-    // line 39
+    // line 32
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -88,7 +88,7 @@ class __TwigTemplate_4401aa8db7481547c6babf2a9ded752f extends Template
         yield from [];
     }
 
-    // line 41
+    // line 34
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -101,30 +101,40 @@ class __TwigTemplate_4401aa8db7481547c6babf2a9ded752f extends Template
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "stylesheets"));
 
-        // line 42
+        // line 35
         yield "    ";
         yield from $this->yieldParentBlock("stylesheets", $context, $blocks);
         yield "
     <link href=\"";
-        // line 43
+        // line 36
         yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl("harmonie/css/harmony-theme.css"), "html", null, true);
         yield "\" rel=\"stylesheet\">
     <link href=\"";
-        // line 44
+        // line 37
         yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl("harmonie/css/harmony-panel.css"), "html", null, true);
         yield "\" rel=\"stylesheet\">
     <style>
+
         .kan-page { max-width: 1120px; margin: 0 auto; }
+        
         .kan-top {
-            display: flex; flex-wrap: wrap; align-items: flex-start;
+            display: flex; flex-wrap: wrap; align-items: center;
             justify-content: space-between; gap: 16px; margin-bottom: 20px;
         }
         .kan-advice {
-            font-size: 13px; color: var(--text-muted, #9590B8); max-width: 62%;
-            line-height: 1.5;
+            font-size: 13px; color: var(--text-muted, #9590B8); font-style: italic; max-width: 40%;
+            line-height: 1.5; margin: 0;
         }
-        .kan-advice strong { color: var(--text-mid, #4A4570); font-weight: 600; }
-        .kan-export-wrap { position: relative; margin-left: auto; }
+        .kan-advice strong { color: #6b7280; font-weight: 500; }
+        
+        .kan-filters { display: flex; gap: 10px; flex: 1; align-items: center; justify-content: flex-end; }
+        .kan-search-input, .kan-priority-select {
+            padding: 8px 12px; border: 1px solid #e5e7eb; border-radius: 10px; font-size: 13px;
+            background: #fff; outline: none; transition: border-color 0.2s;
+        }
+        .kan-search-input:focus, .kan-priority-select:focus { border-color: #6A5ACD; }
+        
+        .kan-export-wrap { position: relative; }
         .kan-export-summary {
             list-style: none; cursor: pointer;
             padding: 8px 16px; border-radius: 10px;
@@ -150,8 +160,13 @@ class __TwigTemplate_4401aa8db7481547c6babf2a9ded752f extends Template
             border: 1px solid #e5e7eb;
             background: linear-gradient(180deg, #fafafa, #f3f4f6);
             font-size: 13px; font-weight: 500; color: var(--text-mid, #4A4570);
-            margin-left: 8px;
         }
+        
+        .kan-progress-wrap { margin-bottom: 24px; position: relative; }
+        .kan-progress-text { font-size: 13px; color: #4b5563; margin-bottom: 6px; font-weight: 500; }
+        .kan-progress-bar-bg { background: #e5e7eb; border-radius: 10px; height: 8px; width: 100%; overflow: hidden; }
+        .kan-progress-bar-fill { background: #6A5ACD; height: 100%; border-radius: 10px; transition: width 0.4s ease; }
+
         .kan-settings-modal {
             position: fixed; inset: 0; background: rgba(17, 24, 39, .35);
             display: none; align-items: center; justify-content: center; z-index: 999;
@@ -159,8 +174,7 @@ class __TwigTemplate_4401aa8db7481547c6babf2a9ded752f extends Template
         .kan-settings-modal.is-open { display: flex; }
         .kan-settings-card {
             width: min(94vw, 460px); background: #fff; border-radius: 14px;
-            border: 1px solid rgba(106,90,205,.12); box-shadow: 0 15px 40px rgba(0,0,0,.15);
-            padding: 16px;
+            border: 1px solid rgba(106,90,205,.12); box-shadow: 0 15px 40px rgba(0,0,0,.15); padding: 16px;
         }
         .kan-settings-card h3 { margin: 0 0 10px; font-size: 16px; color: #1f1b3a; }
         .kan-settings-row { margin-bottom: 10px; }
@@ -170,122 +184,100 @@ class __TwigTemplate_4401aa8db7481547c6babf2a9ded752f extends Template
             padding: 8px 10px; font-size: 13px;
         }
         .kan-settings-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 12px; }
-        .kan-settings-actions button {
-            border: 1px solid #d1d5db; background: #fff; border-radius: 10px; padding: 8px 12px; cursor: pointer;
-        }
+        .kan-settings-actions button { border: 1px solid #d1d5db; background: #fff; border-radius: 10px; padding: 8px 12px; cursor: pointer; }
         .kan-settings-actions .is-primary { background: #6A5ACD; border-color: #6A5ACD; color: #fff; }
         .kan-settings-status { font-size: 12px; margin-top: 8px; color: #4b5563; min-height: 16px; }
 
         .kan-board {
-            display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
-            align-items: stretch;
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; align-items: stretch;
         }
         @media (max-width: 960px) { .kan-board { grid-template-columns: 1fr; } }
 
         .kan-col {
             background: rgba(255,255,255,.7); border: 1px solid var(--border, rgba(106,90,205,.12));
-            border-radius: 18px; padding: 16px 14px 20px;
-            min-height: 280px; position: relative;
-            box-shadow: 0 2px 16px rgba(106,90,205,.06);
-            display: flex; flex-direction: column;
+            border-radius: 18px; position: relative; box-shadow: 0 2px 16px rgba(106,90,205,.06);
+            display: flex; flex-direction: column; overflow: hidden;
+            min-height: 280px;
         }
-        .kan-col-body {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            min-height: 200px;
-            margin-top: 4px;
-            padding: 10px 8px 12px;
-            border-radius: 14px;
-            border: 1px dashed rgba(124, 58, 237, 0.22);
-            background: rgba(255, 255, 255, 0.35);
-            transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
-            cursor: pointer;
-        }
-        .kan-col-body:hover {
-            border-color: rgba(124, 58, 237, 0.45);
-            background: rgba(255, 255, 255, 0.75);
-            box-shadow: inset 0 0 0 1px rgba(124, 58, 237, 0.08);
-        }
-        .kan-col-body:focus-visible {
-            outline: 2px solid #7c3aed;
-            outline-offset: 2px;
-        }
+        
+        .kan-col-header { padding: 16px 14px 10px; display: flex; align-items: center; justify-content: space-between; border-top: 4px solid #ccc; background: rgba(255,255,255, 0.9); }
+        .kan-col[data-statut=\"A_FAIRE\"] .kan-col-header { border-top-color: #9ca3af; }
+        .kan-col[data-statut=\"EN_COURS\"] .kan-col-header { border-top-color: #3b82f6; }
+        .kan-col[data-statut=\"TERMINEE\"] .kan-col-header { border-top-color: #10b981; }
+        
         .kan-col-title {
             font-family: var(--font-head, 'Syne', sans-serif); font-weight: 800; font-size: 13px;
-            letter-spacing: 0.06em; text-transform: uppercase;
-            color: var(--text-muted, #9590B8); margin: 0 0 10px 4px;
+            letter-spacing: 0.06em; text-transform: uppercase; display: flex; align-items: center; gap: 6px;
+            margin: 0; color: #4b5563;
         }
-        .kan-col--doing { min-height: 320px; }
-        .kan-col-list {
-            list-style: none; margin: 0; padding: 0;
-            flex: 1; min-height: 140px;
+        .kan-col[data-statut=\"A_FAIRE\"] .kan-col-title { color: #6b7280; }
+        .kan-col[data-statut=\"EN_COURS\"] .kan-col-title { color: #2563eb; }
+        .kan-col[data-statut=\"TERMINEE\"] .kan-col-title { color: #059669; }
+        
+        .kan-col-count { background: rgba(0,0,0,0.06); padding: 2px 8px; border-radius: 12px; font-size: 11px; }
+        .kan-col-add-btn { background: none; border: none; cursor: pointer; color: #9ca3af; font-size: 18px; padding: 0 4px; transition: color 0.2s; }
+        .kan-col-add-btn:hover { color: #1f2937; }
+
+        .kan-col-body {
+            flex: 1; display: flex; flex-direction: column;
+            padding: 0 8px 12px; transition: background 0.2s ease;
         }
-        .kan-col-list--doing { position: relative; }
+        .kan-col-body.is-dragover { background: rgba(106, 90, 205, 0.05); }
+
+        .kan-col-list { list-style: none; margin: 0; padding: 0; flex: 1; min-height: 140px; display: flex; flex-direction: column; gap: 12px; }
+        
+        .kan-empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0.5; font-size: 13px; min-height: 120px; pointer-events: none; }
+        .kan-empty-state svg { width: 32px; height: 32px; margin-bottom: 8px; color: #9ca3af; }
+
         .kan-card {
-            background: var(--white, #fff); border-radius: 14px;
-            padding: 14px 14px 12px;
-            box-shadow: 0 4px 14px rgba(0,0,0,.06);
-            border: 1px solid rgba(124,58,237,.1);
-            margin-bottom: 12px;
-            cursor: grab;
-            position: relative;
+            background: var(--white, #fff); border-radius: 12px; padding: 14px;
+            box-shadow: 0 2px 8px rgba(0,0,0,.04); border: 1px solid rgba(124,58,237,.1);
+            cursor: grab; position: relative; transition: box-shadow 0.2s, transform 0.2s, opacity 0.3s;
+            border-left: 4px solid #ccc;
+            animation: fadeIn 0.3s ease;
         }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .kan-col[data-statut=\"A_FAIRE\"] .kan-card { border-left-color: #9ca3af; }
+        .kan-col[data-statut=\"EN_COURS\"] .kan-card { border-left-color: #3b82f6; }
+        .kan-col[data-statut=\"TERMINEE\"] .kan-card { border-left-color: #10b981; }
+        
+        .kan-card:hover { box-shadow: 0 8px 20px rgba(0,0,0,.08); transform: translateY(-2px); }
         .kan-card:active { cursor: grabbing; }
-        .kan-card-title { font-weight: 700; font-size: 15px; color: var(--text, #1C1733); margin: 0 0 10px; line-height: 1.3; }
+        
+        .kan-card-top-info { display: flex; justify-content: flex-end; margin-bottom: 6px; }
+        .kan-priority-badge { font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: bold; text-transform: uppercase; }
+        .kan-prio-haute { background: #fee2e2; color: #991b1b; }
+        .kan-prio-moyenne { background: #ffedd5; color: #9a3412; }
+        .kan-prio-basse { background: #d1fae5; color: #065f46; }
+        
+        .kan-card-title { font-weight: 800; font-size: 15px; color: var(--text, #1C1733); margin: 0 0 10px; line-height: 1.3; }
         .kan-card-title-text { cursor: pointer; }
         .kan-card-title-text:hover { color: var(--purple, #6A5ACD); }
-        .kan-card-meta {
-            display: flex; align-items: center; gap: 6px; font-size: 13px;
-            color: #7c3aed; font-weight: 500; margin-bottom: 6px;
-        }
-        .kan-card-meta.overdue { color: #ea580c; font-weight: 600; }
-        .kan-card-meta.late { color: #dc2626; font-weight: 600; }
-        .kan-card-notes { font-size: 13px; color: var(--text-muted, #9590B8); line-height: 1.4; }
-        .kan-card-actions {
-            margin-top: 10px;
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            gap: 12px;
-        }
-        .kan-card-icon-link {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 6px;
-            border-radius: 10px;
-            color: var(--purple, #6A5ACD);
-            text-decoration: none;
-            transition: background 0.15s ease, color 0.15s ease;
-        }
-        .kan-card-icon-link:hover {
-            background: var(--purple-pale, #EDE8FA);
-            color: #5b21b6;
-        }
-        .kan-card-icon-link:focus-visible {
-            outline: 2px solid #7c3aed;
-            outline-offset: 2px;
-        }
+        
+        .kan-card-meta { display: flex; align-items: center; gap: 6px; font-size: 13px; color: #6b7280; font-weight: 500; margin-bottom: 6px; }
+        .kan-card-meta.overdue { color: #dc2626; font-weight: 600; }
+        .kan-card-meta.late { color: #ea580c; font-weight: 600; }
+        
+        .kan-card-notes { font-size: 13px; color: var(--text-muted, #9590B8); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        
+        .kan-card-actions { margin-top: 10px; display: flex; align-items: center; gap: 8px; }
+        .kan-card-icon-link { display: inline-flex; align-items: center; justify-content: center; padding: 6px; border-radius: 8px; color: #6b7280; text-decoration: none; transition: background 0.15s, color 0.15s; }
+        .kan-card-icon-link:hover { background: var(--purple-pale, #EDE8FA); color: var(--purple, #6A5ACD); }
 
         .kan-issue-badge {
-            position: absolute;
-            right: 10px;
-            bottom: 8px;
-            font-size: 11px;
-            line-height: 1;
-            padding: 4px 7px;
-            border-radius: 999px;
-            color: #5b21b6;
-            background: #ede9fe;
-            border: 1px solid rgba(91, 33, 182, .2);
-            text-decoration: none;
+            position: absolute; right: 14px; bottom: 12px; font-size: 11px; padding: 4px 8px; border-radius: 6px;
+            color: #4c1d95; background: #e0e7ff; font-weight: bold; text-decoration: none; transition: background 0.2s;
         }
-        .kan-issue-badge:hover { background: #ddd6fe; }
+        .kan-issue-badge:hover { background: #c7d2fe; }
 
         .kan-col-list.sortable-drag { min-height: 40px; }
-        .kan-card.sortable-ghost { opacity: 0.45; }
-    </style>
+        .kan-card.sortable-ghost { opacity: 0.3; background: #f3f4f6; border: 1px dashed #9ca3af; box-shadow: none; }
+        body.is-dragging .kan-col { filter: brightness(0.98); }
+        body.is-dragging .kan-col-list { outline: 2px dashed #d1d5db; min-height: 100px; border-radius: 12px; transition: 0.2s; }
+        body.is-dragging .kan-col-list:hover { outline-color: var(--blue); background: #f8fafc; }
+
+</style>
 ";
         
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->leave($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof);
@@ -296,7 +288,7 @@ class __TwigTemplate_4401aa8db7481547c6babf2a9ded752f extends Template
         yield from [];
     }
 
-    // line 220
+    // line 205
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -309,30 +301,62 @@ class __TwigTemplate_4401aa8db7481547c6babf2a9ded752f extends Template
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "body"));
 
-        // line 221
-        yield from $this->load("_planning_topbar.html.twig", 221)->unwrap()->yield($context);
-        // line 222
+        // line 206
+        yield from $this->load("_planning_topbar.html.twig", 206)->unwrap()->yield($context);
+        // line 207
         yield "<main class=\"page\">
 <div class=\"kan-page\"
      id=\"kanban-root\"
      data-csrf=\"";
-        // line 225
+        // line 210
         yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderCsrfToken("tache_dnd"), "html", null, true);
         yield "\"
      data-url-template=\"";
-        // line 226
+        // line 211
         yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_tache_update_statut", ["id" => 888888888]), "html_attr");
         yield "\"
      data-edit-url-template=\"";
-        // line 227
+        // line 212
         yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_tache_edit", ["id" => 888888888]), "html_attr");
         yield "\">
+        ";
+        // line 213
+        $context["total_tasks"] = ((Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["columns"]) || array_key_exists("columns", $context) ? $context["columns"] : (function () { throw new RuntimeError('Variable "columns" does not exist.', 213, $this->source); })()), "A_FAIRE", [], "any", false, false, false, 213)) + Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["columns"]) || array_key_exists("columns", $context) ? $context["columns"] : (function () { throw new RuntimeError('Variable "columns" does not exist.', 213, $this->source); })()), "EN_COURS", [], "any", false, false, false, 213))) + Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["columns"]) || array_key_exists("columns", $context) ? $context["columns"] : (function () { throw new RuntimeError('Variable "columns" does not exist.', 213, $this->source); })()), "TERMINEE", [], "any", false, false, false, 213)));
+        // line 214
+        yield "    ";
+        $context["done_tasks"] = Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["columns"]) || array_key_exists("columns", $context) ? $context["columns"] : (function () { throw new RuntimeError('Variable "columns" does not exist.', 214, $this->source); })()), "TERMINEE", [], "any", false, false, false, 214));
+        // line 215
+        yield "    ";
+        $context["percent"] = ((((isset($context["total_tasks"]) || array_key_exists("total_tasks", $context) ? $context["total_tasks"] : (function () { throw new RuntimeError('Variable "total_tasks" does not exist.', 215, $this->source); })()) > 0)) ? (Twig\Extension\CoreExtension::round((((isset($context["done_tasks"]) || array_key_exists("done_tasks", $context) ? $context["done_tasks"] : (function () { throw new RuntimeError('Variable "done_tasks" does not exist.', 215, $this->source); })()) / (isset($context["total_tasks"]) || array_key_exists("total_tasks", $context) ? $context["total_tasks"] : (function () { throw new RuntimeError('Variable "total_tasks" does not exist.', 215, $this->source); })())) * 100))) : (0));
+        // line 216
+        yield "    <div class=\"kan-progress-wrap\">
+        <div class=\"kan-progress-text\" id=\"kan-progress-text\">Progression : ";
+        // line 217
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["percent"]) || array_key_exists("percent", $context) ? $context["percent"] : (function () { throw new RuntimeError('Variable "percent" does not exist.', 217, $this->source); })()), "html", null, true);
+        yield "% — ";
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["done_tasks"]) || array_key_exists("done_tasks", $context) ? $context["done_tasks"] : (function () { throw new RuntimeError('Variable "done_tasks" does not exist.', 217, $this->source); })()), "html", null, true);
+        yield " tâches sur ";
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["total_tasks"]) || array_key_exists("total_tasks", $context) ? $context["total_tasks"] : (function () { throw new RuntimeError('Variable "total_tasks" does not exist.', 217, $this->source); })()), "html", null, true);
+        yield " complétées</div>
+        <div class=\"kan-progress-bar-bg\"><div class=\"kan-progress-bar-fill\" id=\"kan-progress-fill\" style=\"width: ";
+        // line 218
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["percent"]) || array_key_exists("percent", $context) ? $context["percent"] : (function () { throw new RuntimeError('Variable "percent" does not exist.', 218, $this->source); })()), "html", null, true);
+        yield "%;\"></div></div>
+    </div>
+
     <div class=\"kan-top\">
         <p class=\"kan-advice\"><strong>Conseil du jour :</strong> ";
-        // line 229
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["advice"]) || array_key_exists("advice", $context) ? $context["advice"] : (function () { throw new RuntimeError('Variable "advice" does not exist.', 229, $this->source); })()), "html", null, true);
+        // line 222
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["advice"]) || array_key_exists("advice", $context) ? $context["advice"] : (function () { throw new RuntimeError('Variable "advice" does not exist.', 222, $this->source); })()), "html", null, true);
         yield "</p>
-        <div style=\"display:flex; align-items:center; margin-left:auto;\">
+        <div class=\"kan-filters\">
+            <input type=\"text\" class=\"kan-search-input\" id=\"kan-search\" placeholder=\"Rechercher...\">
+            <select class=\"kan-priority-select\" id=\"kan-priority-filter\">
+                <option value=\"all\">Toutes</option>
+                <option value=\"haute\">Haute</option>
+                <option value=\"moyenne\">Moyenne</option>
+                <option value=\"basse\">Basse</option>
+            </select>
             <details class=\"kan-export-wrap\">
                 <summary class=\"kan-export-summary\">Exporter ▾</summary>
                 <div class=\"kan-export-menu\">
@@ -349,72 +373,127 @@ class __TwigTemplate_4401aa8db7481547c6babf2a9ded752f extends Template
     </div>
 
     <div class=\"kan-board\" id=\"kan-board-root\">
+
         <div class=\"kan-col\" data-statut=\"A_FAIRE\">
-            <h2 class=\"kan-col-title\">TODO</h2>
-            <div class=\"kan-col-body js-kan-col-zone\" tabindex=\"0\" aria-label=\"Colonne À faire — clic dans la zone vide pour ajouter une tâche. Glisser une carte pour la déplacer.\">
-                <ul class=\"kan-col-list\" data-statut=\"A_FAIRE\" aria-label=\"À faire\">
+            <div class=\"kan-col-header\">
+                <h2 class=\"kan-col-title\">TODO <span class=\"kan-col-count\" id=\"count-todo\">";
+        // line 247
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["columns"]) || array_key_exists("columns", $context) ? $context["columns"] : (function () { throw new RuntimeError('Variable "columns" does not exist.', 247, $this->source); })()), "A_FAIRE", [], "any", false, false, false, 247)), "html", null, true);
+        yield "</span></h2>
+                <button class=\"kan-col-add-btn js-kan-col-add\" data-statut=\"A_FAIRE\" title=\"Ajouter une tâche\">+</button>
+            </div>
+            <div class=\"kan-col-body js-kan-col-zone\" tabindex=\"0\">
+                <ul class=\"kan-col-list\" data-statut=\"A_FAIRE\">
                     ";
-        // line 248
+        // line 252
         $context['_parent'] = $context;
-        $context['_seq'] = CoreExtension::ensureTraversable(CoreExtension::getAttribute($this->env, $this->source, (isset($context["columns"]) || array_key_exists("columns", $context) ? $context["columns"] : (function () { throw new RuntimeError('Variable "columns" does not exist.', 248, $this->source); })()), "A_FAIRE", [], "any", false, false, false, 248));
+        $context['_seq'] = CoreExtension::ensureTraversable(CoreExtension::getAttribute($this->env, $this->source, (isset($context["columns"]) || array_key_exists("columns", $context) ? $context["columns"] : (function () { throw new RuntimeError('Variable "columns" does not exist.', 252, $this->source); })()), "A_FAIRE", [], "any", false, false, false, 252));
         foreach ($context['_seq'] as $context["_key"] => $context["tache"]) {
-            // line 249
+            // line 253
             yield "                        ";
-            yield $macros["kan"]->getTemplateForMacro("macro_kan_card", $context, 249, $this->getSourceContext())->macro_kan_card(...[$context["tache"], (isset($context["today"]) || array_key_exists("today", $context) ? $context["today"] : (function () { throw new RuntimeError('Variable "today" does not exist.', 249, $this->source); })())]);
+            yield $macros["kan"]->getTemplateForMacro("macro_kan_card", $context, 253, $this->getSourceContext())->macro_kan_card(...[$context["tache"], (isset($context["today"]) || array_key_exists("today", $context) ? $context["today"] : (function () { throw new RuntimeError('Variable "today" does not exist.', 253, $this->source); })())]);
             yield "
                     ";
         }
         $_parent = $context['_parent'];
         unset($context['_seq'], $context['_key'], $context['tache'], $context['_parent']);
         $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 251
+        // line 255
         yield "                </ul>
+                <div class=\"kan-empty-state\" style=\"display:";
+        // line 256
+        if ((Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["columns"]) || array_key_exists("columns", $context) ? $context["columns"] : (function () { throw new RuntimeError('Variable "columns" does not exist.', 256, $this->source); })()), "A_FAIRE", [], "any", false, false, false, 256)) > 0)) {
+            yield "none";
+        } else {
+            yield "flex";
+        }
+        yield ";\">
+                    <svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M12 6v6m0 0v6m0-6h6m-6 0H6\"/></svg>
+                    <div style=\"margin-bottom: 8px;\">Aucune tâche ici</div>
+                    <button class=\"kan-col-add-btn js-kan-col-add\" data-statut=\"A_FAIRE\" style=\"font-size:12px;background:#f3f4f6;padding:4px 12px;border-radius:6px;color:#4b5563;border:1px solid #e5e7eb;\">Ajouter une tâche</button>
+                </div>
             </div>
         </div>
 
         <div class=\"kan-col kan-col--doing\" data-statut=\"EN_COURS\">
-            <h2 class=\"kan-col-title\">DOING</h2>
-            <div class=\"kan-col-body js-kan-col-zone\" tabindex=\"0\" aria-label=\"Colonne En cours\">
-                <ul class=\"kan-col-list kan-col-list--doing\" data-statut=\"EN_COURS\" aria-label=\"En cours\">
+            <div class=\"kan-col-header\">
+                <h2 class=\"kan-col-title\">DOING <span class=\"kan-col-count\" id=\"count-doing\">";
+        // line 266
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["columns"]) || array_key_exists("columns", $context) ? $context["columns"] : (function () { throw new RuntimeError('Variable "columns" does not exist.', 266, $this->source); })()), "EN_COURS", [], "any", false, false, false, 266)), "html", null, true);
+        yield "</span></h2>
+                <button class=\"kan-col-add-btn js-kan-col-add\" data-statut=\"EN_COURS\" title=\"Ajouter une tâche\">+</button>
+            </div>
+            <div class=\"kan-col-body js-kan-col-zone\" tabindex=\"0\">
+                <ul class=\"kan-col-list kan-col-list--doing\" data-statut=\"EN_COURS\">
                     ";
-        // line 259
+        // line 271
         $context['_parent'] = $context;
-        $context['_seq'] = CoreExtension::ensureTraversable(CoreExtension::getAttribute($this->env, $this->source, (isset($context["columns"]) || array_key_exists("columns", $context) ? $context["columns"] : (function () { throw new RuntimeError('Variable "columns" does not exist.', 259, $this->source); })()), "EN_COURS", [], "any", false, false, false, 259));
+        $context['_seq'] = CoreExtension::ensureTraversable(CoreExtension::getAttribute($this->env, $this->source, (isset($context["columns"]) || array_key_exists("columns", $context) ? $context["columns"] : (function () { throw new RuntimeError('Variable "columns" does not exist.', 271, $this->source); })()), "EN_COURS", [], "any", false, false, false, 271));
         foreach ($context['_seq'] as $context["_key"] => $context["tache"]) {
-            // line 260
+            // line 272
             yield "                        ";
-            yield $macros["kan"]->getTemplateForMacro("macro_kan_card", $context, 260, $this->getSourceContext())->macro_kan_card(...[$context["tache"], (isset($context["today"]) || array_key_exists("today", $context) ? $context["today"] : (function () { throw new RuntimeError('Variable "today" does not exist.', 260, $this->source); })())]);
+            yield $macros["kan"]->getTemplateForMacro("macro_kan_card", $context, 272, $this->getSourceContext())->macro_kan_card(...[$context["tache"], (isset($context["today"]) || array_key_exists("today", $context) ? $context["today"] : (function () { throw new RuntimeError('Variable "today" does not exist.', 272, $this->source); })())]);
             yield "
                     ";
         }
         $_parent = $context['_parent'];
         unset($context['_seq'], $context['_key'], $context['tache'], $context['_parent']);
         $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 262
+        // line 274
         yield "                </ul>
+                <div class=\"kan-empty-state\" style=\"display:";
+        // line 275
+        if ((Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["columns"]) || array_key_exists("columns", $context) ? $context["columns"] : (function () { throw new RuntimeError('Variable "columns" does not exist.', 275, $this->source); })()), "EN_COURS", [], "any", false, false, false, 275)) > 0)) {
+            yield "none";
+        } else {
+            yield "flex";
+        }
+        yield ";\">
+                    <svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M12 6v6m0 0v6m0-6h6m-6 0H6\"/></svg>
+                    <div style=\"margin-bottom: 8px;\">Aucune tâche ici</div>
+                    <button class=\"kan-col-add-btn js-kan-col-add\" data-statut=\"EN_COURS\" style=\"font-size:12px;background:#f3f4f6;padding:4px 12px;border-radius:6px;color:#4b5563;border:1px solid #e5e7eb;\">Ajouter une tâche</button>
+                </div>
             </div>
         </div>
 
         <div class=\"kan-col\" data-statut=\"TERMINEE\">
-            <h2 class=\"kan-col-title\">DONE</h2>
-            <div class=\"kan-col-body js-kan-col-zone\" tabindex=\"0\" aria-label=\"Colonne Terminées\">
-                <ul class=\"kan-col-list\" data-statut=\"TERMINEE\" aria-label=\"Terminées\">
+            <div class=\"kan-col-header\">
+                <h2 class=\"kan-col-title\">DONE <span class=\"kan-col-count\" id=\"count-done\">";
+        // line 285
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["columns"]) || array_key_exists("columns", $context) ? $context["columns"] : (function () { throw new RuntimeError('Variable "columns" does not exist.', 285, $this->source); })()), "TERMINEE", [], "any", false, false, false, 285)), "html", null, true);
+        yield "</span></h2>
+                <button class=\"kan-col-add-btn js-kan-col-add\" data-statut=\"TERMINEE\" title=\"Ajouter une tâche\">+</button>
+            </div>
+            <div class=\"kan-col-body js-kan-col-zone\" tabindex=\"0\">
+                <ul class=\"kan-col-list\" data-statut=\"TERMINEE\">
                     ";
-        // line 270
+        // line 290
         $context['_parent'] = $context;
-        $context['_seq'] = CoreExtension::ensureTraversable(CoreExtension::getAttribute($this->env, $this->source, (isset($context["columns"]) || array_key_exists("columns", $context) ? $context["columns"] : (function () { throw new RuntimeError('Variable "columns" does not exist.', 270, $this->source); })()), "TERMINEE", [], "any", false, false, false, 270));
+        $context['_seq'] = CoreExtension::ensureTraversable(CoreExtension::getAttribute($this->env, $this->source, (isset($context["columns"]) || array_key_exists("columns", $context) ? $context["columns"] : (function () { throw new RuntimeError('Variable "columns" does not exist.', 290, $this->source); })()), "TERMINEE", [], "any", false, false, false, 290));
         foreach ($context['_seq'] as $context["_key"] => $context["tache"]) {
-            // line 271
+            // line 291
             yield "                        ";
-            yield $macros["kan"]->getTemplateForMacro("macro_kan_card", $context, 271, $this->getSourceContext())->macro_kan_card(...[$context["tache"], (isset($context["today"]) || array_key_exists("today", $context) ? $context["today"] : (function () { throw new RuntimeError('Variable "today" does not exist.', 271, $this->source); })())]);
+            yield $macros["kan"]->getTemplateForMacro("macro_kan_card", $context, 291, $this->getSourceContext())->macro_kan_card(...[$context["tache"], (isset($context["today"]) || array_key_exists("today", $context) ? $context["today"] : (function () { throw new RuntimeError('Variable "today" does not exist.', 291, $this->source); })())]);
             yield "
                     ";
         }
         $_parent = $context['_parent'];
         unset($context['_seq'], $context['_key'], $context['tache'], $context['_parent']);
         $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 273
+        // line 293
         yield "                </ul>
+                <div class=\"kan-empty-state\" style=\"display:";
+        // line 294
+        if ((Twig\Extension\CoreExtension::length($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["columns"]) || array_key_exists("columns", $context) ? $context["columns"] : (function () { throw new RuntimeError('Variable "columns" does not exist.', 294, $this->source); })()), "TERMINEE", [], "any", false, false, false, 294)) > 0)) {
+            yield "none";
+        } else {
+            yield "flex";
+        }
+        yield ";\">
+                    <svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M12 6v6m0 0v6m0-6h6m-6 0H6\"/></svg>
+                    <div style=\"margin-bottom: 8px;\">Aucune tâche ici</div>
+                    <button class=\"kan-col-add-btn js-kan-col-add\" data-statut=\"TERMINEE\" style=\"font-size:12px;background:#f3f4f6;padding:4px 12px;border-radius:6px;color:#4b5563;border:1px solid #e5e7eb;\">Ajouter une tâche</button>
+                </div>
             </div>
         </div>
     </div>
@@ -434,9 +513,9 @@ class __TwigTemplate_4401aa8db7481547c6babf2a9ded752f extends Template
 
     <template id=\"harmony-tpl-tache-form-new\">
         ";
-        // line 292
-        yield from $this->load("tache/_form_panel.html.twig", 292)->unwrap()->yield(CoreExtension::toArray(["form" => (isset($context["tacheFormNew"]) || array_key_exists("tacheFormNew", $context) ? $context["tacheFormNew"] : (function () { throw new RuntimeError('Variable "tacheFormNew" does not exist.', 292, $this->source); })()), "panel_mode" => "new"]));
-        // line 293
+        // line 317
+        yield from $this->load("tache/_form_panel.html.twig", 317)->unwrap()->yield(CoreExtension::toArray(["form" => (isset($context["tacheFormNew"]) || array_key_exists("tacheFormNew", $context) ? $context["tacheFormNew"] : (function () { throw new RuntimeError('Variable "tacheFormNew" does not exist.', 317, $this->source); })()), "panel_mode" => "new"]));
+        // line 318
         yield "    </template>
 </div>
 
@@ -467,8 +546,8 @@ class __TwigTemplate_4401aa8db7481547c6babf2a9ded752f extends Template
 <script>
 window.HARMONIE_TASKS = [
     ...(";
-        // line 322
-        yield json_encode(CoreExtension::getAttribute($this->env, $this->source, (isset($context["columns"]) || array_key_exists("columns", $context) ? $context["columns"] : (function () { throw new RuntimeError('Variable "columns" does not exist.', 322, $this->source); })()), "A_FAIRE", [], "any", false, false, false, 322));
+        // line 347
+        yield json_encode(CoreExtension::getAttribute($this->env, $this->source, (isset($context["columns"]) || array_key_exists("columns", $context) ? $context["columns"] : (function () { throw new RuntimeError('Variable "columns" does not exist.', 347, $this->source); })()), "A_FAIRE", [], "any", false, false, false, 347));
         yield ").map(t => ({
         id: t.id,
         title: t.nom,
@@ -479,8 +558,8 @@ window.HARMONIE_TASKS = [
         completed: false
     })),
     ...(";
-        // line 331
-        yield json_encode(CoreExtension::getAttribute($this->env, $this->source, (isset($context["columns"]) || array_key_exists("columns", $context) ? $context["columns"] : (function () { throw new RuntimeError('Variable "columns" does not exist.', 331, $this->source); })()), "EN_COURS", [], "any", false, false, false, 331));
+        // line 356
+        yield json_encode(CoreExtension::getAttribute($this->env, $this->source, (isset($context["columns"]) || array_key_exists("columns", $context) ? $context["columns"] : (function () { throw new RuntimeError('Variable "columns" does not exist.', 356, $this->source); })()), "EN_COURS", [], "any", false, false, false, 356));
         yield ").map(t => ({
         id: t.id,
         title: t.nom,
@@ -491,8 +570,8 @@ window.HARMONIE_TASKS = [
         completed: false
     })),
     ...(";
-        // line 340
-        yield json_encode(CoreExtension::getAttribute($this->env, $this->source, (isset($context["columns"]) || array_key_exists("columns", $context) ? $context["columns"] : (function () { throw new RuntimeError('Variable "columns" does not exist.', 340, $this->source); })()), "TERMINEE", [], "any", false, false, false, 340));
+        // line 365
+        yield json_encode(CoreExtension::getAttribute($this->env, $this->source, (isset($context["columns"]) || array_key_exists("columns", $context) ? $context["columns"] : (function () { throw new RuntimeError('Variable "columns" does not exist.', 365, $this->source); })()), "TERMINEE", [], "any", false, false, false, 365));
         yield ").map(t => ({
         id: t.id,
         title: t.nom,
@@ -505,7 +584,7 @@ window.HARMONIE_TASKS = [
 ];
 </script>
 <script src=\"";
-        // line 351
+        // line 376
         yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl("harmonie-chatbot-widget.js"), "html", null, true);
         yield "\"></script>
 ";
@@ -518,7 +597,7 @@ window.HARMONIE_TASKS = [
         yield from [];
     }
 
-    // line 354
+    // line 379
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -531,10 +610,10 @@ window.HARMONIE_TASKS = [
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "body_javascripts"));
 
-        // line 355
+        // line 380
         yield "    <script src=\"https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js\" crossorigin=\"anonymous\"></script>
     <script src=\"";
-        // line 356
+        // line 381
         yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl("harmonie/js/export-handler.js"), "html", null, true);
         yield "\"></script>
     <script>
@@ -624,7 +703,10 @@ window.HARMONIE_TASKS = [
                         bindCancel(slot);
                         bindAjaxForm(slot);
                     });
-                }).catch(function () {
+                
+                            updateCountsAndProgress();
+                        }).catch(function () {
+
                     window.alert('Une erreur réseau est survenue.');
                 });
             });
@@ -669,7 +751,10 @@ window.HARMONIE_TASKS = [
                 slot.innerHTML = html;
                 bindCancel(slot);
                 bindAjaxForm(slot);
-            }).catch(function () {
+            
+                            updateCountsAndProgress();
+                        }).catch(function () {
+
                 slot.innerHTML = '<p style=\"color:#dc2626;font-size:14px;\">Impossible de charger le formulaire.</p>';
             });
         }
@@ -690,7 +775,7 @@ window.HARMONIE_TASKS = [
         function loadGithubSettings() {
             if (!ghRepo || !ghStatus || !ghBranch) return;
             fetch('";
-        // line 509
+        // line 540
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("api_github_settings_get");
         yield "', { credentials: 'same-origin' })
                 .then(function (r) { return r.json(); })
@@ -726,7 +811,7 @@ window.HARMONIE_TASKS = [
             ghSave.addEventListener('click', function () {
                 ghStatus.textContent = 'Enregistrement...';
                 fetch('";
-        // line 542
+        // line 573
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("api_github_settings_put");
         yield "', {
                     method: 'PUT',
@@ -768,7 +853,14 @@ window.HARMONIE_TASKS = [
                     dragClass: 'sortable-drag',
                     emptyInsertThreshold: 40,
                     fallbackTolerance: 4,
+
+                    onChoose: function (evt) { evt.item.classList.add('sortable-ghost'); },
+                    onStart: function (evt) { document.body.classList.add('is-dragging'); },
+                    onUnchoose: function (evt) { evt.item.classList.remove('sortable-ghost'); updateCountsAndProgress(); },
+                    onChange: function(evt) { updateCountsAndProgress(); },
+
                     onEnd: function (evt) {
+                        document.body.classList.remove('is-dragging');
                         suppressCardClickUntil = Date.now() + 400;
                         if (evt.from === evt.to) {
                             return;
@@ -795,7 +887,10 @@ window.HARMONIE_TASKS = [
                             if (!data.ok) {
                                 throw new Error(data.error || 'Erreur');
                             }
+                        
+                            updateCountsAndProgress();
                         }).catch(function () {
+
                             alert('Impossible d’enregistrer le déplacement. La page va se recharger.');
                             window.location.reload();
                         });
@@ -832,9 +927,62 @@ window.HARMONIE_TASKS = [
                 var id = card.getAttribute('data-tache-id');
                 if (id) openEdit(id);
             });
+
+            board.querySelectorAll('.js-kan-col-add').forEach(function(btn) {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    var st = btn.getAttribute('data-statut');
+                    if (st) openNew(st);
+                });
+            });
         }
 
         bindBoardEvents();
+
+        function updateCountsAndProgress() {
+            var total = document.querySelectorAll('.kan-card').length;
+            var done = document.querySelectorAll('.kan-col[data-statut=\"TERMINEE\"] .kan-card').length;
+            
+            var todoCountEl = document.getElementById('count-todo');
+            if (todoCountEl) todoCountEl.textContent = document.querySelectorAll('.kan-col[data-statut=\"A_FAIRE\"] .kan-card').length;
+            
+            var doingCountEl = document.getElementById('count-doing');
+            if (doingCountEl) doingCountEl.textContent = document.querySelectorAll('.kan-col[data-statut=\"EN_COURS\"] .kan-card').length;
+            
+            var doneCountEl = document.getElementById('count-done');
+            if (doneCountEl) doneCountEl.textContent = done;
+            
+            var pct = total > 0 ? Math.round((done / total) * 100) : 0;
+            var fill = document.getElementById('kan-progress-fill');
+            if (fill) fill.style.width = pct + '%';
+            
+            var txt = document.getElementById('kan-progress-text');
+            if (txt) txt.textContent = 'Progression : ' + pct + '% — ' + done + ' tâches sur ' + total + ' complétées';
+            
+            document.querySelectorAll('.kan-col').forEach(function(col) {
+                var len = col.querySelectorAll('.kan-card').length;
+                var empty = col.querySelector('.kan-empty-state');
+                if (empty) empty.style.display = len > 0 ? 'none' : 'flex';
+            });
+        }
+
+        var searchInput = document.getElementById('kan-search');
+        var prioFilter = document.getElementById('kan-priority-filter');
+        function filterCards() {
+            var txt = (searchInput ? searchInput.value : '').toLowerCase();
+            var prio = prioFilter ? prioFilter.value : 'all';
+            document.querySelectorAll('.kan-card').forEach(function(card) {
+                var cTitle = card.getAttribute('data-title') || '';
+                var cPrio = card.getAttribute('data-priority') || '';
+                var matchTxt = !txt || cTitle.indexOf(txt) !== -1;
+                var matchPrio = prio === 'all' || cPrio === prio;
+                card.style.display = (matchTxt && matchPrio) ? '' : 'none';
+            });
+            updateCountsAndProgress();
+        }
+        if (searchInput) searchInput.addEventListener('input', filterCards);
+        if (prioFilter) prioFilter.addEventListener('change', filterCards);
+
 
         document.addEventListener('harmonie_data_updated', function() {
             fetch(window.location.href, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
@@ -855,7 +1003,7 @@ window.HARMONIE_TASKS = [
         if (window.EventSource) {
             try {
                 var es = new EventSource('";
-        // line 668
+        // line 762
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("api_kanban_stream");
         yield "');
                 es.addEventListener('kanban-update', function () {
@@ -903,85 +1051,83 @@ window.HARMONIE_TASKS = [
             yield "    ";
             $context["is_overdue"] = (((isset($context["dl"]) || array_key_exists("dl", $context) ? $context["dl"] : (function () { throw new RuntimeError('Variable "dl" does not exist.', 5, $this->source); })()) && ($this->extensions['Twig\Extension\CoreExtension']->formatDate((isset($context["dl"]) || array_key_exists("dl", $context) ? $context["dl"] : (function () { throw new RuntimeError('Variable "dl" does not exist.', 5, $this->source); })()), "Y-m-d") < $this->extensions['Twig\Extension\CoreExtension']->formatDate((isset($context["today"]) || array_key_exists("today", $context) ? $context["today"] : (function () { throw new RuntimeError('Variable "today" does not exist.', 5, $this->source); })()), "Y-m-d"))) && (CoreExtension::getAttribute($this->env, $this->source, (isset($context["tache"]) || array_key_exists("tache", $context) ? $context["tache"] : (function () { throw new RuntimeError('Variable "tache" does not exist.', 5, $this->source); })()), "statutTache", [], "any", false, false, false, 5) != "TERMINEE"));
             // line 6
-            yield "    <li class=\"kan-card\" data-tache-id=\"";
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["tache"]) || array_key_exists("tache", $context) ? $context["tache"] : (function () { throw new RuntimeError('Variable "tache" does not exist.', 6, $this->source); })()), "id", [], "any", false, false, false, 6), "html", null, true);
-            yield "\">
-        <h3 class=\"kan-card-title\"><span class=\"kan-card-title-text\">";
+            yield "    ";
+            $context["is_late"] = ((((isset($context["dl"]) || array_key_exists("dl", $context) ? $context["dl"] : (function () { throw new RuntimeError('Variable "dl" does not exist.', 6, $this->source); })()) && ($this->extensions['Twig\Extension\CoreExtension']->formatDate((isset($context["dl"]) || array_key_exists("dl", $context) ? $context["dl"] : (function () { throw new RuntimeError('Variable "dl" does not exist.', 6, $this->source); })()), "Y-m-d") >= $this->extensions['Twig\Extension\CoreExtension']->formatDate((isset($context["today"]) || array_key_exists("today", $context) ? $context["today"] : (function () { throw new RuntimeError('Variable "today" does not exist.', 6, $this->source); })()), "Y-m-d"))) && ($this->extensions['Twig\Extension\CoreExtension']->formatDate((isset($context["dl"]) || array_key_exists("dl", $context) ? $context["dl"] : (function () { throw new RuntimeError('Variable "dl" does not exist.', 6, $this->source); })()), "Y-m-d") <= $this->extensions['Twig\Extension\CoreExtension']->formatDate($this->extensions['Twig\Extension\CoreExtension']->modifyDate((isset($context["today"]) || array_key_exists("today", $context) ? $context["today"] : (function () { throw new RuntimeError('Variable "today" does not exist.', 6, $this->source); })()), "+3 days"), "Y-m-d"))) && (CoreExtension::getAttribute($this->env, $this->source, (isset($context["tache"]) || array_key_exists("tache", $context) ? $context["tache"] : (function () { throw new RuntimeError('Variable "tache" does not exist.', 6, $this->source); })()), "statutTache", [], "any", false, false, false, 6) != "TERMINEE"));
             // line 7
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["tache"]) || array_key_exists("tache", $context) ? $context["tache"] : (function () { throw new RuntimeError('Variable "tache" does not exist.', 7, $this->source); })()), "nom", [], "any", false, false, false, 7), "html", null, true);
+            yield "    <li class=\"kan-card priority-";
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::lower($this->env->getCharset(), ((CoreExtension::getAttribute($this->env, $this->source, ($context["tache"] ?? null), "priorite", [], "any", true, true, false, 7)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["tache"]) || array_key_exists("tache", $context) ? $context["tache"] : (function () { throw new RuntimeError('Variable "tache" does not exist.', 7, $this->source); })()), "priorite", [], "any", false, false, false, 7), "moyenne")) : ("moyenne"))), "html", null, true);
+            yield "\" data-tache-id=\"";
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["tache"]) || array_key_exists("tache", $context) ? $context["tache"] : (function () { throw new RuntimeError('Variable "tache" does not exist.', 7, $this->source); })()), "id", [], "any", false, false, false, 7), "html", null, true);
+            yield "\" data-priority=\"";
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::lower($this->env->getCharset(), ((CoreExtension::getAttribute($this->env, $this->source, ($context["tache"] ?? null), "priorite", [], "any", true, true, false, 7)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["tache"]) || array_key_exists("tache", $context) ? $context["tache"] : (function () { throw new RuntimeError('Variable "tache" does not exist.', 7, $this->source); })()), "priorite", [], "any", false, false, false, 7), "moyenne")) : ("moyenne"))), "html", null, true);
+            yield "\" data-title=\"";
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::lower($this->env->getCharset(), CoreExtension::getAttribute($this->env, $this->source, (isset($context["tache"]) || array_key_exists("tache", $context) ? $context["tache"] : (function () { throw new RuntimeError('Variable "tache" does not exist.', 7, $this->source); })()), "nom", [], "any", false, false, false, 7)), "html_attr");
+            yield "\">
+        <div class=\"kan-card-top-info\">
+            <span class=\"kan-priority-badge kan-prio-";
+            // line 9
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(Twig\Extension\CoreExtension::lower($this->env->getCharset(), ((CoreExtension::getAttribute($this->env, $this->source, ($context["tache"] ?? null), "priorite", [], "any", true, true, false, 9)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["tache"]) || array_key_exists("tache", $context) ? $context["tache"] : (function () { throw new RuntimeError('Variable "tache" does not exist.', 9, $this->source); })()), "priorite", [], "any", false, false, false, 9), "moyenne")) : ("moyenne"))), "html", null, true);
+            yield "\">";
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(((CoreExtension::getAttribute($this->env, $this->source, ($context["tache"] ?? null), "priorite", [], "any", true, true, false, 9)) ? (Twig\Extension\CoreExtension::default(CoreExtension::getAttribute($this->env, $this->source, (isset($context["tache"]) || array_key_exists("tache", $context) ? $context["tache"] : (function () { throw new RuntimeError('Variable "tache" does not exist.', 9, $this->source); })()), "priorite", [], "any", false, false, false, 9), "Moyenne")) : ("Moyenne")), "html", null, true);
+            yield "</span>
+        </div>
+        <h3 class=\"kan-card-title\"><span class=\"kan-card-title-text\">";
+            // line 11
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["tache"]) || array_key_exists("tache", $context) ? $context["tache"] : (function () { throw new RuntimeError('Variable "tache" does not exist.', 11, $this->source); })()), "nom", [], "any", false, false, false, 11), "html", null, true);
             yield "</span></h3>
         ";
-            // line 8
-            if ((($tmp = (isset($context["dl"]) || array_key_exists("dl", $context) ? $context["dl"] : (function () { throw new RuntimeError('Variable "dl" does not exist.', 8, $this->source); })())) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-                // line 9
+            // line 12
+            if ((($tmp = (isset($context["dl"]) || array_key_exists("dl", $context) ? $context["dl"] : (function () { throw new RuntimeError('Variable "dl" does not exist.', 12, $this->source); })())) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+                // line 13
                 yield "            <div class=\"kan-card-meta";
-                if ((($tmp = (isset($context["is_overdue"]) || array_key_exists("is_overdue", $context) ? $context["is_overdue"] : (function () { throw new RuntimeError('Variable "is_overdue" does not exist.', 9, $this->source); })())) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+                if ((($tmp = (isset($context["is_overdue"]) || array_key_exists("is_overdue", $context) ? $context["is_overdue"] : (function () { throw new RuntimeError('Variable "is_overdue" does not exist.', 13, $this->source); })())) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
                     yield " overdue";
-                }
-                if (((isset($context["is_overdue"]) || array_key_exists("is_overdue", $context) ? $context["is_overdue"] : (function () { throw new RuntimeError('Variable "is_overdue" does not exist.', 9, $this->source); })()) && ($this->extensions['Twig\Extension\CoreExtension']->formatDate((isset($context["dl"]) || array_key_exists("dl", $context) ? $context["dl"] : (function () { throw new RuntimeError('Variable "dl" does not exist.', 9, $this->source); })()), "Y-m-d") < $this->extensions['Twig\Extension\CoreExtension']->formatDate($this->extensions['Twig\Extension\CoreExtension']->modifyDate((isset($context["today"]) || array_key_exists("today", $context) ? $context["today"] : (function () { throw new RuntimeError('Variable "today" does not exist.', 9, $this->source); })()), "-7 days"), "Y-m-d")))) {
+                } elseif ((($tmp = (isset($context["is_late"]) || array_key_exists("is_late", $context) ? $context["is_late"] : (function () { throw new RuntimeError('Variable "is_late" does not exist.', 13, $this->source); })())) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
                     yield " late";
                 }
                 yield "\">
-                <svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\">
-                    <rect x=\"3\" y=\"4\" width=\"18\" height=\"18\" rx=\"2\"/><path d=\"M16 2v4M8 2v4M3 10h18\"/>
-                </svg>
+                <svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\"><rect x=\"3\" y=\"4\" width=\"18\" height=\"18\" rx=\"2\"/><path d=\"M16 2v4M8 2v4M3 10h18\"/></svg>
                 <span>";
-                // line 13
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate((isset($context["dl"]) || array_key_exists("dl", $context) ? $context["dl"] : (function () { throw new RuntimeError('Variable "dl" does not exist.', 13, $this->source); })()), "d/m/Y"), "html", null, true);
+                // line 15
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate((isset($context["dl"]) || array_key_exists("dl", $context) ? $context["dl"] : (function () { throw new RuntimeError('Variable "dl" does not exist.', 15, $this->source); })()), "d/m/Y"), "html", null, true);
                 yield "</span>
             </div>
         ";
             }
-            // line 16
+            // line 18
             yield "        ";
-            if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["tache"]) || array_key_exists("tache", $context) ? $context["tache"] : (function () { throw new RuntimeError('Variable "tache" does not exist.', 16, $this->source); })()), "notes", [], "any", false, false, false, 16)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-                // line 17
+            if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, (isset($context["tache"]) || array_key_exists("tache", $context) ? $context["tache"] : (function () { throw new RuntimeError('Variable "tache" does not exist.', 18, $this->source); })()), "notes", [], "any", false, false, false, 18)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+                // line 19
                 yield "            <p class=\"kan-card-notes\">";
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["tache"]) || array_key_exists("tache", $context) ? $context["tache"] : (function () { throw new RuntimeError('Variable "tache" does not exist.', 17, $this->source); })()), "notes", [], "any", false, false, false, 17), "html", null, true);
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["tache"]) || array_key_exists("tache", $context) ? $context["tache"] : (function () { throw new RuntimeError('Variable "tache" does not exist.', 19, $this->source); })()), "notes", [], "any", false, false, false, 19), "html", null, true);
                 yield "</p>
         ";
             }
-            // line 19
+            // line 21
             yield "        <div class=\"kan-card-actions\">
             <a href=\"";
-            // line 20
-            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_tache_show", ["id" => CoreExtension::getAttribute($this->env, $this->source, (isset($context["tache"]) || array_key_exists("tache", $context) ? $context["tache"] : (function () { throw new RuntimeError('Variable "tache" does not exist.', 20, $this->source); })()), "id", [], "any", false, false, false, 20)]), "html", null, true);
-            yield "\" class=\"kan-card-icon-link\" title=\"Voir\" aria-label=\"Voir la tâche\">
-                <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z\"/><circle cx=\"12\" cy=\"12\" r=\"3\"/></svg>
-            </a>
+            // line 22
+            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_tache_show", ["id" => CoreExtension::getAttribute($this->env, $this->source, (isset($context["tache"]) || array_key_exists("tache", $context) ? $context["tache"] : (function () { throw new RuntimeError('Variable "tache" does not exist.', 22, $this->source); })()), "id", [], "any", false, false, false, 22)]), "html", null, true);
+            yield "\" class=\"kan-card-icon-link\" title=\"Voir\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z\"/><circle cx=\"12\" cy=\"12\" r=\"3\"/></svg></a>
             <a href=\"";
             // line 23
             yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_tache_edit", ["id" => CoreExtension::getAttribute($this->env, $this->source, (isset($context["tache"]) || array_key_exists("tache", $context) ? $context["tache"] : (function () { throw new RuntimeError('Variable "tache" does not exist.', 23, $this->source); })()), "id", [], "any", false, false, false, 23)]), "html", null, true);
-            yield "\" class=\"kan-card-icon-link\" title=\"Modifier\" aria-label=\"Modifier la tâche\">
-                <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M12 20h9\"/><path d=\"M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z\"/></svg>
-            </a>
+            yield "\" class=\"kan-card-icon-link\" title=\"Modifier\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 20h9\"/><path d=\"M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z\"/></svg></a>
         </div>
         ";
-            // line 27
-            if ((CoreExtension::getAttribute($this->env, $this->source, (isset($context["tache"]) || array_key_exists("tache", $context) ? $context["tache"] : (function () { throw new RuntimeError('Variable "tache" does not exist.', 27, $this->source); })()), "githubIssueNumber", [], "any", false, false, false, 27) && CoreExtension::getAttribute($this->env, $this->source, (isset($context["tache"]) || array_key_exists("tache", $context) ? $context["tache"] : (function () { throw new RuntimeError('Variable "tache" does not exist.', 27, $this->source); })()), "githubRepo", [], "any", false, false, false, 27))) {
-                // line 28
-                yield "            <a class=\"kan-issue-badge\"
-               href=\"https://github.com/";
-                // line 29
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["tache"]) || array_key_exists("tache", $context) ? $context["tache"] : (function () { throw new RuntimeError('Variable "tache" does not exist.', 29, $this->source); })()), "githubRepo", [], "any", false, false, false, 29), "html", null, true);
+            // line 25
+            if ((CoreExtension::getAttribute($this->env, $this->source, (isset($context["tache"]) || array_key_exists("tache", $context) ? $context["tache"] : (function () { throw new RuntimeError('Variable "tache" does not exist.', 25, $this->source); })()), "githubIssueNumber", [], "any", false, false, false, 25) && CoreExtension::getAttribute($this->env, $this->source, (isset($context["tache"]) || array_key_exists("tache", $context) ? $context["tache"] : (function () { throw new RuntimeError('Variable "tache" does not exist.', 25, $this->source); })()), "githubRepo", [], "any", false, false, false, 25))) {
+                // line 26
+                yield "            <a class=\"kan-issue-badge\" href=\"https://github.com/";
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["tache"]) || array_key_exists("tache", $context) ? $context["tache"] : (function () { throw new RuntimeError('Variable "tache" does not exist.', 26, $this->source); })()), "githubRepo", [], "any", false, false, false, 26), "html", null, true);
                 yield "/issues/";
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["tache"]) || array_key_exists("tache", $context) ? $context["tache"] : (function () { throw new RuntimeError('Variable "tache" does not exist.', 29, $this->source); })()), "githubIssueNumber", [], "any", false, false, false, 29), "html", null, true);
-                yield "\"
-               target=\"_blank\"
-               rel=\"noopener noreferrer\"
-               title=\"Ouvrir l'issue GitHub #";
-                // line 32
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["tache"]) || array_key_exists("tache", $context) ? $context["tache"] : (function () { throw new RuntimeError('Variable "tache" does not exist.', 32, $this->source); })()), "githubIssueNumber", [], "any", false, false, false, 32), "html", null, true);
-                yield "\"
-               aria-label=\"Ouvrir l'issue GitHub #";
-                // line 33
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["tache"]) || array_key_exists("tache", $context) ? $context["tache"] : (function () { throw new RuntimeError('Variable "tache" does not exist.', 33, $this->source); })()), "githubIssueNumber", [], "any", false, false, false, 33), "html", null, true);
-                yield "\">#";
-                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["tache"]) || array_key_exists("tache", $context) ? $context["tache"] : (function () { throw new RuntimeError('Variable "tache" does not exist.', 33, $this->source); })()), "githubIssueNumber", [], "any", false, false, false, 33), "html", null, true);
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["tache"]) || array_key_exists("tache", $context) ? $context["tache"] : (function () { throw new RuntimeError('Variable "tache" does not exist.', 26, $this->source); })()), "githubIssueNumber", [], "any", false, false, false, 26), "html", null, true);
+                yield "\" target=\"_blank\" rel=\"noopener noreferrer\">#";
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["tache"]) || array_key_exists("tache", $context) ? $context["tache"] : (function () { throw new RuntimeError('Variable "tache" does not exist.', 26, $this->source); })()), "githubIssueNumber", [], "any", false, false, false, 26), "html", null, true);
                 yield "</a>
         ";
             }
-            // line 35
+            // line 28
             yield "    </li>
 ";
             
@@ -1015,7 +1161,7 @@ window.HARMONIE_TASKS = [
      */
     public function getDebugInfo(): array
     {
-        return array (  985 => 35,  978 => 33,  974 => 32,  966 => 29,  963 => 28,  961 => 27,  954 => 23,  948 => 20,  945 => 19,  939 => 17,  936 => 16,  930 => 13,  917 => 9,  915 => 8,  911 => 7,  906 => 6,  903 => 5,  900 => 4,  881 => 3,  859 => 668,  730 => 542,  694 => 509,  538 => 356,  535 => 355,  522 => 354,  509 => 351,  495 => 340,  483 => 331,  471 => 322,  440 => 293,  438 => 292,  417 => 273,  408 => 271,  404 => 270,  394 => 262,  385 => 260,  381 => 259,  371 => 251,  362 => 249,  358 => 248,  343 => 236,  333 => 229,  328 => 227,  324 => 226,  320 => 225,  315 => 222,  313 => 221,  300 => 220,  114 => 44,  110 => 43,  105 => 42,  92 => 41,  69 => 39,  58 => 1,  56 => 37,  43 => 1,);
+        return array (  1131 => 28,  1121 => 26,  1119 => 25,  1114 => 23,  1110 => 22,  1107 => 21,  1101 => 19,  1098 => 18,  1092 => 15,  1082 => 13,  1080 => 12,  1076 => 11,  1069 => 9,  1057 => 7,  1054 => 6,  1051 => 5,  1048 => 4,  1029 => 3,  1007 => 762,  815 => 573,  779 => 540,  617 => 381,  614 => 380,  601 => 379,  588 => 376,  574 => 365,  562 => 356,  550 => 347,  519 => 318,  517 => 317,  487 => 294,  484 => 293,  475 => 291,  471 => 290,  463 => 285,  446 => 275,  443 => 274,  434 => 272,  430 => 271,  422 => 266,  405 => 256,  402 => 255,  393 => 253,  389 => 252,  381 => 247,  367 => 236,  350 => 222,  343 => 218,  335 => 217,  332 => 216,  329 => 215,  326 => 214,  324 => 213,  320 => 212,  316 => 211,  312 => 210,  307 => 207,  305 => 206,  292 => 205,  114 => 37,  110 => 36,  105 => 35,  92 => 34,  69 => 32,  58 => 1,  56 => 30,  43 => 1,);
     }
 
     public function getSourceContext(): Source
@@ -1025,13 +1171,15 @@ window.HARMONIE_TASKS = [
 {% macro kan_card(tache, today) %}
     {% set dl = tache.deadline %}
     {% set is_overdue = dl and dl|date('Y-m-d') < today|date('Y-m-d') and tache.statutTache != 'TERMINEE' %}
-    <li class=\"kan-card\" data-tache-id=\"{{ tache.id }}\">
+    {% set is_late = dl and dl|date('Y-m-d') >= today|date('Y-m-d') and dl|date('Y-m-d') <= today|date_modify('+3 days')|date('Y-m-d') and tache.statutTache != 'TERMINEE' %}
+    <li class=\"kan-card priority-{{ tache.priorite|default('moyenne')|lower }}\" data-tache-id=\"{{ tache.id }}\" data-priority=\"{{ tache.priorite|default('moyenne')|lower }}\" data-title=\"{{ tache.nom|lower|escape('html_attr') }}\">
+        <div class=\"kan-card-top-info\">
+            <span class=\"kan-priority-badge kan-prio-{{ tache.priorite|default('moyenne')|lower }}\">{{ tache.priorite|default('Moyenne') }}</span>
+        </div>
         <h3 class=\"kan-card-title\"><span class=\"kan-card-title-text\">{{ tache.nom }}</span></h3>
         {% if dl %}
-            <div class=\"kan-card-meta{% if is_overdue %} overdue{% endif %}{% if is_overdue and dl|date('Y-m-d') < today|date_modify('-7 days')|date('Y-m-d') %} late{% endif %}\">
-                <svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\">
-                    <rect x=\"3\" y=\"4\" width=\"18\" height=\"18\" rx=\"2\"/><path d=\"M16 2v4M8 2v4M3 10h18\"/>
-                </svg>
+            <div class=\"kan-card-meta{% if is_overdue %} overdue{% elseif is_late %} late{% endif %}\">
+                <svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\"><rect x=\"3\" y=\"4\" width=\"18\" height=\"18\" rx=\"2\"/><path d=\"M16 2v4M8 2v4M3 10h18\"/></svg>
                 <span>{{ dl|date('d/m/Y') }}</span>
             </div>
         {% endif %}
@@ -1039,20 +1187,11 @@ window.HARMONIE_TASKS = [
             <p class=\"kan-card-notes\">{{ tache.notes }}</p>
         {% endif %}
         <div class=\"kan-card-actions\">
-            <a href=\"{{ path('app_tache_show', {id: tache.id}) }}\" class=\"kan-card-icon-link\" title=\"Voir\" aria-label=\"Voir la tâche\">
-                <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z\"/><circle cx=\"12\" cy=\"12\" r=\"3\"/></svg>
-            </a>
-            <a href=\"{{ path('app_tache_edit', {id: tache.id}) }}\" class=\"kan-card-icon-link\" title=\"Modifier\" aria-label=\"Modifier la tâche\">
-                <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M12 20h9\"/><path d=\"M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z\"/></svg>
-            </a>
+            <a href=\"{{ path('app_tache_show', {id: tache.id}) }}\" class=\"kan-card-icon-link\" title=\"Voir\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z\"/><circle cx=\"12\" cy=\"12\" r=\"3\"/></svg></a>
+            <a href=\"{{ path('app_tache_edit', {id: tache.id}) }}\" class=\"kan-card-icon-link\" title=\"Modifier\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 20h9\"/><path d=\"M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z\"/></svg></a>
         </div>
         {% if tache.githubIssueNumber and tache.githubRepo %}
-            <a class=\"kan-issue-badge\"
-               href=\"https://github.com/{{ tache.githubRepo }}/issues/{{ tache.githubIssueNumber }}\"
-               target=\"_blank\"
-               rel=\"noopener noreferrer\"
-               title=\"Ouvrir l'issue GitHub #{{ tache.githubIssueNumber }}\"
-               aria-label=\"Ouvrir l'issue GitHub #{{ tache.githubIssueNumber }}\">#{{ tache.githubIssueNumber }}</a>
+            <a class=\"kan-issue-badge\" href=\"https://github.com/{{ tache.githubRepo }}/issues/{{ tache.githubIssueNumber }}\" target=\"_blank\" rel=\"noopener noreferrer\">#{{ tache.githubIssueNumber }}</a>
         {% endif %}
     </li>
 {% endmacro %}
@@ -1065,17 +1204,27 @@ window.HARMONIE_TASKS = [
     <link href=\"{{ asset('harmonie/css/harmony-theme.css') }}\" rel=\"stylesheet\">
     <link href=\"{{ asset('harmonie/css/harmony-panel.css') }}\" rel=\"stylesheet\">
     <style>
+
         .kan-page { max-width: 1120px; margin: 0 auto; }
+        
         .kan-top {
-            display: flex; flex-wrap: wrap; align-items: flex-start;
+            display: flex; flex-wrap: wrap; align-items: center;
             justify-content: space-between; gap: 16px; margin-bottom: 20px;
         }
         .kan-advice {
-            font-size: 13px; color: var(--text-muted, #9590B8); max-width: 62%;
-            line-height: 1.5;
+            font-size: 13px; color: var(--text-muted, #9590B8); font-style: italic; max-width: 40%;
+            line-height: 1.5; margin: 0;
         }
-        .kan-advice strong { color: var(--text-mid, #4A4570); font-weight: 600; }
-        .kan-export-wrap { position: relative; margin-left: auto; }
+        .kan-advice strong { color: #6b7280; font-weight: 500; }
+        
+        .kan-filters { display: flex; gap: 10px; flex: 1; align-items: center; justify-content: flex-end; }
+        .kan-search-input, .kan-priority-select {
+            padding: 8px 12px; border: 1px solid #e5e7eb; border-radius: 10px; font-size: 13px;
+            background: #fff; outline: none; transition: border-color 0.2s;
+        }
+        .kan-search-input:focus, .kan-priority-select:focus { border-color: #6A5ACD; }
+        
+        .kan-export-wrap { position: relative; }
         .kan-export-summary {
             list-style: none; cursor: pointer;
             padding: 8px 16px; border-radius: 10px;
@@ -1101,8 +1250,13 @@ window.HARMONIE_TASKS = [
             border: 1px solid #e5e7eb;
             background: linear-gradient(180deg, #fafafa, #f3f4f6);
             font-size: 13px; font-weight: 500; color: var(--text-mid, #4A4570);
-            margin-left: 8px;
         }
+        
+        .kan-progress-wrap { margin-bottom: 24px; position: relative; }
+        .kan-progress-text { font-size: 13px; color: #4b5563; margin-bottom: 6px; font-weight: 500; }
+        .kan-progress-bar-bg { background: #e5e7eb; border-radius: 10px; height: 8px; width: 100%; overflow: hidden; }
+        .kan-progress-bar-fill { background: #6A5ACD; height: 100%; border-radius: 10px; transition: width 0.4s ease; }
+
         .kan-settings-modal {
             position: fixed; inset: 0; background: rgba(17, 24, 39, .35);
             display: none; align-items: center; justify-content: center; z-index: 999;
@@ -1110,8 +1264,7 @@ window.HARMONIE_TASKS = [
         .kan-settings-modal.is-open { display: flex; }
         .kan-settings-card {
             width: min(94vw, 460px); background: #fff; border-radius: 14px;
-            border: 1px solid rgba(106,90,205,.12); box-shadow: 0 15px 40px rgba(0,0,0,.15);
-            padding: 16px;
+            border: 1px solid rgba(106,90,205,.12); box-shadow: 0 15px 40px rgba(0,0,0,.15); padding: 16px;
         }
         .kan-settings-card h3 { margin: 0 0 10px; font-size: 16px; color: #1f1b3a; }
         .kan-settings-row { margin-bottom: 10px; }
@@ -1121,122 +1274,100 @@ window.HARMONIE_TASKS = [
             padding: 8px 10px; font-size: 13px;
         }
         .kan-settings-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 12px; }
-        .kan-settings-actions button {
-            border: 1px solid #d1d5db; background: #fff; border-radius: 10px; padding: 8px 12px; cursor: pointer;
-        }
+        .kan-settings-actions button { border: 1px solid #d1d5db; background: #fff; border-radius: 10px; padding: 8px 12px; cursor: pointer; }
         .kan-settings-actions .is-primary { background: #6A5ACD; border-color: #6A5ACD; color: #fff; }
         .kan-settings-status { font-size: 12px; margin-top: 8px; color: #4b5563; min-height: 16px; }
 
         .kan-board {
-            display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
-            align-items: stretch;
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; align-items: stretch;
         }
         @media (max-width: 960px) { .kan-board { grid-template-columns: 1fr; } }
 
         .kan-col {
             background: rgba(255,255,255,.7); border: 1px solid var(--border, rgba(106,90,205,.12));
-            border-radius: 18px; padding: 16px 14px 20px;
-            min-height: 280px; position: relative;
-            box-shadow: 0 2px 16px rgba(106,90,205,.06);
-            display: flex; flex-direction: column;
+            border-radius: 18px; position: relative; box-shadow: 0 2px 16px rgba(106,90,205,.06);
+            display: flex; flex-direction: column; overflow: hidden;
+            min-height: 280px;
         }
-        .kan-col-body {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            min-height: 200px;
-            margin-top: 4px;
-            padding: 10px 8px 12px;
-            border-radius: 14px;
-            border: 1px dashed rgba(124, 58, 237, 0.22);
-            background: rgba(255, 255, 255, 0.35);
-            transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
-            cursor: pointer;
-        }
-        .kan-col-body:hover {
-            border-color: rgba(124, 58, 237, 0.45);
-            background: rgba(255, 255, 255, 0.75);
-            box-shadow: inset 0 0 0 1px rgba(124, 58, 237, 0.08);
-        }
-        .kan-col-body:focus-visible {
-            outline: 2px solid #7c3aed;
-            outline-offset: 2px;
-        }
+        
+        .kan-col-header { padding: 16px 14px 10px; display: flex; align-items: center; justify-content: space-between; border-top: 4px solid #ccc; background: rgba(255,255,255, 0.9); }
+        .kan-col[data-statut=\"A_FAIRE\"] .kan-col-header { border-top-color: #9ca3af; }
+        .kan-col[data-statut=\"EN_COURS\"] .kan-col-header { border-top-color: #3b82f6; }
+        .kan-col[data-statut=\"TERMINEE\"] .kan-col-header { border-top-color: #10b981; }
+        
         .kan-col-title {
             font-family: var(--font-head, 'Syne', sans-serif); font-weight: 800; font-size: 13px;
-            letter-spacing: 0.06em; text-transform: uppercase;
-            color: var(--text-muted, #9590B8); margin: 0 0 10px 4px;
+            letter-spacing: 0.06em; text-transform: uppercase; display: flex; align-items: center; gap: 6px;
+            margin: 0; color: #4b5563;
         }
-        .kan-col--doing { min-height: 320px; }
-        .kan-col-list {
-            list-style: none; margin: 0; padding: 0;
-            flex: 1; min-height: 140px;
+        .kan-col[data-statut=\"A_FAIRE\"] .kan-col-title { color: #6b7280; }
+        .kan-col[data-statut=\"EN_COURS\"] .kan-col-title { color: #2563eb; }
+        .kan-col[data-statut=\"TERMINEE\"] .kan-col-title { color: #059669; }
+        
+        .kan-col-count { background: rgba(0,0,0,0.06); padding: 2px 8px; border-radius: 12px; font-size: 11px; }
+        .kan-col-add-btn { background: none; border: none; cursor: pointer; color: #9ca3af; font-size: 18px; padding: 0 4px; transition: color 0.2s; }
+        .kan-col-add-btn:hover { color: #1f2937; }
+
+        .kan-col-body {
+            flex: 1; display: flex; flex-direction: column;
+            padding: 0 8px 12px; transition: background 0.2s ease;
         }
-        .kan-col-list--doing { position: relative; }
+        .kan-col-body.is-dragover { background: rgba(106, 90, 205, 0.05); }
+
+        .kan-col-list { list-style: none; margin: 0; padding: 0; flex: 1; min-height: 140px; display: flex; flex-direction: column; gap: 12px; }
+        
+        .kan-empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0.5; font-size: 13px; min-height: 120px; pointer-events: none; }
+        .kan-empty-state svg { width: 32px; height: 32px; margin-bottom: 8px; color: #9ca3af; }
+
         .kan-card {
-            background: var(--white, #fff); border-radius: 14px;
-            padding: 14px 14px 12px;
-            box-shadow: 0 4px 14px rgba(0,0,0,.06);
-            border: 1px solid rgba(124,58,237,.1);
-            margin-bottom: 12px;
-            cursor: grab;
-            position: relative;
+            background: var(--white, #fff); border-radius: 12px; padding: 14px;
+            box-shadow: 0 2px 8px rgba(0,0,0,.04); border: 1px solid rgba(124,58,237,.1);
+            cursor: grab; position: relative; transition: box-shadow 0.2s, transform 0.2s, opacity 0.3s;
+            border-left: 4px solid #ccc;
+            animation: fadeIn 0.3s ease;
         }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .kan-col[data-statut=\"A_FAIRE\"] .kan-card { border-left-color: #9ca3af; }
+        .kan-col[data-statut=\"EN_COURS\"] .kan-card { border-left-color: #3b82f6; }
+        .kan-col[data-statut=\"TERMINEE\"] .kan-card { border-left-color: #10b981; }
+        
+        .kan-card:hover { box-shadow: 0 8px 20px rgba(0,0,0,.08); transform: translateY(-2px); }
         .kan-card:active { cursor: grabbing; }
-        .kan-card-title { font-weight: 700; font-size: 15px; color: var(--text, #1C1733); margin: 0 0 10px; line-height: 1.3; }
+        
+        .kan-card-top-info { display: flex; justify-content: flex-end; margin-bottom: 6px; }
+        .kan-priority-badge { font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: bold; text-transform: uppercase; }
+        .kan-prio-haute { background: #fee2e2; color: #991b1b; }
+        .kan-prio-moyenne { background: #ffedd5; color: #9a3412; }
+        .kan-prio-basse { background: #d1fae5; color: #065f46; }
+        
+        .kan-card-title { font-weight: 800; font-size: 15px; color: var(--text, #1C1733); margin: 0 0 10px; line-height: 1.3; }
         .kan-card-title-text { cursor: pointer; }
         .kan-card-title-text:hover { color: var(--purple, #6A5ACD); }
-        .kan-card-meta {
-            display: flex; align-items: center; gap: 6px; font-size: 13px;
-            color: #7c3aed; font-weight: 500; margin-bottom: 6px;
-        }
-        .kan-card-meta.overdue { color: #ea580c; font-weight: 600; }
-        .kan-card-meta.late { color: #dc2626; font-weight: 600; }
-        .kan-card-notes { font-size: 13px; color: var(--text-muted, #9590B8); line-height: 1.4; }
-        .kan-card-actions {
-            margin-top: 10px;
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            gap: 12px;
-        }
-        .kan-card-icon-link {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 6px;
-            border-radius: 10px;
-            color: var(--purple, #6A5ACD);
-            text-decoration: none;
-            transition: background 0.15s ease, color 0.15s ease;
-        }
-        .kan-card-icon-link:hover {
-            background: var(--purple-pale, #EDE8FA);
-            color: #5b21b6;
-        }
-        .kan-card-icon-link:focus-visible {
-            outline: 2px solid #7c3aed;
-            outline-offset: 2px;
-        }
+        
+        .kan-card-meta { display: flex; align-items: center; gap: 6px; font-size: 13px; color: #6b7280; font-weight: 500; margin-bottom: 6px; }
+        .kan-card-meta.overdue { color: #dc2626; font-weight: 600; }
+        .kan-card-meta.late { color: #ea580c; font-weight: 600; }
+        
+        .kan-card-notes { font-size: 13px; color: var(--text-muted, #9590B8); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        
+        .kan-card-actions { margin-top: 10px; display: flex; align-items: center; gap: 8px; }
+        .kan-card-icon-link { display: inline-flex; align-items: center; justify-content: center; padding: 6px; border-radius: 8px; color: #6b7280; text-decoration: none; transition: background 0.15s, color 0.15s; }
+        .kan-card-icon-link:hover { background: var(--purple-pale, #EDE8FA); color: var(--purple, #6A5ACD); }
 
         .kan-issue-badge {
-            position: absolute;
-            right: 10px;
-            bottom: 8px;
-            font-size: 11px;
-            line-height: 1;
-            padding: 4px 7px;
-            border-radius: 999px;
-            color: #5b21b6;
-            background: #ede9fe;
-            border: 1px solid rgba(91, 33, 182, .2);
-            text-decoration: none;
+            position: absolute; right: 14px; bottom: 12px; font-size: 11px; padding: 4px 8px; border-radius: 6px;
+            color: #4c1d95; background: #e0e7ff; font-weight: bold; text-decoration: none; transition: background 0.2s;
         }
-        .kan-issue-badge:hover { background: #ddd6fe; }
+        .kan-issue-badge:hover { background: #c7d2fe; }
 
         .kan-col-list.sortable-drag { min-height: 40px; }
-        .kan-card.sortable-ghost { opacity: 0.45; }
-    </style>
+        .kan-card.sortable-ghost { opacity: 0.3; background: #f3f4f6; border: 1px dashed #9ca3af; box-shadow: none; }
+        body.is-dragging .kan-col { filter: brightness(0.98); }
+        body.is-dragging .kan-col-list { outline: 2px dashed #d1d5db; min-height: 100px; border-radius: 12px; transition: 0.2s; }
+        body.is-dragging .kan-col-list:hover { outline-color: var(--blue); background: #f8fafc; }
+
+</style>
 {% endblock %}
 
 {% block body %}
@@ -1247,9 +1378,24 @@ window.HARMONIE_TASKS = [
      data-csrf=\"{{ csrf_token('tache_dnd') }}\"
      data-url-template=\"{{ path('app_tache_update_statut', {id: 888888888})|e('html_attr') }}\"
      data-edit-url-template=\"{{ path('app_tache_edit', { id: 888888888 })|e('html_attr') }}\">
+        {% set total_tasks = columns.A_FAIRE|length + columns.EN_COURS|length + columns.TERMINEE|length %}
+    {% set done_tasks = columns.TERMINEE|length %}
+    {% set percent = total_tasks > 0 ? (done_tasks / total_tasks * 100)|round : 0 %}
+    <div class=\"kan-progress-wrap\">
+        <div class=\"kan-progress-text\" id=\"kan-progress-text\">Progression : {{ percent }}% — {{ done_tasks }} tâches sur {{ total_tasks }} complétées</div>
+        <div class=\"kan-progress-bar-bg\"><div class=\"kan-progress-bar-fill\" id=\"kan-progress-fill\" style=\"width: {{ percent }}%;\"></div></div>
+    </div>
+
     <div class=\"kan-top\">
         <p class=\"kan-advice\"><strong>Conseil du jour :</strong> {{ advice }}</p>
-        <div style=\"display:flex; align-items:center; margin-left:auto;\">
+        <div class=\"kan-filters\">
+            <input type=\"text\" class=\"kan-search-input\" id=\"kan-search\" placeholder=\"Rechercher...\">
+            <select class=\"kan-priority-select\" id=\"kan-priority-filter\">
+                <option value=\"all\">Toutes</option>
+                <option value=\"haute\">Haute</option>
+                <option value=\"moyenne\">Moyenne</option>
+                <option value=\"basse\">Basse</option>
+            </select>
             <details class=\"kan-export-wrap\">
                 <summary class=\"kan-export-summary\">Exporter ▾</summary>
                 <div class=\"kan-export-menu\">
@@ -1263,36 +1409,61 @@ window.HARMONIE_TASKS = [
     </div>
 
     <div class=\"kan-board\" id=\"kan-board-root\">
+
         <div class=\"kan-col\" data-statut=\"A_FAIRE\">
-            <h2 class=\"kan-col-title\">TODO</h2>
-            <div class=\"kan-col-body js-kan-col-zone\" tabindex=\"0\" aria-label=\"Colonne À faire — clic dans la zone vide pour ajouter une tâche. Glisser une carte pour la déplacer.\">
-                <ul class=\"kan-col-list\" data-statut=\"A_FAIRE\" aria-label=\"À faire\">
+            <div class=\"kan-col-header\">
+                <h2 class=\"kan-col-title\">TODO <span class=\"kan-col-count\" id=\"count-todo\">{{ columns.A_FAIRE|length }}</span></h2>
+                <button class=\"kan-col-add-btn js-kan-col-add\" data-statut=\"A_FAIRE\" title=\"Ajouter une tâche\">+</button>
+            </div>
+            <div class=\"kan-col-body js-kan-col-zone\" tabindex=\"0\">
+                <ul class=\"kan-col-list\" data-statut=\"A_FAIRE\">
                     {% for tache in columns.A_FAIRE %}
                         {{ kan.kan_card(tache, today) }}
                     {% endfor %}
                 </ul>
+                <div class=\"kan-empty-state\" style=\"display:{% if columns.A_FAIRE|length > 0 %}none{% else %}flex{% endif %};\">
+                    <svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M12 6v6m0 0v6m0-6h6m-6 0H6\"/></svg>
+                    <div style=\"margin-bottom: 8px;\">Aucune tâche ici</div>
+                    <button class=\"kan-col-add-btn js-kan-col-add\" data-statut=\"A_FAIRE\" style=\"font-size:12px;background:#f3f4f6;padding:4px 12px;border-radius:6px;color:#4b5563;border:1px solid #e5e7eb;\">Ajouter une tâche</button>
+                </div>
             </div>
         </div>
 
         <div class=\"kan-col kan-col--doing\" data-statut=\"EN_COURS\">
-            <h2 class=\"kan-col-title\">DOING</h2>
-            <div class=\"kan-col-body js-kan-col-zone\" tabindex=\"0\" aria-label=\"Colonne En cours\">
-                <ul class=\"kan-col-list kan-col-list--doing\" data-statut=\"EN_COURS\" aria-label=\"En cours\">
+            <div class=\"kan-col-header\">
+                <h2 class=\"kan-col-title\">DOING <span class=\"kan-col-count\" id=\"count-doing\">{{ columns.EN_COURS|length }}</span></h2>
+                <button class=\"kan-col-add-btn js-kan-col-add\" data-statut=\"EN_COURS\" title=\"Ajouter une tâche\">+</button>
+            </div>
+            <div class=\"kan-col-body js-kan-col-zone\" tabindex=\"0\">
+                <ul class=\"kan-col-list kan-col-list--doing\" data-statut=\"EN_COURS\">
                     {% for tache in columns.EN_COURS %}
                         {{ kan.kan_card(tache, today) }}
                     {% endfor %}
                 </ul>
+                <div class=\"kan-empty-state\" style=\"display:{% if columns.EN_COURS|length > 0 %}none{% else %}flex{% endif %};\">
+                    <svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M12 6v6m0 0v6m0-6h6m-6 0H6\"/></svg>
+                    <div style=\"margin-bottom: 8px;\">Aucune tâche ici</div>
+                    <button class=\"kan-col-add-btn js-kan-col-add\" data-statut=\"EN_COURS\" style=\"font-size:12px;background:#f3f4f6;padding:4px 12px;border-radius:6px;color:#4b5563;border:1px solid #e5e7eb;\">Ajouter une tâche</button>
+                </div>
             </div>
         </div>
 
         <div class=\"kan-col\" data-statut=\"TERMINEE\">
-            <h2 class=\"kan-col-title\">DONE</h2>
-            <div class=\"kan-col-body js-kan-col-zone\" tabindex=\"0\" aria-label=\"Colonne Terminées\">
-                <ul class=\"kan-col-list\" data-statut=\"TERMINEE\" aria-label=\"Terminées\">
+            <div class=\"kan-col-header\">
+                <h2 class=\"kan-col-title\">DONE <span class=\"kan-col-count\" id=\"count-done\">{{ columns.TERMINEE|length }}</span></h2>
+                <button class=\"kan-col-add-btn js-kan-col-add\" data-statut=\"TERMINEE\" title=\"Ajouter une tâche\">+</button>
+            </div>
+            <div class=\"kan-col-body js-kan-col-zone\" tabindex=\"0\">
+                <ul class=\"kan-col-list\" data-statut=\"TERMINEE\">
                     {% for tache in columns.TERMINEE %}
                         {{ kan.kan_card(tache, today) }}
                     {% endfor %}
                 </ul>
+                <div class=\"kan-empty-state\" style=\"display:{% if columns.TERMINEE|length > 0 %}none{% else %}flex{% endif %};\">
+                    <svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M12 6v6m0 0v6m0-6h6m-6 0H6\"/></svg>
+                    <div style=\"margin-bottom: 8px;\">Aucune tâche ici</div>
+                    <button class=\"kan-col-add-btn js-kan-col-add\" data-statut=\"TERMINEE\" style=\"font-size:12px;background:#f3f4f6;padding:4px 12px;border-radius:6px;color:#4b5563;border:1px solid #e5e7eb;\">Ajouter une tâche</button>
+                </div>
             </div>
         </div>
     </div>
@@ -1463,7 +1634,10 @@ window.HARMONIE_TASKS = [
                         bindCancel(slot);
                         bindAjaxForm(slot);
                     });
-                }).catch(function () {
+                
+                            updateCountsAndProgress();
+                        }).catch(function () {
+
                     window.alert('Une erreur réseau est survenue.');
                 });
             });
@@ -1508,7 +1682,10 @@ window.HARMONIE_TASKS = [
                 slot.innerHTML = html;
                 bindCancel(slot);
                 bindAjaxForm(slot);
-            }).catch(function () {
+            
+                            updateCountsAndProgress();
+                        }).catch(function () {
+
                 slot.innerHTML = '<p style=\"color:#dc2626;font-size:14px;\">Impossible de charger le formulaire.</p>';
             });
         }
@@ -1601,7 +1778,14 @@ window.HARMONIE_TASKS = [
                     dragClass: 'sortable-drag',
                     emptyInsertThreshold: 40,
                     fallbackTolerance: 4,
+
+                    onChoose: function (evt) { evt.item.classList.add('sortable-ghost'); },
+                    onStart: function (evt) { document.body.classList.add('is-dragging'); },
+                    onUnchoose: function (evt) { evt.item.classList.remove('sortable-ghost'); updateCountsAndProgress(); },
+                    onChange: function(evt) { updateCountsAndProgress(); },
+
                     onEnd: function (evt) {
+                        document.body.classList.remove('is-dragging');
                         suppressCardClickUntil = Date.now() + 400;
                         if (evt.from === evt.to) {
                             return;
@@ -1628,7 +1812,10 @@ window.HARMONIE_TASKS = [
                             if (!data.ok) {
                                 throw new Error(data.error || 'Erreur');
                             }
+                        
+                            updateCountsAndProgress();
                         }).catch(function () {
+
                             alert('Impossible d’enregistrer le déplacement. La page va se recharger.');
                             window.location.reload();
                         });
@@ -1665,9 +1852,62 @@ window.HARMONIE_TASKS = [
                 var id = card.getAttribute('data-tache-id');
                 if (id) openEdit(id);
             });
+
+            board.querySelectorAll('.js-kan-col-add').forEach(function(btn) {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    var st = btn.getAttribute('data-statut');
+                    if (st) openNew(st);
+                });
+            });
         }
 
         bindBoardEvents();
+
+        function updateCountsAndProgress() {
+            var total = document.querySelectorAll('.kan-card').length;
+            var done = document.querySelectorAll('.kan-col[data-statut=\"TERMINEE\"] .kan-card').length;
+            
+            var todoCountEl = document.getElementById('count-todo');
+            if (todoCountEl) todoCountEl.textContent = document.querySelectorAll('.kan-col[data-statut=\"A_FAIRE\"] .kan-card').length;
+            
+            var doingCountEl = document.getElementById('count-doing');
+            if (doingCountEl) doingCountEl.textContent = document.querySelectorAll('.kan-col[data-statut=\"EN_COURS\"] .kan-card').length;
+            
+            var doneCountEl = document.getElementById('count-done');
+            if (doneCountEl) doneCountEl.textContent = done;
+            
+            var pct = total > 0 ? Math.round((done / total) * 100) : 0;
+            var fill = document.getElementById('kan-progress-fill');
+            if (fill) fill.style.width = pct + '%';
+            
+            var txt = document.getElementById('kan-progress-text');
+            if (txt) txt.textContent = 'Progression : ' + pct + '% — ' + done + ' tâches sur ' + total + ' complétées';
+            
+            document.querySelectorAll('.kan-col').forEach(function(col) {
+                var len = col.querySelectorAll('.kan-card').length;
+                var empty = col.querySelector('.kan-empty-state');
+                if (empty) empty.style.display = len > 0 ? 'none' : 'flex';
+            });
+        }
+
+        var searchInput = document.getElementById('kan-search');
+        var prioFilter = document.getElementById('kan-priority-filter');
+        function filterCards() {
+            var txt = (searchInput ? searchInput.value : '').toLowerCase();
+            var prio = prioFilter ? prioFilter.value : 'all';
+            document.querySelectorAll('.kan-card').forEach(function(card) {
+                var cTitle = card.getAttribute('data-title') || '';
+                var cPrio = card.getAttribute('data-priority') || '';
+                var matchTxt = !txt || cTitle.indexOf(txt) !== -1;
+                var matchPrio = prio === 'all' || cPrio === prio;
+                card.style.display = (matchTxt && matchPrio) ? '' : 'none';
+            });
+            updateCountsAndProgress();
+        }
+        if (searchInput) searchInput.addEventListener('input', filterCards);
+        if (prioFilter) prioFilter.addEventListener('change', filterCards);
+
 
         document.addEventListener('harmonie_data_updated', function() {
             fetch(window.location.href, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
