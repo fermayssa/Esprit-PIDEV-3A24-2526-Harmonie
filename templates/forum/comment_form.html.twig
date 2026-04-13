@@ -173,6 +173,9 @@ function scheduleSpellCheck(inputId, errorsId, statusId) {
     spellTimers[inputId] = setTimeout(() => doSpellCheck(text, inputId, errorsId, statusId), 1000);
 }
 
+
+
+
 async function doSpellCheck(text, inputId, errorsId, statusId) {
     try {
         const fd = new FormData();

@@ -963,3 +963,12 @@ aae70f,127.0.0.1,GET,http://127.0.0.1:8000/forum,1776065335,,200,request
 3d6de4,127.0.0.1,GET,http://127.0.0.1:8000/uploads/posts/uploads/1772099525127_F_SDG-goals_icons-individual-rgb-03.png,1776065343,3db279,404,request
 3db279,127.0.0.1,GET,http://127.0.0.1:8000/uploads/posts/uploads/1772099525127_F_SDG-goals_icons-individual-rgb-03.png,1776065343,,404,request
 74cf85,127.0.0.1,POST,http://127.0.0.1:8000/forum/post/71/like,1776065346,,200,request
+1fe1e1,127.0.0.1,GET,http://127.0.0.1:8000/forum,1776066755,,200,request
+e4744c,127.0.0.1,GET,http://127.0.0.1:8000/forum/categorie/24,1776066758,,200,request
+6b5b8f,127.0.0.1,GET,http://127.0.0.1:8000/forum/categorie/24/post/new,1776066766,,200,request
+6d240a,127.0.0.1,POST,http://127.0.0.1:8000/forum/spellcheck,1776066810,,200,request
+e69316,127.0.0.1,POST,http://127.0.0.1:8000/forum/spellcheck,1776066896,,200,request
+595e94,127.0.0.1,POST,http://127.0.0.1:8000/forum/post/91/comment/new,1776066950,,302,request
+4a8842,127.0.0.1,GET,http://127.0.0.1:8000/forum/categorie/24,1776066951,,200,request
+da0411,127.0.0.1,POST,http://127.0.0.1:8000/forum/comment/72/delete,1776066960,,302,request
+3ef11c,127.0.0.1,GET,http://127.0.0.1:8000/forum/categorie/24,1776066961,,200,request
