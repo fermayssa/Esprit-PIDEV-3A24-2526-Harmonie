@@ -4,8 +4,7 @@ namespace App\Controller\Api;
 
 use App\Entity\Tache;
 use App\Repository\TacheRepository;
-use App\Repository\CalendrierRepository;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Service\Domain\PlanningDomainService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,13 +27,15 @@ final class TaskApiController extends AbstractController
                 'notes' => $task->getNotes(),
                 'completed' => $task->getStatutTache() === 'TERMINEE',
                 'statut' => $task->getStatutTache(),
+                'githubIssueNumber' => $task->getGithubIssueNumber(),
+                'githubRepo' => $task->getGithubRepo(),
             ];
         }
         return $this->json($data);
     }
 
     #[Route('', name: 'api_tasks_create', methods: ['POST'])]
-    public function create(Request $request, EntityManagerInterface $em, CalendrierRepository $calendrierRepository): JsonResponse
+    public function create(Request $request, PlanningDomainService $domainService): JsonResponse
     {
         try {
             $data = json_decode($request->getContent(), true);
@@ -48,15 +49,9 @@ final class TaskApiController extends AbstractController
                 $task->setDeadline(new \DateTime($data['dueDate']));
             }
             
-            $task->setStatutTache($data['completed'] ? 'TERMINEE' : ($data['statut'] ?? 'A_FAIRE'));
-            
-            // Assigner au calendrier principal
-            if ($cal = $calendrierRepository->findPrimary()) {
-                $task->setCalendrier($cal);
-            }
-            
-            $em->persist($task);
-            $em->flush();
+            $task->setStatutTache(!empty($data['completed']) ? 'TERMINEE' : ($data['statut'] ?? 'A_FAIRE'));
+
+            $domainService->saveTache($task);
             
             return $this->json([
                 'id' => $task->getId(),
@@ -64,6 +59,8 @@ final class TaskApiController extends AbstractController
                 'priority' => $task->getPriorite() ?? 'moyenne',
                 'dueDate' => $task->getDeadline() ? $task->getDeadline()->format('Y-m-d') : null,
                 'completed' => $task->getStatutTache() === 'TERMINEE',
+                'githubIssueNumber' => $task->getGithubIssueNumber(),
+                'githubRepo' => $task->getGithubRepo(),
             ], 201);
         } catch (\Exception $e) {
             return $this->json(['error' => $e->getMessage()], 400);
@@ -71,7 +68,7 @@ final class TaskApiController extends AbstractController
     }
 
     #[Route('/{id}', name: 'api_tasks_update', methods: ['PUT'])]
-    public function update(Tache $task, Request $request, EntityManagerInterface $em): JsonResponse
+    public function update(Tache $task, Request $request, PlanningDomainService $domainService): JsonResponse
     {
         try {
             $data = json_decode($request->getContent(), true);
@@ -94,8 +91,8 @@ final class TaskApiController extends AbstractController
             if (isset($data['statut'])) {
                 $task->setStatutTache($data['statut']);
             }
-            
-            $em->flush();
+
+            $domainService->saveTache($task);
             
             return $this->json([
                 'id' => $task->getId(),
@@ -103,6 +100,8 @@ final class TaskApiController extends AbstractController
                 'priority' => $task->getPriorite() ?? 'moyenne',
                 'dueDate' => $task->getDeadline() ? $task->getDeadline()->format('Y-m-d') : null,
                 'completed' => $task->getStatutTache() === 'TERMINEE',
+                'githubIssueNumber' => $task->getGithubIssueNumber(),
+                'githubRepo' => $task->getGithubRepo(),
             ]);
         } catch (\Exception $e) {
             return $this->json(['error' => $e->getMessage()], 400);
@@ -110,11 +109,10 @@ final class TaskApiController extends AbstractController
     }
 
     #[Route('/{id}', name: 'api_tasks_delete', methods: ['DELETE'])]
-    public function delete(Tache $task, EntityManagerInterface $em): JsonResponse
+    public function delete(Tache $task, PlanningDomainService $domainService): JsonResponse
     {
         try {
-            $em->remove($task);
-            $em->flush();
+            $domainService->removeTache($task);
             return $this->json(null, 204);
         } catch (\Exception $e) {
             return $this->json(['error' => $e->getMessage()], 400);

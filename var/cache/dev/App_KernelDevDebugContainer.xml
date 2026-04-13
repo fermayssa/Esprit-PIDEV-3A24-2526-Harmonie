@@ -124,6 +124,9 @@
         <parameter key="dev">true</parameter>
       </parameter>
     </parameter>
+    <parameter key="github.default_token">%env(string:GITHUB_PAT)%</parameter>
+    <parameter key="github.default_repo">%env(string:GITHUB_REPO)%</parameter>
+    <parameter key="github.default_branch">%env(string:GITHUB_BRANCH)%</parameter>
     <parameter key="event_dispatcher.event_aliases" type="collection">
       <parameter key="Symfony\Component\Console\Event\ConsoleCommandEvent">console.command</parameter>
       <parameter key="Symfony\Component\Console\Event\ConsoleErrorEvent">console.error</parameter>
@@ -529,6 +532,31 @@
         <argument type="service" id=".service_locator.TJNRSaV.App\Controller\Api\EventApiController"/>
       </call>
     </service>
+    <service id="App\Controller\Api\GithubSettingsController" class="App\Controller\Api\GithubSettingsController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
+      <tag name="routing.controller"/>
+      <tag name="container.service_subscriber"/>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.TJNRSaV.App\Controller\Api\GithubSettingsController"/>
+      </call>
+    </service>
+    <service id="App\Controller\Api\GithubWebhookController" class="App\Controller\Api\GithubWebhookController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
+      <tag name="routing.controller"/>
+      <tag name="container.service_subscriber"/>
+      <argument>%env(string:GITHUB_WEBHOOK_SECRET)%</argument>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.TJNRSaV.App\Controller\Api\GithubWebhookController"/>
+      </call>
+    </service>
+    <service id="App\Controller\Api\KanbanStreamController" class="App\Controller\Api\KanbanStreamController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
+      <tag name="routing.controller"/>
+      <tag name="container.service_subscriber"/>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.TJNRSaV.App\Controller\Api\KanbanStreamController"/>
+      </call>
+    </service>
     <service id="App\Controller\Api\TaskApiController" class="App\Controller\Api\TaskApiController" public="true" autowire="true" autoconfigure="true">
       <tag name="controller.service_arguments"/>
       <tag name="routing.controller"/>
@@ -856,12 +884,24 @@
       <argument type="service" id="App\Repository\DemandeReservationRepository"/>
       <argument type="service" id="App\Repository\CalendrierRepository"/>
       <argument type="service" id="App\Service\GoogleCalendarService"/>
+      <argument type="service" id="App\Service\Github\GithubIssueService"/>
+      <argument type="service" id="App\Service\Kanban\KanbanRealtimeNotifier"/>
     </service>
     <service id="App\Service\Export\CalendarExportService" class="App\Service\Export\CalendarExportService" autowire="true" autoconfigure="true"/>
     <service id="App\Service\Export\KanbanExportService" class="App\Service\Export\KanbanExportService" autowire="true" autoconfigure="true"/>
+    <service id="App\Service\Github\GithubIssueService" class="App\Service\Github\GithubIssueService" autowire="true" autoconfigure="true">
+      <argument type="service" id="http_client.uri_template"/>
+      <argument>/Users/rayen/Desktop/pi dev/mon_projet</argument>
+      <argument>%env(string:GITHUB_PAT)%</argument>
+      <argument>%env(string:GITHUB_REPO)%</argument>
+      <argument>%env(string:GITHUB_BRANCH)%</argument>
+    </service>
     <service id="App\Service\GoogleCalendarService" class="App\Service\GoogleCalendarService" autowire="true" autoconfigure="true">
       <argument type="service" id="doctrine.orm.default_entity_manager"/>
       <argument type="service" id="router.default"/>
+    </service>
+    <service id="App\Service\Kanban\KanbanRealtimeNotifier" class="App\Service\Kanban\KanbanRealtimeNotifier" autowire="true" autoconfigure="true">
+      <argument type="service" id="cache.app"/>
     </service>
     <service id="App\Service\SuspicionScoreService" class="App\Service\SuspicionScoreService" autowire="true" autoconfigure="true"/>
     <service id="argument_metadata_factory" class="Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadataFactory"/>
@@ -892,7 +932,7 @@
     </service>
     <service id="argument_resolver.service" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver">
       <tag name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver" priority="-50">controller.argument_value_resolver</tag>
-      <argument type="service" id=".service_locator.n.DZ4mu"/>
+      <argument type="service" id=".service_locator.VOcI_l8"/>
     </service>
     <service id="argument_resolver.default" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver">
       <tag name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver" priority="-100">controller.argument_value_resolver</tag>
@@ -4028,7 +4068,7 @@
     </service>
     <service id="argument_resolver.not_tagged_controller" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\NotTaggedControllerValueResolver">
       <tag name="controller.argument_value_resolver" priority="-200"/>
-      <argument type="service" id=".service_locator.n.DZ4mu"/>
+      <argument type="service" id=".service_locator.VOcI_l8"/>
     </service>
     <service id="debug.log_processor" class="Symfony\Bridge\Monolog\Processor\DebugProcessor">
       <tag name="kernel.reset" method="reset"/>
@@ -4121,6 +4161,9 @@
         <argument>App\Controller\AdminTacheController</argument>
         <argument>App\Controller\AdminUserController</argument>
         <argument>App\Controller\Api\EventApiController</argument>
+        <argument>App\Controller\Api\GithubSettingsController</argument>
+        <argument>App\Controller\Api\GithubWebhookController</argument>
+        <argument>App\Controller\Api\KanbanStreamController</argument>
         <argument>App\Controller\Api\TaskApiController</argument>
         <argument>App\Controller\BackController</argument>
         <argument>App\Controller\ChatbotController</argument>
@@ -8548,6 +8591,18 @@
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\Api\EventApiController" class="App\Controller\Api\EventApiController" autowire="true" abstract="true"/>
     <service id=".instanceof.App\Controller\Api\EventApiController.0.App\Controller\Api\EventApiController" class="App\Controller\Api\EventApiController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\Api\EventApiController" class="App\Controller\Api\EventApiController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\Api\GithubSettingsController" class="App\Controller\Api\GithubSettingsController" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\Api\GithubSettingsController" class="App\Controller\Api\GithubSettingsController" autowire="true" abstract="true"/>
+    <service id=".instanceof.App\Controller\Api\GithubSettingsController.0.App\Controller\Api\GithubSettingsController" class="App\Controller\Api\GithubSettingsController" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Controller\Api\GithubSettingsController" class="App\Controller\Api\GithubSettingsController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\Api\GithubWebhookController" class="App\Controller\Api\GithubWebhookController" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\Api\GithubWebhookController" class="App\Controller\Api\GithubWebhookController" autowire="true" abstract="true"/>
+    <service id=".instanceof.App\Controller\Api\GithubWebhookController.0.App\Controller\Api\GithubWebhookController" class="App\Controller\Api\GithubWebhookController" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Controller\Api\GithubWebhookController" class="App\Controller\Api\GithubWebhookController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\Api\KanbanStreamController" class="App\Controller\Api\KanbanStreamController" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\Api\KanbanStreamController" class="App\Controller\Api\KanbanStreamController" autowire="true" abstract="true"/>
+    <service id=".instanceof.App\Controller\Api\KanbanStreamController.0.App\Controller\Api\KanbanStreamController" class="App\Controller\Api\KanbanStreamController" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Controller\Api\KanbanStreamController" class="App\Controller\Api\KanbanStreamController" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\Api\TaskApiController" class="App\Controller\Api\TaskApiController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\Api\TaskApiController" class="App\Controller\Api\TaskApiController" autowire="true" abstract="true"/>
     <service id=".instanceof.App\Controller\Api\TaskApiController.0.App\Controller\Api\TaskApiController" class="App\Controller\Api\TaskApiController" autowire="true" abstract="true"/>
@@ -9673,43 +9728,81 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.GsKU6fY" method="withContext"/>
     </service>
+    <service id=".service_locator.3JdX6zi" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="github" type="service_closure" id="App\Service\Github\GithubIssueService"/>
+      </argument>
+    </service>
+    <service id=".service_locator.3JdX6zi.App\Controller\Api\GithubSettingsController::getSettings()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\Api\GithubSettingsController::getSettings()"/>
+      <argument>App\Controller\Api\GithubSettingsController::getSettings()</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.3JdX6zi" method="withContext"/>
+    </service>
+    <service id=".service_locator.3JdX6zi.App\Controller\Api\GithubSettingsController::saveSettings()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\Api\GithubSettingsController::saveSettings()"/>
+      <argument>App\Controller\Api\GithubSettingsController::saveSettings()</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.3JdX6zi" method="withContext"/>
+    </service>
+    <service id=".service_locator.l310bRk" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="tacheRepository" type="service_closure" id="App\Repository\TacheRepository"/>
+        <argument key="calendrierRepository" type="service_closure" id="App\Repository\CalendrierRepository"/>
+        <argument key="em" type="service_closure" id="doctrine.orm.default_entity_manager"/>
+        <argument key="notifier" type="service_closure" id="App\Service\Kanban\KanbanRealtimeNotifier"/>
+      </argument>
+    </service>
+    <service id=".service_locator.l310bRk.App\Controller\Api\GithubWebhookController::__invoke()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\Api\GithubWebhookController::__invoke()"/>
+      <argument>App\Controller\Api\GithubWebhookController::__invoke()</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.l310bRk" method="withContext"/>
+    </service>
+    <service id=".service_locator.9XNXc6E" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="notifier" type="service_closure" id="App\Service\Kanban\KanbanRealtimeNotifier"/>
+      </argument>
+    </service>
+    <service id=".service_locator.9XNXc6E.App\Controller\Api\KanbanStreamController::events()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\Api\KanbanStreamController::events()"/>
+      <argument>App\Controller\Api\KanbanStreamController::events()</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.9XNXc6E" method="withContext"/>
+    </service>
     <service id=".service_locator.e53I5WH.App\Controller\Api\TaskApiController::list()" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\Api\TaskApiController::list()"/>
       <argument>App\Controller\Api\TaskApiController::list()</argument>
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.e53I5WH" method="withContext"/>
     </service>
-    <service id=".service_locator.PUfitXC" class="Symfony\Component\DependencyInjection\ServiceLocator">
-      <tag name="container.service_locator"/>
-      <argument type="collection">
-        <argument key="em" type="service_closure" id="doctrine.orm.default_entity_manager"/>
-        <argument key="calendrierRepository" type="service_closure" id="App\Repository\CalendrierRepository"/>
-      </argument>
-    </service>
-    <service id=".service_locator.PUfitXC.App\Controller\Api\TaskApiController::create()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.Ekf188_.App\Controller\Api\TaskApiController::create()" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\Api\TaskApiController::create()"/>
       <argument>App\Controller\Api\TaskApiController::create()</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.PUfitXC" method="withContext"/>
+      <factory service=".service_locator.Ekf188_" method="withContext"/>
     </service>
-    <service id=".service_locator.0MKPK3c" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.3DuEe5o" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
-        <argument key="task" type="service_closure" id=".errored..service_locator.0MKPK3c.App\Entity\Tache"/>
-        <argument key="em" type="service_closure" id="doctrine.orm.default_entity_manager"/>
+        <argument key="task" type="service_closure" id=".errored..service_locator.3DuEe5o.App\Entity\Tache"/>
+        <argument key="domainService" type="service_closure" id="App\Service\Domain\PlanningDomainService"/>
       </argument>
     </service>
-    <service id=".service_locator.0MKPK3c.App\Controller\Api\TaskApiController::update()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.3DuEe5o.App\Controller\Api\TaskApiController::update()" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\Api\TaskApiController::update()"/>
       <argument>App\Controller\Api\TaskApiController::update()</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.0MKPK3c" method="withContext"/>
+      <factory service=".service_locator.3DuEe5o" method="withContext"/>
     </service>
-    <service id=".service_locator.0MKPK3c.App\Controller\Api\TaskApiController::delete()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.3DuEe5o.App\Controller\Api\TaskApiController::delete()" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\Api\TaskApiController::delete()"/>
       <argument>App\Controller\Api\TaskApiController::delete()</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.0MKPK3c" method="withContext"/>
+      <factory service=".service_locator.3DuEe5o" method="withContext"/>
     </service>
     <service id=".service_locator.ziqo37J" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
@@ -10236,7 +10329,7 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.z0A7H.F" method="withContext"/>
     </service>
-    <service id=".service_locator.n.DZ4mu" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.VOcI_l8" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="kernel::registerContainerConfiguration" type="service_closure" id=".service_locator.1vYpZ1B.kernel::registerContainerConfiguration()"/>
@@ -10282,10 +10375,14 @@
         <argument key="App\Controller\Api\EventApiController::create" type="service_closure" id=".service_locator.0FPZQH5.App\Controller\Api\EventApiController::create()"/>
         <argument key="App\Controller\Api\EventApiController::update" type="service_closure" id=".service_locator.GsKU6fY.App\Controller\Api\EventApiController::update()"/>
         <argument key="App\Controller\Api\EventApiController::delete" type="service_closure" id=".service_locator.GsKU6fY.App\Controller\Api\EventApiController::delete()"/>
+        <argument key="App\Controller\Api\GithubSettingsController::getSettings" type="service_closure" id=".service_locator.3JdX6zi.App\Controller\Api\GithubSettingsController::getSettings()"/>
+        <argument key="App\Controller\Api\GithubSettingsController::saveSettings" type="service_closure" id=".service_locator.3JdX6zi.App\Controller\Api\GithubSettingsController::saveSettings()"/>
+        <argument key="App\Controller\Api\GithubWebhookController::__invoke" type="service_closure" id=".service_locator.l310bRk.App\Controller\Api\GithubWebhookController::__invoke()"/>
+        <argument key="App\Controller\Api\KanbanStreamController::events" type="service_closure" id=".service_locator.9XNXc6E.App\Controller\Api\KanbanStreamController::events()"/>
         <argument key="App\Controller\Api\TaskApiController::list" type="service_closure" id=".service_locator.e53I5WH.App\Controller\Api\TaskApiController::list()"/>
-        <argument key="App\Controller\Api\TaskApiController::create" type="service_closure" id=".service_locator.PUfitXC.App\Controller\Api\TaskApiController::create()"/>
-        <argument key="App\Controller\Api\TaskApiController::update" type="service_closure" id=".service_locator.0MKPK3c.App\Controller\Api\TaskApiController::update()"/>
-        <argument key="App\Controller\Api\TaskApiController::delete" type="service_closure" id=".service_locator.0MKPK3c.App\Controller\Api\TaskApiController::delete()"/>
+        <argument key="App\Controller\Api\TaskApiController::create" type="service_closure" id=".service_locator.Ekf188_.App\Controller\Api\TaskApiController::create()"/>
+        <argument key="App\Controller\Api\TaskApiController::update" type="service_closure" id=".service_locator.3DuEe5o.App\Controller\Api\TaskApiController::update()"/>
+        <argument key="App\Controller\Api\TaskApiController::delete" type="service_closure" id=".service_locator.3DuEe5o.App\Controller\Api\TaskApiController::delete()"/>
         <argument key="App\Controller\BackController::dashboard" type="service_closure" id=".service_locator.ziqo37J.App\Controller\BackController::dashboard()"/>
         <argument key="App\Controller\BackController::categories" type="service_closure" id=".service_locator.Y_R0bCX.App\Controller\BackController::categories()"/>
         <argument key="App\Controller\BackController::deleteCategorie" type="service_closure" id=".service_locator.0pAqWtH.App\Controller\BackController::deleteCategorie()"/>
@@ -10389,10 +10486,15 @@
         <argument key="App\Controller\Api\EventApiController:create" type="service_closure" id=".service_locator.0FPZQH5.App\Controller\Api\EventApiController::create()"/>
         <argument key="App\Controller\Api\EventApiController:update" type="service_closure" id=".service_locator.GsKU6fY.App\Controller\Api\EventApiController::update()"/>
         <argument key="App\Controller\Api\EventApiController:delete" type="service_closure" id=".service_locator.GsKU6fY.App\Controller\Api\EventApiController::delete()"/>
+        <argument key="App\Controller\Api\GithubSettingsController:getSettings" type="service_closure" id=".service_locator.3JdX6zi.App\Controller\Api\GithubSettingsController::getSettings()"/>
+        <argument key="App\Controller\Api\GithubSettingsController:saveSettings" type="service_closure" id=".service_locator.3JdX6zi.App\Controller\Api\GithubSettingsController::saveSettings()"/>
+        <argument key="App\Controller\Api\GithubWebhookController:__invoke" type="service_closure" id=".service_locator.l310bRk.App\Controller\Api\GithubWebhookController::__invoke()"/>
+        <argument key="App\Controller\Api\GithubWebhookController" type="service_closure" id=".service_locator.l310bRk.App\Controller\Api\GithubWebhookController::__invoke()"/>
+        <argument key="App\Controller\Api\KanbanStreamController:events" type="service_closure" id=".service_locator.9XNXc6E.App\Controller\Api\KanbanStreamController::events()"/>
         <argument key="App\Controller\Api\TaskApiController:list" type="service_closure" id=".service_locator.e53I5WH.App\Controller\Api\TaskApiController::list()"/>
-        <argument key="App\Controller\Api\TaskApiController:create" type="service_closure" id=".service_locator.PUfitXC.App\Controller\Api\TaskApiController::create()"/>
-        <argument key="App\Controller\Api\TaskApiController:update" type="service_closure" id=".service_locator.0MKPK3c.App\Controller\Api\TaskApiController::update()"/>
-        <argument key="App\Controller\Api\TaskApiController:delete" type="service_closure" id=".service_locator.0MKPK3c.App\Controller\Api\TaskApiController::delete()"/>
+        <argument key="App\Controller\Api\TaskApiController:create" type="service_closure" id=".service_locator.Ekf188_.App\Controller\Api\TaskApiController::create()"/>
+        <argument key="App\Controller\Api\TaskApiController:update" type="service_closure" id=".service_locator.3DuEe5o.App\Controller\Api\TaskApiController::update()"/>
+        <argument key="App\Controller\Api\TaskApiController:delete" type="service_closure" id=".service_locator.3DuEe5o.App\Controller\Api\TaskApiController::delete()"/>
         <argument key="App\Controller\BackController:dashboard" type="service_closure" id=".service_locator.ziqo37J.App\Controller\BackController::dashboard()"/>
         <argument key="App\Controller\BackController:categories" type="service_closure" id=".service_locator.Y_R0bCX.App\Controller\BackController::categories()"/>
         <argument key="App\Controller\BackController:deleteCategorie" type="service_closure" id=".service_locator.0pAqWtH.App\Controller\BackController::deleteCategorie()"/>
@@ -11158,6 +11260,24 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.TJNRSaV" method="withContext"/>
     </service>
+    <service id=".service_locator.TJNRSaV.App\Controller\Api\GithubSettingsController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\Api\GithubSettingsController"/>
+      <argument>App\Controller\Api\GithubSettingsController</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.TJNRSaV" method="withContext"/>
+    </service>
+    <service id=".service_locator.TJNRSaV.App\Controller\Api\GithubWebhookController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\Api\GithubWebhookController"/>
+      <argument>App\Controller\Api\GithubWebhookController</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.TJNRSaV" method="withContext"/>
+    </service>
+    <service id=".service_locator.TJNRSaV.App\Controller\Api\KanbanStreamController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\Api\KanbanStreamController"/>
+      <argument>App\Controller\Api\KanbanStreamController</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.TJNRSaV" method="withContext"/>
+    </service>
     <service id=".service_locator.TJNRSaV.App\Controller\Api\TaskApiController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\Api\TaskApiController"/>
       <argument>App\Controller\Api\TaskApiController</argument>
@@ -11476,6 +11596,9 @@
           <argument>App\Controller\AdminTacheController</argument>
           <argument>App\Controller\AdminUserController</argument>
           <argument>App\Controller\Api\EventApiController</argument>
+          <argument>App\Controller\Api\GithubSettingsController</argument>
+          <argument>App\Controller\Api\GithubWebhookController</argument>
+          <argument>App\Controller\Api\KanbanStreamController</argument>
           <argument>App\Controller\Api\TaskApiController</argument>
           <argument>App\Controller\BackController</argument>
           <argument>App\Controller\ChatbotController</argument>
@@ -11758,8 +11881,8 @@
     <service id=".errored..service_locator.GsKU6fY.App\Entity\Evenement" class="App\Entity\Evenement">
       <tag name="container.error" message="Cannot autowire service &quot;.service_locator.GsKU6fY&quot;: it needs an instance of &quot;App\Entity\Evenement&quot; but this type has been excluded because it's a Doctrine entity."/>
     </service>
-    <service id=".errored..service_locator.0MKPK3c.App\Entity\Tache" class="App\Entity\Tache">
-      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.0MKPK3c&quot;: it needs an instance of &quot;App\Entity\Tache&quot; but this type has been excluded because it's a Doctrine entity."/>
+    <service id=".errored..service_locator.3DuEe5o.App\Entity\Tache" class="App\Entity\Tache">
+      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.3DuEe5o&quot;: it needs an instance of &quot;App\Entity\Tache&quot; but this type has been excluded because it's a Doctrine entity."/>
     </service>
     <service id=".errored..service_locator.j4Wlmfc.App\Entity\JournalHumeur" class="App\Entity\JournalHumeur">
       <tag name="container.error" message="Cannot autowire service &quot;.service_locator.j4Wlmfc&quot;: it needs an instance of &quot;App\Entity\JournalHumeur&quot; but this type has been excluded because it's a Doctrine entity."/>
@@ -13003,7 +13126,7 @@
     <service id="Psr\Log\LoggerInterface" alias="monolog.logger"/>
     <service id="container.env_var_processors_locator" alias=".service_locator.ryAvHi4" public="true"/>
     <service id="twig.loader.filesystem" alias="twig.loader.native_filesystem"/>
-    <service id="argument_resolver.controller_locator" alias=".service_locator.n.DZ4mu"/>
+    <service id="argument_resolver.controller_locator" alias=".service_locator.VOcI_l8"/>
     <service id="doctrine.id_generator_locator" alias=".service_locator.W55Po6X"/>
     <service id="twig.loader" alias="twig.loader.native_filesystem"/>
     <service id=".Psr\Log\LoggerInterface $request" alias="monolog.logger.request"/>
@@ -13085,8 +13208,10 @@
     <service id=".service_locator.KNSic_m" alias=".service_locator.n60qnZK"/>
     <service id=".service_locator._q2H952" alias=".service_locator.0FPZQH5"/>
     <service id=".service_locator.58sSNTL" alias=".service_locator.GsKU6fY"/>
-    <service id=".service_locator.jyb8slm" alias=".service_locator.PUfitXC"/>
-    <service id=".service_locator.KsD8UyN" alias=".service_locator.0MKPK3c"/>
+    <service id=".service_locator.FTKAQHX" alias=".service_locator.3JdX6zi"/>
+    <service id=".service_locator.3t1LHNM" alias=".service_locator.l310bRk"/>
+    <service id=".service_locator.Xlc1lXD" alias=".service_locator.9XNXc6E"/>
+    <service id=".service_locator.JS_juxD" alias=".service_locator.3DuEe5o"/>
     <service id=".service_locator.rY1dfrx" alias=".service_locator.ziqo37J"/>
     <service id=".service_locator.lrLzzYc" alias=".service_locator.Y_R0bCX"/>
     <service id=".service_locator._wZi7jF" alias=".service_locator.0pAqWtH"/>

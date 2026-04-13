@@ -52,7 +52,7 @@ class __TwigTemplate_4401aa8db7481547c6babf2a9ded752f extends Template
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "template", "tache/index.html.twig"));
 
-        // line 29
+        // line 37
         $macros["kan"] = $this->macros["kan"] = $this;
         // line 1
         $this->parent = $this->load("base.html.twig", 1);
@@ -65,7 +65,7 @@ class __TwigTemplate_4401aa8db7481547c6babf2a9ded752f extends Template
 
     }
 
-    // line 31
+    // line 39
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -88,7 +88,7 @@ class __TwigTemplate_4401aa8db7481547c6babf2a9ded752f extends Template
         yield from [];
     }
 
-    // line 33
+    // line 41
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -101,16 +101,16 @@ class __TwigTemplate_4401aa8db7481547c6babf2a9ded752f extends Template
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "stylesheets"));
 
-        // line 34
+        // line 42
         yield "    ";
         yield from $this->yieldParentBlock("stylesheets", $context, $blocks);
         yield "
     <link href=\"";
-        // line 35
+        // line 43
         yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl("harmonie/css/harmony-theme.css"), "html", null, true);
         yield "\" rel=\"stylesheet\">
     <link href=\"";
-        // line 36
+        // line 44
         yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl("harmonie/css/harmony-panel.css"), "html", null, true);
         yield "\" rel=\"stylesheet\">
     <style>
@@ -144,6 +144,37 @@ class __TwigTemplate_4401aa8db7481547c6babf2a9ded752f extends Template
             color: var(--text, #1C1733); text-decoration: none; font-size: 14px;
         }
         .kan-export-menu a:hover { background: var(--purple-pale, #EDE8FA); color: var(--purple, #6A5ACD); }
+        .kan-settings-btn {
+            list-style: none; cursor: pointer;
+            padding: 8px 16px; border-radius: 10px;
+            border: 1px solid #e5e7eb;
+            background: linear-gradient(180deg, #fafafa, #f3f4f6);
+            font-size: 13px; font-weight: 500; color: var(--text-mid, #4A4570);
+            margin-left: 8px;
+        }
+        .kan-settings-modal {
+            position: fixed; inset: 0; background: rgba(17, 24, 39, .35);
+            display: none; align-items: center; justify-content: center; z-index: 999;
+        }
+        .kan-settings-modal.is-open { display: flex; }
+        .kan-settings-card {
+            width: min(94vw, 460px); background: #fff; border-radius: 14px;
+            border: 1px solid rgba(106,90,205,.12); box-shadow: 0 15px 40px rgba(0,0,0,.15);
+            padding: 16px;
+        }
+        .kan-settings-card h3 { margin: 0 0 10px; font-size: 16px; color: #1f1b3a; }
+        .kan-settings-row { margin-bottom: 10px; }
+        .kan-settings-row label { display: block; font-size: 12px; color: #6b7280; margin-bottom: 4px; }
+        .kan-settings-row input {
+            width: 100%; border: 1px solid #d1d5db; border-radius: 10px;
+            padding: 8px 10px; font-size: 13px;
+        }
+        .kan-settings-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 12px; }
+        .kan-settings-actions button {
+            border: 1px solid #d1d5db; background: #fff; border-radius: 10px; padding: 8px 12px; cursor: pointer;
+        }
+        .kan-settings-actions .is-primary { background: #6A5ACD; border-color: #6A5ACD; color: #fff; }
+        .kan-settings-status { font-size: 12px; margin-top: 8px; color: #4b5563; min-height: 16px; }
 
         .kan-board {
             display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
@@ -198,6 +229,7 @@ class __TwigTemplate_4401aa8db7481547c6babf2a9ded752f extends Template
             border: 1px solid rgba(124,58,237,.1);
             margin-bottom: 12px;
             cursor: grab;
+            position: relative;
         }
         .kan-card:active { cursor: grabbing; }
         .kan-card-title { font-weight: 700; font-size: 15px; color: var(--text, #1C1733); margin: 0 0 10px; line-height: 1.3; }
@@ -236,6 +268,21 @@ class __TwigTemplate_4401aa8db7481547c6babf2a9ded752f extends Template
             outline-offset: 2px;
         }
 
+        .kan-issue-badge {
+            position: absolute;
+            right: 10px;
+            bottom: 8px;
+            font-size: 11px;
+            line-height: 1;
+            padding: 4px 7px;
+            border-radius: 999px;
+            color: #5b21b6;
+            background: #ede9fe;
+            border: 1px solid rgba(91, 33, 182, .2);
+            text-decoration: none;
+        }
+        .kan-issue-badge:hover { background: #ddd6fe; }
+
         .kan-col-list.sortable-drag { min-height: 40px; }
         .kan-card.sortable-ghost { opacity: 0.45; }
     </style>
@@ -249,7 +296,7 @@ class __TwigTemplate_4401aa8db7481547c6babf2a9ded752f extends Template
         yield from [];
     }
 
-    // line 165
+    // line 220
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -262,40 +309,43 @@ class __TwigTemplate_4401aa8db7481547c6babf2a9ded752f extends Template
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "body"));
 
-        // line 166
-        yield from $this->load("_planning_topbar.html.twig", 166)->unwrap()->yield($context);
-        // line 167
+        // line 221
+        yield from $this->load("_planning_topbar.html.twig", 221)->unwrap()->yield($context);
+        // line 222
         yield "<main class=\"page\">
 <div class=\"kan-page\"
      id=\"kanban-root\"
      data-csrf=\"";
-        // line 170
+        // line 225
         yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->env->getRuntime('Symfony\Component\Form\FormRenderer')->renderCsrfToken("tache_dnd"), "html", null, true);
         yield "\"
      data-url-template=\"";
-        // line 171
+        // line 226
         yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_tache_update_statut", ["id" => 888888888]), "html_attr");
         yield "\"
      data-edit-url-template=\"";
-        // line 172
+        // line 227
         yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_tache_edit", ["id" => 888888888]), "html_attr");
         yield "\">
     <div class=\"kan-top\">
         <p class=\"kan-advice\"><strong>Conseil du jour :</strong> ";
-        // line 174
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["advice"]) || array_key_exists("advice", $context) ? $context["advice"] : (function () { throw new RuntimeError('Variable "advice" does not exist.', 174, $this->source); })()), "html", null, true);
+        // line 229
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["advice"]) || array_key_exists("advice", $context) ? $context["advice"] : (function () { throw new RuntimeError('Variable "advice" does not exist.', 229, $this->source); })()), "html", null, true);
         yield "</p>
-        <details class=\"kan-export-wrap\">
-            <summary class=\"kan-export-summary\">Exporter ▾</summary>
-            <div class=\"kan-export-menu\">
-                <a href=\"#\" class=\"js-kanban-export-pdf\" data-type=\"pdf\">Exporter en PDF</a>
-                <a href=\"#\" class=\"js-kanban-export-excel\" data-type=\"excel\">Exporter en Excel</a>
-                <a href=\"";
-        // line 180
+        <div style=\"display:flex; align-items:center; margin-left:auto;\">
+            <details class=\"kan-export-wrap\">
+                <summary class=\"kan-export-summary\">Exporter ▾</summary>
+                <div class=\"kan-export-menu\">
+                    <a href=\"#\" class=\"js-kanban-export-pdf\" data-type=\"pdf\">Exporter en PDF</a>
+                    <a href=\"#\" class=\"js-kanban-export-excel\" data-type=\"excel\">Exporter en Excel</a>
+                    <a href=\"";
+        // line 236
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_tache_export_csv");
         yield "\">Télécharger CSV (legacy)</a>
-            </div>
-        </details>
+                </div>
+            </details>
+            <button type=\"button\" id=\"kan-github-settings-open\" class=\"kan-settings-btn\">GitHub ⚙</button>
+        </div>
     </div>
 
     <div class=\"kan-board\" id=\"kan-board-root\">
@@ -304,20 +354,20 @@ class __TwigTemplate_4401aa8db7481547c6babf2a9ded752f extends Template
             <div class=\"kan-col-body js-kan-col-zone\" tabindex=\"0\" aria-label=\"Colonne À faire — clic dans la zone vide pour ajouter une tâche. Glisser une carte pour la déplacer.\">
                 <ul class=\"kan-col-list\" data-statut=\"A_FAIRE\" aria-label=\"À faire\">
                     ";
-        // line 190
+        // line 248
         $context['_parent'] = $context;
-        $context['_seq'] = CoreExtension::ensureTraversable(CoreExtension::getAttribute($this->env, $this->source, (isset($context["columns"]) || array_key_exists("columns", $context) ? $context["columns"] : (function () { throw new RuntimeError('Variable "columns" does not exist.', 190, $this->source); })()), "A_FAIRE", [], "any", false, false, false, 190));
+        $context['_seq'] = CoreExtension::ensureTraversable(CoreExtension::getAttribute($this->env, $this->source, (isset($context["columns"]) || array_key_exists("columns", $context) ? $context["columns"] : (function () { throw new RuntimeError('Variable "columns" does not exist.', 248, $this->source); })()), "A_FAIRE", [], "any", false, false, false, 248));
         foreach ($context['_seq'] as $context["_key"] => $context["tache"]) {
-            // line 191
+            // line 249
             yield "                        ";
-            yield $macros["kan"]->getTemplateForMacro("macro_kan_card", $context, 191, $this->getSourceContext())->macro_kan_card(...[$context["tache"], (isset($context["today"]) || array_key_exists("today", $context) ? $context["today"] : (function () { throw new RuntimeError('Variable "today" does not exist.', 191, $this->source); })())]);
+            yield $macros["kan"]->getTemplateForMacro("macro_kan_card", $context, 249, $this->getSourceContext())->macro_kan_card(...[$context["tache"], (isset($context["today"]) || array_key_exists("today", $context) ? $context["today"] : (function () { throw new RuntimeError('Variable "today" does not exist.', 249, $this->source); })())]);
             yield "
                     ";
         }
         $_parent = $context['_parent'];
         unset($context['_seq'], $context['_key'], $context['tache'], $context['_parent']);
         $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 193
+        // line 251
         yield "                </ul>
             </div>
         </div>
@@ -327,20 +377,20 @@ class __TwigTemplate_4401aa8db7481547c6babf2a9ded752f extends Template
             <div class=\"kan-col-body js-kan-col-zone\" tabindex=\"0\" aria-label=\"Colonne En cours\">
                 <ul class=\"kan-col-list kan-col-list--doing\" data-statut=\"EN_COURS\" aria-label=\"En cours\">
                     ";
-        // line 201
+        // line 259
         $context['_parent'] = $context;
-        $context['_seq'] = CoreExtension::ensureTraversable(CoreExtension::getAttribute($this->env, $this->source, (isset($context["columns"]) || array_key_exists("columns", $context) ? $context["columns"] : (function () { throw new RuntimeError('Variable "columns" does not exist.', 201, $this->source); })()), "EN_COURS", [], "any", false, false, false, 201));
+        $context['_seq'] = CoreExtension::ensureTraversable(CoreExtension::getAttribute($this->env, $this->source, (isset($context["columns"]) || array_key_exists("columns", $context) ? $context["columns"] : (function () { throw new RuntimeError('Variable "columns" does not exist.', 259, $this->source); })()), "EN_COURS", [], "any", false, false, false, 259));
         foreach ($context['_seq'] as $context["_key"] => $context["tache"]) {
-            // line 202
+            // line 260
             yield "                        ";
-            yield $macros["kan"]->getTemplateForMacro("macro_kan_card", $context, 202, $this->getSourceContext())->macro_kan_card(...[$context["tache"], (isset($context["today"]) || array_key_exists("today", $context) ? $context["today"] : (function () { throw new RuntimeError('Variable "today" does not exist.', 202, $this->source); })())]);
+            yield $macros["kan"]->getTemplateForMacro("macro_kan_card", $context, 260, $this->getSourceContext())->macro_kan_card(...[$context["tache"], (isset($context["today"]) || array_key_exists("today", $context) ? $context["today"] : (function () { throw new RuntimeError('Variable "today" does not exist.', 260, $this->source); })())]);
             yield "
                     ";
         }
         $_parent = $context['_parent'];
         unset($context['_seq'], $context['_key'], $context['tache'], $context['_parent']);
         $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 204
+        // line 262
         yield "                </ul>
             </div>
         </div>
@@ -350,20 +400,20 @@ class __TwigTemplate_4401aa8db7481547c6babf2a9ded752f extends Template
             <div class=\"kan-col-body js-kan-col-zone\" tabindex=\"0\" aria-label=\"Colonne Terminées\">
                 <ul class=\"kan-col-list\" data-statut=\"TERMINEE\" aria-label=\"Terminées\">
                     ";
-        // line 212
+        // line 270
         $context['_parent'] = $context;
-        $context['_seq'] = CoreExtension::ensureTraversable(CoreExtension::getAttribute($this->env, $this->source, (isset($context["columns"]) || array_key_exists("columns", $context) ? $context["columns"] : (function () { throw new RuntimeError('Variable "columns" does not exist.', 212, $this->source); })()), "TERMINEE", [], "any", false, false, false, 212));
+        $context['_seq'] = CoreExtension::ensureTraversable(CoreExtension::getAttribute($this->env, $this->source, (isset($context["columns"]) || array_key_exists("columns", $context) ? $context["columns"] : (function () { throw new RuntimeError('Variable "columns" does not exist.', 270, $this->source); })()), "TERMINEE", [], "any", false, false, false, 270));
         foreach ($context['_seq'] as $context["_key"] => $context["tache"]) {
-            // line 213
+            // line 271
             yield "                        ";
-            yield $macros["kan"]->getTemplateForMacro("macro_kan_card", $context, 213, $this->getSourceContext())->macro_kan_card(...[$context["tache"], (isset($context["today"]) || array_key_exists("today", $context) ? $context["today"] : (function () { throw new RuntimeError('Variable "today" does not exist.', 213, $this->source); })())]);
+            yield $macros["kan"]->getTemplateForMacro("macro_kan_card", $context, 271, $this->getSourceContext())->macro_kan_card(...[$context["tache"], (isset($context["today"]) || array_key_exists("today", $context) ? $context["today"] : (function () { throw new RuntimeError('Variable "today" does not exist.', 271, $this->source); })())]);
             yield "
                     ";
         }
         $_parent = $context['_parent'];
         unset($context['_seq'], $context['_key'], $context['tache'], $context['_parent']);
         $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 215
+        // line 273
         yield "                </ul>
             </div>
         </div>
@@ -384,49 +434,78 @@ class __TwigTemplate_4401aa8db7481547c6babf2a9ded752f extends Template
 
     <template id=\"harmony-tpl-tache-form-new\">
         ";
-        // line 234
-        yield from $this->load("tache/_form_panel.html.twig", 234)->unwrap()->yield(CoreExtension::toArray(["form" => (isset($context["tacheFormNew"]) || array_key_exists("tacheFormNew", $context) ? $context["tacheFormNew"] : (function () { throw new RuntimeError('Variable "tacheFormNew" does not exist.', 234, $this->source); })()), "panel_mode" => "new"]));
-        // line 235
+        // line 292
+        yield from $this->load("tache/_form_panel.html.twig", 292)->unwrap()->yield(CoreExtension::toArray(["form" => (isset($context["tacheFormNew"]) || array_key_exists("tacheFormNew", $context) ? $context["tacheFormNew"] : (function () { throw new RuntimeError('Variable "tacheFormNew" does not exist.', 292, $this->source); })()), "panel_mode" => "new"]));
+        // line 293
         yield "    </template>
+</div>
+
+<div id=\"kan-github-settings-modal\" class=\"kan-settings-modal\" aria-hidden=\"true\">
+    <div class=\"kan-settings-card\" role=\"dialog\" aria-modal=\"true\" aria-labelledby=\"kan-github-title\">
+        <h3 id=\"kan-github-title\">Paramètres GitHub</h3>
+        <div class=\"kan-settings-row\">
+            <label for=\"kan-github-token\">Personal Access Token</label>
+            <input id=\"kan-github-token\" type=\"password\" autocomplete=\"off\" placeholder=\"ghp_...\">
+        </div>
+        <div class=\"kan-settings-row\">
+            <label for=\"kan-github-repo\">Dépôt (owner/repo)</label>
+            <input id=\"kan-github-repo\" type=\"text\" autocomplete=\"off\" placeholder=\"monuser/monrepo\">
+        </div>
+        <div class=\"kan-settings-row\">
+            <label for=\"kan-github-branch\">Branche (optionnel)</label>
+            <input id=\"kan-github-branch\" type=\"text\" autocomplete=\"off\" placeholder=\"main (par défaut)\">
+        </div>
+        <div id=\"kan-github-status\" class=\"kan-settings-status\"></div>
+        <div class=\"kan-settings-actions\">
+            <button type=\"button\" id=\"kan-github-cancel\">Annuler</button>
+            <button type=\"button\" id=\"kan-github-save\" class=\"is-primary\">Enregistrer</button>
+        </div>
+    </div>
 </div>
 
 </main>
 <script>
 window.HARMONIE_TASKS = [
     ...(";
-        // line 241
-        yield json_encode(CoreExtension::getAttribute($this->env, $this->source, (isset($context["columns"]) || array_key_exists("columns", $context) ? $context["columns"] : (function () { throw new RuntimeError('Variable "columns" does not exist.', 241, $this->source); })()), "A_FAIRE", [], "any", false, false, false, 241));
+        // line 322
+        yield json_encode(CoreExtension::getAttribute($this->env, $this->source, (isset($context["columns"]) || array_key_exists("columns", $context) ? $context["columns"] : (function () { throw new RuntimeError('Variable "columns" does not exist.', 322, $this->source); })()), "A_FAIRE", [], "any", false, false, false, 322));
         yield ").map(t => ({
         id: t.id,
         title: t.nom,
         priority: t.priorite ?? 'moyenne',
         dueDate: t.deadline ?? '',
+        githubIssueNumber: t.githubIssueNumber ?? null,
+        githubRepo: t.githubRepo ?? null,
         completed: false
     })),
     ...(";
-        // line 248
-        yield json_encode(CoreExtension::getAttribute($this->env, $this->source, (isset($context["columns"]) || array_key_exists("columns", $context) ? $context["columns"] : (function () { throw new RuntimeError('Variable "columns" does not exist.', 248, $this->source); })()), "EN_COURS", [], "any", false, false, false, 248));
+        // line 331
+        yield json_encode(CoreExtension::getAttribute($this->env, $this->source, (isset($context["columns"]) || array_key_exists("columns", $context) ? $context["columns"] : (function () { throw new RuntimeError('Variable "columns" does not exist.', 331, $this->source); })()), "EN_COURS", [], "any", false, false, false, 331));
         yield ").map(t => ({
         id: t.id,
         title: t.nom,
         priority: t.priorite ?? 'moyenne',
         dueDate: t.deadline ?? '',
+        githubIssueNumber: t.githubIssueNumber ?? null,
+        githubRepo: t.githubRepo ?? null,
         completed: false
     })),
     ...(";
-        // line 255
-        yield json_encode(CoreExtension::getAttribute($this->env, $this->source, (isset($context["columns"]) || array_key_exists("columns", $context) ? $context["columns"] : (function () { throw new RuntimeError('Variable "columns" does not exist.', 255, $this->source); })()), "TERMINEE", [], "any", false, false, false, 255));
+        // line 340
+        yield json_encode(CoreExtension::getAttribute($this->env, $this->source, (isset($context["columns"]) || array_key_exists("columns", $context) ? $context["columns"] : (function () { throw new RuntimeError('Variable "columns" does not exist.', 340, $this->source); })()), "TERMINEE", [], "any", false, false, false, 340));
         yield ").map(t => ({
         id: t.id,
         title: t.nom,
         priority: t.priorite ?? 'moyenne',
         dueDate: t.deadline ?? '',
+        githubIssueNumber: t.githubIssueNumber ?? null,
+        githubRepo: t.githubRepo ?? null,
         completed: true
     }))
 ];
 </script>
 <script src=\"";
-        // line 264
+        // line 351
         yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl("harmonie-chatbot-widget.js"), "html", null, true);
         yield "\"></script>
 ";
@@ -439,7 +518,7 @@ window.HARMONIE_TASKS = [
         yield from [];
     }
 
-    // line 267
+    // line 354
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -452,10 +531,10 @@ window.HARMONIE_TASKS = [
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "body_javascripts"));
 
-        // line 268
+        // line 355
         yield "    <script src=\"https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js\" crossorigin=\"anonymous\"></script>
     <script src=\"";
-        // line 269
+        // line 356
         yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl("harmonie/js/export-handler.js"), "html", null, true);
         yield "\"></script>
     <script>
@@ -479,6 +558,14 @@ window.HARMONIE_TASKS = [
         var editTpl = root.getAttribute('data-edit-url-template') || '';
         var board = document.getElementById('kan-board-root');
         var suppressCardClickUntil = 0;
+        var ghOpenBtn = document.getElementById('kan-github-settings-open');
+        var ghModal = document.getElementById('kan-github-settings-modal');
+        var ghToken = document.getElementById('kan-github-token');
+        var ghRepo = document.getElementById('kan-github-repo');
+        var ghBranch = document.getElementById('kan-github-branch');
+        var ghStatus = document.getElementById('kan-github-status');
+        var ghSave = document.getElementById('kan-github-save');
+        var ghCancel = document.getElementById('kan-github-cancel');
 
         function editUrl(id) {
             return editTpl.replace('888888888', String(id)) + '?panel=1';
@@ -595,7 +682,75 @@ window.HARMONIE_TASKS = [
             if (e.key === 'Escape' && panel && panel.classList.contains('is-open')) {
                 closePanel();
             }
+            if (e.key === 'Escape' && ghModal && ghModal.classList.contains('is-open')) {
+                ghModal.classList.remove('is-open');
+            }
         });
+
+        function loadGithubSettings() {
+            if (!ghRepo || !ghStatus || !ghBranch) return;
+            fetch('";
+        // line 509
+        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("api_github_settings_get");
+        yield "', { credentials: 'same-origin' })
+                .then(function (r) { return r.json(); })
+                .then(function (data) {
+                    ghRepo.value = data.repo || '';
+                    ghBranch.value = data.branch || 'main';
+                    if (data.configured) {
+                        ghStatus.textContent = data.tokenValid
+                            ? ('Configuration active ✅ (branche: ' + (data.branch || 'main') + ')')
+                            : 'Token invalide ⚠️';
+                    } else {
+                        ghStatus.textContent = 'GitHub non configuré (optionnel).';
+                    }
+                })
+                .catch(function () {
+                    ghStatus.textContent = 'Impossible de charger la configuration.';
+                });
+        }
+
+        if (ghOpenBtn && ghModal) {
+            ghOpenBtn.addEventListener('click', function () {
+                ghModal.classList.add('is-open');
+                loadGithubSettings();
+            });
+            ghModal.addEventListener('click', function (e) {
+                if (e.target === ghModal) ghModal.classList.remove('is-open');
+            });
+        }
+        if (ghCancel && ghModal) {
+            ghCancel.addEventListener('click', function () { ghModal.classList.remove('is-open'); });
+        }
+                if (ghSave && ghToken && ghRepo && ghBranch && ghStatus) {
+            ghSave.addEventListener('click', function () {
+                ghStatus.textContent = 'Enregistrement...';
+                fetch('";
+        // line 542
+        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("api_github_settings_put");
+        yield "', {
+                    method: 'PUT',
+                    credentials: 'same-origin',
+                    headers: { 'Content-Type': 'application/json' },
+                                        body: JSON.stringify({
+                                                token: ghToken.value,
+                                                repo: ghRepo.value,
+                                                branch: (ghBranch.value || '').trim()
+                                        })
+                }).then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
+                  .then(function (res) {
+                    if (!res.ok || !res.d.ok) throw new Error(res.d.error || 'Erreur');
+                                        ghStatus.textContent = res.d.tokenValid
+                                                ? ('Enregistré ✅ (branche: ' + (res.d.branch || 'main') + ')')
+                                                : 'Enregistré, mais token invalide ⚠️';
+                    ghToken.value = '';
+                                        ghBranch.value = res.d.branch || 'main';
+                  })
+                  .catch(function (e) {
+                    ghStatus.textContent = e.message || 'Erreur de sauvegarde';
+                  });
+            });
+        }
 
         function bindBoardEvents() {
             var board = document.getElementById('kan-board-root');
@@ -696,6 +851,20 @@ window.HARMONIE_TASKS = [
                 })
                 .catch(function(e) { console.error('Erreur rafraîchissement kanban', e); });
         });
+
+        if (window.EventSource) {
+            try {
+                var es = new EventSource('";
+        // line 668
+        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("api_kanban_stream");
+        yield "');
+                es.addEventListener('kanban-update', function () {
+                    document.dispatchEvent(new CustomEvent('harmonie_data_updated'));
+                });
+            } catch (e) {
+                console.warn('Flux SSE indisponible', e);
+            }
+        }
     })();
     </script>
 ";
@@ -787,7 +956,33 @@ window.HARMONIE_TASKS = [
                 <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M12 20h9\"/><path d=\"M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z\"/></svg>
             </a>
         </div>
-    </li>
+        ";
+            // line 27
+            if ((CoreExtension::getAttribute($this->env, $this->source, (isset($context["tache"]) || array_key_exists("tache", $context) ? $context["tache"] : (function () { throw new RuntimeError('Variable "tache" does not exist.', 27, $this->source); })()), "githubIssueNumber", [], "any", false, false, false, 27) && CoreExtension::getAttribute($this->env, $this->source, (isset($context["tache"]) || array_key_exists("tache", $context) ? $context["tache"] : (function () { throw new RuntimeError('Variable "tache" does not exist.', 27, $this->source); })()), "githubRepo", [], "any", false, false, false, 27))) {
+                // line 28
+                yield "            <a class=\"kan-issue-badge\"
+               href=\"https://github.com/";
+                // line 29
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["tache"]) || array_key_exists("tache", $context) ? $context["tache"] : (function () { throw new RuntimeError('Variable "tache" does not exist.', 29, $this->source); })()), "githubRepo", [], "any", false, false, false, 29), "html", null, true);
+                yield "/issues/";
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["tache"]) || array_key_exists("tache", $context) ? $context["tache"] : (function () { throw new RuntimeError('Variable "tache" does not exist.', 29, $this->source); })()), "githubIssueNumber", [], "any", false, false, false, 29), "html", null, true);
+                yield "\"
+               target=\"_blank\"
+               rel=\"noopener noreferrer\"
+               title=\"Ouvrir l'issue GitHub #";
+                // line 32
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["tache"]) || array_key_exists("tache", $context) ? $context["tache"] : (function () { throw new RuntimeError('Variable "tache" does not exist.', 32, $this->source); })()), "githubIssueNumber", [], "any", false, false, false, 32), "html", null, true);
+                yield "\"
+               aria-label=\"Ouvrir l'issue GitHub #";
+                // line 33
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["tache"]) || array_key_exists("tache", $context) ? $context["tache"] : (function () { throw new RuntimeError('Variable "tache" does not exist.', 33, $this->source); })()), "githubIssueNumber", [], "any", false, false, false, 33), "html", null, true);
+                yield "\">#";
+                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, (isset($context["tache"]) || array_key_exists("tache", $context) ? $context["tache"] : (function () { throw new RuntimeError('Variable "tache" does not exist.', 33, $this->source); })()), "githubIssueNumber", [], "any", false, false, false, 33), "html", null, true);
+                yield "</a>
+        ";
+            }
+            // line 35
+            yield "    </li>
 ";
             
             $__internal_6f47bbe9983af81f1e7450e9a3e3768f->leave($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof);
@@ -820,7 +1015,7 @@ window.HARMONIE_TASKS = [
      */
     public function getDebugInfo(): array
     {
-        return array (  785 => 23,  779 => 20,  776 => 19,  770 => 17,  767 => 16,  761 => 13,  748 => 9,  746 => 8,  742 => 7,  737 => 6,  734 => 5,  731 => 4,  712 => 3,  459 => 269,  456 => 268,  443 => 267,  430 => 264,  418 => 255,  408 => 248,  398 => 241,  390 => 235,  388 => 234,  367 => 215,  358 => 213,  354 => 212,  344 => 204,  335 => 202,  331 => 201,  321 => 193,  312 => 191,  308 => 190,  295 => 180,  286 => 174,  281 => 172,  277 => 171,  273 => 170,  268 => 167,  266 => 166,  253 => 165,  114 => 36,  110 => 35,  105 => 34,  92 => 33,  69 => 31,  58 => 1,  56 => 29,  43 => 1,);
+        return array (  985 => 35,  978 => 33,  974 => 32,  966 => 29,  963 => 28,  961 => 27,  954 => 23,  948 => 20,  945 => 19,  939 => 17,  936 => 16,  930 => 13,  917 => 9,  915 => 8,  911 => 7,  906 => 6,  903 => 5,  900 => 4,  881 => 3,  859 => 668,  730 => 542,  694 => 509,  538 => 356,  535 => 355,  522 => 354,  509 => 351,  495 => 340,  483 => 331,  471 => 322,  440 => 293,  438 => 292,  417 => 273,  408 => 271,  404 => 270,  394 => 262,  385 => 260,  381 => 259,  371 => 251,  362 => 249,  358 => 248,  343 => 236,  333 => 229,  328 => 227,  324 => 226,  320 => 225,  315 => 222,  313 => 221,  300 => 220,  114 => 44,  110 => 43,  105 => 42,  92 => 41,  69 => 39,  58 => 1,  56 => 37,  43 => 1,);
     }
 
     public function getSourceContext(): Source
@@ -851,6 +1046,14 @@ window.HARMONIE_TASKS = [
                 <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M12 20h9\"/><path d=\"M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z\"/></svg>
             </a>
         </div>
+        {% if tache.githubIssueNumber and tache.githubRepo %}
+            <a class=\"kan-issue-badge\"
+               href=\"https://github.com/{{ tache.githubRepo }}/issues/{{ tache.githubIssueNumber }}\"
+               target=\"_blank\"
+               rel=\"noopener noreferrer\"
+               title=\"Ouvrir l'issue GitHub #{{ tache.githubIssueNumber }}\"
+               aria-label=\"Ouvrir l'issue GitHub #{{ tache.githubIssueNumber }}\">#{{ tache.githubIssueNumber }}</a>
+        {% endif %}
     </li>
 {% endmacro %}
 {% import _self as kan %}
@@ -892,6 +1095,37 @@ window.HARMONIE_TASKS = [
             color: var(--text, #1C1733); text-decoration: none; font-size: 14px;
         }
         .kan-export-menu a:hover { background: var(--purple-pale, #EDE8FA); color: var(--purple, #6A5ACD); }
+        .kan-settings-btn {
+            list-style: none; cursor: pointer;
+            padding: 8px 16px; border-radius: 10px;
+            border: 1px solid #e5e7eb;
+            background: linear-gradient(180deg, #fafafa, #f3f4f6);
+            font-size: 13px; font-weight: 500; color: var(--text-mid, #4A4570);
+            margin-left: 8px;
+        }
+        .kan-settings-modal {
+            position: fixed; inset: 0; background: rgba(17, 24, 39, .35);
+            display: none; align-items: center; justify-content: center; z-index: 999;
+        }
+        .kan-settings-modal.is-open { display: flex; }
+        .kan-settings-card {
+            width: min(94vw, 460px); background: #fff; border-radius: 14px;
+            border: 1px solid rgba(106,90,205,.12); box-shadow: 0 15px 40px rgba(0,0,0,.15);
+            padding: 16px;
+        }
+        .kan-settings-card h3 { margin: 0 0 10px; font-size: 16px; color: #1f1b3a; }
+        .kan-settings-row { margin-bottom: 10px; }
+        .kan-settings-row label { display: block; font-size: 12px; color: #6b7280; margin-bottom: 4px; }
+        .kan-settings-row input {
+            width: 100%; border: 1px solid #d1d5db; border-radius: 10px;
+            padding: 8px 10px; font-size: 13px;
+        }
+        .kan-settings-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 12px; }
+        .kan-settings-actions button {
+            border: 1px solid #d1d5db; background: #fff; border-radius: 10px; padding: 8px 12px; cursor: pointer;
+        }
+        .kan-settings-actions .is-primary { background: #6A5ACD; border-color: #6A5ACD; color: #fff; }
+        .kan-settings-status { font-size: 12px; margin-top: 8px; color: #4b5563; min-height: 16px; }
 
         .kan-board {
             display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
@@ -946,6 +1180,7 @@ window.HARMONIE_TASKS = [
             border: 1px solid rgba(124,58,237,.1);
             margin-bottom: 12px;
             cursor: grab;
+            position: relative;
         }
         .kan-card:active { cursor: grabbing; }
         .kan-card-title { font-weight: 700; font-size: 15px; color: var(--text, #1C1733); margin: 0 0 10px; line-height: 1.3; }
@@ -984,6 +1219,21 @@ window.HARMONIE_TASKS = [
             outline-offset: 2px;
         }
 
+        .kan-issue-badge {
+            position: absolute;
+            right: 10px;
+            bottom: 8px;
+            font-size: 11px;
+            line-height: 1;
+            padding: 4px 7px;
+            border-radius: 999px;
+            color: #5b21b6;
+            background: #ede9fe;
+            border: 1px solid rgba(91, 33, 182, .2);
+            text-decoration: none;
+        }
+        .kan-issue-badge:hover { background: #ddd6fe; }
+
         .kan-col-list.sortable-drag { min-height: 40px; }
         .kan-card.sortable-ghost { opacity: 0.45; }
     </style>
@@ -999,14 +1249,17 @@ window.HARMONIE_TASKS = [
      data-edit-url-template=\"{{ path('app_tache_edit', { id: 888888888 })|e('html_attr') }}\">
     <div class=\"kan-top\">
         <p class=\"kan-advice\"><strong>Conseil du jour :</strong> {{ advice }}</p>
-        <details class=\"kan-export-wrap\">
-            <summary class=\"kan-export-summary\">Exporter ▾</summary>
-            <div class=\"kan-export-menu\">
-                <a href=\"#\" class=\"js-kanban-export-pdf\" data-type=\"pdf\">Exporter en PDF</a>
-                <a href=\"#\" class=\"js-kanban-export-excel\" data-type=\"excel\">Exporter en Excel</a>
-                <a href=\"{{ path('app_tache_export_csv') }}\">Télécharger CSV (legacy)</a>
-            </div>
-        </details>
+        <div style=\"display:flex; align-items:center; margin-left:auto;\">
+            <details class=\"kan-export-wrap\">
+                <summary class=\"kan-export-summary\">Exporter ▾</summary>
+                <div class=\"kan-export-menu\">
+                    <a href=\"#\" class=\"js-kanban-export-pdf\" data-type=\"pdf\">Exporter en PDF</a>
+                    <a href=\"#\" class=\"js-kanban-export-excel\" data-type=\"excel\">Exporter en Excel</a>
+                    <a href=\"{{ path('app_tache_export_csv') }}\">Télécharger CSV (legacy)</a>
+                </div>
+            </details>
+            <button type=\"button\" id=\"kan-github-settings-open\" class=\"kan-settings-btn\">GitHub ⚙</button>
+        </div>
     </div>
 
     <div class=\"kan-board\" id=\"kan-board-root\">
@@ -1062,6 +1315,29 @@ window.HARMONIE_TASKS = [
     </template>
 </div>
 
+<div id=\"kan-github-settings-modal\" class=\"kan-settings-modal\" aria-hidden=\"true\">
+    <div class=\"kan-settings-card\" role=\"dialog\" aria-modal=\"true\" aria-labelledby=\"kan-github-title\">
+        <h3 id=\"kan-github-title\">Paramètres GitHub</h3>
+        <div class=\"kan-settings-row\">
+            <label for=\"kan-github-token\">Personal Access Token</label>
+            <input id=\"kan-github-token\" type=\"password\" autocomplete=\"off\" placeholder=\"ghp_...\">
+        </div>
+        <div class=\"kan-settings-row\">
+            <label for=\"kan-github-repo\">Dépôt (owner/repo)</label>
+            <input id=\"kan-github-repo\" type=\"text\" autocomplete=\"off\" placeholder=\"monuser/monrepo\">
+        </div>
+        <div class=\"kan-settings-row\">
+            <label for=\"kan-github-branch\">Branche (optionnel)</label>
+            <input id=\"kan-github-branch\" type=\"text\" autocomplete=\"off\" placeholder=\"main (par défaut)\">
+        </div>
+        <div id=\"kan-github-status\" class=\"kan-settings-status\"></div>
+        <div class=\"kan-settings-actions\">
+            <button type=\"button\" id=\"kan-github-cancel\">Annuler</button>
+            <button type=\"button\" id=\"kan-github-save\" class=\"is-primary\">Enregistrer</button>
+        </div>
+    </div>
+</div>
+
 </main>
 <script>
 window.HARMONIE_TASKS = [
@@ -1070,6 +1346,8 @@ window.HARMONIE_TASKS = [
         title: t.nom,
         priority: t.priorite ?? 'moyenne',
         dueDate: t.deadline ?? '',
+        githubIssueNumber: t.githubIssueNumber ?? null,
+        githubRepo: t.githubRepo ?? null,
         completed: false
     })),
     ...({{ columns.EN_COURS|json_encode|raw }}).map(t => ({
@@ -1077,6 +1355,8 @@ window.HARMONIE_TASKS = [
         title: t.nom,
         priority: t.priorite ?? 'moyenne',
         dueDate: t.deadline ?? '',
+        githubIssueNumber: t.githubIssueNumber ?? null,
+        githubRepo: t.githubRepo ?? null,
         completed: false
     })),
     ...({{ columns.TERMINEE|json_encode|raw }}).map(t => ({
@@ -1084,6 +1364,8 @@ window.HARMONIE_TASKS = [
         title: t.nom,
         priority: t.priorite ?? 'moyenne',
         dueDate: t.deadline ?? '',
+        githubIssueNumber: t.githubIssueNumber ?? null,
+        githubRepo: t.githubRepo ?? null,
         completed: true
     }))
 ];
@@ -1115,6 +1397,14 @@ window.HARMONIE_TASKS = [
         var editTpl = root.getAttribute('data-edit-url-template') || '';
         var board = document.getElementById('kan-board-root');
         var suppressCardClickUntil = 0;
+        var ghOpenBtn = document.getElementById('kan-github-settings-open');
+        var ghModal = document.getElementById('kan-github-settings-modal');
+        var ghToken = document.getElementById('kan-github-token');
+        var ghRepo = document.getElementById('kan-github-repo');
+        var ghBranch = document.getElementById('kan-github-branch');
+        var ghStatus = document.getElementById('kan-github-status');
+        var ghSave = document.getElementById('kan-github-save');
+        var ghCancel = document.getElementById('kan-github-cancel');
 
         function editUrl(id) {
             return editTpl.replace('888888888', String(id)) + '?panel=1';
@@ -1231,7 +1521,69 @@ window.HARMONIE_TASKS = [
             if (e.key === 'Escape' && panel && panel.classList.contains('is-open')) {
                 closePanel();
             }
+            if (e.key === 'Escape' && ghModal && ghModal.classList.contains('is-open')) {
+                ghModal.classList.remove('is-open');
+            }
         });
+
+        function loadGithubSettings() {
+            if (!ghRepo || !ghStatus || !ghBranch) return;
+            fetch('{{ path('api_github_settings_get') }}', { credentials: 'same-origin' })
+                .then(function (r) { return r.json(); })
+                .then(function (data) {
+                    ghRepo.value = data.repo || '';
+                    ghBranch.value = data.branch || 'main';
+                    if (data.configured) {
+                        ghStatus.textContent = data.tokenValid
+                            ? ('Configuration active ✅ (branche: ' + (data.branch || 'main') + ')')
+                            : 'Token invalide ⚠️';
+                    } else {
+                        ghStatus.textContent = 'GitHub non configuré (optionnel).';
+                    }
+                })
+                .catch(function () {
+                    ghStatus.textContent = 'Impossible de charger la configuration.';
+                });
+        }
+
+        if (ghOpenBtn && ghModal) {
+            ghOpenBtn.addEventListener('click', function () {
+                ghModal.classList.add('is-open');
+                loadGithubSettings();
+            });
+            ghModal.addEventListener('click', function (e) {
+                if (e.target === ghModal) ghModal.classList.remove('is-open');
+            });
+        }
+        if (ghCancel && ghModal) {
+            ghCancel.addEventListener('click', function () { ghModal.classList.remove('is-open'); });
+        }
+                if (ghSave && ghToken && ghRepo && ghBranch && ghStatus) {
+            ghSave.addEventListener('click', function () {
+                ghStatus.textContent = 'Enregistrement...';
+                fetch('{{ path('api_github_settings_put') }}', {
+                    method: 'PUT',
+                    credentials: 'same-origin',
+                    headers: { 'Content-Type': 'application/json' },
+                                        body: JSON.stringify({
+                                                token: ghToken.value,
+                                                repo: ghRepo.value,
+                                                branch: (ghBranch.value || '').trim()
+                                        })
+                }).then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
+                  .then(function (res) {
+                    if (!res.ok || !res.d.ok) throw new Error(res.d.error || 'Erreur');
+                                        ghStatus.textContent = res.d.tokenValid
+                                                ? ('Enregistré ✅ (branche: ' + (res.d.branch || 'main') + ')')
+                                                : 'Enregistré, mais token invalide ⚠️';
+                    ghToken.value = '';
+                                        ghBranch.value = res.d.branch || 'main';
+                  })
+                  .catch(function (e) {
+                    ghStatus.textContent = e.message || 'Erreur de sauvegarde';
+                  });
+            });
+        }
 
         function bindBoardEvents() {
             var board = document.getElementById('kan-board-root');
@@ -1332,6 +1684,17 @@ window.HARMONIE_TASKS = [
                 })
                 .catch(function(e) { console.error('Erreur rafraîchissement kanban', e); });
         });
+
+        if (window.EventSource) {
+            try {
+                var es = new EventSource('{{ path('api_kanban_stream') }}');
+                es.addEventListener('kanban-update', function () {
+                    document.dispatchEvent(new CustomEvent('harmonie_data_updated'));
+                });
+            } catch (e) {
+                console.warn('Flux SSE indisponible', e);
+            }
+        }
     })();
     </script>
 {% endblock %}

@@ -7,6 +7,9 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+    github.default_token: '%env(string:GITHUB_PAT)%'
+    github.default_repo: '%env(string:GITHUB_REPO)%'
+    github.default_branch: '%env(string:GITHUB_BRANCH)%'
 
 services:
     # default configuration for services in *this* file
@@ -18,6 +21,13 @@ services:
     # this creates a service per class whose id is the fully-qualified class name
     App\:
         resource: '../src/'
+
+    App\Service\Github\GithubIssueService:
+        arguments:
+            $projectDir: '%kernel.project_dir%'
+            $defaultToken: '%github.default_token%'
+            $defaultRepo: '%github.default_repo%'
+            $defaultBranch: '%github.default_branch%'
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

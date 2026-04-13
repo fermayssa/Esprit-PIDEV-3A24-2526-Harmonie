@@ -43,6 +43,12 @@ return [
             [['_route' => 'api_events_list', '_controller' => 'App\\Controller\\Api\\EventApiController::list'], null, ['GET' => 0], null, false, false, null],
             [['_route' => 'api_events_create', '_controller' => 'App\\Controller\\Api\\EventApiController::create'], null, ['POST' => 0], null, false, false, null],
         ],
+        '/api/github/settings' => [
+            [['_route' => 'api_github_settings_get', '_controller' => 'App\\Controller\\Api\\GithubSettingsController::getSettings'], null, ['GET' => 0], null, false, false, null],
+            [['_route' => 'api_github_settings_put', '_controller' => 'App\\Controller\\Api\\GithubSettingsController::saveSettings'], null, ['PUT' => 0], null, false, false, null],
+        ],
+        '/api/webhooks/github' => [[['_route' => 'api_webhooks_github', '_controller' => 'App\\Controller\\Api\\GithubWebhookController'], null, ['POST' => 0], null, false, false, null]],
+        '/api/kanban/stream' => [[['_route' => 'api_kanban_stream', '_controller' => 'App\\Controller\\Api\\KanbanStreamController::events'], null, ['GET' => 0], null, false, false, null]],
         '/api/tasks' => [
             [['_route' => 'api_tasks_list', '_controller' => 'App\\Controller\\Api\\TaskApiController::list'], null, ['GET' => 0], null, false, false, null],
             [['_route' => 'api_tasks_create', '_controller' => 'App\\Controller\\Api\\TaskApiController::create'], null, ['POST' => 0], null, false, false, null],
