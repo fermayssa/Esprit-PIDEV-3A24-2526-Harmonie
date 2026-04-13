@@ -249,11 +249,16 @@ class __TwigTemplate_e740dafe845d7410a672193219524eb7 extends Template
         yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_evenement_edit", ["id" => CoreExtension::getAttribute($this->env, $this->source, (isset($context["evenement"]) || array_key_exists("evenement", $context) ? $context["evenement"] : (function () { throw new RuntimeError('Variable "evenement" does not exist.', 77, $this->source); })()), "id", [], "any", false, false, false, 77)]), "html", null, true);
         yield "\">Modifier</a></p>
 
+
     ";
-        // line 79
+        // line 80
         yield Twig\Extension\CoreExtension::include($this->env, $context, "evenement/_delete_form.html.twig");
         yield "
 </main>
+<script src=\"";
+        // line 82
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl("harmonie-chatbot-widget.js"), "html", null, true);
+        yield "\"></script>
 ";
         
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->leave($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof);
@@ -285,7 +290,7 @@ class __TwigTemplate_e740dafe845d7410a672193219524eb7 extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  254 => 79,  249 => 77,  245 => 76,  237 => 71,  230 => 67,  223 => 63,  216 => 59,  209 => 55,  202 => 51,  195 => 47,  188 => 43,  181 => 39,  174 => 35,  167 => 31,  160 => 27,  153 => 23,  146 => 19,  137 => 13,  134 => 12,  132 => 11,  119 => 10,  106 => 7,  101 => 6,  88 => 5,  65 => 3,  42 => 1,);
+        return array (  260 => 82,  255 => 80,  249 => 77,  245 => 76,  237 => 71,  230 => 67,  223 => 63,  216 => 59,  209 => 55,  202 => 51,  195 => 47,  188 => 43,  181 => 39,  174 => 35,  167 => 31,  160 => 27,  153 => 23,  146 => 19,  137 => 13,  134 => 12,  132 => 11,  119 => 10,  106 => 7,  101 => 6,  88 => 5,  65 => 3,  42 => 1,);
     }
 
     public function getSourceContext(): Source
@@ -368,8 +373,10 @@ class __TwigTemplate_e740dafe845d7410a672193219524eb7 extends Template
     <p><a href=\"{{ path('app_evenement_index') }}\">← Calendrier</a></p>
     <p><a href=\"{{ path('app_evenement_edit', {'id': evenement.id}) }}\">Modifier</a></p>
 
+
     {{ include('evenement/_delete_form.html.twig') }}
 </main>
+<script src=\"{{ asset('harmonie-chatbot-widget.js') }}\"></script>
 {% endblock %}
 ", "evenement/show.html.twig", "/Users/rayen/Desktop/pi dev/mon_projet/templates/evenement/show.html.twig");
     }

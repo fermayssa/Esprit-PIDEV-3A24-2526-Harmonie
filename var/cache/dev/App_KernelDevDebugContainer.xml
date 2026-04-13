@@ -418,6 +418,20 @@
       <tag name="controller.service_arguments"/>
       <tag name="routing.route_loader"/>
     </service>
+    <service id="Google\Client" class="Google\Client">
+      <call method="setDeveloperKey">
+        <argument>%env(GOOGLE_API_KEY)%</argument>
+      </call>
+      <call method="setClientId">
+        <argument>%env(GOOGLE_CLIENT_ID)%</argument>
+      </call>
+      <call method="setClientSecret">
+        <argument>%env(GOOGLE_CLIENT_SECRET)%</argument>
+      </call>
+      <call method="setAuthConfig">
+        <argument>%env(resolve:GOOGLE_AUTH_CONFIG)%</argument>
+      </call>
+    </service>
     <service id="App\Controller\ActivitesController" class="App\Controller\ActivitesController" public="true" autowire="true" autoconfigure="true">
       <tag name="controller.service_arguments"/>
       <tag name="routing.controller"/>
@@ -554,6 +568,14 @@
       <tag name="container.service_subscriber"/>
       <call method="setContainer">
         <argument type="service" id=".service_locator.TJNRSaV.App\Controller\ForumController"/>
+      </call>
+    </service>
+    <service id="App\Controller\GoogleCalendarController" class="App\Controller\GoogleCalendarController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
+      <tag name="routing.controller"/>
+      <tag name="container.service_subscriber"/>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.TJNRSaV.App\Controller\GoogleCalendarController"/>
       </call>
     </service>
     <service id="App\Controller\HomepageController" class="App\Controller\HomepageController" public="true" autowire="true" autoconfigure="true">
@@ -833,9 +855,14 @@
       <argument type="service" id="debug.validator"/>
       <argument type="service" id="App\Repository\DemandeReservationRepository"/>
       <argument type="service" id="App\Repository\CalendrierRepository"/>
+      <argument type="service" id="App\Service\GoogleCalendarService"/>
     </service>
     <service id="App\Service\Export\CalendarExportService" class="App\Service\Export\CalendarExportService" autowire="true" autoconfigure="true"/>
     <service id="App\Service\Export\KanbanExportService" class="App\Service\Export\KanbanExportService" autowire="true" autoconfigure="true"/>
+    <service id="App\Service\GoogleCalendarService" class="App\Service\GoogleCalendarService" autowire="true" autoconfigure="true">
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
+      <argument type="service" id="router.default"/>
+    </service>
     <service id="App\Service\SuspicionScoreService" class="App\Service\SuspicionScoreService" autowire="true" autoconfigure="true"/>
     <service id="argument_metadata_factory" class="Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadataFactory"/>
     <service id="argument_resolver.backed_enum_resolver" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\BackedEnumValueResolver">
@@ -865,7 +892,7 @@
     </service>
     <service id="argument_resolver.service" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver">
       <tag name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver" priority="-50">controller.argument_value_resolver</tag>
-      <argument type="service" id=".service_locator.HkbUFRz"/>
+      <argument type="service" id=".service_locator.OH37aAG"/>
     </service>
     <service id="argument_resolver.default" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver">
       <tag name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver" priority="-100">controller.argument_value_resolver</tag>
@@ -2511,6 +2538,11 @@
       </call>
       <factory class="Symfony\Component\HttpClient\HttpClient" method="create"/>
     </service>
+    <service id="psr18.http_client" class="Symfony\Component\HttpClient\Psr18Client">
+      <argument type="service" id="http_client.uri_template"/>
+      <argument>null</argument>
+      <argument>null</argument>
+    </service>
     <service id="http_client.abstract_retry_strategy" class="Symfony\Component\HttpClient\Retry\GenericRetryStrategy" abstract="true">
       <argument type="abstract">http codes</argument>
       <argument type="abstract">delay ms</argument>
@@ -3996,7 +4028,7 @@
     </service>
     <service id="argument_resolver.not_tagged_controller" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\NotTaggedControllerValueResolver">
       <tag name="controller.argument_value_resolver" priority="-200"/>
-      <argument type="service" id=".service_locator.HkbUFRz"/>
+      <argument type="service" id=".service_locator.OH37aAG"/>
     </service>
     <service id="debug.log_processor" class="Symfony\Bridge\Monolog\Processor\DebugProcessor">
       <tag name="kernel.reset" method="reset"/>
@@ -4094,6 +4126,7 @@
         <argument>App\Controller\ChatbotController</argument>
         <argument>App\Controller\EvenementsController</argument>
         <argument>App\Controller\ForumController</argument>
+        <argument>App\Controller\GoogleCalendarController</argument>
         <argument>App\Controller\HomepageController</argument>
         <argument>App\Controller\JournalController</argument>
         <argument>App\Controller\LibraryController</argument>
@@ -8535,6 +8568,10 @@
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\ForumController" class="App\Controller\ForumController" autowire="true" abstract="true"/>
     <service id=".instanceof.App\Controller\ForumController.0.App\Controller\ForumController" class="App\Controller\ForumController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\ForumController" class="App\Controller\ForumController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\GoogleCalendarController" class="App\Controller\GoogleCalendarController" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\GoogleCalendarController" class="App\Controller\GoogleCalendarController" autowire="true" abstract="true"/>
+    <service id=".instanceof.App\Controller\GoogleCalendarController.0.App\Controller\GoogleCalendarController" class="App\Controller\GoogleCalendarController" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Controller\GoogleCalendarController" class="App\Controller\GoogleCalendarController" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\HomepageController" class="App\Controller\HomepageController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\HomepageController" class="App\Controller\HomepageController" autowire="true" abstract="true"/>
     <service id=".instanceof.App\Controller\HomepageController.0.App\Controller\HomepageController" class="App\Controller\HomepageController" autowire="true" abstract="true"/>
@@ -9602,43 +9639,52 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.n60qnZK" method="withContext"/>
     </service>
-    <service id=".service_locator.PUfitXC" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.0FPZQH5" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="em" type="service_closure" id="doctrine.orm.default_entity_manager"/>
         <argument key="calendrierRepository" type="service_closure" id="App\Repository\CalendrierRepository"/>
+        <argument key="googleService" type="service_closure" id="App\Service\GoogleCalendarService"/>
       </argument>
     </service>
-    <service id=".service_locator.PUfitXC.App\Controller\Api\EventApiController::create()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.0FPZQH5.App\Controller\Api\EventApiController::create()" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\Api\EventApiController::create()"/>
       <argument>App\Controller\Api\EventApiController::create()</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.PUfitXC" method="withContext"/>
+      <factory service=".service_locator.0FPZQH5" method="withContext"/>
     </service>
-    <service id=".service_locator.AJCrrkc" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.GsKU6fY" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
-        <argument key="event" type="service_closure" id=".errored..service_locator.AJCrrkc.App\Entity\Evenement"/>
+        <argument key="event" type="service_closure" id=".errored..service_locator.GsKU6fY.App\Entity\Evenement"/>
         <argument key="em" type="service_closure" id="doctrine.orm.default_entity_manager"/>
+        <argument key="googleService" type="service_closure" id="App\Service\GoogleCalendarService"/>
       </argument>
     </service>
-    <service id=".service_locator.AJCrrkc.App\Controller\Api\EventApiController::update()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.GsKU6fY.App\Controller\Api\EventApiController::update()" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\Api\EventApiController::update()"/>
       <argument>App\Controller\Api\EventApiController::update()</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.AJCrrkc" method="withContext"/>
+      <factory service=".service_locator.GsKU6fY" method="withContext"/>
     </service>
-    <service id=".service_locator.AJCrrkc.App\Controller\Api\EventApiController::delete()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.GsKU6fY.App\Controller\Api\EventApiController::delete()" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\Api\EventApiController::delete()"/>
       <argument>App\Controller\Api\EventApiController::delete()</argument>
       <argument type="service" id="service_container"/>
-      <factory service=".service_locator.AJCrrkc" method="withContext"/>
+      <factory service=".service_locator.GsKU6fY" method="withContext"/>
     </service>
     <service id=".service_locator.e53I5WH.App\Controller\Api\TaskApiController::list()" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\Api\TaskApiController::list()"/>
       <argument>App\Controller\Api\TaskApiController::list()</argument>
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.e53I5WH" method="withContext"/>
+    </service>
+    <service id=".service_locator.PUfitXC" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="em" type="service_closure" id="doctrine.orm.default_entity_manager"/>
+        <argument key="calendrierRepository" type="service_closure" id="App\Repository\CalendrierRepository"/>
+      </argument>
     </service>
     <service id=".service_locator.PUfitXC.App\Controller\Api\TaskApiController::create()" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\Api\TaskApiController::create()"/>
@@ -9902,6 +9948,36 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.z0A7H.F" method="withContext"/>
     </service>
+    <service id=".service_locator.n3xukcA" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="googleService" type="service_closure" id="App\Service\GoogleCalendarService"/>
+      </argument>
+    </service>
+    <service id=".service_locator.n3xukcA.App\Controller\GoogleCalendarController::connect()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\GoogleCalendarController::connect()"/>
+      <argument>App\Controller\GoogleCalendarController::connect()</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.n3xukcA" method="withContext"/>
+    </service>
+    <service id=".service_locator.n3xukcA.App\Controller\GoogleCalendarController::callback()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\GoogleCalendarController::callback()"/>
+      <argument>App\Controller\GoogleCalendarController::callback()</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.n3xukcA" method="withContext"/>
+    </service>
+    <service id=".service_locator.z0A7H.F.App\Controller\GoogleCalendarController::disconnect()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\GoogleCalendarController::disconnect()"/>
+      <argument>App\Controller\GoogleCalendarController::disconnect()</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.z0A7H.F" method="withContext"/>
+    </service>
+    <service id=".service_locator.z0A7H.F.App\Controller\GoogleCalendarController::webhook()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\GoogleCalendarController::webhook()"/>
+      <argument>App\Controller\GoogleCalendarController::webhook()</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.z0A7H.F" method="withContext"/>
+    </service>
     <service id=".service_locator.j4Wlmfc" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
@@ -10154,7 +10230,7 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.z0A7H.F" method="withContext"/>
     </service>
-    <service id=".service_locator.HkbUFRz" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.OH37aAG" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="kernel::registerContainerConfiguration" type="service_closure" id=".service_locator.1vYpZ1B.kernel::registerContainerConfiguration()"/>
@@ -10197,9 +10273,9 @@
         <argument key="App\Controller\AdminUserController::toggle" type="service_closure" id=".service_locator.kYAceIU.App\Controller\AdminUserController::toggle()"/>
         <argument key="App\Controller\AdminUserController::suspicionDetail" type="service_closure" id=".service_locator.kYAceIU.App\Controller\AdminUserController::suspicionDetail()"/>
         <argument key="App\Controller\Api\EventApiController::list" type="service_closure" id=".service_locator.n60qnZK.App\Controller\Api\EventApiController::list()"/>
-        <argument key="App\Controller\Api\EventApiController::create" type="service_closure" id=".service_locator.PUfitXC.App\Controller\Api\EventApiController::create()"/>
-        <argument key="App\Controller\Api\EventApiController::update" type="service_closure" id=".service_locator.AJCrrkc.App\Controller\Api\EventApiController::update()"/>
-        <argument key="App\Controller\Api\EventApiController::delete" type="service_closure" id=".service_locator.AJCrrkc.App\Controller\Api\EventApiController::delete()"/>
+        <argument key="App\Controller\Api\EventApiController::create" type="service_closure" id=".service_locator.0FPZQH5.App\Controller\Api\EventApiController::create()"/>
+        <argument key="App\Controller\Api\EventApiController::update" type="service_closure" id=".service_locator.GsKU6fY.App\Controller\Api\EventApiController::update()"/>
+        <argument key="App\Controller\Api\EventApiController::delete" type="service_closure" id=".service_locator.GsKU6fY.App\Controller\Api\EventApiController::delete()"/>
         <argument key="App\Controller\Api\TaskApiController::list" type="service_closure" id=".service_locator.e53I5WH.App\Controller\Api\TaskApiController::list()"/>
         <argument key="App\Controller\Api\TaskApiController::create" type="service_closure" id=".service_locator.PUfitXC.App\Controller\Api\TaskApiController::create()"/>
         <argument key="App\Controller\Api\TaskApiController::update" type="service_closure" id=".service_locator.0MKPK3c.App\Controller\Api\TaskApiController::update()"/>
@@ -10232,6 +10308,10 @@
         <argument key="App\Controller\ForumController::newComment" type="service_closure" id=".service_locator.z0A7H.F.App\Controller\ForumController::newComment()"/>
         <argument key="App\Controller\ForumController::editComment" type="service_closure" id=".service_locator.z0A7H.F.App\Controller\ForumController::editComment()"/>
         <argument key="App\Controller\ForumController::deleteComment" type="service_closure" id=".service_locator.z0A7H.F.App\Controller\ForumController::deleteComment()"/>
+        <argument key="App\Controller\GoogleCalendarController::connect" type="service_closure" id=".service_locator.n3xukcA.App\Controller\GoogleCalendarController::connect()"/>
+        <argument key="App\Controller\GoogleCalendarController::callback" type="service_closure" id=".service_locator.n3xukcA.App\Controller\GoogleCalendarController::callback()"/>
+        <argument key="App\Controller\GoogleCalendarController::disconnect" type="service_closure" id=".service_locator.z0A7H.F.App\Controller\GoogleCalendarController::disconnect()"/>
+        <argument key="App\Controller\GoogleCalendarController::webhook" type="service_closure" id=".service_locator.z0A7H.F.App\Controller\GoogleCalendarController::webhook()"/>
         <argument key="App\Controller\JournalController::edit" type="service_closure" id=".service_locator.j4Wlmfc.App\Controller\JournalController::edit()"/>
         <argument key="App\Controller\JournalController::delete" type="service_closure" id=".service_locator.j4Wlmfc.App\Controller\JournalController::delete()"/>
         <argument key="App\Controller\MeditationController::show" type="service_closure" id=".service_locator.DS21UbZ.App\Controller\MeditationController::show()"/>
@@ -10299,9 +10379,9 @@
         <argument key="App\Controller\AdminUserController:toggle" type="service_closure" id=".service_locator.kYAceIU.App\Controller\AdminUserController::toggle()"/>
         <argument key="App\Controller\AdminUserController:suspicionDetail" type="service_closure" id=".service_locator.kYAceIU.App\Controller\AdminUserController::suspicionDetail()"/>
         <argument key="App\Controller\Api\EventApiController:list" type="service_closure" id=".service_locator.n60qnZK.App\Controller\Api\EventApiController::list()"/>
-        <argument key="App\Controller\Api\EventApiController:create" type="service_closure" id=".service_locator.PUfitXC.App\Controller\Api\EventApiController::create()"/>
-        <argument key="App\Controller\Api\EventApiController:update" type="service_closure" id=".service_locator.AJCrrkc.App\Controller\Api\EventApiController::update()"/>
-        <argument key="App\Controller\Api\EventApiController:delete" type="service_closure" id=".service_locator.AJCrrkc.App\Controller\Api\EventApiController::delete()"/>
+        <argument key="App\Controller\Api\EventApiController:create" type="service_closure" id=".service_locator.0FPZQH5.App\Controller\Api\EventApiController::create()"/>
+        <argument key="App\Controller\Api\EventApiController:update" type="service_closure" id=".service_locator.GsKU6fY.App\Controller\Api\EventApiController::update()"/>
+        <argument key="App\Controller\Api\EventApiController:delete" type="service_closure" id=".service_locator.GsKU6fY.App\Controller\Api\EventApiController::delete()"/>
         <argument key="App\Controller\Api\TaskApiController:list" type="service_closure" id=".service_locator.e53I5WH.App\Controller\Api\TaskApiController::list()"/>
         <argument key="App\Controller\Api\TaskApiController:create" type="service_closure" id=".service_locator.PUfitXC.App\Controller\Api\TaskApiController::create()"/>
         <argument key="App\Controller\Api\TaskApiController:update" type="service_closure" id=".service_locator.0MKPK3c.App\Controller\Api\TaskApiController::update()"/>
@@ -10334,6 +10414,10 @@
         <argument key="App\Controller\ForumController:newComment" type="service_closure" id=".service_locator.z0A7H.F.App\Controller\ForumController::newComment()"/>
         <argument key="App\Controller\ForumController:editComment" type="service_closure" id=".service_locator.z0A7H.F.App\Controller\ForumController::editComment()"/>
         <argument key="App\Controller\ForumController:deleteComment" type="service_closure" id=".service_locator.z0A7H.F.App\Controller\ForumController::deleteComment()"/>
+        <argument key="App\Controller\GoogleCalendarController:connect" type="service_closure" id=".service_locator.n3xukcA.App\Controller\GoogleCalendarController::connect()"/>
+        <argument key="App\Controller\GoogleCalendarController:callback" type="service_closure" id=".service_locator.n3xukcA.App\Controller\GoogleCalendarController::callback()"/>
+        <argument key="App\Controller\GoogleCalendarController:disconnect" type="service_closure" id=".service_locator.z0A7H.F.App\Controller\GoogleCalendarController::disconnect()"/>
+        <argument key="App\Controller\GoogleCalendarController:webhook" type="service_closure" id=".service_locator.z0A7H.F.App\Controller\GoogleCalendarController::webhook()"/>
         <argument key="App\Controller\JournalController:edit" type="service_closure" id=".service_locator.j4Wlmfc.App\Controller\JournalController::edit()"/>
         <argument key="App\Controller\JournalController:delete" type="service_closure" id=".service_locator.j4Wlmfc.App\Controller\JournalController::delete()"/>
         <argument key="App\Controller\MeditationController:show" type="service_closure" id=".service_locator.DS21UbZ.App\Controller\MeditationController::show()"/>
@@ -11096,6 +11180,12 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.TJNRSaV" method="withContext"/>
     </service>
+    <service id=".service_locator.TJNRSaV.App\Controller\GoogleCalendarController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\GoogleCalendarController"/>
+      <argument>App\Controller\GoogleCalendarController</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.TJNRSaV" method="withContext"/>
+    </service>
     <service id=".service_locator.TJNRSaV.App\Controller\HomepageController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\HomepageController"/>
       <argument>App\Controller\HomepageController</argument>
@@ -11383,6 +11473,7 @@
           <argument>App\Controller\ChatbotController</argument>
           <argument>App\Controller\EvenementsController</argument>
           <argument>App\Controller\ForumController</argument>
+          <argument>App\Controller\GoogleCalendarController</argument>
           <argument>App\Controller\HomepageController</argument>
           <argument>App\Controller\JournalController</argument>
           <argument>App\Controller\LibraryController</argument>
@@ -11656,8 +11747,8 @@
     <service id=".errored..service_locator.UoveXVI.App\Entity\User" class="App\Entity\User">
       <tag name="container.error" message="Cannot autowire service &quot;.service_locator.UoveXVI&quot;: it needs an instance of &quot;App\Entity\User&quot; but this type has been excluded because it's a Doctrine entity."/>
     </service>
-    <service id=".errored..service_locator.AJCrrkc.App\Entity\Evenement" class="App\Entity\Evenement">
-      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.AJCrrkc&quot;: it needs an instance of &quot;App\Entity\Evenement&quot; but this type has been excluded because it's a Doctrine entity."/>
+    <service id=".errored..service_locator.GsKU6fY.App\Entity\Evenement" class="App\Entity\Evenement">
+      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.GsKU6fY&quot;: it needs an instance of &quot;App\Entity\Evenement&quot; but this type has been excluded because it's a Doctrine entity."/>
     </service>
     <service id=".errored..service_locator.0MKPK3c.App\Entity\Tache" class="App\Entity\Tache">
       <tag name="container.error" message="Cannot autowire service &quot;.service_locator.0MKPK3c&quot;: it needs an instance of &quot;App\Entity\Tache&quot; but this type has been excluded because it's a Doctrine entity."/>
@@ -12792,6 +12883,7 @@
     <service id="Symfony\Component\AssetMapper\ImportMap\ImportMapManager" alias="asset_mapper.importmap.manager"/>
     <service id="Symfony\Component\AssetMapper\Compressor\CompressorInterface" alias="asset_mapper.compressor"/>
     <service id="Symfony\Contracts\HttpClient\HttpClientInterface" alias="http_client.uri_template"/>
+    <service id="Psr\Http\Client\ClientInterface" alias="psr18.http_client"/>
     <service id="mailer" alias="mailer.mailer"/>
     <service id="Symfony\Component\Mailer\MailerInterface" alias="mailer.mailer"/>
     <service id="mailer.default_transport" alias="mailer.transports"/>
@@ -12903,7 +12995,7 @@
     <service id="Psr\Log\LoggerInterface" alias="monolog.logger"/>
     <service id="container.env_var_processors_locator" alias=".service_locator.ryAvHi4" public="true"/>
     <service id="twig.loader.filesystem" alias="twig.loader.native_filesystem"/>
-    <service id="argument_resolver.controller_locator" alias=".service_locator.HkbUFRz"/>
+    <service id="argument_resolver.controller_locator" alias=".service_locator.OH37aAG"/>
     <service id="doctrine.id_generator_locator" alias=".service_locator.W55Po6X"/>
     <service id="twig.loader" alias="twig.loader.native_filesystem"/>
     <service id=".Psr\Log\LoggerInterface $request" alias="monolog.logger.request"/>
@@ -12983,8 +13075,9 @@
     <service id=".service_locator.yFRapHK" alias=".service_locator.kYAceIU"/>
     <service id=".service_locator.pGrZ91r" alias=".service_locator.UoveXVI"/>
     <service id=".service_locator.KNSic_m" alias=".service_locator.n60qnZK"/>
+    <service id=".service_locator._q2H952" alias=".service_locator.0FPZQH5"/>
+    <service id=".service_locator.58sSNTL" alias=".service_locator.GsKU6fY"/>
     <service id=".service_locator.jyb8slm" alias=".service_locator.PUfitXC"/>
-    <service id=".service_locator.cQxy5hq" alias=".service_locator.AJCrrkc"/>
     <service id=".service_locator.KsD8UyN" alias=".service_locator.0MKPK3c"/>
     <service id=".service_locator.rY1dfrx" alias=".service_locator.ziqo37J"/>
     <service id=".service_locator.lrLzzYc" alias=".service_locator.Y_R0bCX"/>
@@ -12996,6 +13089,7 @@
     <service id=".service_locator.L.ivR_d" alias=".service_locator.OwMsx8r"/>
     <service id=".service_locator.23Ydx6f" alias=".service_locator.NgPr0wp"/>
     <service id=".service_locator.0ekWYPZ" alias=".service_locator.z0A7H.F"/>
+    <service id=".service_locator.Hu4DQ2P" alias=".service_locator.n3xukcA"/>
     <service id=".service_locator.a4BGQuG" alias=".service_locator.j4Wlmfc"/>
     <service id=".service_locator.qG0FeeQ" alias=".service_locator.eTqhGjo"/>
     <service id=".service_locator.HEogJwd" alias=".service_locator.Cz8IWeY"/>

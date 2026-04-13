@@ -62,6 +62,9 @@ class Evenement
     #[ORM\Column(name: 'event_type', length: 20, nullable: true)]
     private ?string $eventType = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $googleEventId = null;
+
     /** presentiel | en_ligne */
     #[Assert\NotBlank(message: 'Indiquez le mode de lieu.')]
     #[ORM\Column(name: 'lieu_type', length: 20, nullable: true)]
@@ -240,6 +243,18 @@ class Evenement
     public function setEventType(?string $eventType): static
     {
         $this->eventType = $eventType;
+
+        return $this;
+    }
+
+    public function getGoogleEventId(): ?string
+    {
+        return $this->googleEventId;
+    }
+
+    public function setGoogleEventId(?string $googleEventId): static
+    {
+        $this->googleEventId = $googleEventId;
 
         return $this;
     }

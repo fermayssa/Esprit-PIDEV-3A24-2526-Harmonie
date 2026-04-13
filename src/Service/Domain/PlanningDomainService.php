@@ -12,6 +12,7 @@ use App\Entity\User;
 use App\Repository\CalendrierRepository;
 use App\Repository\DemandeReservationRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Service\GoogleCalendarService;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 final class PlanningDomainService
@@ -23,6 +24,7 @@ final class PlanningDomainService
         private readonly ValidatorInterface $validator,
         private readonly DemandeReservationRepository $demandeReservationRepository,
         private readonly CalendrierRepository $calendrierRepository,
+        private readonly GoogleCalendarService $googleCalendarService,
     ) {
     }
 
@@ -61,6 +63,12 @@ final class PlanningDomainService
         $this->validateEntity($evenement);
         $this->entityManager->persist($evenement);
         $this->entityManager->flush();
+
+        // Sync to Google
+        if ($reserver = ($demandeur ?? $evenement->getProprietaire())) {
+            $this->googleCalendarService->syncEventToGoogle($evenement);
+            $this->entityManager->flush(); // Save googleEventId
+        }
 
         $reserver = $demandeur ?? $evenement->getProprietaire();
         if ($reserver instanceof User
@@ -138,6 +146,7 @@ final class PlanningDomainService
 
     public function removeEvenement(Evenement $evenement): void
     {
+        $this->googleCalendarService->deleteEventFromGoogle($evenement);
         $this->removeAndFlush($evenement);
     }
 

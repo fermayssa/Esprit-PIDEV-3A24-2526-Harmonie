@@ -111,6 +111,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(name: 'face_image_path', type: Types::STRING, length: 500, nullable: true)]
     private ?string $faceImagePath = null;
 
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $googleAccessToken = null;
+
+    #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
+    private ?string $googleRefreshToken = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $googleTokenExpiresAt = null;
+
     // ── Symfony UserInterface ──────────────────────────────────────────────
 
     public function getUserIdentifier(): string
@@ -191,4 +200,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getFaceImagePath(): ?string { return $this->faceImagePath; }
     public function setFaceImagePath(?string $v): self { $this->faceImagePath = $v; return $this; }
+
+    public function getGoogleAccessToken(): ?string { return $this->googleAccessToken; }
+    public function setGoogleAccessToken(?string $v): self { $this->googleAccessToken = $v; return $this; }
+
+    public function getGoogleRefreshToken(): ?string { return $this->googleRefreshToken; }
+    public function setGoogleRefreshToken(?string $v): self { $this->googleRefreshToken = $v; return $this; }
+
+    public function getGoogleTokenExpiresAt(): ?\DateTimeInterface { return $this->googleTokenExpiresAt; }
+    public function setGoogleTokenExpiresAt(?\DateTimeInterface $v): self { $this->googleTokenExpiresAt = $v; return $this; }
 }

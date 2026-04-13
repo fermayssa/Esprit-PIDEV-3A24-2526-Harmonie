@@ -616,7 +616,7 @@ class __TwigTemplate_6793daf4dd52bdf87cdd196e948a37a5 extends Template
     // Configuration Gemini
     const CONFIG = {
         API_KEY: 'AIzaSyDRfeHdCUnKk8wwf3gAGJChWlSj9ObRSR8',
-        MODEL: 'gemini-1.5-flash'
+        MODEL: 'gemini-pro'
     };
 
     // État
@@ -1498,7 +1498,7 @@ Ne jamais inventer de données.`;
     // Configuration Gemini
     const CONFIG = {
         API_KEY: 'AIzaSyDRfeHdCUnKk8wwf3gAGJChWlSj9ObRSR8',
-        MODEL: 'gemini-1.5-flash'
+        MODEL: 'gemini-pro'
     };
 
     // État

@@ -1,0 +1,176 @@
+<?php
+
+namespace App\Service;
+
+use App\Entity\Evenement;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+
+class GoogleCalendarService
+{
+    private $client;
+    private $em;
+    private $router;
+
+    public function __construct(EntityManagerInterface $em, UrlGeneratorInterface $router)
+    {
+        $this->em = $em;
+        $this->router = $router;
+
+        if (class_exists(\Google_Client::class)) {
+            $this->client = new \Google_Client();
+            // Ces variables devront être dans le .env
+            $clientId = $_ENV['GOOGLE_CLIENT_ID'] ?? 'your_client_id';
+            $clientSecret = $_ENV['GOOGLE_CLIENT_SECRET'] ?? 'your_client_secret';
+
+            $this->client->setClientId($clientId);
+            $this->client->setClientSecret($clientSecret);
+            // La route OAuth Callback définie dans notre contrôleur (doit être absolue)
+            // On peut la forcer ou générer absolue:
+            $redirectUri = $this->router->generate('app_google_calendar_callback', [], UrlGeneratorInterface::ABSOLUTE_URL);
+            $this->client->setRedirectUri($redirectUri);
+            
+            $this->client->setAccessType('offline'); // Pour obtenir un refresh_token
+            $this->client->setPrompt('consent');
+            
+            // On a besoin du scope Calendar + Userinfo pour lier au user actuel
+            $this->client->addScope('https://www.googleapis.com/auth/calendar');
+            $this->client->addScope('email');
+            $this->client->addScope('profile');
+        }
+    }
+
+    public function getAuthUrl(): string
+    {
+        if (!$this->client) return '#';
+        return $this->client->createAuthUrl();
+    }
+
+    // Utilisé dans le callback OAuth
+    public function authenticate(string $code, $user)
+    {
+        if (!$this->client) return false;
+        
+        $token = $this->client->fetchAccessTokenWithAuthCode($code);
+        
+        if (isset($token['error'])) {
+            return false;
+        }
+
+        // On sauvegarde le token dans notre user
+        $user->setGoogleAccessToken(json_encode($token));
+        
+        if (isset($token['refresh_token'])) {
+            $user->setGoogleRefreshToken($token['refresh_token']);
+        }
+        
+        if (isset($token['expires_in'])) {
+            $expiresAt = new \DateTime();
+            $expiresAt->modify('+' . $token['expires_in'] . ' seconds');
+            $user->setGoogleTokenExpiresAt($expiresAt);
+        }
+
+        $this->em->persist($user);
+        $this->em->flush();
+
+        return true;
+    }
+
+    // Paramétrer le client avec les droits d'un user
+    private function autoConfigForUser($user)
+    {
+        if (!$this->client || !$user || !$user->getGoogleAccessToken()) {
+            return false;
+        }
+
+        $tokenData = json_decode($user->getGoogleAccessToken(), true);
+        if (!$tokenData) return false;
+
+        $this->client->setAccessToken($tokenData);
+
+        // Auto-refresh token si expiré
+        if ($this->client->isAccessTokenExpired()) {
+            $refreshToken = $user->getGoogleRefreshToken();
+            if ($refreshToken) {
+                $newTokenData = $this->client->fetchAccessTokenWithRefreshToken($refreshToken);
+                if (!isset($newTokenData['error'])) {
+                    // Mettre à jour en BDD
+                    $newTokenData['refresh_token'] = $refreshToken; // Google ne renvoie pas tt le tps le refresh_token après le premier appel
+                    $user->setGoogleAccessToken(json_encode($newTokenData));
+                    
+                    if (isset($newTokenData['expires_in'])) {
+                        $expiresAt = new \DateTime();
+                        $expiresAt->modify('+' . $newTokenData['expires_in'] . ' seconds');
+                        $user->setGoogleTokenExpiresAt($expiresAt);
+                    }
+                    $this->em->persist($user);
+                    $this->em->flush();
+                } else {
+                    return false; // Impossible de rafraîchir
+                }
+            } else {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public function syncEventToGoogle(Evenement $event)
+    {
+        $user = $event->getProprietaire();
+        if (!$user || !$this->autoConfigForUser($user)) {
+            return null; // Pas de compte Google lié pour ce user
+        }
+
+        $service = new \Google_Service_Calendar($this->client);
+        
+        $googleEvent = new \Google_Service_Calendar_Event([
+            'summary' => $event->getTitre() ?? 'Sans titre',
+            'location' => $event->getLieu() ?? $event->getLieuAdresse() ?? 'Non spécifié',
+            'description' => $event->getDescription() ?? '',
+            'start' => [
+                'dateTime' => $event->getDateDebut() ? $event->getDateDebut()->format('c') : null,
+                'timeZone' => 'Europe/Paris',
+            ],
+            'end' => [
+                'dateTime' => $event->getDateFin() ? $event->getDateFin()->format('c') : null,
+                'timeZone' => 'Europe/Paris',
+            ],
+        ]);
+
+        try {
+            if ($event->getGoogleEventId()) {
+                // UPDATE
+                $eventId = $event->getGoogleEventId();
+                $updatedEvent = $service->events->update('primary', $eventId, $googleEvent);
+                return $updatedEvent->getId();
+            } else {
+                // INSERT
+                $createdEvent = $service->events->insert('primary', $googleEvent);
+                $event->setGoogleEventId($createdEvent->getId());
+                $this->em->persist($event);
+                $this->em->flush();
+                return $createdEvent->getId();
+            }
+        } catch (\Exception $e) {
+            // Logs d'erreur, fallback
+            return null;
+        }
+    }
+
+    public function deleteEventFromGoogle(Evenement $event)
+    {
+        $user = $event->getProprietaire();
+        if (!$user || !$this->autoConfigForUser($user) || !$event->getGoogleEventId()) {
+            return false;
+        }
+
+        $service = new \Google_Service_Calendar($this->client);
+        try {
+            $service->events->delete('primary', $event->getGoogleEventId());
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+}
