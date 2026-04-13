@@ -263,7 +263,7 @@ src/
 
 ## 👤 Auteur
 
-**fermayssa** — Module Planning & Événements  
+**Gmati Rayen** — Module Planning & Événements  
 Projet PIDEV 3A — Esprit School of Engineering — 2025/2026
 
 ---
