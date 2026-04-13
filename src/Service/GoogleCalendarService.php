@@ -173,4 +173,67 @@ class GoogleCalendarService
             return false;
         }
     }
+
+    public function pullEventsFromGoogle(\App\Entity\User $user)
+    {
+        if (!$this->autoConfigForUser($user)) {
+            return false;
+        }
+
+        $service = new \Google_Service_Calendar($this->client);
+        $optParams = [
+            'maxResults' => 200,
+            'orderBy' => 'startTime',
+            'singleEvents' => true,
+            'timeMin' => (new \DateTime('-1 month'))->format('c'),
+        ];
+
+        try {
+            $results = $service->events->listEvents('primary', $optParams);
+            $events = $results->getItems();
+
+            $calendrier = $this->em->getRepository(\App\Entity\Calendrier::class)->findOneBy([]);
+
+            foreach ($events as $gEvent) {
+                if (!$gEvent->getId() || $gEvent->getStatus() === 'cancelled') {
+                    continue; // On ignore les événements annulés ou invalides
+                }
+
+                $localEvent = $this->em->getRepository(Evenement::class)->findOneBy(['googleEventId' => $gEvent->getId()]);
+                
+                if (!$localEvent) {
+                    $localEvent = new Evenement();
+                    $localEvent->setGoogleEventId($gEvent->getId());
+                    $localEvent->setProprietaire($user);
+                    if ($calendrier) {
+                        $localEvent->setCalendrier($calendrier);
+                    }
+                }
+                
+                $localEvent->setTitre($gEvent->getSummary() ?: 'Sans titre');
+                $localEvent->setDescription($gEvent->getDescription() ?: null);
+                $localEvent->setLieu($gEvent->getLocation() ?: null);
+                $localEvent->setEventType('autre');
+                $localEvent->setLieuType('presentiel');
+                
+                if ($gEvent->getStart() && $gEvent->getStart()->getDateTime()) {
+                    $localEvent->setDateDebut(new \DateTime($gEvent->getStart()->getDateTime()));
+                } elseif ($gEvent->getStart() && $gEvent->getStart()->getDate()) {
+                    $localEvent->setDateDebut(new \DateTime($gEvent->getStart()->getDate() . ' 00:00:00'));
+                }
+
+                if ($gEvent->getEnd() && $gEvent->getEnd()->getDateTime()) {
+                    $localEvent->setDateFin(new \DateTime($gEvent->getEnd()->getDateTime()));
+                } elseif ($gEvent->getEnd() && $gEvent->getEnd()->getDate()) {
+                    $localEvent->setDateFin(new \DateTime($gEvent->getEnd()->getDate() . ' 23:59:59'));
+                }
+
+                $this->em->persist($localEvent);
+            }
+            $this->em->flush();
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }

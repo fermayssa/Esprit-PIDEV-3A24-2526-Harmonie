@@ -64,6 +64,7 @@ return [
         '/oauth/google/connect' => [[['_route' => 'app_google_calendar_connect', '_controller' => 'App\\Controller\\GoogleCalendarController::connect'], null, null, null, false, false, null]],
         '/oauth/google/callback' => [[['_route' => 'app_google_calendar_callback', '_controller' => 'App\\Controller\\GoogleCalendarController::callback'], null, null, null, false, false, null]],
         '/oauth/google/disconnect' => [[['_route' => 'app_google_calendar_disconnect', '_controller' => 'App\\Controller\\GoogleCalendarController::disconnect'], null, null, null, false, false, null]],
+        '/oauth/google/pull' => [[['_route' => 'app_google_calendar_pull', '_controller' => 'App\\Controller\\GoogleCalendarController::pull'], null, null, null, false, false, null]],
         '/webhook/google-calendar' => [[['_route' => 'app_google_calendar_webhook', '_controller' => 'App\\Controller\\GoogleCalendarController::webhook'], null, ['POST' => 0], null, false, false, null]],
         '/' => [[['_route' => 'homepage', '_controller' => 'App\\Controller\\HomepageController::index'], null, null, null, false, false, null]],
         '/journal' => [[['_route' => 'journal', '_controller' => 'App\\Controller\\JournalController::index'], null, ['GET' => 0], null, false, false, null]],

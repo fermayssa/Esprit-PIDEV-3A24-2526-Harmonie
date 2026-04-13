@@ -56,6 +56,19 @@ class GoogleCalendarController extends AbstractController
         return $this->redirectToRoute('app_evenement_index');
     }
 
+    #[Route('/oauth/google/pull', name: 'app_google_calendar_pull')]
+    public function pull(GoogleCalendarService $googleService): Response
+    {
+        $user = $this->getUser();
+        if ($user && $googleService->pullEventsFromGoogle($user)) {
+            $this->addFlash('success', 'Calendrier synchronisé avec succès depuis Google !');
+        } else {
+            $this->addFlash('error', 'Impossible de récupérer les événements Google.');
+        }
+
+        return $this->redirectToRoute('app_evenement_index');
+    }
+
     #[Route('/webhook/google-calendar', name: 'app_google_calendar_webhook', methods: ['POST'])]
     public function webhook(Request $request, EntityManagerInterface $em): Response
     {

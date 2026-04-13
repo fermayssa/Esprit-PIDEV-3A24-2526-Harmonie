@@ -264,28 +264,38 @@ class __TwigTemplate_d30d2fd6cc02ff8e350be72f2b38f1d1 extends Template
             yield "                    ";
             if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 141, $this->source); })()), "user", [], "any", false, false, false, 141), "googleAccessToken", [], "any", false, false, false, 141)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
                 // line 142
-                yield "                        <div style=\"font-size: 13px; margin-top: 6px; color: #10b981; display:flex; align-items:center; gap: 6px;\">
-                            <span>✅ Connecté à Google Calendar</span>
+                yield "                        <div style=\"margin-top: 8px; display:inline-flex; align-items:center; gap: 8px; flex-wrap: wrap;\">
+                            <span style=\"font-size: 12px; font-weight: 600; color: #10b981; background: rgba(16, 185, 129, 0.1); padding: 4px 8px; border-radius: 6px; display:flex; align-items:center; gap:4px;\">
+                                <svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><polyline points=\"20 6 9 17 4 12\"></polyline></svg> Connecté
+                            </span>
                             <a href=\"";
-                // line 144
+                // line 146
+                yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_google_calendar_pull");
+                yield "\" style=\"display:inline-flex; align-items:center; gap:4px; font-size:12px; color:#4285F4; background: rgba(66, 133, 244, 0.1); padding:4px 8px; border-radius:6px; text-decoration:none; font-weight:600; transition:all 0.2s;\" onmouseover=\"this.style.background='rgba(66, 133, 244, 0.2)'\" onmouseout=\"this.style.background='rgba(66, 133, 244, 0.1)'\">
+                                <svg width=\"12\" height=\"12\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M21 2v6h-6\"/><path d=\"M3 12a9 9 0 1015-6.7L21 8\"/><path d=\"M3 22v-6h6\"/><path d=\"M21 12A9 9 0 106 18.7L3 16\"/></svg> Importer
+                            </a>
+                            <a href=\"";
+                // line 149
                 yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_google_calendar_disconnect");
-                yield "\" style=\"color: #ef4444; text-decoration: underline; font-size: 12px; margin-left: 8px;\">(Déconnecter)</a>
+                yield "\" style=\"display:inline-flex; align-items:center; gap:4px; font-size:12px; color:#ef4444; background: rgba(239, 68, 68, 0.1); padding:4px 8px; border-radius:6px; text-decoration:none; font-weight:600; transition:all 0.2s;\" onmouseover=\"this.style.background='rgba(239, 68, 68, 0.2)'\" onmouseout=\"this.style.background='rgba(239, 68, 68, 0.1)'\">
+                                Déconnecter
+                            </a>
                         </div>
                     ";
             } else {
-                // line 147
+                // line 154
                 yield "                        <div style=\"margin-top: 6px;\">
                             <a href=\"";
-                // line 148
+                // line 155
                 yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_google_calendar_connect");
                 yield "\" style=\"display:inline-flex; align-items:center; gap:6px; background:#4285F4; color:#fff; font-size:12px; padding:6px 12px; border-radius:6px;text-decoration:none;font-weight:600;\"><svg width=\"14\" height=\"14\" viewBox=\"0 0 48 48\" aria-hidden=\"true\"><path fill=\"#FFC107\" d=\"M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z\"></path><path fill=\"#FF3D00\" d=\"M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z\"></path><path fill=\"#4CAF50\" d=\"M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z\"></path><path fill=\"#1976D2\" d=\"M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z\"></path></svg> Lier à Google</a>
                         </div>
                     ";
             }
-            // line 151
+            // line 158
             yield "                ";
         }
-        // line 152
+        // line 159
         yield "            </div>
             <details class=\"cal-export-wrap\">
                 <summary class=\"cal-export-summary\">Exporter ▾</summary>
@@ -293,39 +303,39 @@ class __TwigTemplate_d30d2fd6cc02ff8e350be72f2b38f1d1 extends Template
                     <a href=\"#\" class=\"js-export-pdf\" data-type=\"pdf\">Exporter en PDF</a>
                     <a href=\"#\" class=\"js-export-excel\" data-type=\"excel\">Exporter en Excel</a>
                     <a href=\"";
-        // line 158
+        // line 165
         yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_evenement_export_csv");
         yield "\">Télécharger CSV (legacy)</a>
                 </div>
             </details>
             <div class=\"cal-nav\">
                 <a class=\"cal-nav-btn\" href=\"";
-        // line 162
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_evenement_index", ["year" => $this->extensions['Twig\Extension\CoreExtension']->formatDate((isset($context["prev"]) || array_key_exists("prev", $context) ? $context["prev"] : (function () { throw new RuntimeError('Variable "prev" does not exist.', 162, $this->source); })()), "Y"), "month" => $this->extensions['Twig\Extension\CoreExtension']->formatDate((isset($context["prev"]) || array_key_exists("prev", $context) ? $context["prev"] : (function () { throw new RuntimeError('Variable "prev" does not exist.', 162, $this->source); })()), "n")]), "html", null, true);
+        // line 169
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_evenement_index", ["year" => $this->extensions['Twig\Extension\CoreExtension']->formatDate((isset($context["prev"]) || array_key_exists("prev", $context) ? $context["prev"] : (function () { throw new RuntimeError('Variable "prev" does not exist.', 169, $this->source); })()), "Y"), "month" => $this->extensions['Twig\Extension\CoreExtension']->formatDate((isset($context["prev"]) || array_key_exists("prev", $context) ? $context["prev"] : (function () { throw new RuntimeError('Variable "prev" does not exist.', 169, $this->source); })()), "n")]), "html", null, true);
         yield "\" aria-label=\"Mois précédent\">‹</a>
                 <span class=\"cal-nav-title\">";
-        // line 163
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["monthLabel"]) || array_key_exists("monthLabel", $context) ? $context["monthLabel"] : (function () { throw new RuntimeError('Variable "monthLabel" does not exist.', 163, $this->source); })()), "html", null, true);
+        // line 170
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["monthLabel"]) || array_key_exists("monthLabel", $context) ? $context["monthLabel"] : (function () { throw new RuntimeError('Variable "monthLabel" does not exist.', 170, $this->source); })()), "html", null, true);
         yield "</span>
                 <a class=\"cal-nav-btn\" href=\"";
-        // line 164
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_evenement_index", ["year" => $this->extensions['Twig\Extension\CoreExtension']->formatDate((isset($context["next"]) || array_key_exists("next", $context) ? $context["next"] : (function () { throw new RuntimeError('Variable "next" does not exist.', 164, $this->source); })()), "Y"), "month" => $this->extensions['Twig\Extension\CoreExtension']->formatDate((isset($context["next"]) || array_key_exists("next", $context) ? $context["next"] : (function () { throw new RuntimeError('Variable "next" does not exist.', 164, $this->source); })()), "n")]), "html", null, true);
+        // line 171
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_evenement_index", ["year" => $this->extensions['Twig\Extension\CoreExtension']->formatDate((isset($context["next"]) || array_key_exists("next", $context) ? $context["next"] : (function () { throw new RuntimeError('Variable "next" does not exist.', 171, $this->source); })()), "Y"), "month" => $this->extensions['Twig\Extension\CoreExtension']->formatDate((isset($context["next"]) || array_key_exists("next", $context) ? $context["next"] : (function () { throw new RuntimeError('Variable "next" does not exist.', 171, $this->source); })()), "n")]), "html", null, true);
         yield "\" aria-label=\"Mois suivant\">›</a>
             </div>
             <p class=\"cal-weather\">";
-        // line 166
-        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["weatherLine"]) || array_key_exists("weatherLine", $context) ? $context["weatherLine"] : (function () { throw new RuntimeError('Variable "weatherLine" does not exist.', 166, $this->source); })()), "html", null, true);
+        // line 173
+        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((isset($context["weatherLine"]) || array_key_exists("weatherLine", $context) ? $context["weatherLine"] : (function () { throw new RuntimeError('Variable "weatherLine" does not exist.', 173, $this->source); })()), "html", null, true);
         yield "</p>
         </div>
 
         <div class=\"cal-grid-wrap\" id=\"cal-grid-root\">
             <div class=\"cal-dow-row\">
                 ";
-        // line 171
+        // line 178
         $context['_parent'] = $context;
         $context['_seq'] = CoreExtension::ensureTraversable(["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"]);
         foreach ($context['_seq'] as $context["_key"] => $context["d"]) {
-            // line 172
+            // line 179
             yield "                    <div class=\"cal-dow\">";
             yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($context["d"], "html", null, true);
             yield "</div>
@@ -334,101 +344,101 @@ class __TwigTemplate_d30d2fd6cc02ff8e350be72f2b38f1d1 extends Template
         $_parent = $context['_parent'];
         unset($context['_seq'], $context['_key'], $context['d'], $context['_parent']);
         $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 174
+        // line 181
         yield "            </div>
             ";
-        // line 175
+        // line 182
         $context['_parent'] = $context;
-        $context['_seq'] = CoreExtension::ensureTraversable((isset($context["weeks"]) || array_key_exists("weeks", $context) ? $context["weeks"] : (function () { throw new RuntimeError('Variable "weeks" does not exist.', 175, $this->source); })()));
+        $context['_seq'] = CoreExtension::ensureTraversable((isset($context["weeks"]) || array_key_exists("weeks", $context) ? $context["weeks"] : (function () { throw new RuntimeError('Variable "weeks" does not exist.', 182, $this->source); })()));
         foreach ($context['_seq'] as $context["_key"] => $context["week"]) {
-            // line 176
+            // line 183
             yield "                <div class=\"cal-week\">
                     ";
-            // line 177
+            // line 184
             $context['_parent'] = $context;
             $context['_seq'] = CoreExtension::ensureTraversable($context["week"]);
             foreach ($context['_seq'] as $context["_key"] => $context["cell"]) {
-                // line 178
+                // line 185
                 yield "                        ";
                 if ((null === $context["cell"])) {
-                    // line 179
+                    // line 186
                     yield "                            <div class=\"cal-cell cal-cell--pad\" aria-hidden=\"true\"></div>
                         ";
                 } else {
-                    // line 181
+                    // line 188
                     yield "                            <div class=\"cal-cell";
-                    if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["cell"], "isToday", [], "any", false, false, false, 181)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+                    if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["cell"], "isToday", [], "any", false, false, false, 188)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
                         yield " cal-cell--today";
                     }
-                    if ((($tmp =  !Twig\Extension\CoreExtension::testEmpty(CoreExtension::getAttribute($this->env, $this->source, $context["cell"], "events", [], "any", false, false, false, 181))) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+                    if ((($tmp =  !Twig\Extension\CoreExtension::testEmpty(CoreExtension::getAttribute($this->env, $this->source, $context["cell"], "events", [], "any", false, false, false, 188))) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
                         yield " cal-cell--has-events";
                     }
                     yield "\"
                                  data-iso-date=\"";
-                    // line 182
-                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate(CoreExtension::getAttribute($this->env, $this->source, $context["cell"], "date", [], "any", false, false, false, 182), "Y-m-d"), "html", null, true);
+                    // line 189
+                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate(CoreExtension::getAttribute($this->env, $this->source, $context["cell"], "date", [], "any", false, false, false, 189), "Y-m-d"), "html", null, true);
                     yield "\"
                                  role=\"button\"
                                  tabindex=\"0\"
                                  aria-label=\"Ajouter un événement le ";
-                    // line 185
-                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["cell"], "day", [], "any", false, false, false, 185), "html", null, true);
+                    // line 192
+                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["cell"], "day", [], "any", false, false, false, 192), "html", null, true);
                     yield "\">
                                 <span class=\"cal-day-num";
-                    // line 186
-                    if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["cell"], "isSunday", [], "any", false, false, false, 186)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+                    // line 193
+                    if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["cell"], "isSunday", [], "any", false, false, false, 193)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
                         yield " cal-day-num--sun";
                     }
                     yield "\">";
-                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["cell"], "day", [], "any", false, false, false, 186), "html", null, true);
+                    yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["cell"], "day", [], "any", false, false, false, 193), "html", null, true);
                     yield "</span>
                                 <div class=\"cal-ev-stack\">
                                     ";
-                    // line 188
+                    // line 195
                     $context['_parent'] = $context;
-                    $context['_seq'] = CoreExtension::ensureTraversable(CoreExtension::getAttribute($this->env, $this->source, $context["cell"], "events", [], "any", false, false, false, 188));
+                    $context['_seq'] = CoreExtension::ensureTraversable(CoreExtension::getAttribute($this->env, $this->source, $context["cell"], "events", [], "any", false, false, false, 195));
                     foreach ($context['_seq'] as $context["_key"] => $context["ev"]) {
-                        // line 189
+                        // line 196
                         yield "                                        <div class=\"cal-ev\" style=\"--evc: ";
-                        yield $macros["evcal"]->getTemplateForMacro("macro_eventAccentColor", $context, 189, $this->getSourceContext())->macro_eventAccentColor(...[$context["ev"]]);
+                        yield $macros["evcal"]->getTemplateForMacro("macro_eventAccentColor", $context, 196, $this->getSourceContext())->macro_eventAccentColor(...[$context["ev"]]);
                         yield "\">
                                             <button type=\"button\"
                                                     class=\"cal-ev-open\"
                                                     data-id=\"";
-                        // line 192
-                        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["ev"], "id", [], "any", false, false, false, 192), "html", null, true);
+                        // line 199
+                        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["ev"], "id", [], "any", false, false, false, 199), "html", null, true);
                         yield "\"
                                                     aria-label=\"Modifier ";
-                        // line 193
-                        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((((CoreExtension::getAttribute($this->env, $this->source, $context["ev"], "titre", [], "any", true, true, false, 193) &&  !(null === CoreExtension::getAttribute($this->env, $this->source, $context["ev"], "titre", [], "any", false, false, false, 193)))) ? (CoreExtension::getAttribute($this->env, $this->source, $context["ev"], "titre", [], "any", false, false, false, 193)) : ("Sans titre")), "html_attr");
+                        // line 200
+                        yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape((((CoreExtension::getAttribute($this->env, $this->source, $context["ev"], "titre", [], "any", true, true, false, 200) &&  !(null === CoreExtension::getAttribute($this->env, $this->source, $context["ev"], "titre", [], "any", false, false, false, 200)))) ? (CoreExtension::getAttribute($this->env, $this->source, $context["ev"], "titre", [], "any", false, false, false, 200)) : ("Sans titre")), "html_attr");
                         yield "\">
                                                 <span class=\"cal-ev-title\">
                                                     ";
-                        // line 195
-                        if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["ev"], "googleEventId", [], "any", false, false, false, 195)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-                            // line 196
+                        // line 202
+                        if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["ev"], "googleEventId", [], "any", false, false, false, 202)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+                            // line 203
                             yield "                                                        <span title=\"Synchronisé avec Google Calendar\" style=\"color:var(--purple);font-weight:bold;margin-right:2px;font-size:10px;\">(G)</span>
                                                     ";
                         }
-                        // line 198
+                        // line 205
                         yield "                                                    ";
-                        yield (((CoreExtension::getAttribute($this->env, $this->source, $context["ev"], "titre", [], "any", true, true, false, 198) &&  !(null === CoreExtension::getAttribute($this->env, $this->source, $context["ev"], "titre", [], "any", false, false, false, 198)))) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["ev"], "titre", [], "any", false, false, false, 198), "html", null, true)) : ("Sans titre"));
+                        yield (((CoreExtension::getAttribute($this->env, $this->source, $context["ev"], "titre", [], "any", true, true, false, 205) &&  !(null === CoreExtension::getAttribute($this->env, $this->source, $context["ev"], "titre", [], "any", false, false, false, 205)))) ? ($this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape(CoreExtension::getAttribute($this->env, $this->source, $context["ev"], "titre", [], "any", false, false, false, 205), "html", null, true)) : ("Sans titre"));
                         yield "
                                                 </span>
                                                 ";
-                        // line 200
-                        if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["ev"], "dateDebut", [], "any", false, false, false, 200)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
-                            // line 201
+                        // line 207
+                        if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["ev"], "dateDebut", [], "any", false, false, false, 207)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+                            // line 208
                             yield "                                                    <span class=\"cal-ev-time\">";
-                            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate(CoreExtension::getAttribute($this->env, $this->source, $context["ev"], "dateDebut", [], "any", false, false, false, 201), "H:i"), "html", null, true);
-                            if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["ev"], "dateFin", [], "any", false, false, false, 201)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+                            yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate(CoreExtension::getAttribute($this->env, $this->source, $context["ev"], "dateDebut", [], "any", false, false, false, 208), "H:i"), "html", null, true);
+                            if ((($tmp = CoreExtension::getAttribute($this->env, $this->source, $context["ev"], "dateFin", [], "any", false, false, false, 208)) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
                                 yield " – ";
-                                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate(CoreExtension::getAttribute($this->env, $this->source, $context["ev"], "dateFin", [], "any", false, false, false, 201), "H:i"), "html", null, true);
+                                yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Twig\Extension\CoreExtension']->formatDate(CoreExtension::getAttribute($this->env, $this->source, $context["ev"], "dateFin", [], "any", false, false, false, 208), "H:i"), "html", null, true);
                             }
                             yield "</span>
                                                 ";
                         }
-                        // line 203
+                        // line 210
                         yield "                                            </button>
                                         </div>
                                     ";
@@ -436,25 +446,25 @@ class __TwigTemplate_d30d2fd6cc02ff8e350be72f2b38f1d1 extends Template
                     $_parent = $context['_parent'];
                     unset($context['_seq'], $context['_key'], $context['ev'], $context['_parent']);
                     $context = array_intersect_key($context, $_parent) + $_parent;
-                    // line 206
+                    // line 213
                     yield "                                </div>
                             </div>
                         ";
                 }
-                // line 209
+                // line 216
                 yield "                    ";
             }
             $_parent = $context['_parent'];
             unset($context['_seq'], $context['_key'], $context['cell'], $context['_parent']);
             $context = array_intersect_key($context, $_parent) + $_parent;
-            // line 210
+            // line 217
             yield "                </div>
             ";
         }
         $_parent = $context['_parent'];
         unset($context['_seq'], $context['_key'], $context['week'], $context['_parent']);
         $context = array_intersect_key($context, $_parent) + $_parent;
-        // line 212
+        // line 219
         yield "        </div>
     </div>
 
@@ -473,9 +483,9 @@ class __TwigTemplate_d30d2fd6cc02ff8e350be72f2b38f1d1 extends Template
 
     <template id=\"harmony-tpl-evenement-form-new\">
         ";
-        // line 229
-        yield from $this->load("evenement/_form_panel.html.twig", 229)->unwrap()->yield(CoreExtension::toArray(["form" => (isset($context["evenementFormNew"]) || array_key_exists("evenementFormNew", $context) ? $context["evenementFormNew"] : (function () { throw new RuntimeError('Variable "evenementFormNew" does not exist.', 229, $this->source); })()), "panel_mode" => "new"]));
-        // line 230
+        // line 236
+        yield from $this->load("evenement/_form_panel.html.twig", 236)->unwrap()->yield(CoreExtension::toArray(["form" => (isset($context["evenementFormNew"]) || array_key_exists("evenementFormNew", $context) ? $context["evenementFormNew"] : (function () { throw new RuntimeError('Variable "evenementFormNew" does not exist.', 236, $this->source); })()), "panel_mode" => "new"]));
+        // line 237
         yield "    </template>
 </div>
 </main>
@@ -489,7 +499,7 @@ class __TwigTemplate_d30d2fd6cc02ff8e350be72f2b38f1d1 extends Template
         yield from [];
     }
 
-    // line 235
+    // line 242
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -502,16 +512,16 @@ class __TwigTemplate_d30d2fd6cc02ff8e350be72f2b38f1d1 extends Template
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f = $this->extensions["Symfony\\Bridge\\Twig\\Extension\\ProfilerExtension"];
         $__internal_6f47bbe9983af81f1e7450e9a3e3768f->enter($__internal_6f47bbe9983af81f1e7450e9a3e3768f_prof = new \Twig\Profiler\Profile($this->getTemplateName(), "block", "body_javascripts"));
 
-        // line 236
+        // line 243
         yield "    <script src=\"";
         yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl("harmonie/js/cal-tunisia-holidays.js"), "html", null, true);
         yield "\" defer></script>
     <script src=\"";
-        // line 237
+        // line 244
         yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl("harmonie/js/evenement-form.js"), "html", null, true);
         yield "\"></script>
     <script src=\"";
-        // line 238
+        // line 245
         yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl("harmonie/js/export-handler.js"), "html", null, true);
         yield "\"></script>
     <script>
@@ -695,7 +705,7 @@ class __TwigTemplate_d30d2fd6cc02ff8e350be72f2b38f1d1 extends Template
         });
     </script>
 <script src=\"";
-        // line 419
+        // line 426
         yield $this->env->getRuntime('Twig\Runtime\EscaperRuntime')->escape($this->extensions['Symfony\Bridge\Twig\Extension\AssetExtension']->getAssetUrl("harmonie-chatbot-widget.js"), "html", null, true);
         yield "\"></script>
 ";
@@ -791,7 +801,7 @@ class __TwigTemplate_d30d2fd6cc02ff8e350be72f2b38f1d1 extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  760 => 15,  756 => 14,  753 => 13,  750 => 12,  747 => 11,  745 => 10,  741 => 8,  738 => 7,  735 => 6,  732 => 5,  730 => 4,  712 => 3,  699 => 419,  515 => 238,  511 => 237,  506 => 236,  493 => 235,  479 => 230,  477 => 229,  458 => 212,  451 => 210,  445 => 209,  440 => 206,  432 => 203,  422 => 201,  420 => 200,  414 => 198,  410 => 196,  408 => 195,  403 => 193,  399 => 192,  392 => 189,  388 => 188,  379 => 186,  375 => 185,  369 => 182,  359 => 181,  355 => 179,  352 => 178,  348 => 177,  345 => 176,  341 => 175,  338 => 174,  329 => 172,  325 => 171,  317 => 166,  312 => 164,  308 => 163,  304 => 162,  297 => 158,  289 => 152,  286 => 151,  280 => 148,  277 => 147,  271 => 144,  267 => 142,  264 => 141,  262 => 140,  254 => 135,  250 => 134,  245 => 131,  243 => 130,  230 => 129,  118 => 27,  114 => 26,  110 => 25,  105 => 24,  92 => 23,  69 => 21,  58 => 1,  56 => 19,  43 => 1,);
+        return array (  770 => 15,  766 => 14,  763 => 13,  760 => 12,  757 => 11,  755 => 10,  751 => 8,  748 => 7,  745 => 6,  742 => 5,  740 => 4,  722 => 3,  709 => 426,  525 => 245,  521 => 244,  516 => 243,  503 => 242,  489 => 237,  487 => 236,  468 => 219,  461 => 217,  455 => 216,  450 => 213,  442 => 210,  432 => 208,  430 => 207,  424 => 205,  420 => 203,  418 => 202,  413 => 200,  409 => 199,  402 => 196,  398 => 195,  389 => 193,  385 => 192,  379 => 189,  369 => 188,  365 => 186,  362 => 185,  358 => 184,  355 => 183,  351 => 182,  348 => 181,  339 => 179,  335 => 178,  327 => 173,  322 => 171,  318 => 170,  314 => 169,  307 => 165,  299 => 159,  296 => 158,  290 => 155,  287 => 154,  279 => 149,  273 => 146,  267 => 142,  264 => 141,  262 => 140,  254 => 135,  250 => 134,  245 => 131,  243 => 130,  230 => 129,  118 => 27,  114 => 26,  110 => 25,  105 => 24,  92 => 23,  69 => 21,  58 => 1,  56 => 19,  43 => 1,);
     }
 
     public function getSourceContext(): Source
@@ -937,9 +947,16 @@ class __TwigTemplate_d30d2fd6cc02ff8e350be72f2b38f1d1 extends Template
                 <h1>Calendrier</h1>
                 {% if app.user %}
                     {% if app.user.googleAccessToken %}
-                        <div style=\"font-size: 13px; margin-top: 6px; color: #10b981; display:flex; align-items:center; gap: 6px;\">
-                            <span>✅ Connecté à Google Calendar</span>
-                            <a href=\"{{ path('app_google_calendar_disconnect') }}\" style=\"color: #ef4444; text-decoration: underline; font-size: 12px; margin-left: 8px;\">(Déconnecter)</a>
+                        <div style=\"margin-top: 8px; display:inline-flex; align-items:center; gap: 8px; flex-wrap: wrap;\">
+                            <span style=\"font-size: 12px; font-weight: 600; color: #10b981; background: rgba(16, 185, 129, 0.1); padding: 4px 8px; border-radius: 6px; display:flex; align-items:center; gap:4px;\">
+                                <svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><polyline points=\"20 6 9 17 4 12\"></polyline></svg> Connecté
+                            </span>
+                            <a href=\"{{ path('app_google_calendar_pull') }}\" style=\"display:inline-flex; align-items:center; gap:4px; font-size:12px; color:#4285F4; background: rgba(66, 133, 244, 0.1); padding:4px 8px; border-radius:6px; text-decoration:none; font-weight:600; transition:all 0.2s;\" onmouseover=\"this.style.background='rgba(66, 133, 244, 0.2)'\" onmouseout=\"this.style.background='rgba(66, 133, 244, 0.1)'\">
+                                <svg width=\"12\" height=\"12\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M21 2v6h-6\"/><path d=\"M3 12a9 9 0 1015-6.7L21 8\"/><path d=\"M3 22v-6h6\"/><path d=\"M21 12A9 9 0 106 18.7L3 16\"/></svg> Importer
+                            </a>
+                            <a href=\"{{ path('app_google_calendar_disconnect') }}\" style=\"display:inline-flex; align-items:center; gap:4px; font-size:12px; color:#ef4444; background: rgba(239, 68, 68, 0.1); padding:4px 8px; border-radius:6px; text-decoration:none; font-weight:600; transition:all 0.2s;\" onmouseover=\"this.style.background='rgba(239, 68, 68, 0.2)'\" onmouseout=\"this.style.background='rgba(239, 68, 68, 0.1)'\">
+                                Déconnecter
+                            </a>
                         </div>
                     {% else %}
                         <div style=\"margin-top: 6px;\">
