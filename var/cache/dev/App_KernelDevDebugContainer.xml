@@ -426,6 +426,15 @@
         <argument type="service" id=".service_locator.TJNRSaV.App\Controller\ActivitesController"/>
       </call>
     </service>
+    <service id="App\Controller\AdminCourseReportsController" class="App\Controller\AdminCourseReportsController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
+      <tag name="routing.controller"/>
+      <tag name="container.service_subscriber"/>
+      <argument type="service" id="doctrine.dbal.default_connection"/>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.TJNRSaV.App\Controller\AdminCourseReportsController"/>
+      </call>
+    </service>
     <service id="App\Controller\AdminDashboardController" class="App\Controller\AdminDashboardController" public="true" autowire="true" autoconfigure="true">
       <tag name="controller.service_arguments"/>
       <tag name="routing.controller"/>
@@ -4095,6 +4104,7 @@
       <tag name="routing.loader" priority="-10"/>
       <argument type="collection">
         <argument>App\Controller\ActivitesController</argument>
+        <argument>App\Controller\AdminCourseReportsController</argument>
         <argument>App\Controller\AdminDashboardController</argument>
         <argument>App\Controller\AdminDemandeController</argument>
         <argument>App\Controller\AdminEvenementController</argument>
@@ -8475,6 +8485,10 @@
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\ActivitesController" class="App\Controller\ActivitesController" autowire="true" abstract="true"/>
     <service id=".instanceof.App\Controller\ActivitesController.0.App\Controller\ActivitesController" class="App\Controller\ActivitesController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\ActivitesController" class="App\Controller\ActivitesController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\AdminCourseReportsController" class="App\Controller\AdminCourseReportsController" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\AdminCourseReportsController" class="App\Controller\AdminCourseReportsController" autowire="true" abstract="true"/>
+    <service id=".instanceof.App\Controller\AdminCourseReportsController.0.App\Controller\AdminCourseReportsController" class="App\Controller\AdminCourseReportsController" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Controller\AdminCourseReportsController" class="App\Controller\AdminCourseReportsController" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\AdminDashboardController" class="App\Controller\AdminDashboardController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\AdminDashboardController" class="App\Controller\AdminDashboardController" autowire="true" abstract="true"/>
     <service id=".instanceof.App\Controller\AdminDashboardController.0.App\Controller\AdminDashboardController" class="App\Controller\AdminDashboardController" autowire="true" abstract="true"/>
@@ -10929,6 +10943,12 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.TJNRSaV" method="withContext"/>
     </service>
+    <service id=".service_locator.TJNRSaV.App\Controller\AdminCourseReportsController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\AdminCourseReportsController"/>
+      <argument>App\Controller\AdminCourseReportsController</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.TJNRSaV" method="withContext"/>
+    </service>
     <service id=".service_locator.TJNRSaV.App\Controller\AdminDashboardController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\AdminDashboardController"/>
       <argument>App\Controller\AdminDashboardController</argument>
@@ -11303,6 +11323,7 @@
         <argument type="collection">
           <argument>App\Kernel</argument>
           <argument>App\Controller\ActivitesController</argument>
+          <argument>App\Controller\AdminCourseReportsController</argument>
           <argument>App\Controller\AdminDashboardController</argument>
           <argument>App\Controller\AdminDemandeController</argument>
           <argument>App\Controller\AdminEvenementController</argument>

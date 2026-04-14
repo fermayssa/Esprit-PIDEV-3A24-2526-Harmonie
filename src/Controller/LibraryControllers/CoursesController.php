@@ -20,8 +20,15 @@ class CoursesController extends AbstractController
 
     private function getMockUserId(): int
     {
-        $session = $this->container->get('request_stack')->getSession();
-        return (int) ($session->get('mock_user_id') ?? 0);
+        $user = $this->getUser();
+        if (!$user) return 0;
+        // getIdentifier() returns the value of your user identifier field
+        // Since your PK is user_id, fetch it from DB by email/identifier
+        $row = $this->db->fetchAssociative(
+            'SELECT user_id FROM `user` WHERE user_email = ?',
+            [$user->getUserIdentifier()]
+        );
+        return $row ? (int) $row['user_id'] : 0;
     }
 
     // ── GET /courses ───────────────────────────────────────────────────────

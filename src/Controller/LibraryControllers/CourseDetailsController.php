@@ -112,6 +112,14 @@ class CourseDetailsController extends AbstractController
     #[Route('/publish', name: '_publish', methods: ['POST'])]
     public function publish(int $id, Request $req): JsonResponse
     {
+        // Prevent owners from republishing a course that was locked by an admin.
+        $locked = (bool) $this->db->fetchOne('SELECT admin_locked FROM courses WHERE id = ?', [$id]);
+        if ($locked) {
+            return $this->json([
+                'message' => 'This course has been unpublished by an administrator and cannot be republished.',
+            ], 403);
+        }
+
         $published = (int) ((bool) $req->request->get('published', false));
         $this->db->executeStatement('UPDATE courses SET is_published = ? WHERE id = ?', [$published, $id]);
         return $this->json(['ok' => true, 'is_published' => $published]);
@@ -568,5 +576,47 @@ class CourseDetailsController extends AbstractController
         $this->db->executeStatement('INSERT INTO saved_courses (user_id, course_id) VALUES (?, ?)', [$userId, $id]);
         $this->db->executeStatement('UPDATE courses SET saves = saves + 1 WHERE id = ?', [$id]);
         return $this->json(['ok' => true, 'saved' => true]);
+    }
+
+    // ── REPORT COURSE ─────────────────────────────────────────────────────────
+    // Inserts a row into course_reports.
+    // A user may not report the same course twice (UNIQUE on reporter_id + course_id).
+    #[Route('/report', name: '_report', methods: ['POST'])]
+    public function reportCourse(int $id, Request $req): JsonResponse
+    {
+        $reporterId = $this->getMockUserId();
+        if (!$reporterId) {
+            return $this->json(['message' => 'Not authenticated'], 401);
+        }
+
+        // Prevent owners from reporting their own course
+        $ownerId = $this->db->fetchOne('SELECT userid FROM courses WHERE id = ?', [$id]);
+        if ((int) $ownerId === $reporterId) {
+            return $this->json(['message' => 'You cannot report your own course.'], 403);
+        }
+
+        // Check for duplicate report
+        $alreadyReported = $this->db->fetchOne(
+            'SELECT 1 FROM course_reports WHERE reporter_id = ? AND course_id = ?',
+            [$reporterId, $id]
+        );
+        if ($alreadyReported) {
+            return $this->json(['message' => 'You have already reported this course.'], 409);
+        }
+
+        $reason  = trim((string) $req->request->get('reason', ''));
+        $details = trim((string) $req->request->get('details', ''));
+
+        if ($reason === '') {
+            return $this->json(['message' => 'A reason is required.'], 400);
+        }
+
+        $this->db->executeStatement(
+            'INSERT INTO course_reports (course_id, reporter_id, reason, details, status, created_at)
+             VALUES (?, ?, ?, ?, ?, NOW())',
+            [$id, $reporterId, $reason, $details ?: null, 'pending']
+        );
+
+        return $this->json(['ok' => true]);
     }
 }

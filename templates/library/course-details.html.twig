@@ -164,6 +164,129 @@
             background: var(--purple-dark, #5a4abf);
         }
 
+        .btn-report {
+            background: var(--color-surface, #fff);
+            color: #9ca3af;
+            border-color: #e5e7eb;
+        }
+        .btn-report:hover:not(:disabled) {
+            background: #fef2f2;
+            color: #dc2626;
+            border-color: #fca5a5;
+            box-shadow: 0 1px 4px rgba(220,38,38,.08);
+        }
+
+        /* ── REPORT MODAL ───────────────────────────────────────────────── */
+        .report-modal-backdrop {
+            position: fixed; inset: 0; z-index: 600;
+            background: rgba(0,0,0,.55); backdrop-filter: blur(4px);
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; pointer-events: none; transition: opacity .18s ease;
+        }
+        .report-modal-backdrop.open { opacity: 1; pointer-events: all; }
+
+        .report-modal {
+            background: var(--color-surface, #fff);
+            border-radius: 18px;
+            box-shadow: 0 24px 64px rgba(0,0,0,.22);
+            width: min(92vw, 480px);
+            display: flex; flex-direction: column;
+            overflow: hidden;
+            transform: translateY(20px) scale(.97);
+            transition: transform .18s ease;
+        }
+        .report-modal-backdrop.open .report-modal { transform: translateY(0) scale(1); }
+
+        .report-modal-header {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 20px 22px 0;
+        }
+        .report-modal-header h2 {
+            font-size: 16px; font-weight: 700;
+            color: var(--color-text, #111); margin: 0;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .report-modal-header h2 .report-icon {
+            width: 32px; height: 32px; border-radius: 50%;
+            background: #fef2f2; display: grid; place-items: center;
+            font-size: 15px; flex-shrink: 0;
+        }
+
+        .report-modal-body { padding: 18px 22px 6px; }
+
+        .report-subtitle {
+            font-size: 13px; color: var(--color-text-muted, #6b7280);
+            margin: 0 0 16px; line-height: 1.5;
+        }
+
+        .report-reasons {
+            display: grid; gap: 8px; margin-bottom: 16px;
+        }
+        .report-reason-option {
+            display: flex; align-items: flex-start; gap: 10px;
+            padding: 11px 13px; border-radius: 10px;
+            border: 1.5px solid var(--color-border, #e5e7eb);
+            cursor: pointer; transition: border-color .13s, background .13s;
+            position: relative;
+        }
+        .report-reason-option:hover {
+            border-color: #fca5a5; background: #fff5f5;
+        }
+        .report-reason-option input[type=radio] {
+            position: absolute; opacity: 0; pointer-events: none;
+        }
+        .report-reason-option.selected {
+            border-color: #dc2626; background: #fef2f2;
+        }
+        .report-reason-option .reason-radio {
+            width: 16px; height: 16px; border-radius: 50%;
+            border: 2px solid #d1d5db; flex-shrink: 0; margin-top: 1px;
+            display: flex; align-items: center; justify-content: center;
+            transition: border-color .13s, background .13s;
+        }
+        .report-reason-option.selected .reason-radio {
+            border-color: #dc2626; background: #dc2626;
+        }
+        .report-reason-option.selected .reason-radio::after {
+            content: ''; width: 6px; height: 6px; border-radius: 50%;
+            background: #fff; display: block;
+        }
+        .report-reason-label { display: flex; flex-direction: column; gap: 2px; }
+        .report-reason-title { font-size: 13.5px; font-weight: 600; color: var(--color-text, #111); }
+        .report-reason-desc  { font-size: 12px; color: var(--color-text-muted, #6b7280); line-height: 1.4; }
+
+        .report-details-label {
+            font-size: 12.5px; font-weight: 600;
+            color: var(--color-text-muted, #6b7280);
+            display: block; margin-bottom: 6px;
+        }
+        .report-details-textarea {
+            width: 100%; box-sizing: border-box;
+            border: 1.5px solid var(--color-border, #e5e7eb);
+            border-radius: 10px; padding: 10px 12px;
+            font-size: 13px; font-family: inherit;
+            color: var(--color-text, #111);
+            background: var(--color-surface, #fff);
+            resize: vertical; min-height: 72px;
+            outline: none; transition: border-color .13s;
+        }
+        .report-details-textarea:focus { border-color: #dc2626; }
+        .report-details-textarea::placeholder { color: #9ca3af; }
+
+        .report-modal-footer {
+            display: flex; justify-content: flex-end; gap: 8px;
+            padding: 16px 22px 20px;
+        }
+
+        .btn-report-submit {
+            background: #dc2626; color: #fff; border-color: #dc2626;
+        }
+        .btn-report-submit:hover:not(:disabled) {
+            background: #b91c1c; border-color: #b91c1c;
+            box-shadow: 0 2px 8px rgba(220,38,38,.25);
+        }
+        .btn-report-submit:disabled { opacity: .5; cursor: not-allowed; }
+
         .btn-icon {
             padding: 7px 9px;
             border-radius: 9px;
@@ -467,6 +590,16 @@
                             Save to Library
                         {% endif %}
                     </button>
+
+                    {# Report button — only visible to non-owners #}
+                    <button class="btn btn-report" id="reportCourseBtn" type="button"
+                            title="Report this course" aria-label="Report this course">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/>
+                            <line x1="4" y1="22" x2="4" y2="15"/>
+                        </svg>
+                        Report
+                    </button>
                 {% endif %}
             </div>
         </div>
@@ -677,6 +810,83 @@
                         <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/>
                     </svg>
                     Delete
+                </button>
+            </div>
+        </div>
+    </div>
+
+    {# ── REPORT COURSE MODAL ──────────────────────────────────────── #}
+    <div class="report-modal-backdrop" id="reportModal" role="dialog" aria-modal="true" aria-labelledby="reportModalTitle">
+        <div class="report-modal">
+            <div class="report-modal-header">
+                <h2 id="reportModalTitle">
+                    <span class="report-icon">🚩</span>
+                    Report Course
+                </h2>
+                <button class="btn btn-icon btn-ghost" id="reportModalCloseBtn" type="button" aria-label="Close">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true">
+                        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="report-modal-body">
+                <p class="report-subtitle">Help us understand what's wrong with this course. Your report is anonymous.</p>
+
+                <div class="report-reasons" id="reportReasons">
+                    <label class="report-reason-option" data-value="Inappropriate content">
+                        <input type="radio" name="reportReason" value="Inappropriate content">
+                        <span class="reason-radio"></span>
+                        <span class="report-reason-label">
+                            <span class="report-reason-title">Inappropriate Content</span>
+                            <span class="report-reason-desc">Contains offensive, harmful or adult material.</span>
+                        </span>
+                    </label>
+                    <label class="report-reason-option" data-value="Spam or misleading">
+                        <input type="radio" name="reportReason" value="Spam or misleading">
+                        <span class="reason-radio"></span>
+                        <span class="report-reason-label">
+                            <span class="report-reason-title">Spam or Misleading</span>
+                            <span class="report-reason-desc">Fake, misleading, or promotional content.</span>
+                        </span>
+                    </label>
+                    <label class="report-reason-option" data-value="Copyright violation">
+                        <input type="radio" name="reportReason" value="Copyright violation">
+                        <span class="reason-radio"></span>
+                        <span class="report-reason-label">
+                            <span class="report-reason-title">Copyright Violation</span>
+                            <span class="report-reason-desc">Uses copyrighted material without permission.</span>
+                        </span>
+                    </label>
+                    <label class="report-reason-option" data-value="Incorrect information">
+                        <input type="radio" name="reportReason" value="Incorrect information">
+                        <span class="reason-radio"></span>
+                        <span class="report-reason-label">
+                            <span class="report-reason-title">Incorrect Information</span>
+                            <span class="report-reason-desc">Contains factual errors or outdated content.</span>
+                        </span>
+                    </label>
+                    <label class="report-reason-option" data-value="Other">
+                        <input type="radio" name="reportReason" value="Other">
+                        <span class="reason-radio"></span>
+                        <span class="report-reason-label">
+                            <span class="report-reason-title">Other</span>
+                            <span class="report-reason-desc">Something else not listed above.</span>
+                        </span>
+                    </label>
+                </div>
+
+                <label class="report-details-label" for="reportDetails">Additional details <span style="font-weight:400;font-size:11.5px;">(optional)</span></label>
+                <textarea class="report-details-textarea" id="reportDetails"
+                          placeholder="Describe the issue in more detail…" rows="3" maxlength="1000"></textarea>
+            </div>
+            <div class="report-modal-footer">
+                <button class="btn btn-secondary" id="reportCancelBtn" type="button">Cancel</button>
+                <button class="btn btn-report-submit" id="reportSubmitBtn" type="button" disabled>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/>
+                        <line x1="4" y1="22" x2="4" y2="15"/>
+                    </svg>
+                    Submit Report
                 </button>
             </div>
         </div>
@@ -1234,11 +1444,89 @@
                 if (e.key !== 'Escape') return;
                 closeModal('confirmModal');
                 closeModal2('previewModal');
+                closeReportModal();
                 if (noteModal.classList.contains('open')) {
                     if (noteDirty && !confirm('Unsaved changes — close anyway?')) return;
                     closeNoteModal();
                 }
             });
+
+            // ── REPORT COURSE ─────────────────────────────────────────────────
+            const reportCourseBtn    = document.getElementById('reportCourseBtn');
+            const reportModal        = document.getElementById('reportModal');
+            const reportModalClose   = document.getElementById('reportModalCloseBtn');
+            const reportCancelBtn    = document.getElementById('reportCancelBtn');
+            const reportSubmitBtn    = document.getElementById('reportSubmitBtn');
+            const reportReasons      = document.getElementById('reportReasons');
+            const reportDetailsArea  = document.getElementById('reportDetails');
+
+            function openReportModal() {
+                // Reset state
+                reportReasons.querySelectorAll('.report-reason-option').forEach(opt => opt.classList.remove('selected'));
+                reportDetailsArea.value = '';
+                reportSubmitBtn.disabled = true;
+                reportModal.classList.add('open');
+            }
+            function closeReportModal() {
+                reportModal.classList.remove('open');
+            }
+
+            if (reportCourseBtn) reportCourseBtn.addEventListener('click', openReportModal);
+            if (reportModalClose) reportModalClose.addEventListener('click', closeReportModal);
+            if (reportCancelBtn)  reportCancelBtn.addEventListener('click', closeReportModal);
+
+            // Reason selection
+            if (reportReasons) {
+                reportReasons.addEventListener('click', e => {
+                    const option = e.target.closest('.report-reason-option');
+                    if (!option) return;
+                    reportReasons.querySelectorAll('.report-reason-option').forEach(o => o.classList.remove('selected'));
+                    option.classList.add('selected');
+                    option.querySelector('input[type=radio]').checked = true;
+                    reportSubmitBtn.disabled = false;
+                });
+            }
+
+            // Submit
+            if (reportSubmitBtn) {
+                reportSubmitBtn.addEventListener('click', async () => {
+                    const selected = reportReasons.querySelector('.report-reason-option.selected');
+                    if (!selected) { toast('Please select a reason.', 'error'); return; }
+                    const reason  = selected.dataset.value;
+                    const details = reportDetailsArea.value.trim();
+
+                    reportSubmitBtn.disabled = true;
+                    reportSubmitBtn.textContent = 'Submitting…';
+
+                    const res  = await post(`/courses/${COURSE_ID}/report`, { reason, details });
+                    const data = await res.json();
+
+                    reportSubmitBtn.disabled = false;
+                    reportSubmitBtn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg> Submit Report`;
+
+                    if (res.ok) {
+                        closeReportModal();
+                        toast('Report submitted. Thank you!', 'success');
+                        // Disable the report button so user can't re-report
+                        if (reportCourseBtn) {
+                            reportCourseBtn.disabled = true;
+                            reportCourseBtn.title = 'You have already reported this course';
+                        }
+                    } else {
+                        toast(data.message || 'Failed to submit report.', 'error');
+                        if (res.status === 409 && reportCourseBtn) {
+                            reportCourseBtn.disabled = true;
+                            reportCourseBtn.title = 'You have already reported this course';
+                            closeReportModal();
+                        }
+                    }
+                });
+            }
+
+            // Close report modal on backdrop click or Escape
+            if (reportModal) {
+                reportModal.addEventListener('click', e => { if (e.target === reportModal) closeReportModal(); });
+            }
 
         })();
     </script>

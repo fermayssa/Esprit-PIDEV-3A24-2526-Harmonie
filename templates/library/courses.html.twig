@@ -397,7 +397,10 @@
             <a href="{{ path('library') }}"     class="nav-link {{ current_route == 'library' or current_route starts with 'app_courses' ? 'active' }}"><span class="nav-emoji">📖</span> Library</a>
         </nav>
         <div class="topbar-right">
-            <button class="logout-btn">🚪 Déconnexion</button>
+            <form method="post" action="{{ path('app_logout') }}" style="margin:0">
+                <input type="hidden" name="_token" value="{{ csrf_token('logout') }}">
+                <button type="submit" class="logout-btn">🚪 Déconnexion</button>
+            </form>
             <div class="profile-wrap">
                 <div class="avatar" id="avatarBtn">
                     {{ app.user ? app.user.firstName|first|upper : 'E' }}
