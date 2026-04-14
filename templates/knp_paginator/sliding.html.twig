@@ -1,4 +1,4 @@
-{# Template personnalisé pour la pagination — style violet  #}
+{# Template personnalisé pour la pagination — style violet @ #}
 
 {% if pageCount > 1 %}
 <nav style="display:flex;align-items:center;justify-content:center;
@@ -16,6 +16,7 @@
            onmouseout="this.style.borderColor='rgba(106,90,205,.2)';this.style.color='#4A4570'">
             ← Précédent
         </a>
+        
     {% else %}
         {# Bouton désactivé si on est à la 1ère page #}
         <span style="display:inline-flex;align-items:center;padding:8px 16px;
