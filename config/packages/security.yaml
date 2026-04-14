@@ -19,13 +19,10 @@ security:
             lazy: true
             provider: app_user_provider
 
-            # ── Authenticators OAuth (Google + Facebook) ──────────────────────
-            # Ils s'activent uniquement sur leurs routes de callback respectives
             custom_authenticators:
                 - App\Security\GoogleAuthenticator
                 - App\Security\FacebookAuthenticator
 
-            # ── Login formulaire classique ────────────────────────────────────
             form_login:
                 login_path: app_login
                 check_path: app_login
@@ -47,11 +44,12 @@ security:
         ROLE_ADMIN: [ROLE_USER]
 
     access_control:
-        - { path: ^/login,           roles: PUBLIC_ACCESS }
-        - { path: ^/register,        roles: PUBLIC_ACCESS }
-        - { path: ^/face-verify,     roles: PUBLIC_ACCESS }
-        - { path: ^/connect/google,  roles: PUBLIC_ACCESS }
-        - { path: ^/connect/facebook, roles: PUBLIC_ACCESS }
-        - { path: ^/admin,           roles: ROLE_ADMIN }
-        - { path: ^/profile,         roles: ROLE_USER }
-        - { path: ^/,                roles: ROLE_USER }
+        - { path: ^/login,                 roles: PUBLIC_ACCESS }
+        - { path: ^/register,              roles: PUBLIC_ACCESS }
+        - { path: ^/face-verify,           roles: PUBLIC_ACCESS }
+        - { path: ^/connect/google,        roles: PUBLIC_ACCESS }
+        - { path: ^/connect/facebook,      roles: PUBLIC_ACCESS }
+        - { path: ^/forgot-password,       roles: PUBLIC_ACCESS }
+        - { path: ^/admin,                 roles: ROLE_ADMIN }
+        - { path: ^/profile,               roles: ROLE_USER }
+        - { path: ^/,                      roles: ROLE_USER }

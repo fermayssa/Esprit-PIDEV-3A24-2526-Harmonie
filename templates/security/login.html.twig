@@ -2,249 +2,605 @@
 {% block title %}Connexion — Harmony{% endblock %}
 
 {% block stylesheets %}
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
         :root {
-            --purple: #6A5ACD; --purple-dark: #4B3B9E; --purple-pale: #EDE8FA;
-            --purple-ghost: #F7F5FD; --text: #1C1733; --text-mid: #4A4570;
-            --text-muted: #9590B8; --border: rgba(106,90,205,.12);
-            --font-head: 'Syne', sans-serif; --font-body: 'Inter', sans-serif;
+            --purple:       #6A5ACD;
+            --purple-dark:  #4B3B9E;
+            --purple-mid:   #7C6DD8;
+            --purple-soft:  #8B7FD4;
+            --purple-pale:  #EDE8FA;
+            --purple-ghost: #F0EEF8;
+            --purple-deep:  #2D2260;
+            --text:         #1C1733;
+            --text-mid:     #4A4570;
+            --text-muted:   #9590B8;
+            --border:       rgba(106,90,205,.15);
+            --white:        #FFFFFF;
+            --font-display: 'Cormorant Garamond', Georgia, serif;
+            --font-body:    'DM Sans', sans-serif;
         }
+
         html, body {
-            min-height: 100vh; font-family: var(--font-body);
-            background: var(--purple-ghost); display: grid; place-items: center;
+            min-height: 100vh;
+            font-family: var(--font-body);
+            background: #E8E4F3;
+            overflow-x: hidden;
         }
-        .auth-card {
-            background: #fff; border: 1px solid var(--border); border-radius: 22px;
-            padding: 48px 44px; width: 100%; max-width: 420px;
-            box-shadow: 0 20px 60px rgba(106,90,205,.08);
-            animation: fadeUp .4s ease both;
-        }
-        @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; } }
 
-        .auth-logo {
-            display: flex; align-items: center; gap: 10px;
-            margin-bottom: 28px; justify-content: center;
+        /* ── BACKGROUND ── */
+        .scene {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            position: relative;
+            background-image: url("{{ asset('images/backgLIGHT.png') }}");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
         }
-        .auth-logo img { width: 36px; height: 36px; border-radius: 10px; object-fit: contain; }
-        .auth-logo span { font-family: var(--font-head); font-size: 20px; font-weight: 800; color: var(--text); }
-        .auth-title { font-family: var(--font-head); font-size: 26px; font-weight: 800; color: var(--text); margin-bottom: 6px; text-align: center; }
-        .auth-sub { font-size: 13.5px; color: var(--text-muted); text-align: center; margin-bottom: 24px; }
 
-        /* ── BOUTONS OAUTH ─────────────────────────────────────────── */
-        .oauth-section { margin-bottom: 20px; }
-        .oauth-title {
-            text-align: center; font-size: 12px; font-weight: 600;
-            color: var(--text-muted); text-transform: uppercase; letter-spacing: .8px;
-            margin-bottom: 12px;
+        .scene::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg,
+                rgba(106,90,205,.18) 0%,
+                rgba(237,232,250,.55) 50%,
+                rgba(75,59,158,.12) 100%);
+            backdrop-filter: blur(1px);
         }
-        .oauth-buttons { display: flex; flex-direction: column; gap: 10px; }
 
-        .btn-oauth {
-            width: 100%; padding: 12px 18px;
-            border-radius: 11px; border: 1.5px solid var(--border);
-            background: #fff; cursor: pointer; font-family: var(--font-body);
-            font-size: 14px; font-weight: 500; color: var(--text);
-            display: flex; align-items: center; justify-content: center; gap: 12px;
-            text-decoration: none; transition: border-color .15s, box-shadow .15s, background .15s;
+        /* ── WRAPPER ── */
+        .login-wrapper {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            gap: 0;
+            max-width: 820px;
+            width: 100%;
+            border-radius: 28px;
+            overflow: hidden;
+            box-shadow:
+                0 32px 80px rgba(45,34,96,.22),
+                0 0 0 1px rgba(106,90,205,.15),
+                inset 0 1px 0 rgba(255,255,255,.6);
+            animation: wrapperIn .7s cubic-bezier(.22,1,.36,1) both;
         }
-        .btn-oauth:hover {
-            border-color: rgba(106,90,205,.3);
-            box-shadow: 0 4px 16px rgba(0,0,0,.07);
-            background: var(--purple-ghost);
-        }
-        .btn-oauth svg { width: 20px; height: 20px; flex-shrink: 0; }
 
-        /* Google spécifique */
-        .btn-google:hover { border-color: #4285F4; }
+        @keyframes wrapperIn {
+            from { opacity:0; transform: translateY(28px) scale(.97); }
+            to   { opacity:1; transform: translateY(0) scale(1); }
+        }
 
-        /* Facebook spécifique */
-        .btn-facebook:hover { border-color: #1877F2; }
+        /* ── LEFT PANEL ── */
+        .panel-left {
+            width: 280px;
+            flex-shrink: 0;
+            background: linear-gradient(160deg, var(--purple-deep) 0%, var(--purple) 60%, var(--purple-mid) 100%);
+            padding: 52px 36px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+        }
 
-        /* ── DIVIDER ────────────────────────────────────────────────── */
-        .divider {
-            display: flex; align-items: center; gap: 12px;
-            margin: 18px 0; color: var(--text-muted);
+        .panel-left::before {
+            content: '';
+            position: absolute;
+            top: -60px; right: -60px;
+            width: 220px; height: 220px;
+            border-radius: 50%;
+            background: rgba(255,255,255,.06);
+            pointer-events: none;
         }
-        .divider::before, .divider::after {
-            content: ''; flex: 1; height: 1px; background: var(--border);
-        }
-        .divider span { font-size: 12px; font-weight: 500; white-space: nowrap; }
 
-        /* ── FORM ───────────────────────────────────────────────────── */
-        .form-group { margin-bottom: 16px; }
-        .form-group label {
-            display: block; font-size: 13px; font-weight: 500;
-            color: var(--text-mid); margin-bottom: 6px;
+        .panel-left::after {
+            content: '';
+            position: absolute;
+            bottom: -40px; left: -40px;
+            width: 180px; height: 180px;
+            border-radius: 50%;
+            background: rgba(255,255,255,.04);
+            pointer-events: none;
         }
-        .form-group input {
-            width: 100%; padding: 11px 14px; border: 1.5px solid var(--border);
-            border-radius: 10px; font-family: var(--font-body); font-size: 14px; color: var(--text);
-            background: var(--purple-ghost); outline: none; transition: border-color .15s;
-        }
-        .form-group input:focus { border-color: var(--purple); background: #fff; }
 
-        /* ── CAPTCHA ────────────────────────────────────────────────── */
-        .captcha-wrap { margin-bottom: 16px; }
-        .captcha-wrap label {
-            display: block; font-size: 13px; font-weight: 500;
-            color: var(--text-mid); margin-bottom: 8px;
+        .brand {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            animation: fadeSlide .6s .15s ease both;
         }
-        .captcha-question-box {
-            display: flex; align-items: center; justify-content: space-between;
-            background: var(--purple-pale); border: 1.5px solid rgba(106,90,205,.25);
-            border-radius: 11px; padding: 12px 18px; margin-bottom: 10px;
-        }
-        .captcha-math {
-            font-family: var(--font-head); font-size: 24px; font-weight: 800;
-            color: var(--purple); letter-spacing: 4px;
-        }
-        .captcha-equals { font-size: 13px; font-weight: 600; color: var(--text-muted); }
-        .captcha-input {
-            width: 100%; padding: 11px 14px; border: 1.5px solid var(--border);
-            border-radius: 10px; font-family: var(--font-head); font-size: 18px;
-            font-weight: 700; color: var(--text); background: var(--purple-ghost);
-            outline: none; text-align: center; letter-spacing: 4px; transition: border-color .15s;
-        }
-        .captcha-input:focus { border-color: var(--purple); background: #fff; }
-        .captcha-hint { font-size: 11px; color: var(--text-muted); text-align: center; margin-top: 5px; }
 
-        /* ── ALERTS ─────────────────────────────────────────────────── */
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand-logo img {
+            width: 38px; height: 38px;
+            border-radius: 11px;
+            object-fit: contain;
+            border: 2px solid rgba(255,255,255,.2);
+        }
+
+        .brand-name {
+            font-family: var(--font-display);
+            font-size: 22px;
+            font-weight: 600;
+            color: white;
+            letter-spacing: .5px;
+        }
+
+        .brand-tagline {
+            font-family: var(--font-display);
+            font-size: 32px;
+            font-weight: 300;
+            font-style: italic;
+            color: rgba(255,255,255,.9);
+            line-height: 1.3;
+            letter-spacing: -.3px;
+        }
+
+        .brand-tagline strong {
+            font-weight: 600;
+            font-style: normal;
+            color: white;
+        }
+
+        .brand-sub {
+            font-size: 12.5px;
+            font-weight: 300;
+            color: rgba(255,255,255,.6);
+            line-height: 1.6;
+            margin-top: 4px;
+        }
+
+        .decorative-dots {
+            display: flex;
+            gap: 6px;
+            animation: fadeSlide .6s .35s ease both;
+        }
+
+        .decorative-dots span {
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: rgba(255,255,255,.3);
+        }
+
+        .decorative-dots span:first-child { background: rgba(255,255,255,.8); }
+        .decorative-dots span:nth-child(2) { background: rgba(255,255,255,.5); }
+
+        /* ── RIGHT PANEL ── */
+        .panel-right {
+            flex: 1;
+            background: rgba(255,255,255,.92);
+            backdrop-filter: blur(20px);
+            padding: 48px 44px 44px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .panel-right-title {
+            font-family: var(--font-display);
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 4px;
+            animation: fadeSlide .5s .1s ease both;
+        }
+
+        .panel-right-sub {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 30px;
+            font-weight: 300;
+            animation: fadeSlide .5s .15s ease both;
+        }
+
+        /* ── ALERTS ── */
+        .alert {
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-size: 12.5px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            animation: fadeSlide .4s ease both;
+        }
+
         .alert-error {
-            background: #FEE2E2; color: #991B1B; padding: 10px 14px;
-            border-radius: 9px; font-size: 13px; margin-bottom: 14px;
-            border: 1px solid #FECACA; display: flex; align-items: center; gap: 8px;
+            background: #FEE2E2;
+            color: #991B1B;
+            border: 1px solid #FECACA;
         }
+
         .alert-captcha {
-            background: #FFF7ED; color: #92400E; padding: 10px 14px;
-            border-radius: 9px; font-size: 13px; margin-bottom: 14px;
-            border: 1px solid #FCD34D; display: flex; align-items: center; gap: 8px;
+            background: #FFF7ED;
+            color: #92400E;
+            border: 1px solid #FCD34D;
         }
+
         .alert-success {
-            background: #D1FAE5; color: #065F46; padding: 10px 14px;
-            border-radius: 9px; font-size: 13px; margin-bottom: 14px;
+            background: #D1FAE5;
+            color: #065F46;
             border: 1px solid #6EE7B7;
         }
 
-        .btn-submit {
-            width: 100%; padding: 13px; background: var(--purple); color: #fff;
-            border: none; border-radius: 11px; font-family: var(--font-body);
-            font-size: 14px; font-weight: 600; cursor: pointer;
-            margin-top: 8px; box-shadow: 0 4px 18px rgba(106,90,205,.3);
-            transition: background .15s, transform .15s;
+        /* ── FORM FIELDS ── */
+        .field-group {
+            margin-bottom: 16px;
+            animation: fadeSlide .5s ease both;
         }
-        .btn-submit:hover { background: var(--purple-dark); transform: translateY(-1px); }
 
-        .auth-footer { text-align: center; margin-top: 22px; font-size: 13px; color: var(--text-muted); }
-        .auth-footer a { color: var(--purple); text-decoration: none; font-weight: 500; }
-        .auth-footer a:hover { text-decoration: underline; }
-        .session-info {
-            display: flex; align-items: center; gap: 6px;
-            font-size: 11px; color: var(--text-muted); margin-top: 12px;
+        .field-group:nth-child(1) { animation-delay: .2s; }
+        .field-group:nth-child(2) { animation-delay: .25s; }
+        .field-group:nth-child(3) { animation-delay: .3s; }
+
+        .field-label {
+            display: block;
+            font-size: 11.5px;
+            font-weight: 600;
+            letter-spacing: .6px;
+            text-transform: uppercase;
+            color: var(--text-mid);
+            margin-bottom: 8px;
+        }
+
+        .field-input-wrap {
+            position: relative;
+        }
+
+        .field-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 15px;
+            pointer-events: none;
+            opacity: .5;
+            transition: opacity .2s;
+        }
+
+        .field-input {
+            width: 100%;
+            padding: 11px 14px 11px 42px;
+            border: 1.5px solid var(--border);
+            border-radius: 11px;
+            font-family: var(--font-body);
+            font-size: 14px;
+            color: var(--text);
+            background: var(--purple-ghost);
+            outline: none;
+            transition: border-color .2s, background .2s, box-shadow .2s;
+        }
+
+        .field-input:focus {
+            border-color: var(--purple);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(106,90,205,.1);
+        }
+
+        .field-input:focus ~ .field-icon,
+        .field-input-wrap:has(.field-input:focus) .field-icon {
+            opacity: .8;
+        }
+
+        /* ── CAPTCHA ── */
+        .captcha-section {
+            margin-bottom: 20px;
+            animation: fadeSlide .5s .35s ease both;
+        }
+
+        .captcha-label {
+            display: block;
+            font-size: 11.5px;
+            font-weight: 600;
+            letter-spacing: .6px;
+            text-transform: uppercase;
+            color: var(--text-mid);
+            margin-bottom: 8px;
+        }
+
+        .captcha-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .captcha-question-box {
+            display: flex;
+            align-items: center;
             justify-content: center;
+            gap: 8px;
+            background: linear-gradient(135deg, var(--purple-pale), rgba(237,232,250,.6));
+            border: 1.5px solid rgba(106,90,205,.2);
+            border-radius: 11px;
+            padding: 10px 20px;
+            flex-shrink: 0;
+        }
+
+        .captcha-math {
+            font-family: var(--font-display);
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--purple-dark);
+            letter-spacing: 3px;
+        }
+
+        .captcha-eq {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .captcha-input {
+            flex: 1;
+            padding: 11px 14px;
+            border: 1.5px solid var(--border);
+            border-radius: 11px;
+            font-family: var(--font-display);
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--purple-dark);
+            background: var(--purple-ghost);
+            outline: none;
+            text-align: center;
+            letter-spacing: 3px;
+            transition: border-color .2s, background .2s, box-shadow .2s;
+        }
+
+        .captcha-input:focus {
+            border-color: var(--purple);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(106,90,205,.1);
+        }
+
+        .captcha-hint {
+            font-size: 10.5px;
+            color: var(--text-muted);
+            text-align: center;
+            margin-top: 5px;
+        }
+
+        /* ── SUBMIT ── */
+        .btn-submit {
+            width: 100%;
+            padding: 13px;
+            background: linear-gradient(135deg, var(--purple) 0%, var(--purple-dark) 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-family: var(--font-body);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            letter-spacing: .3px;
+            box-shadow: 0 4px 20px rgba(106,90,205,.4), 0 1px 0 rgba(255,255,255,.1) inset;
+            transition: transform .15s, box-shadow .15s, background .2s;
+            margin-top: 4px;
+            animation: fadeSlide .5s .4s ease both;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-submit::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,.12) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 28px rgba(106,90,205,.45);
+        }
+
+        .btn-submit:active {
+            transform: translateY(0);
+        }
+
+        /* ── FOOTER LINK ── */
+        .form-footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 12.5px;
+            color: var(--text-muted);
+            animation: fadeSlide .5s .45s ease both;
+        }
+
+        .form-footer a {
+            color: var(--purple);
+            text-decoration: none;
+            font-weight: 500;
+            position: relative;
+        }
+
+        .form-footer a::after {
+            content: '';
+            position: absolute;
+            bottom: -1px; left: 0; right: 0;
+            height: 1px;
+            background: var(--purple);
+            transform: scaleX(0);
+            transition: transform .2s;
+        }
+
+        .form-footer a:hover::after { transform: scaleX(1); }
+
+        .divider-line {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 18px 0;
+            animation: fadeSlide .5s .42s ease both;
+        }
+
+        .divider-line::before,
+        .divider-line::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .divider-line span {
+            font-size: 11px;
+            color: var(--text-muted);
+            letter-spacing: .5px;
+        }
+
+        .session-note {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            font-size: 10.5px;
+            color: var(--text-muted);
+            margin-top: 10px;
+            animation: fadeSlide .5s .5s ease both;
+        }
+
+        /* ── ANIMATIONS ── */
+        @keyframes fadeSlide {
+            from { opacity:0; transform: translateY(12px); }
+            to   { opacity:1; transform: translateY(0); }
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 680px) {
+            .login-wrapper { flex-direction: column; max-width: 420px; border-radius: 22px; }
+            .panel-left { width: 100%; padding: 36px 32px; }
+            .brand-tagline { font-size: 26px; }
+            .panel-right { padding: 36px 28px 32px; }
+            .captcha-row { flex-direction: column; }
+            .captcha-question-box { width: 100%; }
+            .captcha-input { width: 100%; }
         }
     </style>
 {% endblock %}
 
 {% block body %}
-    <div class="auth-card">
-        <div class="auth-logo">
-            <img src="{{ asset('images/logo.png') }}" alt="Harmony">
-            <span>Harmony</span>
-        </div>
-        <div class="auth-title">Bon retour 👋</div>
-        <div class="auth-sub">Connectez-vous à votre espace étudiant</div>
+<div class="scene">
+    <div class="login-wrapper">
 
-        {# ── Alertes ── #}
-        {% if error %}
-            <div class="alert-error">⚠ {{ error.messageKey|trans(error.messageData, 'security') }}</div>
-        {% endif %}
-        {% for msg in app.flashes('captcha_error') %}
-            <div class="alert-captcha">🔒 {{ msg }}</div>
-        {% endfor %}
-        {% for msg in app.flashes('error') %}
-            <div class="alert-error">⚠ {{ msg }}</div>
-        {% endfor %}
-        {% for msg in app.flashes('success') %}
-            <div class="alert-success">✅ {{ msg }}</div>
-        {% endfor %}
-
-        {# ═══════════════════════════════════════════════════════════
-           CONNEXION SOCIALE (OAuth)
-        ═══════════════════════════════════════════════════════════ #}
-        <div class="oauth-section">
-            <div class="oauth-title">Connexion rapide avec</div>
-            <div class="oauth-buttons">
-
-                {# ── Bouton Google ── #}
-                <a href="{{ path('connect_google') }}" class="btn-oauth btn-google">
-                    {# Logo Google officiel SVG #}
-                    <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-                        <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
-                        <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
-                        <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
-                        <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
-                        <path fill="none" d="M0 0h48v48H0z"/>
-                    </svg>
-                    Continuer avec Google
-                </a>
-
-                {# ── Bouton Facebook ── #}
-                <a href="{{ path('connect_facebook') }}" class="btn-oauth btn-facebook">
-                    {# Logo Facebook SVG #}
-                    <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-                        <path fill="#1877F2" d="M48 24C48 10.745 37.255 0 24 0S0 10.745 0 24c0 11.979 8.776 21.908 20.25 23.708V30.938h-6.094V24H20.25v-5.27c0-6.011 3.579-9.332 9.057-9.332 2.624 0 5.371.469 5.371.469v5.906h-3.026c-2.979 0-3.908 1.85-3.908 3.747V24h6.656l-1.064 6.938H27.75v16.77C39.224 45.908 48 35.979 48 24z"/>
-                        <path fill="#fff" d="M33.336 30.938 34.4 24H27.75v-4.48c0-1.897.929-3.747 3.908-3.747h3.025v-5.906s-2.747-.469-5.371-.469c-5.478 0-9.057 3.32-9.057 9.332V24h-6.094v6.938H20.25v16.77a24.21 24.21 0 0 0 7.5 0V30.938h5.586z"/>
-                    </svg>
-                    Continuer avec Facebook
-                </a>
-
-            </div>
-        </div>
-
-        <div class="divider"><span>ou connectez-vous avec votre email</span></div>
-
-        {# ═══════════════════════════════════════════════════════════
-           FORMULAIRE EMAIL / MOT DE PASSE CLASSIQUE
-        ═══════════════════════════════════════════════════════════ #}
-        <form method="post" action="{{ path('app_login') }}">
-
-            <div class="form-group">
-                <label for="email">Adresse email</label>
-                <input type="email" id="email" name="email"
-                       value="{{ last_username }}" required autofocus
-                       placeholder="votre@email.com">
-            </div>
-
-            <div class="form-group">
-                <label for="password">Mot de passe</label>
-                <input type="password" id="password" name="password"
-                       required placeholder="••••••••">
-            </div>
-
-            <div class="captcha-wrap">
-                <label>🔐 Vérification de sécurité</label>
-                <div class="captcha-question-box">
-                    <span class="captcha-math">{{ captcha_question }}</span>
-                    <span class="captcha-equals">= ?</span>
+        <!-- ── LEFT PANEL ── -->
+        <div class="panel-left">
+            <div class="brand">
+                <div class="brand-logo">
+                    <img src="{{ asset('images/logo.png') }}" alt="Harmony">
+                    <span class="brand-name">Harmony</span>
                 </div>
-                <input type="text" id="captcha" name="captcha" class="captcha-input"
-                       required autocomplete="off" inputmode="numeric"
-                       placeholder="?" maxlength="3">
-                <p class="captcha-hint">Entrez le résultat du calcul ci-dessus</p>
+                <p class="brand-tagline">
+                    Votre espace<br>
+                    <strong>étudiant</strong><br>
+                    centralisé
+                </p>
+                <p class="brand-sub">
+                    Gérez vos activités, suivez votre bien-être et restez connecté avec votre communauté.
+                </p>
             </div>
-
-            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-            <button class="btn-submit" type="submit">Se connecter →</button>
-        </form>
-
-        <p class="session-info">🕐 Session maintenue 3 h après connexion</p>
-
-        <div class="divider"><span>ou</span></div>
-
-        <div class="auth-footer">
-            Pas encore de compte ? <a href="{{ path('app_register') }}">S'inscrire</a>
+            <div class="decorative-dots">
+                <span></span><span></span><span></span>
+            </div>
         </div>
+
+        <!-- ── RIGHT PANEL ── -->
+        <div class="panel-right">
+            <div class="panel-right-title">Bon retour 👋</div>
+            <div class="panel-right-sub">Connectez-vous à votre espace</div>
+
+            {# ── Alertes ── #}
+            {% if error %}
+                <div class="alert alert-error">⚠ {{ error.messageKey|trans(error.messageData, 'security') }}</div>
+            {% endif %}
+
+            {% for msg in app.flashes('captcha_error') %}
+                <div class="alert alert-captcha">🔒 {{ msg }}</div>
+            {% endfor %}
+
+            {% for msg in app.flashes('success') %}
+                <div class="alert alert-success">✅ {{ msg }}</div>
+            {% endfor %}
+
+            <form method="post" action="{{ path('app_login') }}">
+
+                {# ── Email ── #}
+                <div class="field-group">
+                    <label class="field-label" for="email">Adresse email</label>
+                    <div class="field-input-wrap">
+                        <span class="field-icon">✉</span>
+                        <input class="field-input" type="email" id="email" name="email"
+                               value="{{ last_username }}" required autofocus
+                               placeholder="votre@email.com">
+                    </div>
+                </div>
+
+                {# ── Mot de passe ── #}
+                <div class="field-group">
+                    <label class="field-label" for="password">Mot de passe</label>
+                    <div class="field-input-wrap">
+                        <span class="field-icon">🔑</span>
+                        <input class="field-input" type="password" id="password" name="password"
+                               required placeholder="••••••••">
+                    </div>
+                </div>
+
+                {# ── Mot de passe oublié ── #}
+                <div style="display:flex;justify-content:flex-end;margin-top:-8px;margin-bottom:18px;">
+                    <a href="{{ path('app_forgot_password') }}"
+                       style="font-size:12px;color:var(--purple);text-decoration:none;opacity:.75;font-weight:500;transition:opacity .15s;"
+                       onmouseover="this.style.opacity='1';this.style.textDecoration='underline';"
+                       onmouseout="this.style.opacity='.75';this.style.textDecoration='none';">
+                        Mot de passe oublié ?
+                    </a>
+                </div>
+
+                {# ── CAPTCHA ── #}
+                <div class="captcha-section">
+                    <label class="captcha-label">🔐 Vérification de sécurité</label>
+                    <div class="captcha-row">
+                        <div class="captcha-question-box">
+                            <span class="captcha-math">{{ captcha_question }}</span>
+                            <span class="captcha-eq">= ?</span>
+                        </div>
+                        <input type="text"
+                               id="captcha"
+                               name="captcha"
+                               class="captcha-input"
+                               required
+                               autocomplete="off"
+                               inputmode="numeric"
+                               placeholder="?"
+                               maxlength="3">
+                    </div>
+                    <p class="captcha-hint">Entrez le résultat du calcul</p>
+                </div>
+
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                <button class="btn-submit" type="submit">
+                    Se connecter →
+                </button>
+            </form>
+
+            <p class="session-note">🕐 Session maintenue 3 h après connexion</p>
+
+            <div class="divider-line"><span>ou</span></div>
+
+            <div class="form-footer">
+                Pas encore de compte ? <a href="{{ path('app_register') }}">S'inscrire</a>
+            </div>
+        </div>
+
     </div>
+</div>
 {% endblock %}

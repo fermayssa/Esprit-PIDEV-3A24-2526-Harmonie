@@ -110,27 +110,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(name: 'face_id_enabled', type: Types::BOOLEAN, options: ['default' => false])]
     private bool $faceIdEnabled = false;
 
-    // ── NOUVEAUX CHAMPS OAUTH ──────────────────────────────────────────────
-
-    /**
-     * Identifiant Google (sub) — null si l'utilisateur n'a pas lié Google
-     */
     #[ORM\Column(name: 'google_id', type: Types::STRING, length: 255, nullable: true, unique: true)]
     private ?string $googleId = null;
 
-    /**
-     * Identifiant Facebook — null si l'utilisateur n'a pas lié Facebook
-     */
     #[ORM\Column(name: 'facebook_id', type: Types::STRING, length: 255, nullable: true, unique: true)]
     private ?string $facebookId = null;
 
-    /**
-     * Avatar récupéré depuis Google/Facebook (URL distante)
-     */
     #[ORM\Column(name: 'oauth_avatar_url', type: Types::STRING, length: 500, nullable: true)]
     private ?string $oauthAvatarUrl = null;
 
-    // ── Symfony UserInterface ──────────────────────────────────────────────
+    /**
+     * Secret TOTP pour Google Authenticator — réinitialisation de mot de passe.
+     */
+    #[ORM\Column(name: 'totp_secret', type: Types::STRING, length: 255, nullable: true)]
+    private ?string $totpSecret = null;
+
+    // ── Symfony UserInterface ──────────────────────────────────────────────────
 
     public function getUserIdentifier(): string { return $this->userEmail; }
 
@@ -144,93 +139,86 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getPassword(): string { return $this->userPassword; }
     public function eraseCredentials(): void {}
 
-    // ── Aliases ────────────────────────────────────────────────────────────
+    // ── Aliases ────────────────────────────────────────────────────────────────
     public function getFirstName(): string { return $this->userPrenom; }
     public function getLastName(): string  { return $this->userNom; }
     public function getEmail(): string     { return $this->userEmail; }
 
-    // ── Getters / Setters ─────────────────────────────────────────────────
+    // ── Getters / Setters ──────────────────────────────────────────────────────
+
     public function getUserId(): ?int { return $this->userId; }
     public function getId(): ?int     { return $this->userId; }
 
-    public function getUserNom(): string { return $this->userNom; }
-    public function setUserNom(string $v): self { $this->userNom = $v; return $this; }
+    public function getUserNom(): string             { return $this->userNom; }
+    public function setUserNom(string $v): self      { $this->userNom = $v; return $this; }
 
-    public function getUserPrenom(): string { return $this->userPrenom; }
-    public function setUserPrenom(string $v): self { $this->userPrenom = $v; return $this; }
+    public function getUserPrenom(): string          { return $this->userPrenom; }
+    public function setUserPrenom(string $v): self   { $this->userPrenom = $v; return $this; }
 
-    public function getUserEmail(): string { return $this->userEmail; }
-    public function setUserEmail(string $v): self { $this->userEmail = $v; return $this; }
+    public function getUserEmail(): string           { return $this->userEmail; }
+    public function setUserEmail(string $v): self    { $this->userEmail = $v; return $this; }
 
-    public function getUserPassword(): string { return $this->userPassword; }
+    public function getUserPassword(): string        { return $this->userPassword; }
     public function setUserPassword(string $v): self { $this->userPassword = $v; return $this; }
 
-    public function getUserDateDeNaissance(): string { return $this->userDateDeNaissance; }
-    public function setUserDateDeNaissance(string $v): self { $this->userDateDeNaissance = $v; return $this; }
+    public function getUserDateDeNaissance(): string         { return $this->userDateDeNaissance; }
+    public function setUserDateDeNaissance(string $v): self  { $this->userDateDeNaissance = $v; return $this; }
 
-    public function getUserSexe(): ?string { return $this->userSexe; }
-    public function setUserSexe(?string $v): self { $this->userSexe = $v; return $this; }
+    public function getUserSexe(): ?string           { return $this->userSexe; }
+    public function setUserSexe(?string $v): self    { $this->userSexe = $v; return $this; }
 
-    public function getUserPoids(): ?string { return $this->userPoids; }
-    public function setUserPoids(?string $v): self { $this->userPoids = $v; return $this; }
+    public function getUserPoids(): ?string          { return $this->userPoids; }
+    public function setUserPoids(?string $v): self   { $this->userPoids = $v; return $this; }
 
-    public function getUserTaille(): ?int { return $this->userTaille; }
-    public function setUserTaille(?int $v): self { $this->userTaille = $v; return $this; }
+    public function getUserTaille(): ?int            { return $this->userTaille; }
+    public function setUserTaille(?int $v): self     { $this->userTaille = $v; return $this; }
 
-    public function getUserNiveauActivitePhysique(): ?string { return $this->userNiveauActivitePhysique; }
+    public function getUserNiveauActivitePhysique(): ?string        { return $this->userNiveauActivitePhysique; }
     public function setUserNiveauActivitePhysique(?string $v): self { $this->userNiveauActivitePhysique = $v; return $this; }
 
-    public function getUserNiveauScolaire(): ?string { return $this->userNiveauScolaire; }
+    public function getUserNiveauScolaire(): ?string        { return $this->userNiveauScolaire; }
     public function setUserNiveauScolaire(?string $v): self { $this->userNiveauScolaire = $v; return $this; }
 
-    public function getUserEtablissementScolaire(): ?string { return $this->userEtablissementScolaire; }
+    public function getUserEtablissementScolaire(): ?string        { return $this->userEtablissementScolaire; }
     public function setUserEtablissementScolaire(?string $v): self { $this->userEtablissementScolaire = $v; return $this; }
 
-    public function getDateInscription(): string { return $this->dateInscription; }
-    public function setDateInscription(string $v): self { $this->dateInscription = $v; return $this; }
+    public function getDateInscription(): string         { return $this->dateInscription; }
+    public function setDateInscription(string $v): self  { $this->dateInscription = $v; return $this; }
 
-    public function getTypeUtilisateur(): string { return $this->typeUtilisateur; }
-    public function setTypeUtilisateur(string $v): self { $this->typeUtilisateur = $v; return $this; }
+    public function getTypeUtilisateur(): string         { return $this->typeUtilisateur; }
+    public function setTypeUtilisateur(string $v): self  { $this->typeUtilisateur = $v; return $this; }
 
-    public function getIsActive(): bool { return $this->isActive; }
-    public function isActive(): bool    { return $this->isActive; }
+    public function getIsActive(): bool      { return $this->isActive; }
+    public function isActive(): bool         { return $this->isActive; }
     public function setIsActive(bool $v): self { $this->isActive = $v; return $this; }
 
-    public function getUserImagePath(): ?string { return $this->userImagePath; }
-    public function setUserImagePath(?string $v): self { $this->userImagePath = $v; return $this; }
+    public function getUserImagePath(): ?string          { return $this->userImagePath; }
+    public function setUserImagePath(?string $v): self   { $this->userImagePath = $v; return $this; }
 
-    public function getFaceImagePath(): ?string { return $this->faceImagePath; }
-    public function setFaceImagePath(?string $v): self { $this->faceImagePath = $v; return $this; }
+    public function getFaceImagePath(): ?string          { return $this->faceImagePath; }
+    public function setFaceImagePath(?string $v): self   { $this->faceImagePath = $v; return $this; }
 
-    public function isFaceIdEnabled(): bool { return $this->faceIdEnabled; }
-    public function getFaceIdEnabled(): bool { return $this->faceIdEnabled; }
-    public function setFaceIdEnabled(bool $v): self { $this->faceIdEnabled = $v; return $this; }
+    public function isFaceIdEnabled(): bool          { return $this->faceIdEnabled; }
+    public function getFaceIdEnabled(): bool         { return $this->faceIdEnabled; }
+    public function setFaceIdEnabled(bool $v): self  { $this->faceIdEnabled = $v; return $this; }
 
-    // ── OAuth Getters / Setters ────────────────────────────────────────────
-    public function getGoogleId(): ?string { return $this->googleId; }
-    public function setGoogleId(?string $v): self { $this->googleId = $v; return $this; }
+    public function getGoogleId(): ?string           { return $this->googleId; }
+    public function setGoogleId(?string $v): self    { $this->googleId = $v; return $this; }
 
-    public function getFacebookId(): ?string { return $this->facebookId; }
-    public function setFacebookId(?string $v): self { $this->facebookId = $v; return $this; }
+    public function getFacebookId(): ?string         { return $this->facebookId; }
+    public function setFacebookId(?string $v): self  { $this->facebookId = $v; return $this; }
 
-    public function getOauthAvatarUrl(): ?string { return $this->oauthAvatarUrl; }
-    public function setOauthAvatarUrl(?string $v): self { $this->oauthAvatarUrl = $v; return $this; }
+    public function getOauthAvatarUrl(): ?string         { return $this->oauthAvatarUrl; }
+    public function setOauthAvatarUrl(?string $v): self  { $this->oauthAvatarUrl = $v; return $this; }
 
-    /**
-     * Retourne l'URL de l'avatar à afficher :
-     * priorité → avatar uploadé > avatar OAuth > null
-     */
+    public function getTotpSecret(): ?string         { return $this->totpSecret; }
+    public function setTotpSecret(?string $v): self  { $this->totpSecret = $v; return $this; }
+
     public function getDisplayAvatar(): ?string
     {
-        if ($this->userImagePath) {
-            return $this->userImagePath;
-        }
-        return $this->oauthAvatarUrl;
+        return $this->userImagePath ?? $this->oauthAvatarUrl;
     }
 
-    /**
-     * Indique si ce compte a été créé via OAuth (pas de mot de passe local)
-     */
     public function isOAuthUser(): bool
     {
         return $this->googleId !== null || $this->facebookId !== null;
