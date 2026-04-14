@@ -524,57 +524,83 @@
             });
         }
 
-        // ── Password strength (onglet Sécurité) ─────────────────────────────────────
-        const newPwd  = document.getElementById('newPwd');
-        const newPwd2 = document.getElementById('newPwd2');
+        // ...existing code...
 
-        if (newPwd) {
+        // ── Password strength (onglet Sécurité) ─────────────────────────────────────
+        function initSecurityPasswordStrength() {
+            const form = document.getElementById('securityForm');
+            if (!form) return; // pas sur l'onglet sécurité
+
+            if (form.dataset.pwdInit === '1') return; // anti double init (turbo)
+            form.dataset.pwdInit = '1';
+
+            const newPwd  = form.querySelector('#newPwd, input[name$="[newPassword][first]"]');
+            const newPwd2 = form.querySelector('#newPwd2, input[name$="[newPassword][second]"]');
+
+            const bars = ['bar1', 'bar2', 'bar3', 'bar4']
+                .map(id => document.getElementById(id))
+                .filter(Boolean);
+
+            const labelEl = document.getElementById('strengthLabel');
+            const pwd2Err = document.getElementById('pwd2Error');
+
+            if (!newPwd || bars.length !== 4) return;
+
             const rules = {
                 len: v => v.length >= 8,
                 maj: v => /[A-Z]/.test(v),
                 num: v => /\d/.test(v),
-                sym: v => /[\W_]/.test(v),
+                sym: v => /[^A-Za-z0-9]/.test(v),
             };
 
-            // Rouge → Orange → Vert → Violet (très fort)
-            const colors = ['#EF4444', '#F59E0B', '#10B981', '#6A5ACD'];
-            const strengthLabels = ['', '🔴 Faible', '🟠 Moyen', '🟢 Fort', '💪 Très fort'];
+            function level(score, hasValue) {
+                if (!hasValue || score <= 0) return { text: '', color: '' };
+                if (score <= 2) return { text: '🔴 Faible', color: '#EF4444' };
+                if (score === 3) return { text: '🟠 Moyen', color: '#F59E0B' };
+                return { text: '🟢 Fort', color: '#10B981' };
+            }
 
-            newPwd.addEventListener('input', () => {
-                const v     = newPwd.value;
-                const score = Object.values(rules).filter(r => r(v)).length;
+            function updateStrength() {
+                const v = newPwd.value || '';
+                const score = Object.values(rules).filter(fn => fn(v)).length;
+                const lv = level(score, v.length > 0);
 
-                // Barres colorées
-                ['bar1', 'bar2', 'bar3', 'bar4'].forEach((id, i) => {
-                    document.getElementById(id).style.background =
-                        i < score ? colors[score - 1] : '#ddd';
+                bars.forEach((bar, i) => {
+                    bar.style.background = i < score ? (lv.color || '#ddd') : '#ddd';
                 });
 
-                // Label textuel
-                const labelEl = document.getElementById('strengthLabel');
-                if (v.length === 0) {
-                    labelEl.textContent = '';
-                    labelEl.style.color = '';
-                } else {
-                    labelEl.textContent = strengthLabels[score] || strengthLabels[1];
-                    labelEl.style.color = colors[Math.max(0, score - 1)];
+                if (labelEl) {
+                    labelEl.textContent = lv.text;
+                    labelEl.style.color = lv.color;
                 }
 
-                // Règles individuelles
                 Object.entries(rules).forEach(([key, fn]) => {
-                    document.getElementById('r-' + key).classList.toggle('ok', fn(v));
+                    const ruleEl = document.getElementById('r-' + key);
+                    if (ruleEl) ruleEl.classList.toggle('ok', fn(v));
                 });
+
+                if (newPwd2 && pwd2Err) {
+                    pwd2Err.style.display =
+                        newPwd2.value && newPwd2.value !== newPwd.value ? 'flex' : 'none';
+                }
+            }
+
+            ['input', 'keyup', 'change', 'paste'].forEach(evt => {
+                newPwd.addEventListener(evt, updateStrength, { passive: true });
             });
 
             if (newPwd2) {
-                newPwd2.addEventListener('blur', () => {
-                    const err = document.getElementById('pwd2Error');
-                    if (err) {
-                        err.style.display = newPwd2.value && newPwd2.value !== newPwd.value ? 'flex' : 'none';
-                    }
-                });
+                ['input', 'blur'].forEach(evt => newPwd2.addEventListener(evt, updateStrength));
             }
+
+            updateStrength();
+            setTimeout(updateStrength, 50); // autofill navigateur
         }
+
+        document.addEventListener('DOMContentLoaded', initSecurityPasswordStrength);
+        document.addEventListener('turbo:load', initSecurityPasswordStrength);
+
+// ...existing code...
 
         // ── Toggle Face ID ────────────────────────────────────────────────────────────
         const faceToggle = document.getElementById('faceIdToggle');
