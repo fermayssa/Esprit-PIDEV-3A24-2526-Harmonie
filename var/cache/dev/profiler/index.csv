@@ -1040,3 +1040,6 @@ b3cd24,127.0.0.1,GET,http://127.0.0.1:8000/forum/categorie/24?search=&tri=date_d
 f026d5,127.0.0.1,POST,http://127.0.0.1:8000/forum/spellcheck,1776077371,,200,request
 cbaae9,127.0.0.1,POST,http://127.0.0.1:8000/forum/post/77/translate,1776077416,,200,request
 fb0f79,127.0.0.1,POST,http://127.0.0.1:8000/forum/post/93/like,1776077472,,200,request
+2d15e1,127.0.0.1,GET,http://127.0.0.1:8000/forum/categorie/24?search=&tri=date_desc,1776197791,,200,request
+0f3cd0,127.0.0.1,GET,http://127.0.0.1:8000/forum,1776197809,,200,request
+d361e7,127.0.0.1,GET,http://127.0.0.1:8000/forum,1776197839,,200,request

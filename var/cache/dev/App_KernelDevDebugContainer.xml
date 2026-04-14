@@ -444,6 +444,9 @@
       <tag name="controller.service_arguments"/>
       <tag name="routing.route_loader"/>
     </service>
+    <service id="App\Entity" class="App\Entity" abstract="true">
+      <tag name="container.excluded" source="in &quot;config/services.yaml&quot;"/>
+    </service>
     <service id="App\Controller\ActivitesController" class="App\Controller\ActivitesController" public="true" autowire="true" autoconfigure="true">
       <tag name="controller.service_arguments"/>
       <tag name="routing.controller"/>
@@ -701,78 +704,6 @@
     <service id="App\DataFixtures\PostFixtures" class="App\DataFixtures\PostFixtures" autowire="true" autoconfigure="true">
       <tag name="doctrine.fixture.orm"/>
     </service>
-    <service id="App\Entity\Activite" class="App\Entity\Activite" autowire="true" autoconfigure="true">
-      <tag name="container.excluded" source="because it's a Doctrine entity"/>
-      <tag name="container.excluded" source="with #[Doctrine\ORM\Mapping\Entity] attribute"/>
-    </service>
-    <service id="App\Entity\Aliment" class="App\Entity\Aliment" autowire="true" autoconfigure="true">
-      <tag name="container.excluded" source="because it's a Doctrine entity"/>
-      <tag name="container.excluded" source="with #[Doctrine\ORM\Mapping\Entity] attribute"/>
-    </service>
-    <service id="App\Entity\Calendrier" class="App\Entity\Calendrier" autowire="true" autoconfigure="true">
-      <tag name="container.excluded" source="because it's a Doctrine entity"/>
-      <tag name="container.excluded" source="with #[Doctrine\ORM\Mapping\Entity] attribute"/>
-    </service>
-    <service id="App\Entity\Categorie" class="App\Entity\Categorie" autowire="true" autoconfigure="true">
-      <tag name="container.excluded" source="because it's a Doctrine entity"/>
-      <tag name="container.excluded" source="with #[Doctrine\ORM\Mapping\Entity] attribute"/>
-    </service>
-    <service id="App\Entity\Commentaire" class="App\Entity\Commentaire" autowire="true" autoconfigure="true">
-      <tag name="container.excluded" source="because it's a Doctrine entity"/>
-      <tag name="container.excluded" source="with #[Doctrine\ORM\Mapping\Entity] attribute"/>
-    </service>
-    <service id="App\Entity\Conseil" class="App\Entity\Conseil" autowire="true" autoconfigure="true">
-      <tag name="container.excluded" source="because it's a Doctrine entity"/>
-      <tag name="container.excluded" source="with #[Doctrine\ORM\Mapping\Entity] attribute"/>
-    </service>
-    <service id="App\Entity\Consommation" class="App\Entity\Consommation" autowire="true" autoconfigure="true">
-      <tag name="container.excluded" source="because it's a Doctrine entity"/>
-      <tag name="container.excluded" source="with #[Doctrine\ORM\Mapping\Entity] attribute"/>
-    </service>
-    <service id="App\Entity\DemandeReservation" class="App\Entity\DemandeReservation" autowire="true" autoconfigure="true">
-      <tag name="container.excluded" source="because it's a Doctrine entity"/>
-      <tag name="container.excluded" source="with #[Doctrine\ORM\Mapping\Entity] attribute"/>
-    </service>
-    <service id="App\Entity\Evenement" class="App\Entity\Evenement" autowire="true" autoconfigure="true">
-      <tag name="container.excluded" source="because it's a Doctrine entity"/>
-      <tag name="container.excluded" source="with #[Doctrine\ORM\Mapping\Entity] attribute"/>
-    </service>
-    <service id="App\Entity\Exercice" class="App\Entity\Exercice" autowire="true" autoconfigure="true">
-      <tag name="container.excluded" source="because it's a Doctrine entity"/>
-      <tag name="container.excluded" source="with #[Doctrine\ORM\Mapping\Entity] attribute"/>
-    </service>
-    <service id="App\Entity\JournalHumeur" class="App\Entity\JournalHumeur" autowire="true" autoconfigure="true">
-      <tag name="container.excluded" source="because it's a Doctrine entity"/>
-      <tag name="container.excluded" source="with #[Doctrine\ORM\Mapping\Entity] attribute"/>
-    </service>
-    <service id="App\Entity\Post" class="App\Entity\Post" autowire="true" autoconfigure="true">
-      <tag name="container.excluded" source="because it's a Doctrine entity"/>
-      <tag name="container.excluded" source="with #[Doctrine\ORM\Mapping\Entity] attribute"/>
-    </service>
-    <service id="App\Entity\Reaction" class="App\Entity\Reaction" autowire="true" autoconfigure="true">
-      <tag name="container.excluded" source="because it's a Doctrine entity"/>
-      <tag name="container.excluded" source="with #[Doctrine\ORM\Mapping\Entity] attribute"/>
-    </service>
-    <service id="App\Entity\Salle" class="App\Entity\Salle" autowire="true" autoconfigure="true">
-      <tag name="container.excluded" source="because it's a Doctrine entity"/>
-      <tag name="container.excluded" source="with #[Doctrine\ORM\Mapping\Entity] attribute"/>
-    </service>
-    <service id="App\Entity\Seance" class="App\Entity\Seance" autowire="true" autoconfigure="true">
-      <tag name="container.excluded" source="because it's a Doctrine entity"/>
-      <tag name="container.excluded" source="with #[Doctrine\ORM\Mapping\Entity] attribute"/>
-    </service>
-    <service id="App\Entity\SessionMeditation" class="App\Entity\SessionMeditation" autowire="true" autoconfigure="true">
-      <tag name="container.excluded" source="because it's a Doctrine entity"/>
-      <tag name="container.excluded" source="with #[Doctrine\ORM\Mapping\Entity] attribute"/>
-    </service>
-    <service id="App\Entity\Tache" class="App\Entity\Tache" autowire="true" autoconfigure="true">
-      <tag name="container.excluded" source="because it's a Doctrine entity"/>
-      <tag name="container.excluded" source="with #[Doctrine\ORM\Mapping\Entity] attribute"/>
-    </service>
-    <service id="App\Entity\User" class="App\Entity\User" autowire="true" autoconfigure="true">
-      <tag name="container.excluded" source="because it's a Doctrine entity"/>
-      <tag name="container.excluded" source="with #[Doctrine\ORM\Mapping\Entity] attribute"/>
-    </service>
     <service id="App\Enum\Humeur" class="App\Enum\Humeur" autowire="true" autoconfigure="true">
       <tag name="container.excluded" source="because it's an enum"/>
     </service>
@@ -900,6 +831,7 @@
     <service id="App\Service\Export\KanbanExportService" class="App\Service\Export\KanbanExportService" autowire="true" autoconfigure="true"/>
     <service id="App\Service\ImageGenerationService" class="App\Service\ImageGenerationService" autowire="true" autoconfigure="true">
       <argument type="service" id="http_client.uri_template"/>
+      <argument>%env(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)%</argument>
     </service>
     <service id="App\Service\ModerationService" class="App\Service\ModerationService" autowire="true" autoconfigure="true">
       <argument type="service" id="http_client.uri_template"/>
@@ -939,7 +871,7 @@
     </service>
     <service id="argument_resolver.service" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver">
       <tag name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver" priority="-50">controller.argument_value_resolver</tag>
-      <argument type="service" id=".service_locator.Mype_rB"/>
+      <argument type="service" id=".service_locator.Plam6Y5"/>
     </service>
     <service id="argument_resolver.default" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver">
       <tag name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver" priority="-100">controller.argument_value_resolver</tag>
@@ -4153,7 +4085,7 @@
     </service>
     <service id="argument_resolver.not_tagged_controller" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\NotTaggedControllerValueResolver">
       <tag name="controller.argument_value_resolver" priority="-200"/>
-      <argument type="service" id=".service_locator.Mype_rB"/>
+      <argument type="service" id=".service_locator.Plam6Y5"/>
     </service>
     <service id="debug.log_processor" class="Symfony\Bridge\Monolog\Processor\DebugProcessor">
       <tag name="kernel.reset" method="reset"/>
@@ -8834,42 +8766,6 @@
     <service id=".abstract.instanceof.App\DataFixtures\AppFixtures" class="App\DataFixtures\AppFixtures" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\FixturesBundle\ORMFixtureInterface.0.App\DataFixtures\PostFixtures" class="App\DataFixtures\PostFixtures" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\DataFixtures\PostFixtures" class="App\DataFixtures\PostFixtures" autowire="true" autoconfigure="true" abstract="true"/>
-    <service id=".instanceof.App\Entity\Activite.0.App\Entity\Activite" class="App\Entity\Activite" autowire="true" abstract="true"/>
-    <service id=".abstract.instanceof.App\Entity\Activite" class="App\Entity\Activite" autowire="true" autoconfigure="true" abstract="true"/>
-    <service id=".instanceof.App\Entity\Aliment.0.App\Entity\Aliment" class="App\Entity\Aliment" autowire="true" abstract="true"/>
-    <service id=".abstract.instanceof.App\Entity\Aliment" class="App\Entity\Aliment" autowire="true" autoconfigure="true" abstract="true"/>
-    <service id=".instanceof.App\Entity\Calendrier.0.App\Entity\Calendrier" class="App\Entity\Calendrier" autowire="true" abstract="true"/>
-    <service id=".abstract.instanceof.App\Entity\Calendrier" class="App\Entity\Calendrier" autowire="true" autoconfigure="true" abstract="true"/>
-    <service id=".instanceof.App\Entity\Categorie.0.App\Entity\Categorie" class="App\Entity\Categorie" autowire="true" abstract="true"/>
-    <service id=".abstract.instanceof.App\Entity\Categorie" class="App\Entity\Categorie" autowire="true" autoconfigure="true" abstract="true"/>
-    <service id=".instanceof.App\Entity\Commentaire.0.App\Entity\Commentaire" class="App\Entity\Commentaire" autowire="true" abstract="true"/>
-    <service id=".abstract.instanceof.App\Entity\Commentaire" class="App\Entity\Commentaire" autowire="true" autoconfigure="true" abstract="true"/>
-    <service id=".instanceof.App\Entity\Conseil.0.App\Entity\Conseil" class="App\Entity\Conseil" autowire="true" abstract="true"/>
-    <service id=".abstract.instanceof.App\Entity\Conseil" class="App\Entity\Conseil" autowire="true" autoconfigure="true" abstract="true"/>
-    <service id=".instanceof.App\Entity\Consommation.0.App\Entity\Consommation" class="App\Entity\Consommation" autowire="true" abstract="true"/>
-    <service id=".abstract.instanceof.App\Entity\Consommation" class="App\Entity\Consommation" autowire="true" autoconfigure="true" abstract="true"/>
-    <service id=".instanceof.App\Entity\DemandeReservation.0.App\Entity\DemandeReservation" class="App\Entity\DemandeReservation" autowire="true" abstract="true"/>
-    <service id=".abstract.instanceof.App\Entity\DemandeReservation" class="App\Entity\DemandeReservation" autowire="true" autoconfigure="true" abstract="true"/>
-    <service id=".instanceof.App\Entity\Evenement.0.App\Entity\Evenement" class="App\Entity\Evenement" autowire="true" abstract="true"/>
-    <service id=".abstract.instanceof.App\Entity\Evenement" class="App\Entity\Evenement" autowire="true" autoconfigure="true" abstract="true"/>
-    <service id=".instanceof.App\Entity\Exercice.0.App\Entity\Exercice" class="App\Entity\Exercice" autowire="true" abstract="true"/>
-    <service id=".abstract.instanceof.App\Entity\Exercice" class="App\Entity\Exercice" autowire="true" autoconfigure="true" abstract="true"/>
-    <service id=".instanceof.App\Entity\JournalHumeur.0.App\Entity\JournalHumeur" class="App\Entity\JournalHumeur" autowire="true" abstract="true"/>
-    <service id=".abstract.instanceof.App\Entity\JournalHumeur" class="App\Entity\JournalHumeur" autowire="true" autoconfigure="true" abstract="true"/>
-    <service id=".instanceof.App\Entity\Post.0.App\Entity\Post" class="App\Entity\Post" autowire="true" abstract="true"/>
-    <service id=".abstract.instanceof.App\Entity\Post" class="App\Entity\Post" autowire="true" autoconfigure="true" abstract="true"/>
-    <service id=".instanceof.App\Entity\Reaction.0.App\Entity\Reaction" class="App\Entity\Reaction" autowire="true" abstract="true"/>
-    <service id=".abstract.instanceof.App\Entity\Reaction" class="App\Entity\Reaction" autowire="true" autoconfigure="true" abstract="true"/>
-    <service id=".instanceof.App\Entity\Salle.0.App\Entity\Salle" class="App\Entity\Salle" autowire="true" abstract="true"/>
-    <service id=".abstract.instanceof.App\Entity\Salle" class="App\Entity\Salle" autowire="true" autoconfigure="true" abstract="true"/>
-    <service id=".instanceof.App\Entity\Seance.0.App\Entity\Seance" class="App\Entity\Seance" autowire="true" abstract="true"/>
-    <service id=".abstract.instanceof.App\Entity\Seance" class="App\Entity\Seance" autowire="true" autoconfigure="true" abstract="true"/>
-    <service id=".instanceof.App\Entity\SessionMeditation.0.App\Entity\SessionMeditation" class="App\Entity\SessionMeditation" autowire="true" abstract="true"/>
-    <service id=".abstract.instanceof.App\Entity\SessionMeditation" class="App\Entity\SessionMeditation" autowire="true" autoconfigure="true" abstract="true"/>
-    <service id=".instanceof.App\Entity\Tache.0.App\Entity\Tache" class="App\Entity\Tache" autowire="true" abstract="true"/>
-    <service id=".abstract.instanceof.App\Entity\Tache" class="App\Entity\Tache" autowire="true" autoconfigure="true" abstract="true"/>
-    <service id=".instanceof.App\Entity\User.0.App\Entity\User" class="App\Entity\User" autowire="true" abstract="true"/>
-    <service id=".abstract.instanceof.App\Entity\User" class="App\Entity\User" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.UnitEnum.0.App\Enum\Humeur" class="App\Enum\Humeur" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Enum\Humeur" class="App\Enum\Humeur" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\AdminEditUserFormType" class="App\Form\AdminEditUserFormType" autowire="true" abstract="true"/>
@@ -10018,6 +9914,18 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.NsUdOW3" method="withContext"/>
     </service>
+    <service id=".service_locator.Caw3WyG" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="imageGenerator" type="service_closure" id="App\Service\ImageGenerationService"/>
+      </argument>
+    </service>
+    <service id=".service_locator.Caw3WyG.App\Controller\ForumController::generateImage()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\ForumController::generateImage()"/>
+      <argument>App\Controller\ForumController::generateImage()</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.Caw3WyG" method="withContext"/>
+    </service>
     <service id=".service_locator.XxmUxmk" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
@@ -10395,7 +10303,7 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.z0A7H.F" method="withContext"/>
     </service>
-    <service id=".service_locator.Mype_rB" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.Plam6Y5" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="kernel::registerContainerConfiguration" type="service_closure" id=".service_locator.1vYpZ1B.kernel::registerContainerConfiguration()"/>
@@ -10453,6 +10361,7 @@
         <argument key="App\Controller\EvenementsController::show" type="service_closure" id=".service_locator.ZILOSg7.App\Controller\EvenementsController::show()"/>
         <argument key="App\Controller\EvenementsController::edit" type="service_closure" id=".service_locator.NsUdOW3.App\Controller\EvenementsController::edit()"/>
         <argument key="App\Controller\EvenementsController::delete" type="service_closure" id=".service_locator.NsUdOW3.App\Controller\EvenementsController::delete()"/>
+        <argument key="App\Controller\ForumController::generateImage" type="service_closure" id=".service_locator.Caw3WyG.App\Controller\ForumController::generateImage()"/>
         <argument key="App\Controller\ForumController::spellcheck" type="service_closure" id=".service_locator.XxmUxmk.App\Controller\ForumController::spellcheck()"/>
         <argument key="App\Controller\ForumController::translatePost" type="service_closure" id=".service_locator.ZQw413b.App\Controller\ForumController::translatePost()"/>
         <argument key="App\Controller\ForumController::index" type="service_closure" id=".service_locator.z0A7H.F.App\Controller\ForumController::index()"/>
@@ -10549,6 +10458,7 @@
         <argument key="App\Controller\EvenementsController:show" type="service_closure" id=".service_locator.ZILOSg7.App\Controller\EvenementsController::show()"/>
         <argument key="App\Controller\EvenementsController:edit" type="service_closure" id=".service_locator.NsUdOW3.App\Controller\EvenementsController::edit()"/>
         <argument key="App\Controller\EvenementsController:delete" type="service_closure" id=".service_locator.NsUdOW3.App\Controller\EvenementsController::delete()"/>
+        <argument key="App\Controller\ForumController:generateImage" type="service_closure" id=".service_locator.Caw3WyG.App\Controller\ForumController::generateImage()"/>
         <argument key="App\Controller\ForumController:spellcheck" type="service_closure" id=".service_locator.XxmUxmk.App\Controller\ForumController::spellcheck()"/>
         <argument key="App\Controller\ForumController:translatePost" type="service_closure" id=".service_locator.ZQw413b.App\Controller\ForumController::translatePost()"/>
         <argument key="App\Controller\ForumController:index" type="service_closure" id=".service_locator.z0A7H.F.App\Controller\ForumController::index()"/>
@@ -11873,40 +11783,40 @@
       <tag name="container.error" message="Cannot autowire service &quot;.service_locator.1vYpZ1B&quot;: it needs an instance of &quot;Symfony\Component\Config\Loader\LoaderInterface&quot; but this type has been excluded from autowiring."/>
     </service>
     <service id=".errored..service_locator.tqdr_iW.App\Entity\DemandeReservation" class="App\Entity\DemandeReservation">
-      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.tqdr_iW&quot;: it needs an instance of &quot;App\Entity\DemandeReservation&quot; but this type has been excluded because it's a Doctrine entity."/>
+      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.tqdr_iW&quot;: it needs an instance of &quot;App\Entity\DemandeReservation&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
     </service>
     <service id=".errored..service_locator.ZILOSg7.App\Entity\Evenement" class="App\Entity\Evenement">
-      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.ZILOSg7&quot;: it needs an instance of &quot;App\Entity\Evenement&quot; but this type has been excluded because it's a Doctrine entity."/>
+      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.ZILOSg7&quot;: it needs an instance of &quot;App\Entity\Evenement&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
     </service>
     <service id=".errored..service_locator.NsUdOW3.App\Entity\Evenement" class="App\Entity\Evenement">
-      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.NsUdOW3&quot;: it needs an instance of &quot;App\Entity\Evenement&quot; but this type has been excluded because it's a Doctrine entity."/>
+      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.NsUdOW3&quot;: it needs an instance of &quot;App\Entity\Evenement&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
     </service>
     <service id=".errored..service_locator.DS21UbZ.App\Entity\SessionMeditation" class="App\Entity\SessionMeditation">
-      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.DS21UbZ&quot;: it needs an instance of &quot;App\Entity\SessionMeditation&quot; but this type has been excluded because it's a Doctrine entity."/>
+      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.DS21UbZ&quot;: it needs an instance of &quot;App\Entity\SessionMeditation&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
     </service>
     <service id=".errored..service_locator.ZXkLKAa.App\Entity\Conseil" class="App\Entity\Conseil">
-      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.ZXkLKAa&quot;: it needs an instance of &quot;App\Entity\Conseil&quot; but this type has been excluded because it's a Doctrine entity."/>
+      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.ZXkLKAa&quot;: it needs an instance of &quot;App\Entity\Conseil&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
     </service>
     <service id=".errored..service_locator.WbJQk76.App\Entity\Salle" class="App\Entity\Salle">
-      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.WbJQk76&quot;: it needs an instance of &quot;App\Entity\Salle&quot; but this type has been excluded because it's a Doctrine entity."/>
+      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.WbJQk76&quot;: it needs an instance of &quot;App\Entity\Salle&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
     </service>
     <service id=".errored..service_locator.GVgECGd.App\Entity\Tache" class="App\Entity\Tache">
-      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.GVgECGd&quot;: it needs an instance of &quot;App\Entity\Tache&quot; but this type has been excluded because it's a Doctrine entity."/>
+      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.GVgECGd&quot;: it needs an instance of &quot;App\Entity\Tache&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
     </service>
     <service id=".errored..service_locator.z08WQKN.App\Entity\Tache" class="App\Entity\Tache">
-      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.z08WQKN&quot;: it needs an instance of &quot;App\Entity\Tache&quot; but this type has been excluded because it's a Doctrine entity."/>
+      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.z08WQKN&quot;: it needs an instance of &quot;App\Entity\Tache&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
     </service>
     <service id=".errored..service_locator.kYAceIU.App\Entity\User" class="App\Entity\User">
-      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.kYAceIU&quot;: it needs an instance of &quot;App\Entity\User&quot; but this type has been excluded because it's a Doctrine entity."/>
+      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.kYAceIU&quot;: it needs an instance of &quot;App\Entity\User&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
     </service>
     <service id=".errored..service_locator.UoveXVI.App\Entity\User" class="App\Entity\User">
-      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.UoveXVI&quot;: it needs an instance of &quot;App\Entity\User&quot; but this type has been excluded because it's a Doctrine entity."/>
+      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.UoveXVI&quot;: it needs an instance of &quot;App\Entity\User&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
     </service>
     <service id=".errored..service_locator.j4Wlmfc.App\Entity\JournalHumeur" class="App\Entity\JournalHumeur">
-      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.j4Wlmfc&quot;: it needs an instance of &quot;App\Entity\JournalHumeur&quot; but this type has been excluded because it's a Doctrine entity."/>
+      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.j4Wlmfc&quot;: it needs an instance of &quot;App\Entity\JournalHumeur&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
     </service>
     <service id=".errored..service_locator._Ls6dHU.App\Entity\Salle" class="App\Entity\Salle">
-      <tag name="container.error" message="Cannot autowire service &quot;.service_locator._Ls6dHU&quot;: it needs an instance of &quot;App\Entity\Salle&quot; but this type has been excluded because it's a Doctrine entity."/>
+      <tag name="container.error" message="Cannot autowire service &quot;.service_locator._Ls6dHU&quot;: it needs an instance of &quot;App\Entity\Salle&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
     </service>
     <service id=".console.command.about.lazy" class="Symfony\Component\Console\Command\LazyCommand">
       <argument>about</argument>
@@ -13149,7 +13059,7 @@
     <service id="doctrine.fixtures.provider" alias="doctrine.fixtures.loader"/>
     <service id="container.env_var_processors_locator" alias=".service_locator.ryAvHi4" public="true"/>
     <service id="twig.loader.filesystem" alias="twig.loader.native_filesystem"/>
-    <service id="argument_resolver.controller_locator" alias=".service_locator.Mype_rB"/>
+    <service id="argument_resolver.controller_locator" alias=".service_locator.Plam6Y5"/>
     <service id="doctrine.id_generator_locator" alias=".service_locator.W55Po6X"/>
     <service id="twig.loader" alias="twig.loader.native_filesystem"/>
     <service id=".Psr\Log\LoggerInterface $request" alias="monolog.logger.request"/>
@@ -13238,6 +13148,7 @@
     <service id=".service_locator.L.ivR_d" alias=".service_locator.OwMsx8r"/>
     <service id=".service_locator.23Ydx6f" alias=".service_locator.NgPr0wp"/>
     <service id=".service_locator.KNSic_m" alias=".service_locator.n60qnZK"/>
+    <service id=".service_locator.hJ9UXta" alias=".service_locator.Caw3WyG"/>
     <service id=".service_locator.XLMlRSU" alias=".service_locator.XxmUxmk"/>
     <service id=".service_locator.qCBSz9Q" alias=".service_locator.ZQw413b"/>
     <service id=".service_locator.0ekWYPZ" alias=".service_locator.z0A7H.F"/>
