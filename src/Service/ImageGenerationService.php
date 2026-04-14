@@ -1,58 +1,67 @@
 <?php
-
 namespace App\Service;
 
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
-
 class ImageGenerationService
 {
-    private const API_KEY = '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';
-    private const API_URL = 'https://router.huggingface.co/hf-inference/models/black-forest-labs/FLUX.1-schnell';
+    // Même modèle que ton code Java
+    private const MODEL_URL = 'https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-2';
 
-    public function __construct(private readonly HttpClientInterface $http) {}
+    public function __construct(
+        private readonly HttpClientInterface $httpClient,
+        private readonly string $apiKey
+    ) {}
 
-
-    public function generateImage(string $prompt): ?string
+    /**
+     * Équivalent de generateImageBytes() en Java
+     * Retourne les bytes PNG encodés en base64 pour le frontend
+     */
+    public function generateImageBytes(string $prompt, string $style = ''): ?string
     {
-        try {
-            $response = $this->http->request('POST', self::API_URL, [
-                'headers' => [
-                    'Authorization' => 'Bearer ' . self::API_KEY,
-                    'Content-Type'  => 'application/json',
-                    'Accept'        => 'image/png',
-                ],
-                'json'    => ['inputs' => $prompt],
-                'timeout' => 60,
-            ]);
-
-            if ($response->getStatusCode() === 200) {
-                return $response->getContent();
-            }
-        } catch (\Throwable $e) {
-            // Silently fail — caller handles null
+        if (empty(trim($prompt))) {
+            return null;
         }
 
-        return null;
-    }
+        // Combine le prompt avec le style — comme ton code Java
+        $fullPrompt = $style ? $prompt . ', ' . $style : $prompt;
 
+        try {
+            $response = $this->httpClient->request('POST',
+                self::MODEL_URL,
+                [
+                    'headers' => [
+                        'Authorization' => 'Bearer ' . $this->apiKey,
+                        'Content-Type'  => 'application/json',
+                    ],
+                    'json' => [
+                        'inputs'     => $fullPrompt,
+                        'parameters' => [
+                            'num_inference_steps' => 20,
+                            'guidance_scale'      => 7.5,
+                        ],
+                    ],
+                    'timeout' => 120, // 2 minutes comme ton Java
+                ]
+            );
 
-    public function generateCourseImage(string $courseTitle, string $subject): ?string
-    {
-        $prompt = sprintf(
-            'A sleek minimalist course cover icon for an online education platform. '
-            . 'The course is titled "%s" and teaches "%s" as an academic subject. '
-            . 'Interpret "%s" strictly as an educational or technical discipline, not literally. '
-            . 'For example if the subject is Python it means the programming language, '
-            . 'if it is Java it means software development, if it is Biology it means life sciences. '
-            . 'Flat vector illustration, modern app icon style, subtle gradient, '
-            . 'centered composition, soft geometric shapes, professional edu-tech aesthetic, '
-            . 'vibrant but clean color palette, no text, no letters, no words, no animals unless abstractly symbolic',
-            $courseTitle,
-            $subject,
-            $subject
-        );
+            $statusCode = $response->getStatusCode();
 
-        return $this->generateImage($prompt);
+            // Modèle en cours de chargement (comme ton Java gère l'erreur)
+            if ($statusCode === 503) {
+                return null; // "Model is loading"
+            }
+
+            if ($statusCode !== 200) {
+                return null;
+            }
+
+            // Retourne les bytes en base64 — équivalent de byte[] en Java
+            $imageBytes = $response->getContent();
+            return base64_encode($imageBytes);
+
+        } catch (\Exception $e) {
+            return null;
+        }
     }
 }
