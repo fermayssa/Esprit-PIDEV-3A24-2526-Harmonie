@@ -366,7 +366,7 @@
                     Génération en cours...
                 </div>
                 <div style="font-size:12px;color:#9590B8;margin-top:6px;">
-                    Peut prendre 30 à 60 secondes
+                    Peut prendre 10 à 30 secondes
                 </div>
             </div>
 
@@ -493,7 +493,7 @@
             document.getElementById('imageLoading').style.display = 'none';
 
             if (data.error) {
-                showError(data.error);
+                showError(data.error + " (API HuggingFace)");
                 resetBtn();
                 return;
             }

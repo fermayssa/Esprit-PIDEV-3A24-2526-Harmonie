@@ -26,37 +26,36 @@ use App\Service\ImageGenerationService;
 class ForumController extends AbstractController
 {
     // ── GÉNÉRATION IMAGE IA ──────────────────────────────
-#[Route('/forum/generate-image', name: 'forum_generate_image', methods: ['POST'])]
-public function generateImage(
-    Request $request,
-    ImageGenerationService $imageGenerator
-): JsonResponse {
-    $prompt = trim($request->request->get('prompt', ''));
-    $style  = trim($request->request->get('style', ''));
+    #[Route('/forum/generate-image', name: 'forum_generate_image', methods: ['POST'])]
+    public function generateImage(
+        Request $request,
+        ImageGenerationService $imageGenerator
+    ): JsonResponse {
+        $prompt = trim($request->request->get('prompt', ''));
+        $style  = trim($request->request->get('style', ''));
 
-    if (empty($prompt)) {
-        return new JsonResponse(['error' => 'Prompt vide'], 400);
-    }
+        if (empty($prompt)) {
+            return new JsonResponse(['error' => 'Merci de décrire l\'image.'], 400);
+        }
 
-    if (strlen($prompt) > 500) {
-        return new JsonResponse(['error' => 'Prompt trop long'], 400);
-    }
+        if (strlen($prompt) > 500) {
+            return new JsonResponse(['error' => 'Prompt trop long (max 500 caractères).'], 400);
+        }
 
-    // Appelle le service — même logique que ton Java
-    $imageBase64 = $imageGenerator->generateImageBytes($prompt, $style);
+        $imageBase64 = $imageGenerator->generateImageBytes($prompt, $style);
 
-    if (!$imageBase64) {
+        if (!$imageBase64) {
+            return new JsonResponse([
+                'error' => 'Génération échouée. Vérifie ta connexion internet et réessaye.'
+            ], 503);
+        }
+
         return new JsonResponse([
-            'error' => 'Le modèle est en cours de chargement. Réessaye dans 20 secondes.'
-        ], 503);
+            'image'  => $imageBase64,
+            'prompt' => $prompt,
+            'style'  => $style,
+        ]);
     }
-
-    return new JsonResponse([
-        'image'  => $imageBase64,
-        'prompt' => $prompt,
-        'style'  => $style,
-    ]);
-}
 
 
     // ── CORRECTION ORTHOGRAPHIQUE (AJAX temps réel) ──────
