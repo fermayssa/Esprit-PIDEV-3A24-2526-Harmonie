@@ -151,7 +151,7 @@ tr:hover td { background:#FAFAFE; }
                 <td class="td-muted">{{ cat.dateCreation ? cat.dateCreation|date('d/m/Y') : '—' }}</td>
                 <td>
                     <div class="actions">
-                        <a href="{{ path('forum_posts', {id: cat.idCategorie}) }}" class="btn-sm btn-view">👁️ Posts</a>
+                        
                         <a href="{{ path('forum_categorie_edit', {id: cat.idCategorie}) }}" class="btn-sm btn-edit">✏️ Modifier</a>
                         <form method="POST"
                               action="{{ path('back_categorie_delete', {id: cat.idCategorie}) }}"

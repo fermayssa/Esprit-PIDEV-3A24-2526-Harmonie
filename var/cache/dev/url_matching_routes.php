@@ -54,6 +54,8 @@ return [
         '/evenement/index' => [[['_route' => 'evenements', '_controller' => 'App\\Controller\\EvenementsController::index'], null, ['GET' => 0], null, false, false, null]],
         '/evenement/export/csv' => [[['_route' => 'app_evenement_export_csv', '_controller' => 'App\\Controller\\EvenementsController::exportCsv'], null, ['GET' => 0], null, false, false, null]],
         '/evenement/new' => [[['_route' => 'app_evenement_new', '_controller' => 'App\\Controller\\EvenementsController::new'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        '/forum/generate-image' => [[['_route' => 'forum_generate_image', '_controller' => 'App\\Controller\\ForumController::generateImage'], null, ['POST' => 0], null, false, false, null]],
+        '/forum/spellcheck' => [[['_route' => 'forum_spellcheck', '_controller' => 'App\\Controller\\ForumController::spellcheck'], null, ['POST' => 0], null, false, false, null]],
         '/forum' => [[['_route' => 'forum', '_controller' => 'App\\Controller\\ForumController::index'], null, null, null, false, false, null]],
         '/forum/categorie/new' => [[['_route' => 'forum_categorie_new', '_controller' => 'App\\Controller\\ForumController::newCategorie'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
         '/' => [[['_route' => 'homepage', '_controller' => 'App\\Controller\\HomepageController::index'], null, null, null, false, false, null]],
@@ -208,6 +210,13 @@ return [
                     .'|(*:1563)'
                 .')'
                 .'|/forum/(?'
+                    .'|post/([^/]++)/(?'
+                        .'|translate(*:1573)'
+                        .'|like(*:1586)'
+                        .'|edit(*:1599)'
+                        .'|delete(*:1614)'
+                        .'|comment/new(*:1634)'
+                    .')'
                     .'|c(?'
                         .'|ategorie/([^/]++)(?'
                             .'|/(?'

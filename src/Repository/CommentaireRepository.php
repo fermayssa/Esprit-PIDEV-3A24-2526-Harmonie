@@ -45,13 +45,13 @@ class CommentaireRepository extends ServiceEntityRepository
      * Retourne tous les commentaires avec leur post associé.
      */
     public function findAllWithPost(): array
-    {
-        return $this->createQueryBuilder('c')
-            ->leftJoin('c.idPost', 'p')
-            ->addSelect('p')
-            ->orderBy('c.dateCommentaire', 'DESC')
-            ->getQuery()
-            ->getResult();
-    }
+{
+    // Pas de JOIN possible car pas d'association Doctrine
+    // On récupère les commentaires triés, le post sera chargé séparément dans le controller
+    return $this->createQueryBuilder('c')
+        ->orderBy('c.dateCommentaire', 'DESC')
+        ->getQuery()
+        ->getResult();
+}
 
 }

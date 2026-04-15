@@ -26,9 +26,9 @@ class BackController extends AbstractController
         CommentaireRepository $comRepo
     ): Response {
         return $this->render('back/dashboard.html.twig', [
-            'nb_categories'  => $catRepo->count([]),
-            'nb_posts'       => $postRepo->count([]),
-            'nb_commentaires'=> $comRepo->count([]),
+            'nb_categories'   => $catRepo->count([]),
+            'nb_posts'        => $postRepo->count([]),
+            'nb_commentaires' => $comRepo->count([]),
         ]);
     }
 
@@ -39,10 +39,9 @@ class BackController extends AbstractController
     {
         $categories = $catRepo->findAll();
 
-        // Compte le nombre de posts par catégorie
         $postCounts = [];
         foreach ($categories as $cat) {
-            $postCounts[$cat->getIdCategorie()] = $postRepo->count(['idCategorie' => $cat]);
+            $postCounts[$cat->getIdCategorie()] = $postRepo->count(['idCategorie' => $cat->getIdCategorie()]);
         }
 
         return $this->render('back/categories.html.twig', [
@@ -69,11 +68,41 @@ class BackController extends AbstractController
     // ─── POSTS ────────────────────────────────────────────────────────────────
 
     #[Route('/posts', name: 'posts')]
-    public function posts(PostRepository $postRepo, CategorieRepository $catRepo): Response
-    {
+    public function posts(
+        PostRepository $postRepo,
+        CategorieRepository $catRepo,
+        EntityManagerInterface $em
+    ): Response {
+        $posts      = $postRepo->findBy([], ['dateCreation' => 'DESC']);
+        $categories = $catRepo->findAll();
+
+        // Map catId => nomCategorie
+        $catMap = [];
+        foreach ($categories as $cat) {
+            $catMap[$cat->getIdCategorie()] = $cat->getNomCategorie();
+        }
+
+        // Map userId => "Prénom Nom"
+        $userIds = array_unique(array_filter(array_map(fn($p) => $p->getUserId(), $posts)));
+        $usersMap = [];
+        if (!empty($userIds)) {
+            $users = $em->createQueryBuilder()
+                ->select('u')
+                ->from(\App\Entity\User::class, 'u')
+                ->where('u.userId IN (:ids)')
+                ->setParameter('ids', $userIds)
+                ->getQuery()
+                ->getResult();
+            foreach ($users as $u) {
+                $usersMap[$u->getUserId()] = $u->getUserPrenom() . ' ' . $u->getUserNom();
+            }
+        }
+
         return $this->render('back/posts.html.twig', [
-            'posts'      => $postRepo->findAllWithCategorie(),
-            'categories' => $catRepo->findAll(),
+            'posts'      => $posts,
+            'categories' => $categories,
+            'catMap'     => $catMap,
+            'usersMap'   => $usersMap,
         ]);
     }
 
@@ -95,10 +124,51 @@ class BackController extends AbstractController
     // ─── COMMENTAIRES ─────────────────────────────────────────────────────────
 
     #[Route('/commentaires', name: 'commentaires')]
-    public function commentaires(CommentaireRepository $comRepo): Response
-    {
+    public function commentaires(
+        CommentaireRepository $commentaireRepo,
+        EntityManagerInterface $em
+    ): Response {
+        $commentaires = $commentaireRepo->findBy([], ['dateCommentaire' => 'DESC']);
+
+        // Map postId => Post object
+        $postsMap = [];
+        foreach ($commentaires as $c) {
+            $pid = $c->getIdPost();
+            if ($pid && !isset($postsMap[$pid])) {
+                $postsMap[$pid] = $em->getRepository(Post::class)->find($pid);
+            }
+        }
+
+        // Map catId => nomCategorie
+        $catMap = [];
+        foreach ($postsMap as $post) {
+            if ($post && !isset($catMap[$post->getIdCategorie()])) {
+                $cat = $em->getRepository(Categorie::class)->find($post->getIdCategorie());
+                $catMap[$post->getIdCategorie()] = $cat ? $cat->getNomCategorie() : null;
+            }
+        }
+
+        // Map userId => "Prénom Nom"
+        $userIds = array_unique(array_filter(array_map(fn($c) => $c->getUserId(), $commentaires)));
+        $usersMap = [];
+        if (!empty($userIds)) {
+            $users = $em->createQueryBuilder()
+                ->select('u')
+                ->from(\App\Entity\User::class, 'u')
+                ->where('u.userId IN (:ids)')
+                ->setParameter('ids', $userIds)
+                ->getQuery()
+                ->getResult();
+            foreach ($users as $u) {
+                $usersMap[$u->getUserId()] = $u->getUserPrenom() . ' ' . $u->getUserNom();
+            }
+        }
+
         return $this->render('back/commentaires.html.twig', [
-            'commentaires' => $comRepo->findAllWithPost(),
+            'commentaires' => $commentaires,
+            'postsMap'     => $postsMap,
+            'catMap'       => $catMap,
+            'usersMap'     => $usersMap,
         ]);
     }
 
