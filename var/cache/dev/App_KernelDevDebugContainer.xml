@@ -831,7 +831,7 @@
     <service id="App\Service\Export\KanbanExportService" class="App\Service\Export\KanbanExportService" autowire="true" autoconfigure="true"/>
     <service id="App\Service\ImageGenerationService" class="App\Service\ImageGenerationService" autowire="true" autoconfigure="true">
       <argument type="service" id="http_client.uri_template"/>
-      <argument>%env(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)%</argument>
+      <argument>%env(HUGGINGFACE_API_KEY)%</argument>
     </service>
     <service id="App\Service\ModerationService" class="App\Service\ModerationService" autowire="true" autoconfigure="true">
       <argument type="service" id="http_client.uri_template"/>
