@@ -211,54 +211,48 @@ return [
                 .')'
                 .'|/forum/(?'
                     .'|post/([^/]++)/(?'
-                        .'|translate(*:1573)'
-                        .'|like(*:1586)'
-                        .'|edit(*:1599)'
-                        .'|delete(*:1614)'
-                        .'|comment/new(*:1634)'
+                        .'|translate(*:1609)'
+                        .'|like(*:1622)'
+                        .'|edit(*:1635)'
+                        .'|delete(*:1650)'
+                        .'|comment/new(*:1670)'
                     .')'
                     .'|c(?'
                         .'|ategorie/([^/]++)(?'
                             .'|/(?'
-                                .'|edit(*:1615)'
-                                .'|delete(*:1630)'
-                                .'|post/new(*:1647)'
+                                .'|edit(*:1712)'
+                                .'|delete(*:1727)'
+                                .'|post/new(*:1744)'
                             .')'
-                            .'|(*:1657)'
+                            .'|(*:1754)'
                         .')'
                         .'|omment/([^/]++)/(?'
-                            .'|edit(*:1690)'
-                            .'|delete(*:1705)'
+                            .'|edit(*:1787)'
+                            .'|delete(*:1802)'
                         .')'
-                    .')'
-                    .'|post/([^/]++)/(?'
-                        .'|like(*:1737)'
-                        .'|edit(*:1750)'
-                        .'|delete(*:1765)'
-                        .'|comment/new(*:1785)'
                     .')'
                 .')'
                 .'|/journal/(?'
-                    .'|(\\d+)/edit(*:1818)'
-                    .'|(\\d+)/delete(*:1839)'
+                    .'|(\\d+)/edit(*:1836)'
+                    .'|(\\d+)/delete(*:1857)'
                 .')'
-                .'|/meditation/(\\d+)(*:1866)'
+                .'|/meditation/(\\d+)(*:1884)'
                 .'|/nutrition/api/(?'
-                    .'|recette/([^/]++)(*:1909)'
-                    .'|modifier/([^/]++)(*:1935)'
-                    .'|supprimer/([^/]++)(*:1962)'
+                    .'|recette/([^/]++)(*:1927)'
+                    .'|modifier/([^/]++)(*:1953)'
+                    .'|supprimer/([^/]++)(*:1980)'
                 .')'
                 .'|/salle/([^/]++)(?'
-                    .'|(*:1990)'
-                    .'|/edit(*:2004)'
-                    .'|(*:2013)'
+                    .'|(*:2008)'
+                    .'|/edit(*:2022)'
+                    .'|(*:2031)'
                 .')'
                 .'|/tache/(?'
-                    .'|(\\d+)/statut(*:2045)'
+                    .'|(\\d+)/statut(*:2063)'
                     .'|([^/]++)(?'
-                        .'|(*:2065)'
-                        .'|/edit(*:2079)'
-                        .'|(*:2088)'
+                        .'|(*:2083)'
+                        .'|/edit(*:2097)'
+                        .'|(*:2106)'
                     .')'
                 .')'
             .')/?$}sDu',
@@ -326,29 +320,30 @@ return [
         1540 => [[['_route' => 'app_evenement_show', '_controller' => 'App\\Controller\\EvenementsController::show'], ['id'], ['GET' => 0], null, false, true, null]],
         1554 => [[['_route' => 'app_evenement_edit', '_controller' => 'App\\Controller\\EvenementsController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
         1563 => [[['_route' => 'app_evenement_delete', '_controller' => 'App\\Controller\\EvenementsController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
-        1615 => [[['_route' => 'forum_categorie_edit', '_controller' => 'App\\Controller\\ForumController::editCategorie'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        1630 => [[['_route' => 'forum_categorie_delete', '_controller' => 'App\\Controller\\ForumController::deleteCategorie'], ['id'], ['POST' => 0], null, false, false, null]],
-        1647 => [[['_route' => 'forum_post_new', '_controller' => 'App\\Controller\\ForumController::newPost'], ['idCat'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        1657 => [[['_route' => 'forum_posts', '_controller' => 'App\\Controller\\ForumController::posts'], ['id'], null, null, false, true, null]],
-        1690 => [[['_route' => 'forum_comment_edit', '_controller' => 'App\\Controller\\ForumController::editComment'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        1705 => [[['_route' => 'forum_comment_delete', '_controller' => 'App\\Controller\\ForumController::deleteComment'], ['id'], ['POST' => 0], null, false, false, null]],
-        1737 => [[['_route' => 'forum_post_like', '_controller' => 'App\\Controller\\ForumController::toggleLike'], ['id'], ['POST' => 0, 'GET' => 1], null, false, false, null]],
-        1750 => [[['_route' => 'forum_post_edit', '_controller' => 'App\\Controller\\ForumController::editPost'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        1765 => [[['_route' => 'forum_post_delete', '_controller' => 'App\\Controller\\ForumController::deletePost'], ['id'], ['POST' => 0], null, false, false, null]],
-        1785 => [[['_route' => 'forum_comment_new', '_controller' => 'App\\Controller\\ForumController::newComment'], ['idPost'], ['POST' => 0], null, false, false, null]],
-        1818 => [[['_route' => 'journal_edit', '_controller' => 'App\\Controller\\JournalController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        1839 => [[['_route' => 'journal_delete', '_controller' => 'App\\Controller\\JournalController::delete'], ['id'], ['POST' => 0], null, false, false, null]],
-        1866 => [[['_route' => 'meditation_show', '_controller' => 'App\\Controller\\MeditationController::show'], ['id'], ['GET' => 0], null, false, true, null]],
-        1909 => [[['_route' => 'nutrition_api_recette_detail', '_controller' => 'App\\Controller\\NutritionController::apiRecetteDetail'], ['id'], ['GET' => 0], null, false, true, null]],
-        1935 => [[['_route' => 'nutrition_api_modifier', '_controller' => 'App\\Controller\\NutritionController::apiModifier'], ['id'], ['POST' => 0, 'PUT' => 1], null, false, true, null]],
-        1962 => [[['_route' => 'nutrition_api_supprimer', '_controller' => 'App\\Controller\\NutritionController::apiSupprimer'], ['id'], ['POST' => 0, 'DELETE' => 1], null, false, true, null]],
-        1990 => [[['_route' => 'app_salle_show', '_controller' => 'App\\Controller\\SalleController::show'], ['id'], ['GET' => 0], null, false, true, null]],
-        2004 => [[['_route' => 'app_salle_edit', '_controller' => 'App\\Controller\\SalleController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        2013 => [[['_route' => 'app_salle_delete', '_controller' => 'App\\Controller\\SalleController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
-        2045 => [[['_route' => 'app_tache_update_statut', '_controller' => 'App\\Controller\\TachesController::updateStatut'], ['id'], ['POST' => 0], null, false, false, null]],
-        2065 => [[['_route' => 'app_tache_show', '_controller' => 'App\\Controller\\TachesController::show'], ['id'], ['GET' => 0], null, false, true, null]],
-        2079 => [[['_route' => 'app_tache_edit', '_controller' => 'App\\Controller\\TachesController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        2088 => [
+        1609 => [[['_route' => 'forum_post_translate', '_controller' => 'App\\Controller\\ForumController::translatePost'], ['id'], ['POST' => 0], null, false, false, null]],
+        1622 => [[['_route' => 'forum_post_like', '_controller' => 'App\\Controller\\ForumController::toggleLike'], ['id'], ['POST' => 0, 'GET' => 1], null, false, false, null]],
+        1635 => [[['_route' => 'forum_post_edit', '_controller' => 'App\\Controller\\ForumController::editPost'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        1650 => [[['_route' => 'forum_post_delete', '_controller' => 'App\\Controller\\ForumController::deletePost'], ['id'], ['POST' => 0], null, false, false, null]],
+        1670 => [[['_route' => 'forum_comment_new', '_controller' => 'App\\Controller\\ForumController::newComment'], ['idPost'], ['POST' => 0], null, false, false, null]],
+        1712 => [[['_route' => 'forum_categorie_edit', '_controller' => 'App\\Controller\\ForumController::editCategorie'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        1727 => [[['_route' => 'forum_categorie_delete', '_controller' => 'App\\Controller\\ForumController::deleteCategorie'], ['id'], ['POST' => 0], null, false, false, null]],
+        1744 => [[['_route' => 'forum_post_new', '_controller' => 'App\\Controller\\ForumController::newPost'], ['idCat'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        1754 => [[['_route' => 'forum_posts', '_controller' => 'App\\Controller\\ForumController::posts'], ['id'], null, null, false, true, null]],
+        1787 => [[['_route' => 'forum_comment_edit', '_controller' => 'App\\Controller\\ForumController::editComment'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        1802 => [[['_route' => 'forum_comment_delete', '_controller' => 'App\\Controller\\ForumController::deleteComment'], ['id'], ['POST' => 0], null, false, false, null]],
+        1836 => [[['_route' => 'journal_edit', '_controller' => 'App\\Controller\\JournalController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        1857 => [[['_route' => 'journal_delete', '_controller' => 'App\\Controller\\JournalController::delete'], ['id'], ['POST' => 0], null, false, false, null]],
+        1884 => [[['_route' => 'meditation_show', '_controller' => 'App\\Controller\\MeditationController::show'], ['id'], ['GET' => 0], null, false, true, null]],
+        1927 => [[['_route' => 'nutrition_api_recette_detail', '_controller' => 'App\\Controller\\NutritionController::apiRecetteDetail'], ['id'], ['GET' => 0], null, false, true, null]],
+        1953 => [[['_route' => 'nutrition_api_modifier', '_controller' => 'App\\Controller\\NutritionController::apiModifier'], ['id'], ['POST' => 0, 'PUT' => 1], null, false, true, null]],
+        1980 => [[['_route' => 'nutrition_api_supprimer', '_controller' => 'App\\Controller\\NutritionController::apiSupprimer'], ['id'], ['POST' => 0, 'DELETE' => 1], null, false, true, null]],
+        2008 => [[['_route' => 'app_salle_show', '_controller' => 'App\\Controller\\SalleController::show'], ['id'], ['GET' => 0], null, false, true, null]],
+        2022 => [[['_route' => 'app_salle_edit', '_controller' => 'App\\Controller\\SalleController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        2031 => [[['_route' => 'app_salle_delete', '_controller' => 'App\\Controller\\SalleController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
+        2063 => [[['_route' => 'app_tache_update_statut', '_controller' => 'App\\Controller\\TachesController::updateStatut'], ['id'], ['POST' => 0], null, false, false, null]],
+        2083 => [[['_route' => 'app_tache_show', '_controller' => 'App\\Controller\\TachesController::show'], ['id'], ['GET' => 0], null, false, true, null]],
+        2097 => [[['_route' => 'app_tache_edit', '_controller' => 'App\\Controller\\TachesController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        2106 => [
             [['_route' => 'app_tache_delete', '_controller' => 'App\\Controller\\TachesController::delete'], ['id'], ['POST' => 0], null, false, true, null],
             [null, null, null, null, false, false, 0],
         ],
