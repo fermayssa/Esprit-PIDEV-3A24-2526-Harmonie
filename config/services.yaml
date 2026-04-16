@@ -37,9 +37,7 @@ services:
         arguments:
             $youtubeApiKey: '%env(YOUTUBE_API_KEY)%'
     # Injecte la clé API — même principe que ton Java
-    App\Service\ImageGenerationService:
-        arguments:
-            $apiKey: '%env(HUGGINGFACE_API_KEY)%'
+    
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
    
