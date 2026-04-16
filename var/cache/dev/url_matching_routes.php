@@ -35,6 +35,7 @@ return [
         '/admin/salles/new' => [[['_route' => 'admin_salle_new', '_controller' => 'App\\Controller\\AdminSalleController::new'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
         '/admin/sport' => [[['_route' => 'admin_sport_index', '_controller' => 'App\\Controller\\AdminSportController::index'], null, ['GET' => 0], null, false, false, null]],
         '/admin/sport/api/list' => [[['_route' => 'admin_sport_list', '_controller' => 'App\\Controller\\AdminSportController::list'], null, ['GET' => 0], null, false, false, null]],
+        '/admin/sport/api/types' => [[['_route' => 'admin_sport_types', '_controller' => 'App\\Controller\\AdminSportController::types'], null, ['GET' => 0], null, false, false, null]],
         '/admin/sport/api/stats' => [[['_route' => 'admin_sport_stats', '_controller' => 'App\\Controller\\AdminSportController::stats'], null, ['GET' => 0], null, false, false, null]],
         '/admin/sport/api/create' => [[['_route' => 'admin_sport_create', '_controller' => 'App\\Controller\\AdminSportController::create'], null, ['POST' => 0], null, false, false, null]],
         '/admin/sport/api/youtube-search' => [[['_route' => 'admin_sport_youtube_search', '_controller' => 'App\\Controller\\AdminSportYouTubeController::search'], null, ['GET' => 0], null, false, false, null]],

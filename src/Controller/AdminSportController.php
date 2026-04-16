@@ -30,12 +30,36 @@ class AdminSportController extends AbstractController
         return $this->render('admin/sport.html.twig');
     }
 
-    // ── LIST (JSON) ──────────────────────────────────────────────────
+    // ── LIST (JSON) — supporte recherche, filtre type, section, tri côté serveur ──
     #[Route('/api/list', name: 'admin_sport_list', methods: ['GET'])]
-    public function list(): JsonResponse
+    public function list(Request $request): JsonResponse
     {
-        $exercices = $this->repo->findAllOrdered();
+        $search  = trim($request->query->get('search',  ''));
+        $type    = trim($request->query->get('type',    ''));
+        $section = strtolower(trim($request->query->get('section', '')));
+        $sort    = $request->query->get('sort', 'nom_asc');
+
+        // Valeurs autorisées pour le tri
+        $allowedSorts = ['nom_asc', 'nom_desc', 'type_asc', 'type_desc'];
+        if (!in_array($sort, $allowedSorts, true)) {
+            $sort = 'nom_asc';
+        }
+
+        // Valeurs autorisées pour la section
+        if (!in_array($section, ['homme', 'femme', ''], true)) {
+            $section = '';
+        }
+
+        $exercices = $this->repo->searchAndFilter($search, $type, $section, $sort);
+
         return $this->json(array_map([$this, 'serialize'], $exercices));
+    }
+
+    // ── TYPES (JSON) — liste des types distincts pour le datalist et le filtre ──
+    #[Route('/api/types', name: 'admin_sport_types', methods: ['GET'])]
+    public function types(): JsonResponse
+    {
+        return $this->json($this->repo->findDistinctTypes());
     }
 
     // ── STATS (JSON) — pour le graphique Chart.js ────────────────────
@@ -48,10 +72,10 @@ class AdminSportController extends AbstractController
         $colors  = $this->statsService->getPalette(count($labels));
 
         return $this->json([
-            'labels'          => $labels,
-            'values'          => $values,
-            'backgroundColors'=> $colors,
-            'total'           => array_sum($values),
+            'labels'           => $labels,
+            'values'           => $values,
+            'backgroundColors' => $colors,
+            'total'            => array_sum($values),
         ]);
     }
 
@@ -83,7 +107,7 @@ class AdminSportController extends AbstractController
             return $this->json(['error' => 'Exercice introuvable'], 404);
         }
 
-        $data = json_decode($request->getContent(), true);
+        $data  = json_decode($request->getContent(), true);
         $error = $this->validateData($data);
         if ($error) {
             return $this->json(['error' => $error], 400);
