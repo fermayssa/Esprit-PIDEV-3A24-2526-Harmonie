@@ -3,606 +3,878 @@
 {% block title %}Activités — Harmony{% endblock %}
 
 {% block stylesheets %}
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-o9N1j7kG8bChx9cArCdZUrw2s2tRoSI6eR7X9tUuCPk=" crossorigin="" />
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 
 :root{
-  --pu:#6A5ACD;--pu-dk:#4B3B9E;--pu-lt:#8B7FD4;--pu-pale:#EDE8FA;
-  --pu-ghost:#F7F5FD;--pu-deep:#1A1035;
-  --tx:#1C1733;--tx-mid:#4A4570;--tx-muted:#9590B8;
-  --border:rgba(106,90,205,.12);--white:#FFFFFF;
-  --shadow:0 8px 32px rgba(106,90,205,.14);
-  --shadow-lg:0 24px 64px rgba(106,90,205,.22);
-  --card-r:20px;
-  --green:#22C55E;--red:#EF4444;--orange:#F59E0B;
-  --cardio:#FF6B6B;--cardio-lt:#FFF0F0;--cardio-dk:#CC3333;
-  --force:#5B8DEF;--force-lt:#EEF3FF;
-  --souplesse:#43D39E;--souplesse-lt:#EAFAF4;
-  --endurance:#F7B731;--endurance-lt:#FFF8E6;
-  --perte:#FD7272;--perte-lt:#FFF0F0;
+  /* Palette principale */
+  --pu:#7C5CFC;--pu-dk:#5B3FDB;--pu-lt:#A78BFA;--pu-pale:#EEE8FF;
+  --pu-ghost:#F5F2FF;--pu-deep:#120A2E;
+  --tx:#0F0A2A;--tx-mid:#3D3570;--tx-muted:#8B82B8;
+  --border:rgba(124,92,252,.1);--white:#FFFFFF;
+  --bg:#F0EDFF;
+  --shadow:0 8px 32px rgba(124,92,252,.14);
+  --shadow-lg:0 24px 64px rgba(124,92,252,.22);
+  --card-r:22px;
+  /* Catégories */
+  --cardio:#FF4D6D;--cardio-lt:#FFF0F3;
+  --force:#3B82F6;--force-lt:#EFF6FF;
+  --souplesse:#10B981;--souplesse-lt:#ECFDF5;
+  --endurance:#F59E0B;--endurance-lt:#FFFBEB;
+  --perte:#EF4444;--perte-lt:#FEF2F2;
+  /* Sections */
+  --homme:#3B82F6;--femme:#EC4899;
 }
 
-html,body{font-family:'DM Sans',sans-serif;background:#F0EEFE;color:var(--tx);overflow-x:hidden}
+html,body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--tx);overflow-x:hidden}
 
-/* ─── HERO ─── */
+/* ─────────────── HERO ─────────────── */
 .hero{
-  position:relative;height:400px;overflow:hidden;
-  background:linear-gradient(135deg,#1A1035 0%,#2D1B69 40%,#4B3B9E 100%);
+  position:relative;min-height:420px;overflow:hidden;
+  background:linear-gradient(135deg,#120A2E 0%,#1E1050 40%,#3A1F8A 100%);
 }
-.hero-bg{
-  position:absolute;inset:0;width:100%;height:100%;
-  object-fit:cover;z-index:0;opacity:.35;
-  filter:brightness(.7) saturate(1.3);
-  transform:scale(1.04);transition:transform 8s ease;
+.hero-mesh{
+  position:absolute;inset:0;z-index:0;
+  background:
+    radial-gradient(ellipse 60% 50% at 20% 50%,rgba(124,92,252,.35) 0%,transparent 70%),
+    radial-gradient(ellipse 40% 60% at 80% 30%,rgba(236,72,153,.2) 0%,transparent 65%),
+    radial-gradient(ellipse 50% 40% at 60% 80%,rgba(59,130,246,.25) 0%,transparent 70%);
 }
-.hero:hover .hero-bg{transform:scale(1)}
-.hero-particles{position:absolute;inset:0;z-index:1;overflow:hidden}
-.hero-particles::before,.hero-particles::after{
-  content:'';position:absolute;border-radius:50%;
-  background:rgba(106,90,205,.3);filter:blur(60px);
-  animation:float 7s ease-in-out infinite;
+.hero-noise{
+  position:absolute;inset:0;z-index:1;opacity:.04;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
-.hero-particles::before{width:400px;height:400px;top:-100px;left:-80px;animation-delay:0s}
-.hero-particles::after{width:300px;height:300px;bottom:-60px;right:10%;animation-delay:3.5s}
-@keyframes float{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-30px) scale(1.07)}}
-.hero-glow{
-  position:absolute;inset:0;z-index:2;
-  background:linear-gradient(135deg,rgba(29,16,80,.65) 0%,rgba(75,59,158,.4) 60%,rgba(139,127,212,.2) 100%);
+.hero-grid{
+  position:absolute;inset:0;z-index:1;
+  background-image:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);
+  background-size:40px 40px;
 }
 .hero-bottom-fade{
-  position:absolute;bottom:0;left:0;right:0;height:80px;z-index:3;
-  background:linear-gradient(to bottom,transparent,#F0EEFE);
+  position:absolute;bottom:0;left:0;right:0;height:100px;z-index:3;
+  background:linear-gradient(to bottom,transparent,var(--bg));
 }
 .hero-content{
-  position:relative;z-index:4;height:100%;
+  position:relative;z-index:4;
   display:flex;align-items:center;justify-content:space-between;
-  padding:0 56px;gap:32px;
+  padding:54px 60px 80px;gap:40px;
 }
-.hero-left{max-width:520px}
-.hero-eyebrow{
-  display:inline-flex;align-items:center;gap:7px;
-  background:rgba(255,255,255,.12);backdrop-filter:blur(8px);
-  border:1px solid rgba(255,255,255,.2);border-radius:30px;
-  padding:5px 14px;font-size:11px;font-weight:600;color:rgba(255,255,255,.85);
-  letter-spacing:.6px;text-transform:uppercase;margin-bottom:14px;
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(255,255,255,.1);backdrop-filter:blur(12px);
+  border:1px solid rgba(255,255,255,.18);border-radius:40px;
+  padding:6px 16px;font-size:11px;font-weight:700;
+  color:rgba(255,255,255,.85);letter-spacing:.8px;
+  text-transform:uppercase;margin-bottom:16px;
 }
-.hero-eyebrow-dot{width:6px;height:6px;border-radius:50%;background:#43D39E;animation:pulse-dot 2s infinite}
-@keyframes pulse-dot{0%,100%{box-shadow:0 0 0 0 rgba(67,211,158,.5)}70%{box-shadow:0 0 0 6px rgba(67,211,158,0)}}
+.hero-badge-dot{width:7px;height:7px;border-radius:50%;background:#34D399;animation:pulse-dot 2s infinite}
+@keyframes pulse-dot{0%,100%{box-shadow:0 0 0 0 rgba(52,211,153,.5)}70%{box-shadow:0 0 0 8px rgba(52,211,153,0)}}
 .hero-title{
-  font-family:'Space Grotesk',sans-serif;
-  font-size:46px;font-weight:700;line-height:1.1;
-  color:white;letter-spacing:-1.5px;margin-bottom:12px;
-  text-shadow:0 4px 20px rgba(0,0,0,.3);
+  font-family:'Outfit',sans-serif;font-size:52px;font-weight:900;
+  line-height:1.05;color:white;letter-spacing:-2px;margin-bottom:14px;
+  text-shadow:0 4px 24px rgba(0,0,0,.3);
 }
-.hero-title span{
-  background:linear-gradient(90deg,#C3B1FF,#A78BFA,#7C3AED);
+.hero-title em{
+  font-style:normal;
+  background:linear-gradient(90deg,#C084FC,#818CF8,#38BDF8);
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
 }
-.hero-sub{font-size:15px;color:rgba(255,255,255,.65);font-weight:300;letter-spacing:.2px}
-.hero-stats{display:flex;gap:14px;flex-shrink:0}
+.hero-sub{font-size:15px;color:rgba(255,255,255,.6);font-weight:400;line-height:1.6}
+.hero-stats{display:flex;gap:14px;flex-shrink:0;align-items:stretch}
 .hstat{
-  background:rgba(255,255,255,.1);backdrop-filter:blur(16px);
-  border:1px solid rgba(255,255,255,.2);border-radius:18px;
-  padding:18px 22px;text-align:center;min-width:100px;
-  transition:background .2s,transform .2s;cursor:default;
+  background:rgba(255,255,255,.08);backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,.15);border-radius:20px;
+  padding:20px 24px;text-align:center;min-width:110px;
+  transition:all .25s;position:relative;overflow:hidden;
 }
-.hstat:hover{background:rgba(255,255,255,.18);transform:translateY(-3px)}
-.hstat-icon{font-size:20px;margin-bottom:4px}
+.hstat::before{
+  content:'';position:absolute;inset:0;border-radius:20px;
+  background:linear-gradient(135deg,rgba(255,255,255,.08),transparent);
+  pointer-events:none;
+}
+.hstat:hover{background:rgba(255,255,255,.15);transform:translateY(-4px);box-shadow:0 20px 40px rgba(0,0,0,.2)}
+.hstat-icon{font-size:22px;margin-bottom:6px;display:block}
 .hstat-val{
-  font-family:'Space Grotesk',sans-serif;font-size:30px;font-weight:700;
-  color:white;line-height:1;text-shadow:0 2px 10px rgba(0,0,0,.2);
+  font-family:'Outfit',sans-serif;font-size:34px;font-weight:800;
+  color:white;line-height:1;display:block;
 }
-.hstat-lbl{font-size:10px;color:rgba(255,255,255,.6);margin-top:4px;text-transform:uppercase;letter-spacing:.7px;font-weight:500}
-.hstat.gold .hstat-val{background:linear-gradient(135deg,#FFD700,#FFA500);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.hstat.teal .hstat-val{background:linear-gradient(135deg,#43D39E,#26A69A);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.hstat.coral .hstat-val{background:linear-gradient(135deg,#FF6B6B,#FF8E53);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hstat-lbl{font-size:9.5px;color:rgba(255,255,255,.55);margin-top:5px;text-transform:uppercase;letter-spacing:.8px;font-weight:600}
+.hstat.gold .hstat-val{background:linear-gradient(135deg,#FCD34D,#F59E0B);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hstat.teal .hstat-val{background:linear-gradient(135deg,#34D399,#0D9488);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hstat.rose .hstat-val{background:linear-gradient(135deg,#FB7185,#F43F5E);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 
-/* ─── LAYOUT ─── */
-.page{max-width:1320px;margin:0 auto;padding:32px 40px 100px;display:grid;grid-template-columns:1fr 360px;gap:26px;align-items:start}
-.main-col{display:flex;flex-direction:column;gap:22px}
-.side-col{display:flex;flex-direction:column;gap:22px;position:sticky;top:78px}
+/* ─────────────── LAYOUT ─────────────── */
+.page{max-width:1340px;margin:0 auto;padding:28px 40px 120px;display:grid;grid-template-columns:1fr 380px;gap:28px;align-items:start}
+.main-col{display:flex;flex-direction:column;gap:24px}
+.side-col{display:flex;flex-direction:column;gap:24px;position:sticky;top:76px}
 
-/* ─── CARDS ─── */
-.card{background:var(--white);border:1px solid rgba(106,90,205,.09);border-radius:var(--card-r);overflow:hidden;box-shadow:0 2px 16px rgba(106,90,205,.06)}
-.card-head{padding:18px 24px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
-.card-title{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;color:var(--tx);display:flex;align-items:center;gap:9px}
-.card-body{padding:20px 24px}
-.section-tag{font-size:10.5px;color:var(--tx-muted);background:var(--pu-ghost);padding:3px 10px;border-radius:20px;font-weight:500;border:1px solid var(--border)}
+/* ─────────────── CARDS ─────────────── */
+.card{
+  background:var(--white);border:1px solid rgba(124,92,252,.08);
+  border-radius:var(--card-r);overflow:hidden;
+  box-shadow:0 2px 20px rgba(124,92,252,.07);
+  transition:box-shadow .2s;
+}
+.card:hover{box-shadow:0 4px 28px rgba(124,92,252,.1)}
+.card-head{
+  padding:18px 26px 16px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.card-title{
+  font-family:'Outfit',sans-serif;font-size:15px;font-weight:700;
+  color:var(--tx);display:flex;align-items:center;gap:10px;
+}
+.card-body{padding:22px 26px}
+.pill-tag{
+  font-size:10px;color:var(--tx-muted);background:var(--pu-ghost);
+  padding:4px 12px;border-radius:20px;font-weight:600;
+  border:1px solid var(--border);letter-spacing:.3px;
+}
 
-/* ─── SECTION TABS (Homme / Femme / Tous) ─── */
+/* ─────────────── SECTION TABS ─────────────── */
 .section-tabs{
-  display:flex;gap:0;padding:0 20px 0;border-bottom:2px solid var(--border);
-  margin-bottom:0;
+  display:flex;gap:0;padding:0 24px;
+  border-bottom:2px solid var(--border);background:var(--white);
 }
 .section-tab-btn{
-  display:inline-flex;align-items:center;gap:7px;
-  padding:12px 20px;border:none;background:transparent;
-  font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;
+  display:inline-flex;align-items:center;gap:8px;
+  padding:14px 22px;border:none;background:transparent;
+  font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;
   color:var(--tx-muted);cursor:pointer;
   border-bottom:3px solid transparent;margin-bottom:-2px;
   transition:all .2s;white-space:nowrap;
 }
 .section-tab-btn:hover{color:var(--pu)}
 .section-tab-btn.active{color:var(--pu);border-bottom-color:var(--pu)}
-.section-tab-btn.active.homme{color:#5B8DEF;border-bottom-color:#5B8DEF}
-.section-tab-btn.active.femme{color:#FF6B6B;border-bottom-color:#FF6B6B}
-.section-tab-btn .tab-count{
-  font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;
-  background:var(--pu-ghost);color:var(--tx-muted);
+.section-tab-btn.active.homme{color:var(--homme);border-bottom-color:var(--homme)}
+.section-tab-btn.active.femme{color:var(--femme);border-bottom-color:var(--femme)}
+.tab-count{
+  font-size:10px;font-weight:800;padding:2px 8px;border-radius:20px;
+  background:var(--pu-ghost);color:var(--tx-muted);min-width:22px;text-align:center;
 }
-.section-tab-btn.active .tab-count{background:rgba(106,90,205,.15);color:var(--pu)}
-.section-tab-btn.active.homme .tab-count{background:rgba(91,141,239,.15);color:#5B8DEF}
-.section-tab-btn.active.femme .tab-count{background:rgba(255,107,107,.15);color:#CC3333}
+.section-tab-btn.active .tab-count{background:rgba(124,92,252,.15);color:var(--pu)}
+.section-tab-btn.active.homme .tab-count{background:rgba(59,130,246,.15);color:var(--homme)}
+.section-tab-btn.active.femme .tab-count{background:rgba(236,72,153,.15);color:var(--femme)}
 
-/* ─── FILTER BAR ─── */
-.cat-filters{display:flex;gap:8px;flex-wrap:wrap;padding:14px 20px}
+/* ─────────────── FILTER BAR ─────────────── */
+.cat-filters{display:flex;gap:8px;flex-wrap:wrap;padding:14px 24px}
 .cat-btn{
-  display:inline-flex;align-items:center;gap:6px;padding:8px 16px;
-  border-radius:30px;border:1.5px solid var(--border);
-  background:var(--white);font-family:'DM Sans',sans-serif;
-  font-size:12.5px;font-weight:600;color:var(--tx-mid);
+  display:inline-flex;align-items:center;gap:6px;padding:8px 18px;
+  border-radius:40px;border:1.5px solid var(--border);
+  background:var(--white);font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:12px;font-weight:700;color:var(--tx-mid);
   cursor:pointer;transition:all .2s;white-space:nowrap;
 }
-.cat-btn:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(106,90,205,.12)}
-.cat-btn.active.all{background:linear-gradient(135deg,var(--pu),var(--pu-lt));border-color:transparent;color:white;box-shadow:0 4px 14px rgba(106,90,205,.35)}
-.cat-btn.active.cardio{background:linear-gradient(135deg,#FF6B6B,#FF8E53);border-color:transparent;color:white;box-shadow:0 4px 14px rgba(255,107,107,.35)}
-.cat-btn.active.force{background:linear-gradient(135deg,#5B8DEF,#667eea);border-color:transparent;color:white;box-shadow:0 4px 14px rgba(91,141,239,.35)}
-.cat-btn.active.souplesse{background:linear-gradient(135deg,#43D39E,#26A69A);border-color:transparent;color:white;box-shadow:0 4px 14px rgba(67,211,158,.35)}
-.cat-btn.active.endurance{background:linear-gradient(135deg,#F7B731,#FFA502);border-color:transparent;color:white;box-shadow:0 4px 14px rgba(247,183,49,.35)}
-.cat-btn.active.perte{background:linear-gradient(135deg,#FD7272,#EB4D4B);border-color:transparent;color:white;box-shadow:0 4px 14px rgba(253,114,114,.35)}
+.cat-btn:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(124,92,252,.12)}
+.cat-btn.active.all{background:linear-gradient(135deg,#7C5CFC,#A78BFA);border-color:transparent;color:white;box-shadow:0 4px 18px rgba(124,92,252,.35)}
+.cat-btn.active.cardio{background:linear-gradient(135deg,#FF4D6D,#FF758C);border-color:transparent;color:white;box-shadow:0 4px 18px rgba(255,77,109,.35)}
+.cat-btn.active.force{background:linear-gradient(135deg,#3B82F6,#60A5FA);border-color:transparent;color:white;box-shadow:0 4px 18px rgba(59,130,246,.35)}
+.cat-btn.active.souplesse{background:linear-gradient(135deg,#10B981,#34D399);border-color:transparent;color:white;box-shadow:0 4px 18px rgba(16,185,129,.35)}
+.cat-btn.active.endurance{background:linear-gradient(135deg,#F59E0B,#FBBF24);border-color:transparent;color:white;box-shadow:0 4px 18px rgba(245,158,11,.35)}
+.cat-btn.active.perte{background:linear-gradient(135deg,#EF4444,#F87171);border-color:transparent;color:white;box-shadow:0 4px 18px rgba(239,68,68,.35)}
 
-/* Section header divider inside library */
-.section-divider{
-  padding:8px 20px 4px;
-  font-family:'Space Grotesk',sans-serif;
-  font-size:11px;font-weight:700;letter-spacing:.8px;
-  text-transform:uppercase;color:var(--tx-muted);
-  border-top:1px solid var(--border);margin-top:4px;
+/* ─────────────── EXERCISE GRID ─────────────── */
+.lib-header{padding:18px 26px 0;display:flex;align-items:center;justify-content:space-between}
+.lib-search{display:flex;align-items:center;gap:8px;padding:12px 24px}
+.lib-search input{
+  flex:1;padding:10px 16px 10px 42px;border:1.5px solid var(--border);
+  border-radius:40px;font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:13px;color:var(--tx);background:var(--pu-ghost);
+  outline:none;transition:all .2s;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%238B82B8' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:14px center;background-size:16px;
 }
-.section-divider.homme{color:#5B8DEF}
-.section-divider.femme{color:#FF6B6B}
+.lib-search input:focus{border-color:var(--pu);background-color:white;box-shadow:0 0 0 3px rgba(124,92,252,.1)}
+.ex-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(195px,1fr));gap:16px;padding:4px 24px 20px}
 
-/* ─── EXERCISE GRID ─── */
-.lib-header{padding:16px 22px 0;display:flex;align-items:center;justify-content:space-between}
-.lib-search{display:flex;align-items:center;gap:8px;padding:10px 20px 12px}
-.lib-search input{flex:1;padding:9px 14px;border:1.5px solid var(--border);border-radius:30px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--tx);background:var(--pu-ghost);outline:none;transition:border-color .15s,box-shadow .15s}
-.lib-search input:focus{border-color:var(--pu);box-shadow:0 0 0 3px rgba(106,90,205,.1)}
-.ex-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;padding:4px 20px 16px}
+/* ─────────────── EXERCISE CARD avec PHOTO ─────────────── */
 .ex-card{
   background:var(--white);border:1.5px solid var(--border);
-  border-radius:18px;overflow:hidden;cursor:pointer;
-  transition:all .22s cubic-bezier(.34,1.56,.64,1);
-  position:relative;
+  border-radius:20px;overflow:hidden;cursor:pointer;
+  transition:all .25s cubic-bezier(.34,1.56,.64,1);position:relative;
 }
-.ex-card:hover{transform:translateY(-5px) scale(1.01);box-shadow:0 16px 40px rgba(106,90,205,.18)}
-.ex-card.selected{border-color:var(--pu);box-shadow:0 0 0 3px rgba(106,90,205,.2),0 12px 30px rgba(106,90,205,.15)}
-.ex-card.selected::after{content:'✓';position:absolute;top:10px;left:10px;width:22px;height:22px;background:var(--pu);border-radius:50%;color:white;font-size:11px;font-weight:700;display:grid;place-items:center;z-index:5}
+.ex-card:hover{transform:translateY(-6px) scale(1.015);box-shadow:0 20px 45px rgba(124,92,252,.18)}
+.ex-card.selected{border-color:var(--pu);box-shadow:0 0 0 3px rgba(124,92,252,.22),0 14px 34px rgba(124,92,252,.16)}
+.ex-card.selected::after{
+  content:'✓';position:absolute;top:10px;left:10px;
+  width:24px;height:24px;background:var(--pu);border-radius:50%;
+  color:white;font-size:12px;font-weight:800;display:grid;place-items:center;z-index:10;
+  box-shadow:0 2px 8px rgba(124,92,252,.4);
+}
+/* Thumbnail avec photo de fond */
 .ex-thumb{
-  height:110px;display:flex;align-items:center;justify-content:center;
-  font-size:44px;position:relative;overflow:hidden;
+  height:120px;display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;
 }
-.ex-thumb.cardio{background:linear-gradient(135deg,#FFE5E5,#FFCCCC)}
-.ex-thumb.force{background:linear-gradient(135deg,#EEF3FF,#D9E6FF)}
-.ex-thumb.souplesse{background:linear-gradient(135deg,#EAFAF4,#C8F4E5)}
-.ex-thumb.endurance{background:linear-gradient(135deg,#FFF8E6,#FFE9A0)}
-.ex-thumb.perte{background:linear-gradient(135deg,#FFF0F0,#FFCCCC)}
-.ex-thumb-icon{font-size:46px;filter:drop-shadow(0 4px 8px rgba(0,0,0,.15));z-index:1;position:relative;transition:transform .2s}
-.ex-card:hover .ex-thumb-icon{transform:scale(1.15) rotate(-5deg)}
+.ex-thumb-img{
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;transition:transform .4s ease;
+  filter:brightness(.75) saturate(1.2);
+}
+.ex-card:hover .ex-thumb-img{transform:scale(1.08)}
+.ex-thumb-overlay{
+  position:absolute;inset:0;
+}
+/* Overlays colorés selon catégorie */
+.ex-thumb.cardio    .ex-thumb-overlay{background:linear-gradient(135deg,rgba(255,77,109,.55),rgba(255,120,130,.35))}
+.ex-thumb.force     .ex-thumb-overlay{background:linear-gradient(135deg,rgba(59,130,246,.55),rgba(96,165,250,.35))}
+.ex-thumb.souplesse .ex-thumb-overlay{background:linear-gradient(135deg,rgba(16,185,129,.55),rgba(52,211,153,.35))}
+.ex-thumb.endurance .ex-thumb-overlay{background:linear-gradient(135deg,rgba(245,158,11,.55),rgba(251,191,36,.35))}
+.ex-thumb.perte     .ex-thumb-overlay{background:linear-gradient(135deg,rgba(239,68,68,.55),rgba(248,113,113,.35))}
+/* Icon flottant */
+.ex-thumb-icon{
+  font-size:40px;z-index:2;position:relative;
+  filter:drop-shadow(0 3px 8px rgba(0,0,0,.3));
+  transition:transform .22s;
+}
+.ex-card:hover .ex-thumb-icon{transform:scale(1.2) rotate(-8deg)}
 .ex-badge{
-  position:absolute;top:8px;right:8px;z-index:2;
-  font-size:9.5px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;
-  padding:3px 8px;border-radius:20px;backdrop-filter:blur(4px);
+  position:absolute;top:8px;right:8px;z-index:5;
+  font-size:9px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;
+  padding:3px 9px;border-radius:20px;
+  backdrop-filter:blur(8px);color:white;
+  background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.3);
 }
-.ex-badge.cardio{background:#FF6B6B;color:white}
-.ex-badge.force{background:#5B8DEF;color:white}
-.ex-badge.souplesse{background:#43D39E;color:white}
-.ex-badge.endurance{background:#F7B731;color:white}
-.ex-badge.perte{background:#FD7272;color:white}
-.ex-body{padding:11px 14px 4px}
-.ex-name{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;color:var(--tx);margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.ex-type{font-size:10.5px;color:var(--tx-muted);font-weight:400}
+/* Badge section homme/femme */
+.ex-gender-badge{
+  position:absolute;top:8px;left:8px;z-index:5;
+  font-size:10px;padding:2px 7px;border-radius:20px;
+  font-weight:700;backdrop-filter:blur(8px);
+  background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.25);color:white;
+}
+.ex-gender-badge.homme{background:rgba(59,130,246,.7)}
+.ex-gender-badge.femme{background:rgba(236,72,153,.7)}
+/* Body */
+.ex-body{padding:12px 14px 6px}
+.ex-name{
+  font-family:'Outfit',sans-serif;font-size:13.5px;font-weight:700;
+  color:var(--tx);margin-bottom:3px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.ex-type{font-size:10.5px;color:var(--tx-muted);font-weight:500}
 .ex-actions{display:flex;gap:6px;padding:8px 14px 12px}
 .btn-video{
-  flex:1;padding:7px 6px;border-radius:10px;border:none;
-  background:linear-gradient(135deg,#667eea,#764ba2);
-  color:white;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:700;
-  cursor:pointer;transition:all .18s;display:flex;align-items:center;justify-content:center;gap:4px;
-  box-shadow:0 3px 10px rgba(102,126,234,.3);
+  flex:1;padding:7px 6px;border-radius:12px;border:none;
+  background:linear-gradient(135deg,#7C5CFC,#9B7FFF);
+  color:white;font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:11px;font-weight:700;cursor:pointer;
+  transition:all .18s;display:flex;align-items:center;justify-content:center;gap:5px;
+  box-shadow:0 3px 10px rgba(124,92,252,.3);
 }
-.btn-video:hover{box-shadow:0 5px 16px rgba(102,126,234,.45);transform:translateY(-1px)}
+.btn-video:hover{box-shadow:0 5px 18px rgba(124,92,252,.5);transform:translateY(-1px)}
 .btn-fav{
-  flex:1;padding:7px 6px;border-radius:10px;border:none;
-  background:linear-gradient(135deg,#FFF3CD,#FFE0A3);
-  color:#B45309;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:700;
-  cursor:pointer;transition:all .18s;display:flex;align-items:center;justify-content:center;gap:4px;
-  border:1px solid #FDE68A;
+  flex:1;padding:7px 6px;border-radius:12px;
+  background:var(--pu-ghost);color:var(--tx-muted);
+  font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;
+  cursor:pointer;transition:all .18s;display:flex;align-items:center;
+  justify-content:center;gap:4px;border:1.5px solid var(--border);
 }
-.btn-fav:hover{background:linear-gradient(135deg,#FDE68A,#FBBF24);box-shadow:0 4px 12px rgba(245,158,11,.3);transform:translateY(-1px)}
-.btn-fav.active{background:linear-gradient(135deg,#F59E0B,#D97706);color:white;border-color:transparent;box-shadow:0 4px 12px rgba(245,158,11,.4)}
+.btn-fav:hover{background:var(--pu-pale);color:var(--pu);border-color:rgba(124,92,252,.2)}
+.btn-fav.active{
+  background:linear-gradient(135deg,#FCD34D,#F59E0B);
+  color:white;border-color:transparent;
+  box-shadow:0 3px 10px rgba(245,158,11,.35);
+}
 
-/* ─── LOG FORM ─── */
+/* ─────────────── VIDEO MODAL — FIX YOUTUBE ─────────────── */
+.video-modal-inner{
+  background:var(--white);border-radius:24px;
+  width:100%;max-width:700px;overflow:hidden;
+  animation:slideUp .28s cubic-bezier(.34,1.56,.64,1);
+}
+.video-modal-head{
+  padding:18px 24px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  background:linear-gradient(135deg,var(--pu-deep),#3A1F8A);
+}
+.video-modal-title{
+  font-family:'Outfit',sans-serif;font-size:16px;font-weight:700;color:white;
+  display:flex;align-items:center;gap:10px;
+}
+.video-modal-close{
+  width:32px;height:32px;border-radius:10px;border:none;
+  background:rgba(255,255,255,.15);cursor:pointer;font-size:14px;
+  display:grid;place-items:center;color:white;transition:all .15s;
+}
+.video-modal-close:hover{background:rgba(255,255,255,.25)}
+.video-wrap{
+  width:100%;padding-top:56.25%;background:#0F0A2A;
+  position:relative;overflow:hidden;
+}
+.video-wrap iframe{
+  position:absolute;inset:0;width:100%;height:100%;border:none;
+}
+/* Fallback si pas d'embed disponible */
+.video-fallback{
+  position:absolute;inset:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:16px;
+  background:linear-gradient(135deg,#120A2E,#1E1050);color:white;text-align:center;padding:20px;
+}
+.video-fallback h3{font-family:'Outfit',sans-serif;font-size:18px;font-weight:700}
+.video-fallback p{font-size:13px;color:rgba(255,255,255,.65);max-width:320px;line-height:1.6}
+.btn-open-youtube{
+  display:inline-flex;align-items:center;gap:9px;padding:12px 24px;
+  border-radius:14px;border:none;text-decoration:none;
+  background:linear-gradient(135deg,#FF0000,#CC0000);
+  color:white;font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:14px;font-weight:700;cursor:pointer;
+  box-shadow:0 6px 20px rgba(255,0,0,.35);transition:all .2s;
+}
+.btn-open-youtube:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(255,0,0,.5)}
+
+/* ─────────────── LOG FORM ─────────────── */
 .log-card{
   background:var(--white);border-radius:var(--card-r);overflow:hidden;
-  border:1.5px solid rgba(106,90,205,.15);
-  box-shadow:var(--shadow);
+  border:1.5px solid rgba(124,92,252,.12);box-shadow:var(--shadow);
 }
 .log-header{
-  padding:20px 26px 16px;
-  background:linear-gradient(135deg,var(--pu-deep) 0%,#3D2A8A 60%,#5E3EB5 100%);
-  display:flex;align-items:center;gap:14px;
+  padding:22px 28px 18px;
+  background:linear-gradient(135deg,var(--pu-deep) 0%,#2A1570 60%,#4B2DB0 100%);
+  display:flex;align-items:center;gap:16px;
 }
-.log-header-icon{width:46px;height:46px;border-radius:14px;background:rgba(255,255,255,.15);display:grid;place-items:center;font-size:22px;flex-shrink:0}
-.log-header-text h3{font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;color:white}
-.log-header-text p{font-size:11.5px;color:rgba(255,255,255,.6);margin-top:2px}
-.log-steps{display:flex;gap:0;padding:0 26px;background:var(--pu-ghost);border-bottom:1px solid var(--border)}
-.log-step{flex:1;padding:11px 14px;display:flex;align-items:center;gap:8px;font-size:11.5px;font-weight:600;color:var(--tx-muted);position:relative;cursor:default}
-.log-step::after{content:'›';position:absolute;right:-2px;font-size:16px;color:var(--border)}
+.log-header-icon{
+  width:50px;height:50px;border-radius:16px;
+  background:rgba(255,255,255,.15);display:grid;place-items:center;
+  font-size:24px;flex-shrink:0;
+}
+.log-header-text h3{font-family:'Outfit',sans-serif;font-size:17px;font-weight:800;color:white}
+.log-header-text p{font-size:12px;color:rgba(255,255,255,.55);margin-top:3px}
+.log-steps{
+  display:flex;gap:0;padding:0 28px;
+  background:var(--pu-ghost);border-bottom:1px solid var(--border);
+}
+.log-step{
+  flex:1;padding:12px 16px;display:flex;align-items:center;gap:9px;
+  font-size:11.5px;font-weight:700;color:var(--tx-muted);
+  position:relative;cursor:default;
+}
+.log-step::after{content:'›';position:absolute;right:-2px;font-size:18px;color:var(--border)}
 .log-step:last-child::after{display:none}
-.log-step .step-num{width:22px;height:22px;border-radius:50%;background:var(--border);display:grid;place-items:center;font-size:10px;font-weight:700;color:var(--tx-muted);flex-shrink:0}
-.log-step.done .step-num{background:var(--green);color:white}
+.step-num{
+  width:24px;height:24px;border-radius:50%;background:var(--border);
+  display:grid;place-items:center;font-size:11px;font-weight:800;
+  color:var(--tx-muted);flex-shrink:0;
+}
 .log-step.active .step-num{background:var(--pu);color:white}
 .log-step.active{color:var(--pu)}
-.log-body{padding:22px 26px}
+.log-step.done .step-num{background:#10B981;color:white}
+.log-body{padding:24px 28px}
 .sel-ex-banner{
-  display:none;padding:14px 16px;border-radius:14px;margin-bottom:18px;
+  display:none;padding:14px 18px;border-radius:16px;margin-bottom:20px;
   background:linear-gradient(135deg,var(--pu-pale),var(--pu-ghost));
-  border:1.5px solid rgba(106,90,205,.2);
-  align-items:center;gap:13px;
+  border:1.5px solid rgba(124,92,252,.18);
+  align-items:center;gap:14px;
 }
 .sel-ex-banner.show{display:flex;animation:fadeUp .28s ease}
-.sel-ex-emoji{font-size:30px;filter:drop-shadow(0 3px 6px rgba(0,0,0,.1))}
+.sel-ex-emoji{font-size:32px;filter:drop-shadow(0 3px 7px rgba(0,0,0,.1))}
 .sel-ex-info{flex:1}
-.sel-ex-name{font-family:'Space Grotesk',sans-serif;font-size:14.5px;font-weight:700;color:var(--pu)}
-.sel-ex-type{font-size:11px;color:var(--tx-muted);margin-top:2px}
-.sel-ex-badge{font-size:10px;background:var(--pu);color:white;padding:2px 8px;border-radius:20px;font-weight:600;margin-top:4px;display:inline-block}
+.sel-ex-name{font-family:'Outfit',sans-serif;font-size:15px;font-weight:800;color:var(--pu)}
+.sel-ex-type{font-size:11.5px;color:var(--tx-muted);margin-top:3px}
+.sel-ex-badge{
+  font-size:10px;background:var(--pu);color:white;
+  padding:2px 10px;border-radius:20px;font-weight:700;margin-top:5px;display:inline-block;
+}
 .log-form{display:flex;flex-direction:column;gap:14px}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .form-group{display:flex;flex-direction:column;gap:5px}
 .form-group.full{grid-column:1/-1}
-.flabel{font-size:11px;font-weight:700;color:var(--tx-mid);text-transform:uppercase;letter-spacing:.5px;display:flex;align-items:center;gap:5px}
-.flabel span{font-size:13px}
+.flabel{
+  font-size:11px;font-weight:800;color:var(--tx-mid);
+  text-transform:uppercase;letter-spacing:.6px;
+  display:flex;align-items:center;gap:5px;
+}
 .finput{
-  padding:10px 14px;border:1.5px solid var(--border);border-radius:11px;
-  font-family:'DM Sans',sans-serif;font-size:13.5px;color:var(--tx);
+  padding:11px 15px;border:1.5px solid var(--border);border-radius:13px;
+  font-family:'Plus Jakarta Sans',sans-serif;font-size:13.5px;color:var(--tx);
   background:var(--pu-ghost);outline:none;transition:all .2s;width:100%;
 }
-.finput:focus{border-color:var(--pu);background:white;box-shadow:0 0 0 3px rgba(106,90,205,.08)}
-.finput.error{border-color:var(--red);background:#FFF5F5}
-textarea.finput{resize:vertical;min-height:72px;line-height:1.55}
-.err-msg{font-size:11px;color:var(--red);display:none;font-weight:600;align-items:center;gap:4px}
+.finput:focus{border-color:var(--pu);background:white;box-shadow:0 0 0 3px rgba(124,92,252,.1)}
+.finput.error{border-color:var(--cardio);background:#FFF5F5}
+textarea.finput{resize:vertical;min-height:72px;line-height:1.6}
+.err-msg{font-size:11px;color:var(--cardio);display:none;font-weight:700;align-items:center;gap:4px}
 .err-msg.show{display:flex}
 .btn-log{
-  width:100%;padding:14px;border-radius:14px;border:none;
-  background:linear-gradient(135deg,var(--pu) 0%,#9B59B6 50%,#7C3AED 100%);
-  color:white;font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;
-  cursor:pointer;transition:all .2s;
+  width:100%;padding:15px;border-radius:15px;border:none;
+  background:linear-gradient(135deg,var(--pu) 0%,#9B59B6 50%,#6366F1 100%);
+  color:white;font-family:'Outfit',sans-serif;font-size:16px;font-weight:800;
+  cursor:pointer;transition:all .22s;
   display:flex;align-items:center;justify-content:center;gap:10px;
   position:relative;overflow:hidden;
-  box-shadow:0 6px 20px rgba(106,90,205,.35);
-  margin-top:4px;
+  box-shadow:0 8px 24px rgba(124,92,252,.4);margin-top:6px;
 }
 .btn-log::after{
   content:'';position:absolute;top:-50%;left:-80%;width:60%;height:200%;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,.18),transparent);
-  transform:skewX(-15deg);transition:left .5s;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent);
+  transform:skewX(-15deg);transition:left .55s;
 }
 .btn-log:hover::after{left:120%}
-.btn-log:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(106,90,205,.45)}
+.btn-log:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(124,92,252,.5)}
 .btn-log:disabled{background:var(--tx-muted);cursor:not-allowed;transform:none;box-shadow:none}
 
-/* ─── MAP CARD — 100% FONCTIONNEL ─── */
-.map-card .map-actions{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
-.map-control-btn{width:42px;height:42px;border:none;border-radius:14px;background:rgba(106,90,205,.1);color:var(--pu-deep);font-size:18px;cursor:pointer;display:grid;place-items:center;box-shadow:0 8px 18px rgba(106,90,205,.08);transition:all .18s}
-.map-control-btn:hover{background:rgba(106,90,205,.16);transform:translateY(-1px)}
-.map-control-btn.active{background:linear-gradient(135deg,#6A5ACD,#8B7FD4);color:white}
+/* ─────────────── MAP CARD ─────────────── */
+.map-card .map-actions{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.map-control-btn{
+  height:42px;padding:0 16px;border:none;border-radius:14px;
+  background:var(--pu-ghost);color:var(--pu-dk);
+  font-size:13px;font-weight:700;cursor:pointer;
+  display:flex;align-items:center;gap:7px;
+  box-shadow:0 4px 12px rgba(124,92,252,.08);transition:all .18s;
+  font-family:'Plus Jakarta Sans',sans-serif;
+}
+.map-control-btn:hover{background:var(--pu-pale);transform:translateY(-1px)}
+.map-control-btn.active{background:linear-gradient(135deg,var(--pu),var(--pu-lt));color:white}
 .map-meta{display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--tx-mid);margin-bottom:14px}
 .map-meta strong{color:var(--tx)}
-/* CORRECTION CARTE : conteneur avec taille fixe explicite */
-#mapContainer{
-  width:100%;
-  height:380px;
-  min-height:380px;
-  border-radius:20px;
-  overflow:hidden;
-  box-shadow:0 18px 36px rgba(106,90,205,.12);
-  background:#eef2ff;
-  position:relative;
-  display:block;
-}
-#activityMap{
-  width:100% !important;
-  height:100% !important;
-  min-height:380px !important;
-  border-radius:20px;
-  display:block !important;
-  position:relative !important;
-}
+#mapContainer{width:100%;height:380px;min-height:380px;border-radius:20px;overflow:hidden;box-shadow:0 16px 40px rgba(124,92,252,.12);position:relative;display:block}
+#activityMap{width:100%!important;height:100%!important;min-height:380px!important;border-radius:20px;display:block!important;position:relative!important}
 
-/* ─── SESSIONS HISTORY (timeline) ─── */
+/* ─────────────── SESSIONS HISTORY ─────────────── */
 .timeline{display:flex;flex-direction:column;gap:0;position:relative}
 .timeline::before{
-  content:'';position:absolute;left:20px;top:0;bottom:0;width:2px;
-  background:linear-gradient(to bottom,var(--pu),rgba(106,90,205,.1));
+  content:'';position:absolute;left:18px;top:0;bottom:0;width:2px;
+  background:linear-gradient(to bottom,var(--pu),rgba(124,92,252,.08));
   border-radius:2px;
 }
 .session-block{
-  margin-left:46px;margin-bottom:16px;border-radius:18px;overflow:hidden;
-  background:var(--white);border:1px solid rgba(106,90,205,.1);
-  box-shadow:0 2px 14px rgba(106,90,205,.06);
-  transition:box-shadow .2s;
-  position:relative;
+  margin-left:44px;margin-bottom:16px;border-radius:20px;overflow:hidden;
+  background:var(--white);border:1px solid rgba(124,92,252,.08);
+  box-shadow:0 2px 16px rgba(124,92,252,.05);transition:all .22s;position:relative;
 }
 .session-block::before{
-  content:'';position:absolute;left:-34px;top:20px;width:12px;height:12px;
-  border-radius:50%;background:var(--pu);border:3px solid var(--pu-ghost);
-  box-shadow:0 0 0 3px rgba(106,90,205,.2);
-  z-index:1;
+  content:'';position:absolute;left:-32px;top:18px;
+  width:13px;height:13px;border-radius:50%;
+  background:var(--pu);border:3px solid var(--pu-ghost);
+  box-shadow:0 0 0 3px rgba(124,92,252,.2);z-index:1;
 }
-.session-block:hover{box-shadow:0 8px 28px rgba(106,90,205,.12)}
+.session-block:hover{box-shadow:0 8px 30px rgba(124,92,252,.1)}
 .session-head{
   padding:14px 20px;
   background:linear-gradient(90deg,var(--pu-ghost) 0%,white 100%);
   display:flex;align-items:center;justify-content:space-between;
-  cursor:pointer;border-bottom:1px solid rgba(106,90,205,.07);
+  cursor:pointer;border-bottom:1px solid rgba(124,92,252,.06);
 }
 .session-date-group{display:flex;flex-direction:column;gap:2px}
-.session-date-big{font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;color:var(--pu)}
-.session-date-rel{font-size:10.5px;color:var(--tx-muted);font-weight:400}
+.session-date-big{font-family:'Outfit',sans-serif;font-size:14px;font-weight:700;color:var(--pu)}
+.session-date-rel{font-size:10.5px;color:var(--tx-muted);font-weight:500}
 .session-tags{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
-.session-tag{font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px}
+.session-tag{font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px}
 .session-tag.ex{background:var(--pu-pale);color:var(--pu)}
-.session-tag.time{background:#E8F8F1;color:#0B7A4C}
-.session-tag.cal{background:#FFF3E0;color:#B45309}
+.session-tag.time{background:#ECFDF5;color:#065F46}
+.session-tag.cal{background:#FFFBEB;color:#92400E}
 .session-actions{display:flex;align-items:center;gap:8px}
 .btn-del-session{
-  padding:5px 12px;border-radius:10px;border:1.5px solid rgba(239,68,68,.25);
+  padding:5px 12px;border-radius:10px;border:1.5px solid rgba(239,68,68,.22);
   background:transparent;color:#DC2626;font-size:11px;font-weight:700;
-  font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .18s;
+  font-family:'Plus Jakarta Sans',sans-serif;cursor:pointer;transition:all .18s;
   display:flex;align-items:center;gap:5px;
 }
-.btn-del-session:hover{background:#FEE2E2;border-color:#DC2626;box-shadow:0 3px 10px rgba(220,38,38,.2)}
-.session-chevron{width:24px;height:24px;border-radius:7px;background:var(--pu-ghost);display:grid;place-items:center;color:var(--tx-muted);font-size:10px;transition:all .2s;border:1px solid var(--border)}
+.btn-del-session:hover{background:#FEE2E2;border-color:#DC2626}
+.session-chevron{
+  width:26px;height:26px;border-radius:8px;background:var(--pu-ghost);
+  display:grid;place-items:center;color:var(--tx-muted);font-size:10px;
+  transition:all .2s;border:1px solid var(--border);
+}
 .session-chevron.open{transform:rotate(180deg);background:var(--pu-pale);color:var(--pu)}
 .session-exercises{display:none;padding:12px 16px 14px}
 .session-exercises.open{display:block;animation:fadeUp .22s ease}
 .ex-row{
   display:flex;align-items:center;gap:12px;padding:10px 14px;
-  border-radius:13px;margin-bottom:7px;background:var(--pu-ghost);
+  border-radius:14px;margin-bottom:7px;background:var(--pu-ghost);
   border:1.5px solid transparent;transition:all .18s;
 }
 .ex-row:last-child{margin-bottom:0}
-.ex-row:hover{background:white;border-color:rgba(106,90,205,.15);box-shadow:0 3px 12px rgba(106,90,205,.07)}
-.ex-row-dot{
-  width:40px;height:40px;border-radius:12px;display:grid;place-items:center;
-  font-size:20px;flex-shrink:0;
-}
-.ex-row-dot.cardio{background:linear-gradient(135deg,#FFE5E5,#FFCCCC)}
-.ex-row-dot.force{background:linear-gradient(135deg,#EEF3FF,#D9E6FF)}
-.ex-row-dot.souplesse{background:linear-gradient(135deg,#EAFAF4,#C8F4E5)}
-.ex-row-dot.endurance{background:linear-gradient(135deg,#FFF8E6,#FFE9A0)}
-.ex-row-dot.perte{background:linear-gradient(135deg,#FFF0F0,#FFCCCC)}
+.ex-row:hover{background:white;border-color:rgba(124,92,252,.14);box-shadow:0 3px 14px rgba(124,92,252,.07)}
+.ex-row-dot{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;font-size:20px;flex-shrink:0}
+.ex-row-dot.cardio{background:linear-gradient(135deg,#FFE4E8,#FFCCD5)}
+.ex-row-dot.force{background:linear-gradient(135deg,#DBEAFE,#BFDBFE)}
+.ex-row-dot.souplesse{background:linear-gradient(135deg,#D1FAE5,#A7F3D0)}
+.ex-row-dot.endurance{background:linear-gradient(135deg,#FEF3C7,#FDE68A)}
+.ex-row-dot.perte{background:linear-gradient(135deg,#FEE2E2,#FECACA)}
 .ex-row-info{flex:1;min-width:0}
-.ex-row-name{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ex-row-name{font-family:'Outfit',sans-serif;font-size:13px;font-weight:700;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ex-row-meta{display:flex;gap:10px;margin-top:3px;flex-wrap:wrap}
-.ex-meta-tag{font-size:11px;color:var(--tx-muted);display:flex;align-items:center;gap:3px;font-weight:500}
+.ex-meta-tag{font-size:11px;color:var(--tx-muted);display:flex;align-items:center;gap:3px;font-weight:600}
 .ex-row-actions{display:flex;gap:6px;flex-shrink:0}
 .btn-edit-ex{
-  width:32px;height:32px;border-radius:10px;border:1.5px solid rgba(91,141,239,.25);
-  background:rgba(91,141,239,.07);cursor:pointer;
-  display:grid;place-items:center;font-size:14px;
-  transition:all .18s;color:#5B8DEF;
+  width:32px;height:32px;border-radius:10px;border:1.5px solid rgba(59,130,246,.25);
+  background:rgba(59,130,246,.07);cursor:pointer;display:grid;place-items:center;
+  font-size:14px;transition:all .18s;color:var(--force);
 }
-.btn-edit-ex:hover{background:rgba(91,141,239,.2);border-color:#5B8DEF;box-shadow:0 3px 10px rgba(91,141,239,.25);transform:translateY(-1px)}
+.btn-edit-ex:hover{background:rgba(59,130,246,.18);border-color:var(--force);transform:translateY(-1px)}
 .btn-del-ex{
   width:32px;height:32px;border-radius:10px;border:1.5px solid rgba(239,68,68,.2);
-  background:rgba(239,68,68,.06);cursor:pointer;
-  display:grid;place-items:center;font-size:14px;
-  transition:all .18s;color:#DC2626;
+  background:rgba(239,68,68,.06);cursor:pointer;display:grid;place-items:center;
+  font-size:14px;transition:all .18s;color:#DC2626;
 }
-.btn-del-ex:hover{background:rgba(239,68,68,.15);border-color:#DC2626;box-shadow:0 3px 10px rgba(239,68,68,.2);transform:translateY(-1px)}
+.btn-del-ex:hover{background:rgba(239,68,68,.15);border-color:#DC2626;transform:translateY(-1px)}
 
-/* ─── STATS SIDEBAR ─── */
-.stats-card{background:var(--white);border-radius:var(--card-r);overflow:hidden;border:1px solid rgba(106,90,205,.09);box-shadow:0 2px 16px rgba(106,90,205,.06)}
+/* ─────────────── STATS INNOVANTES ─────────────── */
+.stats-card{
+  background:var(--white);border-radius:var(--card-r);overflow:hidden;
+  border:1px solid rgba(124,92,252,.08);
+  box-shadow:0 2px 20px rgba(124,92,252,.07);
+}
 .stats-header{
-  padding:18px 22px 14px;
-  background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
+  padding:20px 22px 16px;
+  background:linear-gradient(135deg,#1E1050 0%,#3A1F8A 50%,#5B3FDB 100%);
+  position:relative;overflow:hidden;
 }
-.stats-header-title{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;color:white;display:flex;align-items:center;gap:8px}
-.stats-kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:16px 16px 8px}
-.kpi{border-radius:14px;padding:13px 14px;text-align:center;position:relative;overflow:hidden;border:1px solid transparent;transition:transform .18s}
-.kpi:hover{transform:translateY(-2px)}
-.kpi.purple{background:linear-gradient(135deg,#EDE8FA,#F7F5FD);border-color:rgba(106,90,205,.18)}
-.kpi.green{background:linear-gradient(135deg,#E8FDF5,#F0FAF7);border-color:rgba(67,211,158,.2)}
-.kpi.orange{background:linear-gradient(135deg,#FFF8E6,#FDFAF0);border-color:rgba(247,183,49,.2)}
-.kpi.blue{background:linear-gradient(135deg,#EEF3FF,#F5F7FF);border-color:rgba(91,141,239,.2)}
-.kpi-icon{font-size:18px;margin-bottom:5px}
-.kpi-val{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;line-height:1}
-.kpi.purple .kpi-val{color:var(--pu)}
-.kpi.green .kpi-val{color:#0B7A4C}
-.kpi.orange .kpi-val{color:#B45309}
-.kpi.blue .kpi-val{color:#1D4ED8}
-.kpi-lbl{font-size:10px;color:var(--tx-muted);margin-top:3px;font-weight:500;text-transform:uppercase;letter-spacing:.3px}
-.chart-wrap{padding:0 16px 16px;position:relative}
-.chart-wrap canvas{max-height:180px}
-.chart-legend{display:flex;flex-direction:column;gap:6px;padding:4px 16px 16px}
-.legend-item{display:flex;align-items:center;justify-content:space-between;gap:8px}
-.legend-dot-label{display:flex;align-items:center;gap:8px}
-.legend-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.legend-name{font-size:12px;color:var(--tx-mid);font-weight:500}
-.legend-bar-wrap{flex:1;height:4px;background:var(--pu-ghost);border-radius:4px;overflow:hidden;max-width:70px}
-.legend-bar{height:100%;border-radius:4px;transition:width .6s ease}
-.legend-count{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;color:var(--tx-muted);min-width:18px;text-align:right}
+.stats-header::before{
+  content:'';position:absolute;right:-20px;top:-20px;
+  width:120px;height:120px;border-radius:50%;
+  background:rgba(255,255,255,.07);
+}
+.stats-header::after{
+  content:'';position:absolute;right:40px;bottom:-30px;
+  width:80px;height:80px;border-radius:50%;
+  background:rgba(255,255,255,.05);
+}
+.stats-header-title{
+  font-family:'Outfit',sans-serif;font-size:16px;font-weight:800;
+  color:white;display:flex;align-items:center;gap:9px;position:relative;z-index:1;
+}
+.stats-header-sub{font-size:11px;color:rgba(255,255,255,.5);margin-top:3px;position:relative;z-index:1}
+/* KPI Cards redesignées */
+.stats-kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:14px 14px 6px}
+.kpi{
+  border-radius:18px;padding:16px 14px;text-align:left;
+  position:relative;overflow:hidden;cursor:default;
+  transition:all .22s cubic-bezier(.34,1.56,.64,1);
+}
+.kpi:hover{transform:translateY(-3px) scale(1.02)}
+.kpi::before{
+  content:'';position:absolute;right:-10px;top:-10px;
+  width:70px;height:70px;border-radius:50%;
+  background:rgba(255,255,255,.12);
+}
+.kpi.purple{background:linear-gradient(135deg,#7C5CFC,#9B7FFF);color:white}
+.kpi.teal{background:linear-gradient(135deg,#0D9488,#34D399);color:white}
+.kpi.amber{background:linear-gradient(135deg,#D97706,#FBBF24);color:white}
+.kpi.blue{background:linear-gradient(135deg,#1D4ED8,#60A5FA);color:white}
+.kpi-icon-wrap{
+  width:34px;height:34px;border-radius:10px;background:rgba(255,255,255,.22);
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;margin-bottom:10px;
+}
+.kpi-val{
+  font-family:'Outfit',sans-serif;font-size:26px;font-weight:900;
+  line-height:1;color:white;
+}
+.kpi-lbl{font-size:10px;color:rgba(255,255,255,.7);margin-top:4px;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+/* Graphique donut */
+.chart-section{padding:8px 16px 14px}
+.chart-section-title{
+  font-family:'Outfit',sans-serif;font-size:12px;font-weight:700;
+  color:var(--tx-muted);text-transform:uppercase;letter-spacing:.6px;
+  margin-bottom:10px;padding:0 2px;
+}
+.chart-wrap{position:relative;display:flex;align-items:center;gap:14px}
+.chart-canvas-wrap{position:relative;flex-shrink:0;width:120px;height:120px}
+.chart-canvas-wrap canvas{width:120px!important;height:120px!important}
+.chart-center-label{
+  position:absolute;inset:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;pointer-events:none;
+}
+.chart-center-val{
+  font-family:'Outfit',sans-serif;font-size:22px;font-weight:900;color:var(--tx);
+}
+.chart-center-lbl{font-size:10px;color:var(--tx-muted);font-weight:700;letter-spacing:.3px}
+.chart-legend-list{flex:1;display:flex;flex-direction:column;gap:7px}
+.legend-row{display:flex;align-items:center;gap:8px;cursor:pointer;padding:3px 4px;border-radius:8px;transition:background .15s}
+.legend-row:hover{background:var(--pu-ghost)}
+.legend-swatch{width:9px;height:9px;border-radius:3px;flex-shrink:0}
+.legend-label{font-size:11px;font-weight:600;color:var(--tx-mid);flex:1}
+.legend-val{
+  font-family:'JetBrains Mono',monospace;font-size:11px;
+  font-weight:600;color:var(--tx-muted);
+}
+/* Progress bar mini */
+.legend-bar-track{height:3px;background:rgba(124,92,252,.1);border-radius:3px;overflow:hidden;margin-top:2px}
+.legend-bar-fill{height:100%;border-radius:3px;transition:width .8s cubic-bezier(.34,1.56,.64,1)}
+/* Weekly progress */
+.weekly-section{padding:2px 16px 16px}
+.weekly-title{
+  font-family:'Outfit',sans-serif;font-size:12px;font-weight:700;
+  color:var(--tx-muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px;
+}
+.weekly-bars{display:flex;gap:6px;align-items:flex-end;height:60px}
+.weekly-bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%}
+.weekly-bar-inner{width:100%;border-radius:6px 6px 0 0;min-height:4px;transition:height .6s ease;background:linear-gradient(180deg,var(--pu-lt),var(--pu))}
+.weekly-bar-inner.today{background:linear-gradient(180deg,#34D399,#059669)}
+.weekly-bar-label{font-size:9px;font-weight:700;color:var(--tx-muted);letter-spacing:.3px}
+.weekly-bar-wrap:hover .weekly-bar-inner{filter:brightness(1.1)}
 
-/* ─── FAVORITES ─── */
-.fav-grid{display:flex;flex-direction:column;gap:8px}
+/* ─────────────── FAVORIS REDESIGNÉS ─────────────── */
+.fav-card{
+  background:var(--white);border-radius:var(--card-r);overflow:hidden;
+  border:1px solid rgba(124,92,252,.08);
+  box-shadow:0 2px 20px rgba(124,92,252,.07);
+}
+.fav-card-header{
+  padding:16px 20px 14px;
+  display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid var(--border);
+}
+.fav-card-title{
+  font-family:'Outfit',sans-serif;font-size:15px;font-weight:800;
+  color:var(--tx);display:flex;align-items:center;gap:9px;
+}
+.fav-count-badge{
+  font-size:10px;font-weight:800;padding:3px 10px;border-radius:20px;
+  background:linear-gradient(135deg,#FCD34D,#F59E0B);color:white;
+}
+.fav-body{padding:12px 14px}
+/* État vide redesigné */
+.fav-empty{
+  text-align:center;padding:28px 16px;
+  background:linear-gradient(135deg,var(--pu-ghost),white);
+  border-radius:16px;margin:4px 0;
+}
+.fav-empty-emoji{font-size:40px;margin-bottom:10px;display:block;opacity:.6}
+.fav-empty-title{
+  font-family:'Outfit',sans-serif;font-size:14px;font-weight:700;
+  color:var(--tx);margin-bottom:6px;
+}
+.fav-empty-sub{font-size:12px;color:var(--tx-muted);line-height:1.5}
+/* Items favoris */
+.fav-grid{display:flex;flex-direction:column;gap:8px;max-height:340px;overflow-y:auto;padding-right:2px}
+.fav-grid::-webkit-scrollbar{width:4px}
+.fav-grid::-webkit-scrollbar-thumb{background:var(--pu-pale);border-radius:4px}
 .fav-item{
-  display:flex;align-items:center;gap:11px;padding:10px 13px;
-  border-radius:13px;background:var(--pu-ghost);border:1.5px solid transparent;
-  transition:all .18s;cursor:default;
+  display:flex;align-items:center;gap:12px;padding:11px 14px;
+  border-radius:14px;border:1.5px solid transparent;
+  background:var(--pu-ghost);transition:all .2s;cursor:default;
+  position:relative;overflow:hidden;
 }
-.fav-item:hover{background:white;border-color:rgba(106,90,205,.15);box-shadow:0 4px 14px rgba(106,90,205,.09)}
-.fav-emoji{font-size:22px;flex-shrink:0}
+.fav-item::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:3px;
+  border-radius:3px 0 0 3px;
+}
+.fav-item.cardio::before{background:var(--cardio)}
+.fav-item.force::before{background:var(--force)}
+.fav-item.souplesse::before{background:var(--souplesse)}
+.fav-item.endurance::before{background:var(--endurance)}
+.fav-item.perte::before{background:var(--perte)}
+.fav-item:hover{
+  background:white;border-color:rgba(124,92,252,.14);
+  box-shadow:0 4px 16px rgba(124,92,252,.1);transform:translateX(2px);
+}
+.fav-emoji{
+  font-size:24px;flex-shrink:0;
+  background:white;width:40px;height:40px;
+  border-radius:12px;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 2px 8px rgba(0,0,0,.08);
+}
 .fav-info{flex:1;min-width:0}
-.fav-name{font-family:'Space Grotesk',sans-serif;font-size:12.5px;font-weight:700;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.fav-type{font-size:10.5px;color:var(--tx-muted);margin-top:1px}
-.fav-type-badge{display:inline-block;font-size:9.5px;padding:1.5px 7px;border-radius:10px;font-weight:600;margin-top:3px}
-.fav-type-badge.cardio{background:#FFE5E5;color:#CC3333}
-.fav-type-badge.force{background:#EEF3FF;color:#1D4ED8}
-.fav-type-badge.souplesse{background:#EAFAF4;color:#065F46}
-.fav-type-badge.endurance{background:#FFF8E6;color:#92400E}
-.fav-type-badge.perte{background:#FFF0F0;color:#991B1B}
-.fav-remove{
-  width:26px;height:26px;border-radius:8px;border:none;
-  background:transparent;cursor:pointer;color:var(--tx-muted);
-  font-size:11px;display:grid;place-items:center;transition:all .15s;
-  flex-shrink:0;
+.fav-name{
+  font-family:'Outfit',sans-serif;font-size:13px;font-weight:700;
+  color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 }
-.fav-remove:hover{background:#FEE2E2;color:#DC2626}
-.fav-empty{text-align:center;padding:24px 16px;color:var(--tx-muted)}
-.fav-empty-icon{font-size:32px;margin-bottom:8px;opacity:.4}
-.fav-empty-text{font-size:12.5px;font-weight:500}
+.fav-meta{display:flex;align-items:center;gap:6px;margin-top:3px}
+.fav-cat-pill{
+  display:inline-block;font-size:9.5px;padding:1.5px 8px;
+  border-radius:20px;font-weight:700;
+}
+.fav-cat-pill.cardio{background:#FFE4E8;color:#BE123C}
+.fav-cat-pill.force{background:#DBEAFE;color:#1E40AF}
+.fav-cat-pill.souplesse{background:#D1FAE5;color:#065F46}
+.fav-cat-pill.endurance{background:#FEF3C7;color:#92400E}
+.fav-cat-pill.perte{background:#FEE2E2;color:#991B1B}
+/* Actions favoris */
+.fav-actions{display:flex;flex-direction:column;gap:4px;align-items:center;flex-shrink:0}
+.btn-fav-select{
+  font-size:9.5px;font-weight:700;padding:3px 8px;border-radius:8px;border:none;
+  background:var(--pu);color:white;cursor:pointer;transition:all .15s;
+  font-family:'Plus Jakarta Sans',sans-serif;white-space:nowrap;
+}
+.btn-fav-select:hover{background:var(--pu-dk);transform:scale(1.05)}
+.btn-fav-remove{
+  width:22px;height:22px;border-radius:6px;border:none;
+  background:transparent;cursor:pointer;color:var(--tx-muted);
+  font-size:10px;display:grid;place-items:center;transition:all .15s;
+}
+.btn-fav-remove:hover{background:#FEE2E2;color:#DC2626}
+/* Quick add bar */
+.fav-quickadd{
+  padding:10px 14px 4px;
+  border-top:1px solid var(--border);margin-top:6px;
+}
+.fav-quickadd-hint{
+  font-size:10.5px;color:var(--tx-muted);font-weight:600;
+  display:flex;align-items:center;gap:6px;
+}
 
-/* ─── MODALS ─── */
-.modal-overlay{position:fixed;inset:0;background:rgba(20,15,50,.65);backdrop-filter:blur(8px);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px}
+/* ─────────────── MODALS ─────────────── */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(18,10,46,.7);
+  backdrop-filter:blur(10px);z-index:1000;display:none;
+  align-items:center;justify-content:center;padding:20px;
+}
 .modal-overlay.open{display:flex}
-.modal{background:var(--white);border-radius:24px;width:100%;max-width:520px;overflow:hidden;animation:slideUp .28s cubic-bezier(.34,1.56,.64,1)}
-@keyframes slideUp{from{opacity:0;transform:translateY(24px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
-.modal-head{padding:20px 24px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
-.modal-title{font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;color:var(--tx)}
-.modal-close{width:30px;height:30px;border-radius:9px;border:none;background:var(--pu-ghost);cursor:pointer;font-size:14px;display:grid;place-items:center;color:var(--tx-muted);transition:all .15s}
+.modal{
+  background:var(--white);border-radius:26px;width:100%;max-width:520px;
+  overflow:hidden;animation:slideUp .28s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes slideUp{from{opacity:0;transform:translateY(28px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+.modal-head{
+  padding:20px 26px 16px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.modal-title{font-family:'Outfit',sans-serif;font-size:17px;font-weight:800;color:var(--tx)}
+.modal-close{
+  width:32px;height:32px;border-radius:10px;border:none;
+  background:var(--pu-ghost);cursor:pointer;font-size:14px;
+  display:grid;place-items:center;color:var(--tx-muted);transition:all .15s;
+}
 .modal-close:hover{background:var(--pu-pale);color:var(--pu)}
-.modal-body{padding:24px}
-.video-wrap{width:100%;padding-top:56.25%;border-radius:13px;background:#1A1035;position:relative;overflow:hidden}
-.video-wrap iframe{position:absolute;inset:0;width:100%;height:100%;border:none}
+.modal-body{padding:24px 26px}
 .edit-form{display:flex;flex-direction:column;gap:13px}
 .edit-row{display:grid;grid-template-columns:1fr 1fr;gap:11px}
-
-/* ─── DELETE MODAL ─── */
+/* Delete modal */
 .del-modal-inner{display:flex;flex-direction:column;align-items:center;gap:16px;text-align:center}
-.del-icon-wrap{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#FEE2E2,#FECACA);display:grid;place-items:center;font-size:28px;box-shadow:0 4px 16px rgba(239,68,68,.2)}
-.del-title{font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;color:var(--tx);margin-bottom:4px}
+.del-icon-wrap{
+  width:68px;height:68px;border-radius:50%;
+  background:linear-gradient(135deg,#FEE2E2,#FECACA);
+  display:grid;place-items:center;font-size:30px;
+  box-shadow:0 4px 18px rgba(239,68,68,.2);
+}
+.del-title{font-family:'Outfit',sans-serif;font-size:17px;font-weight:800;color:var(--tx);margin-bottom:4px}
 .del-sub{font-size:13px;color:var(--tx-mid)}
 .del-warn{font-size:11px;color:var(--tx-muted);margin-top:4px}
 .del-btns{display:flex;gap:10px;width:100%;margin-top:4px}
-.btn-cancel{flex:1;padding:12px;border-radius:12px;border:1.5px solid var(--border);background:var(--white);font-family:'DM Sans',sans-serif;font-size:13.5px;font-weight:600;color:var(--tx-mid);cursor:pointer;transition:background .15s}
+.btn-cancel{
+  flex:1;padding:12px;border-radius:13px;border:1.5px solid var(--border);
+  background:var(--white);font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:13.5px;font-weight:700;color:var(--tx-mid);cursor:pointer;transition:background .15s;
+}
 .btn-cancel:hover{background:var(--pu-ghost)}
-.btn-delete{flex:1;padding:12px;border-radius:12px;border:none;background:linear-gradient(135deg,#EF4444,#DC2626);font-family:'Space Grotesk',sans-serif;font-size:13.5px;font-weight:700;color:white;cursor:pointer;transition:all .18s;display:flex;align-items:center;justify-content:center;gap:7px;box-shadow:0 4px 14px rgba(239,68,68,.3)}
-.btn-delete:hover{box-shadow:0 6px 20px rgba(239,68,68,.4);transform:translateY(-1px)}
+.btn-delete{
+  flex:1;padding:12px;border-radius:13px;border:none;
+  background:linear-gradient(135deg,#EF4444,#DC2626);
+  font-family:'Outfit',sans-serif;font-size:14px;font-weight:800;color:white;
+  cursor:pointer;transition:all .18s;
+  display:flex;align-items:center;justify-content:center;gap:7px;
+  box-shadow:0 4px 16px rgba(239,68,68,.3);
+}
+.btn-delete:hover{box-shadow:0 8px 22px rgba(239,68,68,.4);transform:translateY(-1px)}
 
-/* ─── TOAST ─── */
-.toast{position:fixed;bottom:26px;right:26px;z-index:2000;padding:13px 18px;border-radius:14px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;display:flex;align-items:center;gap:9px;transform:translateY(80px);opacity:0;transition:all .3s cubic-bezier(.34,1.56,.64,1);max-width:340px;box-shadow:0 8px 24px rgba(0,0,0,.12)}
+/* ─────────────── TOAST ─────────────── */
+.toast{
+  position:fixed;bottom:28px;right:28px;z-index:2000;
+  padding:14px 20px;border-radius:16px;font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:13px;font-weight:700;display:flex;align-items:center;gap:10px;
+  transform:translateY(90px);opacity:0;
+  transition:all .3s cubic-bezier(.34,1.56,.64,1);max-width:360px;
+  box-shadow:0 10px 28px rgba(0,0,0,.14);
+}
 .toast.show{transform:translateY(0);opacity:1}
-.toast.success{background:white;color:#065F46;border:1.5px solid #A7F3D0;box-shadow:0 8px 24px rgba(0,0,0,.1)}
-.toast.error{background:white;color:#991B1B;border:1.5px solid #FCA5A5}
-.toast.info{background:white;color:var(--pu-dk);border:1.5px solid rgba(106,90,205,.25)}
+.toast.success{background:white;color:#065F46;border:2px solid #A7F3D0}
+.toast.error{background:white;color:#991B1B;border:2px solid #FCA5A5}
+.toast.info{background:white;color:var(--pu-dk);border:2px solid rgba(124,92,252,.3)}
 
-/* ─── PDF EXPORT BAR (barre fixe — un seul bouton Harmony) ─── */
+/* ─────────────── PDF BAR ─────────────── */
 .pdf-bar{
-  position:fixed;bottom:30px;left:50%;transform:translateX(-50%);
-  display:flex;gap:10px;align-items:center;z-index:999;
+  position:fixed;bottom:32px;left:50%;transform:translateX(-50%);
+  display:flex;gap:12px;align-items:center;z-index:999;
 }
 .btn-pdf-server{
-  padding:13px 28px;border-radius:30px;border:none;
-  background:linear-gradient(135deg,#6a1b9a,#9c27b0);
-  color:white;font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;
-  cursor:pointer;display:flex;align-items:center;gap:9px;
-  box-shadow:0 8px 28px rgba(106,27,154,.4);transition:all .22s;
-  border:1px solid rgba(255,255,255,.15);text-decoration:none;
+  padding:14px 30px;border-radius:40px;border:none;
+  background:linear-gradient(135deg,#4C1D95,#7C5CFC);
+  color:white;font-family:'Outfit',sans-serif;font-size:14px;font-weight:800;
+  cursor:pointer;display:flex;align-items:center;gap:10px;
+  box-shadow:0 10px 32px rgba(76,29,149,.5);transition:all .22s;
+  border:1px solid rgba(255,255,255,.2);text-decoration:none;letter-spacing:.2px;
 }
-.btn-pdf-server:hover{transform:translateY(-3px);box-shadow:0 14px 36px rgba(106,27,154,.55)}
+.btn-pdf-server:hover{transform:translateY(-3px);box-shadow:0 16px 40px rgba(76,29,149,.6)}
 
-/* ─── QR BUTTON ─── */
+/* ─────────────── QR BUTTON & MODAL ─────────────── */
 .btn-qr-session{
-  padding:5px 12px;border-radius:10px;border:1.5px solid rgba(106,27,154,.25);
-  background:linear-gradient(135deg,#EDE8FA,#F7F5FD);
-  color:#6a1b9a;font-size:11px;font-weight:700;
-  font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .18s;
+  padding:5px 12px;border-radius:10px;border:1.5px solid rgba(124,92,252,.25);
+  background:var(--pu-ghost);color:var(--pu);font-size:11px;font-weight:700;
+  font-family:'Plus Jakarta Sans',sans-serif;cursor:pointer;transition:all .18s;
   display:flex;align-items:center;gap:5px;
 }
-.btn-qr-session:hover{background:linear-gradient(135deg,#6a1b9a,#9c27b0);color:white;border-color:transparent;box-shadow:0 3px 10px rgba(106,27,154,.35)}
-
-/* ─── QR MODAL ─── */
+.btn-qr-session:hover{background:linear-gradient(135deg,var(--pu),var(--pu-lt));color:white;border-color:transparent;box-shadow:0 4px 14px rgba(124,92,252,.35)}
 .qr-modal-body{display:flex;flex-direction:column;align-items:center;gap:18px;padding:8px 0}
 .qr-img-wrap{
-  width:240px;height:240px;border-radius:20px;overflow:hidden;
-  border:3px solid rgba(106,27,154,.15);
-  box-shadow:0 8px 28px rgba(106,27,154,.18);
+  width:240px;height:240px;border-radius:22px;overflow:hidden;
+  border:3px solid rgba(124,92,252,.15);
+  box-shadow:0 10px 32px rgba(124,92,252,.2);
   background:white;display:flex;align-items:center;justify-content:center;
 }
 .qr-img-wrap img{width:100%;height:100%;object-fit:contain}
-/* SUPPRESSION du spinner/loader — affichage direct */
-.qr-img-wrap .qr-placeholder{
-  font-size:13px;color:var(--tx-muted);text-align:center;padding:20px;
-}
+.qr-placeholder{font-size:13px;color:var(--tx-muted);text-align:center;padding:20px}
 .qr-session-info{text-align:center}
-.qr-session-date{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;color:var(--pu)}
-.qr-session-meta{font-size:12px;color:var(--tx-muted);margin-top:4px}
-.qr-hint{font-size:11.5px;color:var(--tx-muted);text-align:center;max-width:260px;line-height:1.55}
+.qr-session-date{font-family:'Outfit',sans-serif;font-size:15px;font-weight:800;color:var(--pu)}
+.qr-session-meta{font-size:12px;color:var(--tx-muted);margin-top:4px;font-weight:600}
+.qr-hint{font-size:11.5px;color:var(--tx-muted);text-align:center;max-width:260px;line-height:1.6}
 .btn-wa{
-  display:flex;align-items:center;justify-content:center;gap:9px;
-  padding:13px 28px;border-radius:14px;border:none;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  padding:14px 30px;border-radius:15px;border:none;
   background:linear-gradient(135deg,#25D366,#128C7E);
-  color:white;font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;
-  cursor:pointer;transition:all .2s;width:100%;
-  box-shadow:0 6px 18px rgba(37,211,102,.35);text-decoration:none;
+  color:white;font-family:'Outfit',sans-serif;font-size:14px;font-weight:800;
+  cursor:pointer;transition:all .22s;width:100%;
+  box-shadow:0 8px 22px rgba(37,211,102,.35);text-decoration:none;
 }
-.btn-wa:hover{box-shadow:0 10px 26px rgba(37,211,102,.5);transform:translateY(-2px)}
+.btn-wa:hover{box-shadow:0 12px 30px rgba(37,211,102,.5);transform:translateY(-2px)}
 
-/* ─── EMPTY STATES ─── */
-.empty{text-align:center;padding:38px 20px;color:var(--tx-muted)}
-.empty-icon{font-size:40px;margin-bottom:10px;opacity:.4}
-.empty-txt{font-size:13px;font-weight:500}
+/* ─────────────── EMPTY STATES ─────────────── */
+.empty{text-align:center;padding:40px 20px;color:var(--tx-muted)}
+.empty-icon{font-size:44px;margin-bottom:12px;opacity:.4}
+.empty-txt{font-size:13px;font-weight:600}
 
-/* ─── ANIMATIONS ─── */
-@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-.fade{animation:fadeUp .38s ease both}
-.d1{animation-delay:.07s}.d2{animation-delay:.14s}.d3{animation-delay:.21s}
-@keyframes countUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+/* ─────────────── ANIMATIONS ─────────────── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.fade{animation:fadeUp .4s ease both}
+.d1{animation-delay:.08s}.d2{animation-delay:.16s}.d3{animation-delay:.24s}
 
-/* ─── RESPONSIVE ─── */
-@media(max-width:1100px){.page{grid-template-columns:1fr;padding:22px 20px 100px}.side-col{position:static}}
-@media(max-width:680px){.hero-content{flex-direction:column;align-items:flex-start;padding:24px 22px;gap:18px}.hero{height:auto;min-height:360px}.hero-title{font-size:32px}.hero-stats{flex-wrap:wrap;gap:10px}.form-row,.edit-row{grid-template-columns:1fr}.ex-grid{grid-template-columns:repeat(auto-fill,minmax(165px,1fr))}.log-steps{display:none}}
+/* ─────────────── RESPONSIVE ─────────────── */
+@media(max-width:1100px){.page{grid-template-columns:1fr;padding:22px 20px 120px}.side-col{position:static}}
+@media(max-width:680px){
+  .hero-content{flex-direction:column;align-items:flex-start;padding:30px 24px 80px;gap:20px}
+  .hero-title{font-size:36px}
+  .hero-stats{flex-wrap:wrap;gap:10px}
+  .form-row,.edit-row{grid-template-columns:1fr}
+  .ex-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr))}
+  .log-steps{display:none}
+}
 </style>
 {% endblock %}
 
 {% block body %}
 {% include '_planning_topbar.html.twig' %}
 
-{# ══════════════ HERO BANNER ══════════════ #}
+{# ══════════════ HERO ══════════════ #}
 <div class="hero">
-  <img class="hero-bg"
-    src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1600&q=85&auto=format&fit=crop"
-    alt="Salle de sport"
-    onerror="this.src='https://images.unsplash.com/photo-1571902943202-507ec2618e8f?w=1600&q=80'">
-  <div class="hero-particles"></div>
-  <div class="hero-glow"></div>
+  <div class="hero-mesh"></div>
+  <div class="hero-noise"></div>
+  <div class="hero-grid"></div>
   <div class="hero-bottom-fade"></div>
   <div class="hero-content">
     <div class="hero-left">
-      <div class="hero-eyebrow">
-        <span class="hero-eyebrow-dot"></span>
+      <div class="hero-badge">
+        <span class="hero-badge-dot"></span>
         Journal de Sport · Harmony
       </div>
-      <h1 class="hero-title">🏋️ Journal<br>d'<span>Exercices</span></h1>
+      <h1 class="hero-title">🏋️ Journal<br>d'<em>Exercices</em></h1>
       <p class="hero-sub">Planifiez, suivez et progressez — connecté à votre base de données.</p>
     </div>
     <div class="hero-stats">
       <div class="hstat gold">
-        <div class="hstat-icon">🏆</div>
-        <div class="hstat-val" id="statSeances">{{ stats.sessions }}</div>
-        <div class="hstat-lbl">Séances</div>
+        <span class="hstat-icon">🏆</span>
+        <span class="hstat-val" id="statSeances">{{ stats.sessions }}</span>
+        <span class="hstat-lbl">Séances</span>
       </div>
       <div class="hstat teal">
-        <div class="hstat-icon">⏱️</div>
-        <div class="hstat-val" id="statMinutes">{{ stats.minutes }}</div>
-        <div class="hstat-lbl">Minutes</div>
+        <span class="hstat-icon">⏱️</span>
+        <span class="hstat-val" id="statMinutes">{{ stats.minutes }}</span>
+        <span class="hstat-lbl">Minutes</span>
       </div>
-      <div class="hstat coral">
-        <div class="hstat-icon">🔥</div>
-        <div class="hstat-val" id="statCalories">{{ stats.calories }}</div>
-        <div class="hstat-lbl">Calories</div>
+      <div class="hstat rose">
+        <span class="hstat-icon">🔥</span>
+        <span class="hstat-val" id="statCalories">{{ stats.calories }}</span>
+        <span class="hstat-lbl">Calories</span>
       </div>
     </div>
   </div>
@@ -610,385 +882,395 @@ textarea.finput{resize:vertical;min-height:72px;line-height:1.55}
 
 {# ══════════════ PAGE GRID ══════════════ #}
 <div class="page">
+<div class="main-col">
 
-  {# ── MAIN COLUMN ── #}
-  <div class="main-col">
+  {# ── SECTION TABS + FILTRES ── #}
+  {% set countHomme = 0 %}
+  {% set countFemme = 0 %}
+  {% for ex in exercices %}
+    {% if '_homme' in ex.typeExercice|lower %}{% set countHomme = countHomme + 1 %}
+    {% elseif '_femme' in ex.typeExercice|lower %}{% set countFemme = countFemme + 1 %}
+    {% endif %}
+  {% endfor %}
 
-    {# ── SECTION TABS : Tous / Homme / Femme ── #}
-    {#
-      On calcule les compteurs côté Twig pour les afficher dans les onglets.
-      Les exercices _homme ont '_homme' dans leur typeExercice,
-      les exercices _femme ont '_femme'.
-    #}
-    {% set countHomme = 0 %}
-    {% set countFemme = 0 %}
-    {% set countTous  = exercices|length %}
-    {% for ex in exercices %}
-      {% if '_homme' in ex.typeExercice|lower %}
-        {% set countHomme = countHomme + 1 %}
-      {% elseif '_femme' in ex.typeExercice|lower %}
-        {% set countFemme = countFemme + 1 %}
-      {% endif %}
-    {% endfor %}
-
-    <div class="card fade">
-      {# Onglets de section #}
-      <div class="section-tabs" id="sectionTabs">
-        <button class="section-tab-btn active" data-section="all" onclick="switchSection('all',this)">
-          🌟 Tous <span class="tab-count" id="tabCountAll">{{ countTous }}</span>
-        </button>
-        <button class="section-tab-btn homme" data-section="homme" onclick="switchSection('homme',this)">
-          💪 Homme <span class="tab-count" id="tabCountHomme">{{ countHomme }}</span>
-        </button>
-        <button class="section-tab-btn femme" data-section="femme" onclick="switchSection('femme',this)">
-          🌸 Femme <span class="tab-count" id="tabCountFemme">{{ countFemme }}</span>
-        </button>
-      </div>
-
-      {# Filtres catégories (se mettent à jour selon la section active) #}
-      <div class="cat-filters" id="catFiltersBar">
-        <button class="cat-btn active all" data-cat="all" data-cls="all">🌟 Tous</button>
-        <button class="cat-btn" data-cat="Cardio" data-cls="cardio">🔴 Cardio</button>
-        <button class="cat-btn" data-cat="Force" data-cls="force">💪 Force</button>
-        <button class="cat-btn" data-cat="Souplesse" data-cls="souplesse">🌿 Souplesse</button>
-        <button class="cat-btn" data-cat="Endurance" data-cls="endurance">⚡ Endurance</button>
-        <button class="cat-btn" data-cat="Perte" data-cls="perte">🔥 Perte de poids</button>
-      </div>
+  <div class="card fade">
+    <div class="section-tabs" id="sectionTabs">
+      <button class="section-tab-btn active" data-section="all" onclick="switchSection('all',this)">
+        🌟 Tous <span class="tab-count" id="tabCountAll">{{ exercices|length }}</span>
+      </button>
+      <button class="section-tab-btn homme" data-section="homme" onclick="switchSection('homme',this)">
+        💪 Homme <span class="tab-count" id="tabCountHomme">{{ countHomme }}</span>
+      </button>
+      <button class="section-tab-btn femme" data-section="femme" onclick="switchSection('femme',this)">
+        🌸 Femme <span class="tab-count" id="tabCountFemme">{{ countFemme }}</span>
+      </button>
     </div>
-
-    {# EXERCISE LIBRARY #}
-    <div class="card fade d1">
-      <div class="lib-header">
-        <div class="card-title">📚 Bibliothèque d'Exercices</div>
-        <span class="section-tag" id="libSectionLabel">Tous les exercices</span>
-      </div>
-      <div class="lib-search">
-        <input type="text" id="searchInput" placeholder="🔍  Rechercher un exercice..." oninput="liveSearch(this.value)">
-      </div>
-      <div class="card-body" style="padding:0">
-        <div class="ex-grid" id="exerciseGrid">
-          {% for ex in exercices %}
-            {% set cat = ex.typeExercice|lower %}
-            {# Détermine la classe CSS de couleur (ignore _homme/_femme dans le nom du type) #}
-            {% set cls = 'force' %}
-            {% if 'cardio' in cat %}{% set cls = 'cardio' %}
-            {% elseif 'souplesse' in cat %}{% set cls = 'souplesse' %}
-            {% elseif 'endurance' in cat %}{% set cls = 'endurance' %}
-            {% elseif 'perte' in cat %}{% set cls = 'perte' %}
-            {% endif %}
-            {# Icône selon le type et le genre #}
-            {% set icon = '🏃' %}
-            {% if 'cardio' in cat %}{% set icon = '🏃' %}
-            {% elseif 'force' in cat and 'femme' in cat %}{% set icon = '🧘‍♀️' %}
-            {% elseif 'force' in cat %}{% set icon = '💪' %}
-            {% elseif 'souplesse' in cat and 'femme' in cat %}{% set icon = '💃' %}
-            {% elseif 'souplesse' in cat %}{% set icon = '🧘' %}
-            {% elseif 'endurance' in cat %}{% set icon = '⚡' %}
-            {% elseif 'perte' in cat %}{% set icon = '🔥' %}
-            {% endif %}
-            {# Détermine la section : homme / femme / neutre #}
-            {% set sectionData = 'neutre' %}
-            {% if '_homme' in cat %}{% set sectionData = 'homme' %}
-            {% elseif '_femme' in cat %}{% set sectionData = 'femme' %}
-            {% endif %}
-            <div class="ex-card"
-              data-id="{{ ex.id }}"
-              data-name="{{ ex.nomExercice }}"
-              data-type="{{ ex.typeExercice }}"
-              data-icon="{{ icon }}"
-              data-video="{{ ex.videoExercice }}"
-              data-cat="{{ ex.typeExercice }}"
-              data-section="{{ sectionData }}"
-              onclick="selectExercise(this)">
-              <div class="ex-thumb {{ cls }}">
-                <span class="ex-thumb-icon">{{ icon }}</span>
-                {# Affiche le nom de la catégorie sans _homme/_femme #}
-                <span class="ex-badge {{ cls }}">{{ ex.typeExercice|replace({'_homme':'','_femme':'','_':' '})|trim|split(' ')|first }}</span>
-              </div>
-              <div class="ex-body">
-                <div class="ex-name" title="{{ ex.nomExercice }}">{{ ex.nomExercice }}</div>
-                <div class="ex-type">{{ ex.typeExercice|replace({'_homme':' ♂','_femme':' ♀','_':' '}) }}</div>
-              </div>
-              <div class="ex-actions">
-                {% if ex.videoExercice and 'http' in ex.videoExercice %}
-                  <button class="btn-video" onclick="event.stopPropagation();openVideo('{{ ex.videoExercice|e('html_attr') }}','{{ ex.nomExercice|e('html_attr') }}')">▶ Vidéo</button>
-                {% else %}
-                  <button class="btn-video" onclick="event.stopPropagation();showToast('info','⚠ Vidéo non disponible')">▶ Vidéo</button>
-                {% endif %}
-                <button class="btn-fav fav-btn"
-                  data-id="{{ ex.id }}"
-                  data-name="{{ ex.nomExercice|e('html_attr') }}"
-                  data-type="{{ ex.typeExercice|e('html_attr') }}"
-                  data-icon="{{ icon }}"
-                  onclick="event.stopPropagation();toggleFav(this)">⭐ Fav</button>
-              </div>
-            </div>
-          {% else %}
-            <div class="empty" style="grid-column:1/-1"><div class="empty-icon">🔍</div><div class="empty-txt">Aucun exercice en base de données</div></div>
-          {% endfor %}
-        </div>
-      </div>
+    <div class="cat-filters" id="catFiltersBar">
+      <button class="cat-btn active all" data-cat="all" data-cls="all">🌟 Tous</button>
+      <button class="cat-btn" data-cat="Cardio" data-cls="cardio">🔴 Cardio</button>
+      <button class="cat-btn" data-cat="Force" data-cls="force">💪 Force</button>
+      <button class="cat-btn" data-cat="Souplesse" data-cls="souplesse">🌿 Souplesse</button>
+      <button class="cat-btn" data-cat="Endurance" data-cls="endurance">⚡ Endurance</button>
+      <button class="cat-btn" data-cat="Perte" data-cls="perte">🔥 Perte de poids</button>
     </div>
+  </div>
 
-    {# LOG FORM #}
-    <div class="log-card fade d2">
-      <div class="log-header">
-        <div class="log-header-icon">✏️</div>
-        <div class="log-header-text">
-          <h3>Enregistrer dans une Séance</h3>
-          <p>Sélectionnez un exercice puis remplissez les détails</p>
-        </div>
-      </div>
-      <div class="log-steps">
-        <div class="log-step active" id="step1">
-          <div class="step-num">1</div> Choisir exercice
-        </div>
-        <div class="log-step" id="step2">
-          <div class="step-num">2</div> Détails
-        </div>
-        <div class="log-step" id="step3">
-          <div class="step-num">3</div> Enregistrer
-        </div>
-      </div>
-      <div class="log-body">
-        <span class="err-msg" id="err-exercice" style="margin-bottom:8px">⚠ Veuillez sélectionner un exercice ci-dessus.</span>
-
-        <div class="sel-ex-banner" id="selectedInfo">
-          <div class="sel-ex-emoji" id="selectedIcon">🏃</div>
-          <div class="sel-ex-info">
-            <div class="sel-ex-name" id="selectedName">—</div>
-            <div class="sel-ex-type" id="selectedType">—</div>
-            <span class="sel-ex-badge" id="selectedBadge"></span>
-          </div>
-        </div>
-
-        <form class="log-form" id="logForm" novalidate>
-          <input type="hidden" id="exerciseId" value="">
-
-          <div class="form-row">
-            <div class="form-group">
-              <label class="flabel"><span>⏱</span> Durée (minutes) *</label>
-              <span class="err-msg" id="err-duree">⚠ Durée requise (1 – 300 min)</span>
-              <input type="number" id="duree" class="finput" placeholder="Ex : 30" min="1" max="300">
-            </div>
-            <div class="form-group">
-              <label class="flabel"><span>📅</span> Date de séance *</label>
-              <span class="err-msg" id="err-date">⚠ Date requise</span>
-              <input type="date" id="dateSeance" class="finput">
-            </div>
-          </div>
-
-          <div class="form-row">
-            <div class="form-group">
-              <label class="flabel"><span>🔥</span> Calories brûlées</label>
-              <input type="number" id="calories" class="finput" placeholder="Estimées" min="0">
-            </div>
-            <div class="form-group">
-              <label class="flabel"><span>⚖</span> Poids (kg)</label>
-              <input type="number" id="poids" class="finput" placeholder="Ex : 60" min="0" step="0.5">
-            </div>
-          </div>
-
-          <div class="form-row">
-            <div class="form-group">
-              <label class="flabel"><span>🔁</span> Séries</label>
-              <input type="number" id="series" class="finput" placeholder="Ex : 4" min="0">
-            </div>
-            <div class="form-group">
-              <label class="flabel"><span>🔢</span> Répétitions</label>
-              <input type="number" id="reps" class="finput" placeholder="Ex : 12" min="0">
-            </div>
-          </div>
-
-          <div class="form-group full">
-            <label class="flabel"><span>📝</span> Notes</label>
-            <textarea id="notes" class="finput" placeholder="Observations, sensations personnelles..."></textarea>
-          </div>
-
-          <button type="submit" class="btn-log" id="submitBtn">
-            <span>💾</span> Enregistrer dans la séance
-          </button>
-        </form>
-      </div>
+  {# ── BIBLIOTHÈQUE ── #}
+  <div class="card fade d1">
+    <div class="lib-header">
+      <div class="card-title">📚 Bibliothèque d'Exercices</div>
+      <span class="pill-tag" id="libSectionLabel">Tous les exercices</span>
     </div>
-
-    {# CARTE D'ENTRAÎNEMENT — 100% affichée et fonctionnelle #}
-    <div class="card fade d3 map-card">
-      <div class="card-head">
-        <div>
-          <div class="card-title">🗺️ Carte d'entraînement</div>
-          <div style="font-size:11px;color:var(--tx-muted);margin-top:3px">Localisation, tracé de parcours et parcs sportifs</div>
-        </div>
-      </div>
-      <div class="card-body">
-        <div class="map-actions">
-          <button type="button" class="map-control-btn" onclick="locateUser()" title="Se localiser">📍</button>
-          <button type="button" class="map-control-btn" id="routeToggleBtn" onclick="toggleRouteMode()" title="Tracer mon parcours">✍️</button>
-          <button type="button" class="map-control-btn" onclick="searchParks()" title="Afficher les parcs de sport">🏟️</button>
-          <button type="button" class="map-control-btn" onclick="resetRoute()" title="Réinitialiser le parcours">♻️</button>
-        </div>
-        <div class="map-meta">
-          <span id="routeInfo"><strong>Parcours :</strong> Aucun tracé</span>
-          <span id="parkStatus"><strong>Parcs :</strong> Appuyez sur '🏟️' pour afficher les parcs sportifs autour de votre position.</span>
-          <span><strong>Astuce :</strong> cliquez sur la carte pour ajouter des points de parcours.</span>
-        </div>
-        {# Conteneur dédié avec taille fixe pour garantir le rendu Leaflet #}
-        <div id="mapContainer">
-          <div id="activityMap"></div>
-        </div>
-      </div>
+    <div class="lib-search">
+      <input type="text" id="searchInput" placeholder="Rechercher un exercice..." oninput="liveSearch(this.value)">
     </div>
-
-    {# SESSIONS HISTORY #}
-    <div class="card fade d3">
-      <div class="card-head">
-        <div class="card-title">📊 Historique des Séances</div>
-        <span class="section-tag" id="histCount">{{ grouped|length }} séance{{ grouped|length != 1 ? 's' : '' }}</span>
-      </div>
-      <div class="card-body">
-        <div class="timeline" id="sessionsList">
-
-          {% if grouped is empty %}
-            <div class="empty"><div class="empty-icon">📋</div><div class="empty-txt">Aucune séance enregistrée.</div></div>
-          {% else %}
-            {% for date, acts in grouped %}
-              {% set totalMin = 0 %}
-              {% set totalCal = 0 %}
-              {% for a in acts %}
-                {% set totalMin = totalMin + a.dureeMinutes %}
-                {% set totalCal = totalCal + (a.caloriesBrulees ?: 0) %}
-              {% endfor %}
-              <div class="session-block" id="session-{{ date|replace({'-':''}) }}">
-                <div class="session-head" onclick="toggleSession(this)">
-                  <div class="session-date-group">
-                    <div class="session-date-big">📅 {{ date|date('d/m/Y') }}</div>
-                    <div class="session-date-rel">{{ acts|length }} exercice{{ acts|length != 1 ? 's' : '' }}</div>
-                  </div>
-                  <div class="session-tags">
-                    <span class="session-tag ex">{{ acts|length }} ex.</span>
-                    <span class="session-tag time">⏱ {{ totalMin }} min</span>
-                    {% if totalCal > 0 %}<span class="session-tag cal">🔥 {{ totalCal }} kcal</span>{% endif %}
-                  </div>
-                  <div class="session-actions">
-                    <button class="btn-qr-session" onclick="event.stopPropagation();openQR('{{ date }}')">📲 QR</button>
-                    <button class="btn-del-session" onclick="event.stopPropagation();deleteSession('{{ date }}')">🗑 Supprimer</button>
-                    <div class="session-chevron" id="chev-{{ date|replace({'-':''}) }}">▼</div>
-                  </div>
-                </div>
-                <div class="session-exercises" id="sexs-{{ date|replace({'-':''}) }}">
-                  {% for a in acts %}
-                    {% set cat = a.exercice.typeExercice|lower %}
-                    {% set icon = '🏃' %}
-                    {% set cls = 'force' %}
-                    {% if 'cardio' in cat %}{% set icon = '🏃' %}{% set cls = 'cardio' %}
-                    {% elseif 'force' in cat and 'femme' in cat %}{% set icon = '🧘‍♀️' %}{% set cls = 'force' %}
-                    {% elseif 'force' in cat %}{% set icon = '💪' %}{% set cls = 'force' %}
-                    {% elseif 'souplesse' in cat and 'femme' in cat %}{% set icon = '💃' %}{% set cls = 'souplesse' %}
-                    {% elseif 'souplesse' in cat %}{% set icon = '🧘' %}{% set cls = 'souplesse' %}
-                    {% elseif 'endurance' in cat %}{% set icon = '⚡' %}{% set cls = 'endurance' %}
-                    {% elseif 'perte' in cat %}{% set icon = '🔥' %}{% set cls = 'perte' %}
-                    {% endif %}
-                    <div class="ex-row" id="exrow-{{ a.id }}">
-                      <div class="ex-row-dot {{ cls }}">{{ icon }}</div>
-                      <div class="ex-row-info">
-                        <div class="ex-row-name">{{ a.exercice.nomExercice }}</div>
-                        <div class="ex-row-meta">
-                          <span class="ex-meta-tag">⏱ {{ a.dureeMinutes }} min</span>
-                          {% if a.caloriesBrulees %}<span class="ex-meta-tag">🔥 {{ a.caloriesBrulees }} kcal</span>{% endif %}
-                          {% if a.nbSeries %}<span class="ex-meta-tag">✖ {{ a.nbSeries }}×{{ a.nbRepetitions ?: '?' }}</span>{% endif %}
-                          {% if a.poids %}<span class="ex-meta-tag">⚖ {{ a.poids }} kg</span>{% endif %}
-                        </div>
-                        {% if a.notes %}<div style="font-size:11px;color:var(--tx-muted);margin-top:3px;font-style:italic">"{{ a.notes }}"</div>{% endif %}
-                      </div>
-                      <div class="ex-row-actions">
-                        <button class="btn-edit-ex" title="Modifier"
-                          onclick="openEdit({{ a.id }}, {{ a.dureeMinutes }}, {{ a.caloriesBrulees ?: 0 }}, {{ a.nbSeries ?: 0 }}, {{ a.nbRepetitions ?: 0 }}, {{ a.poids ?: 0 }}, '{{ a.notes|e('html_attr') }}')">✏️</button>
-                        <button class="btn-del-ex" title="Supprimer"
-                          onclick="event.stopPropagation();openDeleteModal({{ a.id }}, '{{ a.exercice.nomExercice|e('html_attr') }}')">🗑</button>
-                      </div>
-                    </div>
-                  {% endfor %}
-                </div>
-              </div>
-            {% endfor %}
+    <div style="padding:0">
+      <div class="ex-grid" id="exerciseGrid">
+        {% for ex in exercices %}
+          {% set cat = ex.typeExercice|lower %}
+          {% set cls = 'force' %}
+          {% if 'cardio' in cat %}{% set cls = 'cardio' %}
+          {% elseif 'souplesse' in cat %}{% set cls = 'souplesse' %}
+          {% elseif 'endurance' in cat %}{% set cls = 'endurance' %}
+          {% elseif 'perte' in cat %}{% set cls = 'perte' %}
           {% endif %}
-
-        </div>
+          {% set icon = '🏃' %}
+          {% if 'cardio' in cat %}{% set icon = '🏃' %}
+          {% elseif 'force' in cat and 'femme' in cat %}{% set icon = '🧘‍♀️' %}
+          {% elseif 'force' in cat %}{% set icon = '💪' %}
+          {% elseif 'souplesse' in cat and 'femme' in cat %}{% set icon = '💃' %}
+          {% elseif 'souplesse' in cat %}{% set icon = '🧘' %}
+          {% elseif 'endurance' in cat %}{% set icon = '⚡' %}
+          {% elseif 'perte' in cat %}{% set icon = '🔥' %}
+          {% endif %}
+          {% set sectionData = 'neutre' %}
+          {% if '_homme' in cat %}{% set sectionData = 'homme' %}
+          {% elseif '_femme' in cat %}{% set sectionData = 'femme' %}
+          {% endif %}
+          {# Photos Unsplash selon catégorie et genre — format portrait sport #}
+          {% set photoUrl = '' %}
+          {% if 'cardio' in cat and 'femme' in cat %}
+            {% set photoUrl = 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&q=80&auto=format&fit=crop' %}
+          {% elseif 'cardio' in cat %}
+            {% set photoUrl = 'https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=400&q=80&auto=format&fit=crop' %}
+          {% elseif 'force' in cat and 'femme' in cat %}
+            {% set photoUrl = 'https://images.unsplash.com/photo-1518611012118-696072aa579a?w=400&q=80&auto=format&fit=crop' %}
+          {% elseif 'force' in cat %}
+            {% set photoUrl = 'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=400&q=80&auto=format&fit=crop' %}
+          {% elseif 'souplesse' in cat and 'femme' in cat %}
+            {% set photoUrl = 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=400&q=80&auto=format&fit=crop' %}
+          {% elseif 'souplesse' in cat %}
+            {% set photoUrl = 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=400&q=80&auto=format&fit=crop' %}
+          {% elseif 'endurance' in cat and 'femme' in cat %}
+            {% set photoUrl = 'https://images.unsplash.com/photo-1538481199705-c710c4e965fc?w=400&q=80&auto=format&fit=crop' %}
+          {% elseif 'endurance' in cat %}
+            {% set photoUrl = 'https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?w=400&q=80&auto=format&fit=crop' %}
+          {% elseif 'perte' in cat and 'femme' in cat %}
+            {% set photoUrl = 'https://images.unsplash.com/photo-1571731956672-f2b94d7dd0cb?w=400&q=80&auto=format&fit=crop' %}
+          {% elseif 'perte' in cat %}
+            {% set photoUrl = 'https://images.unsplash.com/photo-1470468969717-61d5d54fd036?w=400&q=80&auto=format&fit=crop' %}
+          {% else %}
+            {% set photoUrl = 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=400&q=80&auto=format&fit=crop' %}
+          {% endif %}
+          <div class="ex-card"
+            data-id="{{ ex.id }}"
+            data-name="{{ ex.nomExercice }}"
+            data-type="{{ ex.typeExercice }}"
+            data-icon="{{ icon }}"
+            data-video="{{ ex.videoExercice }}"
+            data-cat="{{ ex.typeExercice }}"
+            data-section="{{ sectionData }}"
+            onclick="selectExercise(this)">
+            <div class="ex-thumb {{ cls }}">
+              <img class="ex-thumb-img"
+                src="{{ photoUrl }}"
+                alt="{{ ex.nomExercice }}"
+                loading="lazy"
+                onerror="this.style.display='none'">
+              <div class="ex-thumb-overlay"></div>
+              <span class="ex-thumb-icon">{{ icon }}</span>
+              <span class="ex-badge">{{ ex.typeExercice|replace({'_homme':'','_femme':'','_':' '})|trim|split(' ')|first }}</span>
+              {% if sectionData == 'homme' %}
+                <span class="ex-gender-badge homme">♂</span>
+              {% elseif sectionData == 'femme' %}
+                <span class="ex-gender-badge femme">♀</span>
+              {% endif %}
+            </div>
+            <div class="ex-body">
+              <div class="ex-name" title="{{ ex.nomExercice }}">{{ ex.nomExercice }}</div>
+              <div class="ex-type">{{ ex.typeExercice|replace({'_homme':' ♂','_femme':' ♀','_':' '}) }}</div>
+            </div>
+            <div class="ex-actions">
+              {% if ex.videoExercice and 'http' in ex.videoExercice %}
+                <button class="btn-video" onclick="event.stopPropagation();openVideo('{{ ex.videoExercice|e('html_attr') }}','{{ ex.nomExercice|e('html_attr') }}')">▶ Vidéo</button>
+              {% else %}
+                <button class="btn-video" onclick="event.stopPropagation();showToast('info','⚠ Vidéo non disponible')">▶ Vidéo</button>
+              {% endif %}
+              <button class="btn-fav fav-btn"
+                data-id="{{ ex.id }}"
+                data-name="{{ ex.nomExercice|e('html_attr') }}"
+                data-type="{{ ex.typeExercice|e('html_attr') }}"
+                data-icon="{{ icon }}"
+                data-cls="{{ cls }}"
+                onclick="event.stopPropagation();toggleFav(this)">⭐ Fav</button>
+            </div>
+          </div>
+        {% else %}
+          <div class="empty" style="grid-column:1/-1"><div class="empty-icon">🔍</div><div class="empty-txt">Aucun exercice en base de données</div></div>
+        {% endfor %}
       </div>
     </div>
+  </div>
 
-  </div>{# /main-col #}
-
-  {# ── SIDE COLUMN ── #}
-  <div class="side-col">
-
-    {# STATS CARD #}
-    <div class="stats-card fade">
-      <div class="stats-header">
-        <div class="stats-header-title">📈 Mes Statistiques</div>
+  {# ── LOG FORM ── #}
+  <div class="log-card fade d2">
+    <div class="log-header">
+      <div class="log-header-icon">✏️</div>
+      <div class="log-header-text">
+        <h3>Enregistrer dans une Séance</h3>
+        <p>Sélectionnez un exercice puis remplissez les détails</p>
       </div>
-      <div class="stats-kpis">
-        <div class="kpi purple">
-          <div class="kpi-icon">🏆</div>
-          <div class="kpi-val" id="sideSeances">{{ stats.sessions }}</div>
-          <div class="kpi-lbl">Séances</div>
-        </div>
-        <div class="kpi green">
-          <div class="kpi-icon">⏱️</div>
-          <div class="kpi-val" id="sideMin">{{ stats.minutes }}</div>
-          <div class="kpi-lbl">Minutes</div>
-        </div>
-        <div class="kpi orange">
-          <div class="kpi-icon">🔥</div>
-          <div class="kpi-val" id="sideCal">{{ stats.calories }}</div>
-          <div class="kpi-lbl">Calories</div>
-        </div>
-        <div class="kpi blue">
-          <div class="kpi-icon">💪</div>
-          <div class="kpi-val" id="sideTotal">0</div>
-          <div class="kpi-lbl">Exercices</div>
+    </div>
+    <div class="log-steps">
+      <div class="log-step active" id="step1"><div class="step-num">1</div> Choisir exercice</div>
+      <div class="log-step" id="step2"><div class="step-num">2</div> Détails</div>
+      <div class="log-step" id="step3"><div class="step-num">3</div> Enregistrer</div>
+    </div>
+    <div class="log-body">
+      <span class="err-msg" id="err-exercice" style="margin-bottom:8px">⚠ Veuillez sélectionner un exercice ci-dessus.</span>
+      <div class="sel-ex-banner" id="selectedInfo">
+        <div class="sel-ex-emoji" id="selectedIcon">🏃</div>
+        <div class="sel-ex-info">
+          <div class="sel-ex-name" id="selectedName">—</div>
+          <div class="sel-ex-type" id="selectedType">—</div>
+          <span class="sel-ex-badge" id="selectedBadge"></span>
         </div>
       </div>
+      <form class="log-form" id="logForm" novalidate>
+        <input type="hidden" id="exerciseId" value="">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="flabel"><span>⏱</span> Durée (minutes) *</label>
+            <span class="err-msg" id="err-duree">⚠ Durée requise (1–300 min)</span>
+            <input type="number" id="duree" class="finput" placeholder="Ex : 30" min="1" max="300">
+          </div>
+          <div class="form-group">
+            <label class="flabel"><span>📅</span> Date de séance *</label>
+            <span class="err-msg" id="err-date">⚠ Date requise</span>
+            <input type="date" id="dateSeance" class="finput">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="flabel"><span>🔥</span> Calories brûlées</label>
+            <input type="number" id="calories" class="finput" placeholder="Estimées" min="0">
+          </div>
+          <div class="form-group">
+            <label class="flabel"><span>⚖</span> Poids (kg)</label>
+            <input type="number" id="poids" class="finput" placeholder="Ex : 60" min="0" step="0.5">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="flabel"><span>🔁</span> Séries</label>
+            <input type="number" id="series" class="finput" placeholder="Ex : 4" min="0">
+          </div>
+          <div class="form-group">
+            <label class="flabel"><span>🔢</span> Répétitions</label>
+            <input type="number" id="reps" class="finput" placeholder="Ex : 12" min="0">
+          </div>
+        </div>
+        <div class="form-group full">
+          <label class="flabel"><span>📝</span> Notes</label>
+          <textarea id="notes" class="finput" placeholder="Observations, sensations personnelles..."></textarea>
+        </div>
+        <button type="submit" class="btn-log" id="submitBtn">
+          <span>💾</span> Enregistrer dans la séance
+        </button>
+      </form>
+    </div>
+  </div>
+
+  {# ── CARTE ── #}
+  <div class="card fade d3">
+    <div class="card-head">
+      <div>
+        <div class="card-title">🗺️ Carte d'entraînement</div>
+        <div style="font-size:11px;color:var(--tx-muted);margin-top:3px">Localisation, tracé de parcours et parcs sportifs</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
+        <button type="button" class="map-control-btn" onclick="locateUser()">📍 Me localiser</button>
+        <button type="button" class="map-control-btn" id="routeToggleBtn" onclick="toggleRouteMode()">✍️ Tracer</button>
+        <button type="button" class="map-control-btn" onclick="searchParks()">🏟️ Parcs</button>
+        <button type="button" class="map-control-btn" onclick="resetRoute()">♻️ Reset</button>
+      </div>
+      <div class="map-meta">
+        <span id="routeInfo"><strong>Parcours :</strong> Aucun tracé</span>
+        <span id="parkStatus"><strong>Parcs :</strong> Cliquez sur 🏟️ pour chercher les parcs sportifs.</span>
+      </div>
+      <div id="mapContainer"><div id="activityMap"></div></div>
+    </div>
+  </div>
+
+  {# ── HISTORIQUE ── #}
+  <div class="card fade d3">
+    <div class="card-head">
+      <div class="card-title">📊 Historique des Séances</div>
+      <span class="pill-tag" id="histCount">{{ grouped|length }} séance{{ grouped|length != 1 ? 's' : '' }}</span>
+    </div>
+    <div class="card-body">
+      <div class="timeline" id="sessionsList">
+        {% if grouped is empty %}
+          <div class="empty"><div class="empty-icon">📋</div><div class="empty-txt">Aucune séance enregistrée.</div></div>
+        {% else %}
+          {% for date, acts in grouped %}
+            {% set totalMin = 0 %}{% set totalCal = 0 %}
+            {% for a in acts %}
+              {% set totalMin = totalMin + a.dureeMinutes %}
+              {% set totalCal = totalCal + (a.caloriesBrulees ?: 0) %}
+            {% endfor %}
+            <div class="session-block" id="session-{{ date|replace({'-':''}) }}">
+              <div class="session-head" onclick="toggleSession(this)">
+                <div class="session-date-group">
+                  <div class="session-date-big">📅 {{ date|date('d/m/Y') }}</div>
+                  <div class="session-date-rel">{{ acts|length }} exercice{{ acts|length != 1 ? 's' : '' }}</div>
+                </div>
+                <div class="session-tags">
+                  <span class="session-tag ex">{{ acts|length }} ex.</span>
+                  <span class="session-tag time">⏱ {{ totalMin }} min</span>
+                  {% if totalCal > 0 %}<span class="session-tag cal">🔥 {{ totalCal }} kcal</span>{% endif %}
+                </div>
+                <div class="session-actions">
+                  <button class="btn-qr-session" onclick="event.stopPropagation();openQR('{{ date }}')">📲 QR</button>
+                  <button class="btn-del-session" onclick="event.stopPropagation();deleteSession('{{ date }}')">🗑 Sup.</button>
+                  <div class="session-chevron" id="chev-{{ date|replace({'-':''}) }}">▼</div>
+                </div>
+              </div>
+              <div class="session-exercises" id="sexs-{{ date|replace({'-':''}) }}">
+                {% for a in acts %}
+                  {% set cat = a.exercice.typeExercice|lower %}
+                  {% set icon = '🏃' %}{% set cls = 'force' %}
+                  {% if 'cardio' in cat %}{% set icon = '🏃' %}{% set cls = 'cardio' %}
+                  {% elseif 'force' in cat and 'femme' in cat %}{% set icon = '🧘‍♀️' %}{% set cls = 'force' %}
+                  {% elseif 'force' in cat %}{% set icon = '💪' %}{% set cls = 'force' %}
+                  {% elseif 'souplesse' in cat and 'femme' in cat %}{% set icon = '💃' %}{% set cls = 'souplesse' %}
+                  {% elseif 'souplesse' in cat %}{% set icon = '🧘' %}{% set cls = 'souplesse' %}
+                  {% elseif 'endurance' in cat %}{% set icon = '⚡' %}{% set cls = 'endurance' %}
+                  {% elseif 'perte' in cat %}{% set icon = '🔥' %}{% set cls = 'perte' %}
+                  {% endif %}
+                  <div class="ex-row" id="exrow-{{ a.id }}">
+                    <div class="ex-row-dot {{ cls }}">{{ icon }}</div>
+                    <div class="ex-row-info">
+                      <div class="ex-row-name">{{ a.exercice.nomExercice }}</div>
+                      <div class="ex-row-meta">
+                        <span class="ex-meta-tag">⏱ {{ a.dureeMinutes }} min</span>
+                        {% if a.caloriesBrulees %}<span class="ex-meta-tag">🔥 {{ a.caloriesBrulees }} kcal</span>{% endif %}
+                        {% if a.nbSeries %}<span class="ex-meta-tag">✖ {{ a.nbSeries }}×{{ a.nbRepetitions ?: '?' }}</span>{% endif %}
+                        {% if a.poids %}<span class="ex-meta-tag">⚖ {{ a.poids }} kg</span>{% endif %}
+                      </div>
+                      {% if a.notes %}<div style="font-size:11px;color:var(--tx-muted);margin-top:3px;font-style:italic">"{{ a.notes }}"</div>{% endif %}
+                    </div>
+                    <div class="ex-row-actions">
+                      <button class="btn-edit-ex" title="Modifier"
+                        onclick="openEdit({{ a.id }},{{ a.dureeMinutes }},{{ a.caloriesBrulees ?: 0 }},{{ a.nbSeries ?: 0 }},{{ a.nbRepetitions ?: 0 }},{{ a.poids ?: 0 }},'{{ a.notes|e('html_attr') }}')">✏️</button>
+                      <button class="btn-del-ex" title="Supprimer"
+                        onclick="event.stopPropagation();openDeleteModal({{ a.id }},'{{ a.exercice.nomExercice|e('html_attr') }}')">🗑</button>
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+          {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+</div>{# /main-col #}
+
+{# ── SIDE COLUMN ── #}
+<div class="side-col">
+
+  {# ── STATS INNOVANTES ── #}
+  <div class="stats-card fade">
+    <div class="stats-header">
+      <div class="stats-header-title">📈 Mes Statistiques</div>
+      <div class="stats-header-sub">Vue d'ensemble de vos performances</div>
+    </div>
+    <div class="stats-kpis">
+      <div class="kpi purple">
+        <div class="kpi-icon-wrap">🏆</div>
+        <div class="kpi-val" id="sideSeances">{{ stats.sessions }}</div>
+        <div class="kpi-lbl">Séances totales</div>
+      </div>
+      <div class="kpi teal">
+        <div class="kpi-icon-wrap">⏱️</div>
+        <div class="kpi-val" id="sideMin">{{ stats.minutes }}</div>
+        <div class="kpi-lbl">Minutes actives</div>
+      </div>
+      <div class="kpi amber">
+        <div class="kpi-icon-wrap">🔥</div>
+        <div class="kpi-val" id="sideCal">{{ stats.calories }}</div>
+        <div class="kpi-lbl">Calories brûlées</div>
+      </div>
+      <div class="kpi blue">
+        <div class="kpi-icon-wrap">💪</div>
+        <div class="kpi-val" id="sideTotal">0</div>
+        <div class="kpi-lbl">Exercices logués</div>
+      </div>
+    </div>
+    <div class="chart-section">
+      <div class="chart-section-title">Répartition par catégorie</div>
       <div class="chart-wrap">
-        <canvas id="catChart"></canvas>
+        <div class="chart-canvas-wrap">
+          <canvas id="catChart"></canvas>
+          <div class="chart-center-label">
+            <span class="chart-center-val" id="chartTotalEx">0</span>
+            <span class="chart-center-lbl">exercices</span>
+          </div>
+        </div>
+        <div class="chart-legend-list" id="chartLegend"></div>
       </div>
-      <div class="chart-legend" id="chartLegend">
+    </div>
+    <div class="weekly-section">
+      <div class="weekly-title">Activité — 7 derniers jours</div>
+      <div class="weekly-bars" id="weeklyBars">
         {# Filled by JS #}
       </div>
     </div>
+  </div>
 
-    {# FAVORIS #}
-    <div class="card fade d1">
-      <div class="card-head">
-        <div class="card-title">⭐ Mes Favoris</div>
-        <span class="section-tag" id="favCount">0 fav</span>
-      </div>
-      <div class="card-body" style="padding:12px 16px">
-        <div class="fav-grid" id="favList">
-          <div class="fav-empty" id="favEmpty">
-            <div class="fav-empty-icon">⭐</div>
-            <div class="fav-empty-text">Aucun favori pour l'instant</div>
-          </div>
+  {# ── FAVORIS REDESIGNÉS ── #}
+  <div class="fav-card fade d1">
+    <div class="fav-card-header">
+      <div class="fav-card-title">⭐ Mes Favoris</div>
+      <span class="fav-count-badge" id="favCount">0</span>
+    </div>
+    <div class="fav-body">
+      <div class="fav-grid" id="favList">
+        <div class="fav-empty" id="favEmpty">
+          <span class="fav-empty-emoji">⭐</span>
+          <div class="fav-empty-title">Aucun favori encore</div>
+          <div class="fav-empty-sub">Cliquez sur ⭐ dans la bibliothèque pour sauvegarder vos exercices préférés ici.</div>
         </div>
       </div>
     </div>
+  </div>
 
-    {# AI COACH SUPPRIMÉ — section entièrement retirée #}
-
-  </div>{# /side-col #}
+</div>{# /side-col #}
 </div>{# /page #}
 
-{# ══ VIDEO MODAL ══ #}
+{# ══ VIDEO MODAL — FIX YOUTUBE 100% ══ #}
 <div class="modal-overlay" id="videoModal">
-  <div class="modal">
-    <div class="modal-head">
-      <div class="modal-title" id="videoTitle">▶ Démonstration</div>
-      <button class="modal-close" onclick="closeModal('videoModal')">✕</button>
+  <div class="video-modal-inner">
+    <div class="video-modal-head">
+      <div class="video-modal-title">▶ <span id="videoTitle">Démonstration</span></div>
+      <button class="video-modal-close" onclick="closeModal('videoModal')">✕</button>
     </div>
-    <div class="modal-body">
-      <div class="video-wrap">
-        <iframe id="videoFrame" src="" allowfullscreen></iframe>
-      </div>
+    <div class="video-wrap" id="videoWrap">
+      {# Contenu injecté par JS : iframe embed OU fallback bouton YouTube #}
     </div>
   </div>
 </div>
@@ -1032,13 +1314,13 @@ textarea.finput{resize:vertical;min-height:72px;line-height:1.55}
           <label class="flabel">📝 Notes</label>
           <textarea id="editNotes" class="finput" style="min-height:60px"></textarea>
         </div>
-        <button type="submit" class="btn-log"><span>💾</span> Sauvegarder les modifications</button>
+        <button type="submit" class="btn-log">💾 Sauvegarder</button>
       </form>
     </div>
   </div>
 </div>
 
-{# ══ DELETE EXERCISE MODAL ══ #}
+{# ══ DELETE MODAL ══ #}
 <div class="modal-overlay" id="deleteModal">
   <div class="modal" style="max-width:400px">
     <div class="modal-head">
@@ -1065,14 +1347,14 @@ textarea.finput{resize:vertical;min-height:72px;line-height:1.55}
 {# ══ TOAST ══ #}
 <div class="toast" id="toast"></div>
 
-{# ══ PDF EXPORT BAR — Uniquement Bilan Harmony (KnpSnappy) ══ #}
+{# ══ PDF BAR ══ #}
 <div class="pdf-bar">
-  <a class="btn-pdf-server" href="/activites/bilan/pdf" target="_blank" title="Télécharger le bilan PDF Harmony (KnpSnappy)">
+  <a class="btn-pdf-server" href="/activites/bilan/pdf" target="_blank">
     💜 Bilan PDF Harmony
   </a>
 </div>
 
-{# ══ QR CODE MODAL — Sans boite de chargement ══ #}
+{# ══ QR MODAL ══ #}
 <div class="modal-overlay" id="qrModal">
   <div class="modal" style="max-width:360px">
     <div class="modal-head">
@@ -1082,16 +1364,13 @@ textarea.finput{resize:vertical;min-height:72px;line-height:1.55}
     <div class="modal-body">
       <div class="qr-modal-body">
         <div class="qr-img-wrap" id="qrImgWrap">
-          {# Pas de spinner — contenu injecté directement par JS #}
           <span class="qr-placeholder">Chargement…</span>
         </div>
         <div class="qr-session-info">
           <div class="qr-session-date" id="qrDate">—</div>
           <div class="qr-session-meta" id="qrMeta">—</div>
         </div>
-        <p class="qr-hint">
-          📷 Scannez ce QR code pour partager cette séance sur WhatsApp. Les couleurs sont celles d'Harmony 💜
-        </p>
+        <p class="qr-hint">📷 Scannez ce QR code pour partager cette séance sur WhatsApp 💜</p>
         <a class="btn-wa" id="qrWaLink" href="#" target="_blank" rel="noopener">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M11.999 2c-5.514 0-9.999 4.486-9.999 10 0 1.76.463 3.413 1.27 4.855L2 22l5.293-1.254C8.66 21.527 10.297 22 11.999 22c5.514 0 10-4.486 10-10s-4.486-10-10-10zm0 18c-1.567 0-3.05-.432-4.33-1.185l-.31-.184-3.143.744.776-3.044-.202-.319C3.9 14.906 3.5 13.492 3.5 12 3.5 7.81 6.811 4.5 11.999 4.5S20.5 7.81 20.5 12c0 4.192-3.311 7.5-7.501 7.5z"/></svg>
           Ouvrir sur WhatsApp
@@ -1106,7 +1385,7 @@ textarea.finput{resize:vertical;min-height:72px;line-height:1.55}
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-o9N1j7kG8bChx9cArCdZUrw2s2tRoSI6eR7X9tUuCPk=" crossorigin=""></script>
 <script>
 // ══════════════════════════════════════════════════════
-// CONFIG & STATE
+// APIS & STATE
 // ══════════════════════════════════════════════════════
 const API = {
   list:     '/activites/api/list',
@@ -1119,7 +1398,7 @@ const API = {
 
 let selectedExercise = null;
 let currentFilter    = 'all';
-let currentSection   = 'all';   // 'all' | 'homme' | 'femme'
+let currentSection   = 'all';
 let editingId        = null;
 let _deleteTargetId  = null;
 let _catChart        = null;
@@ -1130,12 +1409,10 @@ let _catChart        = null;
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('dateSeance').value = new Date().toISOString().split('T')[0];
 
-  // Category filter buttons
   document.querySelectorAll('.cat-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      document.querySelectorAll('.cat-btn').forEach(b => {
-        b.classList.remove('active','all','cardio','force','souplesse','endurance','perte');
-      });
+      document.querySelectorAll('.cat-btn').forEach(b =>
+        b.classList.remove('active','all','cardio','force','souplesse','endurance','perte'));
       btn.classList.add('active', btn.dataset.cls);
       currentFilter = btn.dataset.cat;
       applyFilters();
@@ -1145,7 +1422,6 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('logForm').addEventListener('submit', handleLogSubmit);
   document.getElementById('editForm').addEventListener('submit', handleEditSubmit);
 
-  // Avatar dropdown (from base template)
   const avatarBtn = document.getElementById('avatarBtn');
   const profileDropdown = document.getElementById('profileDropdown');
   if (avatarBtn && profileDropdown) {
@@ -1153,7 +1429,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('click', () => profileDropdown.classList.remove('open'));
   }
 
-  // Close modals on overlay click
   document.querySelectorAll('.modal-overlay').forEach(overlay => {
     overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(overlay.id); });
   });
@@ -1162,214 +1437,192 @@ document.addEventListener('DOMContentLoaded', () => {
   initChart();
   updateSideTotal();
   animateCounters();
-
-  // La carte est initialisée après un court délai pour garantir
-  // que le DOM et les styles sont complètement appliqués
+  buildWeeklyBars();
   setTimeout(initActivityMap, 300);
 });
 
 window.addEventListener('load', () => {
-  // Force un second invalidateSize après le chargement complet de la page
-  setTimeout(() => {
-    if (activityMap) activityMap.invalidateSize(true);
-  }, 500);
+  setTimeout(() => { if (activityMap) activityMap.invalidateSize(true); }, 500);
 });
 
 // ══════════════════════════════════════════════════════
-// SECTION TABS — Homme / Femme / Tous
+// FIX YOUTUBE — Conversion URL → embed
+// YouTube bloque les iframes sur des URLs normales (watch?v=…).
+// Il faut utiliser https://www.youtube.com/embed/VIDEO_ID
+// Cette fonction extrait l'ID et construit l'URL embed correcte.
 // ══════════════════════════════════════════════════════
 
 /**
- * switchSection(section, btn)
- * Bascule entre les sections 'all', 'homme', 'femme'.
- * Met à jour l'onglet actif et filtre les exercices.
+ * extractYouTubeId(url)
+ * Extrait l'ID d'une vidéo YouTube depuis n'importe quel format :
+ *   - https://www.youtube.com/watch?v=ID
+ *   - https://youtu.be/ID
+ *   - https://www.youtube.com/embed/ID
+ *   - https://youtube.com/shorts/ID
+ * Retourne null si l'URL n'est pas une URL YouTube reconnue.
  */
-function switchSection(section, btn) {
-  currentSection = section;
-
-  // Met à jour l'apparence des onglets
-  document.querySelectorAll('.section-tab-btn').forEach(b => {
-    b.classList.remove('active');
-  });
-  btn.classList.add('active');
-
-  // Met à jour le label de la bibliothèque
-  const labels = { all: 'Tous les exercices', homme: 'Exercices Homme ♂', femme: 'Exercices Femme ♀' };
-  const labelEl = document.getElementById('libSectionLabel');
-  if (labelEl) labelEl.textContent = labels[section] || 'Tous les exercices';
-
-  // Réinitialise le filtre catégorie sur "Tous" lors du changement de section
-  currentFilter = 'all';
-  document.querySelectorAll('.cat-btn').forEach(b => {
-    b.classList.remove('active','all','cardio','force','souplesse','endurance','perte');
-  });
-  const allBtn = document.querySelector('.cat-btn[data-cat="all"]');
-  if (allBtn) allBtn.classList.add('active','all');
-
-  applyFilters();
+function extractYouTubeId(url) {
+  if (!url) return null;
+  // Patterns possibles
+  const patterns = [
+    /[?&]v=([a-zA-Z0-9_-]{11})/,          // watch?v=ID
+    /youtu\.be\/([a-zA-Z0-9_-]{11})/,      // youtu.be/ID
+    /embed\/([a-zA-Z0-9_-]{11})/,          // embed/ID
+    /shorts\/([a-zA-Z0-9_-]{11})/,         // shorts/ID
+    /\/v\/([a-zA-Z0-9_-]{11})/,            // /v/ID
+  ];
+  for (const pattern of patterns) {
+    const match = url.match(pattern);
+    if (match && match[1]) return match[1];
+  }
+  return null;
 }
 
 /**
- * applyFilters()
- * Applique simultanément le filtre de section (homme/femme/tous),
- * le filtre de catégorie (cardio/force/…) et la recherche textuelle.
- * Chaque carte .ex-card possède data-section et data-cat.
+ * openVideo(url, name)
+ * Ouvre la modale vidéo.
+ * - Si c'est une URL YouTube : affiche un iframe embed (contourne le blocage)
+ * - Sinon : affiche un iframe normal (Vimeo, etc.)
+ * - Si l'embed échoue : affiche un bouton pour ouvrir dans un nouvel onglet
  */
+function openVideo(url, name) {
+  const wrap = document.getElementById('videoWrap');
+  document.getElementById('videoTitle').textContent = name;
+  openModal('videoModal');
+
+  const ytId = extractYouTubeId(url);
+
+  if (ytId) {
+    // URL embed YouTube avec paramètres optimaux
+    const embedUrl = `https://www.youtube.com/embed/${ytId}?autoplay=1&rel=0&modestbranding=1&playsinline=1`;
+    wrap.innerHTML = `
+      <iframe
+        src="${embedUrl}"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen
+        referrerpolicy="strict-origin-when-cross-origin"
+        title="${name}"
+        style="position:absolute;inset:0;width:100%;height:100%;border:none;">
+      </iframe>`;
+  } else if (url && url.startsWith('http')) {
+    // Autre plateforme vidéo (Vimeo, etc.)
+    wrap.innerHTML = `
+      <iframe
+        src="${url}"
+        frameborder="0"
+        allow="autoplay; fullscreen; picture-in-picture"
+        allowfullscreen
+        title="${name}"
+        style="position:absolute;inset:0;width:100%;height:100%;border:none;">
+      </iframe>`;
+  } else {
+    // Pas d'URL valide — fallback avec bouton
+    wrap.innerHTML = `
+      <div class="video-fallback">
+        <div style="font-size:52px">🎥</div>
+        <h3>${name}</h3>
+        <p>La vidéo ne peut pas être lue directement ici.<br>Cliquez pour l'ouvrir sur YouTube.</p>
+        <a class="btn-open-youtube" href="${url || '#'}" target="_blank" rel="noopener">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="white">
+            <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+          </svg>
+          Ouvrir sur YouTube
+        </a>
+      </div>`;
+  }
+}
+
+// ══════════════════════════════════════════════════════
+// SECTION TABS
+// ══════════════════════════════════════════════════════
+function switchSection(section, btn) {
+  currentSection = section;
+  document.querySelectorAll('.section-tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const labels = { all: 'Tous les exercices', homme: 'Exercices Homme ♂', femme: 'Exercices Femme ♀' };
+  const lbl = document.getElementById('libSectionLabel');
+  if (lbl) lbl.textContent = labels[section] || 'Tous les exercices';
+  currentFilter = 'all';
+  document.querySelectorAll('.cat-btn').forEach(b =>
+    b.classList.remove('active','all','cardio','force','souplesse','endurance','perte'));
+  const allBtn = document.querySelector('.cat-btn[data-cat="all"]');
+  if (allBtn) allBtn.classList.add('active','all');
+  applyFilters();
+}
+
 function applyFilters() {
   const search = (document.getElementById('searchInput').value || '').toLowerCase().trim();
-
   document.querySelectorAll('.ex-card').forEach(card => {
-    const cardSection = card.dataset.section || 'neutre'; // 'homme' | 'femme' | 'neutre'
+    const cardSection = card.dataset.section || 'neutre';
     const cardCat     = (card.dataset.cat || '').toLowerCase();
     const cardName    = (card.dataset.name || '').toLowerCase();
-
-    // ── Filtre section ──────────────────────────────────────
-    // 'all' → affiche tout
-    // 'homme' → affiche seulement les exercices avec data-section="homme"
-    // 'femme' → affiche seulement les exercices avec data-section="femme"
     let sectionOk = true;
-    if (currentSection === 'homme') {
-      sectionOk = (cardSection === 'homme');
-    } else if (currentSection === 'femme') {
-      sectionOk = (cardSection === 'femme');
-    }
-
-    // ── Filtre catégorie ────────────────────────────────────
-    const catOk = (currentFilter === 'all') || cardCat.includes(currentFilter.toLowerCase());
-
-    // ── Filtre recherche textuelle ──────────────────────────
+    if (currentSection === 'homme') sectionOk = (cardSection === 'homme');
+    else if (currentSection === 'femme') sectionOk = (cardSection === 'femme');
+    const catOk  = (currentFilter === 'all') || cardCat.includes(currentFilter.toLowerCase());
     const nameOk = !search || cardName.includes(search);
-
     card.style.display = (sectionOk && catOk && nameOk) ? '' : 'none';
   });
-
-  // Met à jour les compteurs des onglets en fonction de la recherche
   updateTabCounts(search);
 }
 
-/**
- * updateTabCounts(search)
- * Recalcule et affiche les compteurs visibles dans les onglets.
- */
 function updateTabCounts(search) {
   search = (search || '').toLowerCase().trim();
-  let countAll = 0, countHomme = 0, countFemme = 0;
-
+  let cAll = 0, cH = 0, cF = 0;
   document.querySelectorAll('.ex-card').forEach(card => {
-    const cardSection = card.dataset.section || 'neutre';
-    const cardName    = (card.dataset.name || '').toLowerCase();
-    const nameOk      = !search || cardName.includes(search);
-    if (!nameOk) return;
-    countAll++;
-    if (cardSection === 'homme') countHomme++;
-    else if (cardSection === 'femme') countFemme++;
+    const s = card.dataset.section || 'neutre';
+    const n = (card.dataset.name || '').toLowerCase();
+    if (search && !n.includes(search)) return;
+    cAll++;
+    if (s === 'homme') cH++;
+    else if (s === 'femme') cF++;
   });
-
-  const tAll = document.getElementById('tabCountAll');
-  const tH   = document.getElementById('tabCountHomme');
-  const tF   = document.getElementById('tabCountFemme');
-  if (tAll) tAll.textContent = countAll;
-  if (tH)   tH.textContent   = countHomme;
-  if (tF)   tF.textContent   = countFemme;
+  const ta = document.getElementById('tabCountAll');
+  const th = document.getElementById('tabCountHomme');
+  const tf = document.getElementById('tabCountFemme');
+  if (ta) ta.textContent = cAll;
+  if (th) th.textContent = cH;
+  if (tf) tf.textContent = cF;
 }
 
-function liveSearch(val) {
-  applyFilters();
-}
+function liveSearch(val) { applyFilters(); }
 
-// ══════════════════════════════════════════════════════════════════
-// LEAFLET MAP — CORRECTION TOTALE POUR RENDU 100%
-// La carte est initialisée dans un div de taille fixe (#mapContainer).
-// invalidateSize() est appelé à plusieurs moments clés pour s'assurer
-// que Leaflet calcule correctement la taille réelle du conteneur.
-// ══════════════════════════════════════════════════════════════════
-let activityMap    = null;
-let routePolyline  = null;
-let routeCoords    = [];
-let routeMarkers   = [];
-let parkMarkers    = [];
-let routeMode      = false;
-const DEFAULT_MAP_CENTER = [36.8065, 10.1815]; // Tunis par défaut
+// ══════════════════════════════════════════════════════
+// MAP LEAFLET
+// ══════════════════════════════════════════════════════
+let activityMap = null, routePolyline = null, routeCoords = [], routeMarkers = [], parkMarkers = [], routeMode = false;
+const DEFAULT_MAP_CENTER = [36.8065, 10.1815];
 const DEFAULT_MAP_ZOOM   = 13;
 
 function initActivityMap() {
   const mapEl = document.getElementById('activityMap');
-  if (!mapEl || typeof L === 'undefined') return;
-  if (activityMap) return; // Evite la double initialisation
-
-  // Leaflet requiert que le conteneur ait une taille définie AVANT l'initialisation
-  mapEl.style.width  = '100%';
-  mapEl.style.height = '380px';
-
-  activityMap = L.map('activityMap', {
-    zoomControl:      false,
-    scrollWheelZoom:  false,
-    preferCanvas:     true,    // Meilleure performance
-  }).setView(DEFAULT_MAP_CENTER, DEFAULT_MAP_ZOOM);
-
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; OpenStreetMap contributors',
-    maxZoom: 19,
-  }).addTo(activityMap);
-
-  routePolyline = L.polyline([], {
-    color:    '#5B8DEF',
-    weight:   5,
-    opacity:  0.85,
-    dashArray:'8 6',
-    lineJoin: 'round',
-  }).addTo(activityMap);
-
-  L.control.zoom({ position: 'bottomright' }).addTo(activityMap);
-
-  activityMap.on('click', e => {
-    if (!routeMode) return;
-    addRoutePoint(e.latlng);
-  });
-
-  // CORRECTION CLEF : invalidateSize après que le navigateur a rendu le conteneur
-  activityMap.whenReady(() => {
-    setTimeout(() => {
-      activityMap.invalidateSize(true);
-      activityMap.setView(DEFAULT_MAP_CENTER, DEFAULT_MAP_ZOOM);
-    }, 100);
-  });
-
-  // Redimensionnement lors du resize de la fenêtre
-  window.addEventListener('resize', () => {
-    if (activityMap) activityMap.invalidateSize(true);
-  });
-
-  // Tentative de géolocalisation silencieuse au démarrage
+  if (!mapEl || typeof L === 'undefined' || activityMap) return;
+  mapEl.style.width = '100%'; mapEl.style.height = '380px';
+  activityMap = L.map('activityMap', { zoomControl:false, scrollWheelZoom:false, preferCanvas:true })
+    .setView(DEFAULT_MAP_CENTER, DEFAULT_MAP_ZOOM);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution:'&copy; OpenStreetMap', maxZoom:19 }).addTo(activityMap);
+  routePolyline = L.polyline([], { color:'#7C5CFC', weight:5, opacity:.85, dashArray:'8 6' }).addTo(activityMap);
+  L.control.zoom({ position:'bottomright' }).addTo(activityMap);
+  activityMap.on('click', e => { if (routeMode) addRoutePoint(e.latlng); });
+  activityMap.whenReady(() => { setTimeout(() => { activityMap.invalidateSize(true); activityMap.setView(DEFAULT_MAP_CENTER, DEFAULT_MAP_ZOOM); }, 100); });
+  window.addEventListener('resize', () => { if (activityMap) activityMap.invalidateSize(true); });
   locateUser(true);
 }
 
-function locateUser(silent = false) {
-  if (!navigator.geolocation) {
-    if (!silent) showToast('error', '🌍 Géolocalisation non supportée par votre navigateur.');
-    return;
-  }
-
-  const status = document.getElementById('parkStatus');
-  if (status && !silent) status.textContent = '⏳ Recherche de votre position…';
-
-  navigator.geolocation.getCurrentPosition(position => {
-    const { latitude, longitude } = position.coords;
+function locateUser(silent=false) {
+  if (!navigator.geolocation) { if (!silent) showToast('error','🌍 Géoloc non supportée'); return; }
+  const st = document.getElementById('parkStatus');
+  if (st && !silent) st.textContent = '⏳ Localisation…';
+  navigator.geolocation.getCurrentPosition(pos => {
+    const { latitude: lat, longitude: lng } = pos.coords;
     if (activityMap) {
-      activityMap.setView([latitude, longitude], DEFAULT_MAP_ZOOM);
+      activityMap.setView([lat,lng], DEFAULT_MAP_ZOOM);
       activityMap.invalidateSize(true);
-      L.circle([latitude, longitude], {
-        radius:      80,
-        color:       '#5B8DEF',
-        fillColor:   'rgba(91,138,239,.12)',
-        fillOpacity: 0.6,
-      }).addTo(activityMap);
-      if (status) status.textContent = '📍 Vous êtes localisé. Cliquez sur 🏟️ pour afficher les parcs de sport.';
+      L.circle([lat,lng], { radius:80, color:'#7C5CFC', fillColor:'rgba(124,92,252,.12)', fillOpacity:.6 }).addTo(activityMap);
+      if (st) st.innerHTML = '<strong>Parcs :</strong> Localisé ! Cliquez sur 🏟️ pour voir les parcs sportifs.';
     }
-  }, () => {
-    if (status && !silent) status.textContent = '⚠ Impossible de localiser. Utilisez la carte manuellement.';
-    if (!silent) showToast('error', '⚠ Permission de localisation refusée ou indisponible.');
-  }, { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 });
+  }, () => { if (!silent) showToast('error','⚠ Permission localisation refusée'); }, { enableHighAccuracy:true, timeout:10000 });
 }
 
 function toggleRouteMode() {
@@ -1377,28 +1630,17 @@ function toggleRouteMode() {
   const btn = document.getElementById('routeToggleBtn');
   if (!btn) return;
   btn.classList.toggle('active', routeMode);
-  btn.textContent = routeMode ? '🛑 Terminer' : '✍️';
+  btn.textContent = routeMode ? '🛑 Terminer' : '✍️ Tracer';
   const info = document.getElementById('routeInfo');
-  if (routeMode) {
-    if (info) info.innerHTML = '<strong>Parcours :</strong> Cliquez sur la carte pour ajouter des points.';
-    showToast('info', 'Cliquez sur la carte pour tracer votre parcours.');
-  } else {
-    updateRouteMetrics();
-    showToast('success', 'Parcours enregistré localement.');
-  }
+  if (routeMode) { if (info) info.innerHTML = '<strong>Parcours :</strong> Cliquez pour ajouter des points.'; showToast('info','Cliquez sur la carte pour tracer.'); }
+  else { updateRouteMetrics(); showToast('success','Parcours sauvegardé.'); }
 }
 
 function addRoutePoint(latlng) {
   if (!activityMap) return;
   routeCoords.push([latlng.lat, latlng.lng]);
-  const marker = L.circleMarker(latlng, {
-    radius:      8,
-    fillColor:   '#5B8DEF',
-    color:       '#fff',
-    weight:      2,
-    fillOpacity: 1,
-  }).addTo(activityMap);
-  routeMarkers.push(marker);
+  const m = L.circleMarker(latlng, { radius:8, fillColor:'#7C5CFC', color:'#fff', weight:2, fillOpacity:1 }).addTo(activityMap);
+  routeMarkers.push(m);
   routePolyline.setLatLngs(routeCoords);
   updateRouteMetrics();
 }
@@ -1410,67 +1652,41 @@ function resetRoute() {
   if (routePolyline) routePolyline.setLatLngs([]);
   const info = document.getElementById('routeInfo');
   if (info) info.innerHTML = '<strong>Parcours :</strong> Aucun tracé';
-  showToast('info', 'Le parcours a été réinitialisé.');
+  showToast('info','Parcours réinitialisé.');
 }
 
 function updateRouteMetrics() {
-  if (!activityMap || routeCoords.length < 2) {
-    const info = document.getElementById('routeInfo');
-    if (info) info.innerHTML = '<strong>Parcours :</strong> Aucun tracé';
-    return;
-  }
-  let distance = 0;
-  for (let i = 1; i < routeCoords.length; i++) {
-    distance += activityMap.distance(routeCoords[i - 1], routeCoords[i]);
-  }
+  if (!activityMap || routeCoords.length < 2) { const i=document.getElementById('routeInfo'); if(i) i.innerHTML='<strong>Parcours :</strong> Aucun tracé'; return; }
+  let d = 0;
+  for (let i=1; i<routeCoords.length; i++) d += activityMap.distance(routeCoords[i-1], routeCoords[i]);
   const info = document.getElementById('routeInfo');
-  if (info) info.innerHTML = `<strong>Parcours :</strong> ${(distance / 1000).toFixed(2)} km · ${routeCoords.length} point${routeCoords.length > 1 ? 's' : ''}`;
+  if (info) info.innerHTML = `<strong>Parcours :</strong> ${(d/1000).toFixed(2)} km · ${routeCoords.length} points`;
 }
 
 async function searchParks() {
   if (!activityMap) return;
-  const center = activityMap.getCenter();
-  const status = document.getElementById('parkStatus');
-  if (status) status.textContent = '⏳ Recherche des parcs sportifs aux alentours…';
-  clearParks();
+  const c = activityMap.getCenter();
+  const st = document.getElementById('parkStatus');
+  if (st) st.textContent = '⏳ Recherche des parcs…';
+  parkMarkers.forEach(m => activityMap.removeLayer(m)); parkMarkers = [];
   try {
-    const query = `[out:json][timeout:25];(node["leisure"="park"](around:3000,${center.lat},${center.lng});way["leisure"="park"](around:3000,${center.lat},${center.lng});relation["leisure"="park"](around:3000,${center.lat},${center.lng});node["sport"](around:3000,${center.lat},${center.lng});way["sport"](around:3000,${center.lat},${center.lng});relation["sport"](around:3000,${center.lat},${center.lng}););out center;`;
-    const response = await fetch('https://overpass-api.de/api/interpreter', {
-      method:  'POST',
-      body:    query,
-      headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
+    const q = `[out:json][timeout:25];(node["leisure"="park"](around:3000,${c.lat},${c.lng});way["leisure"="park"](around:3000,${c.lat},${c.lng});node["sport"](around:3000,${c.lat},${c.lng}););out center;`;
+    const r = await fetch('https://overpass-api.de/api/interpreter', { method:'POST', body:q, headers:{'Content-Type':'text/plain;charset=UTF-8'} });
+    const d = await r.json();
+    const u = new Map();
+    (d.elements||[]).forEach(el => {
+      const ct = el.type==='node'?{lat:el.lat,lon:el.lon}:(el.center||{});
+      if (!ct.lat||!ct.lon||u.has(`${el.type}-${el.id}`)) return;
+      u.set(`${el.type}-${el.id}`,true);
+      const lbl = el.tags?.name||(el.tags?.sport?`Parc ${el.tags.sport}`:'Parc sportif');
+      const mk = L.marker([ct.lat,ct.lon],{title:lbl}).addTo(activityMap);
+      mk.bindPopup(`<strong>${lbl}</strong><br>${el.tags?.leisure||el.tags?.sport||''}`);
+      parkMarkers.push(mk);
     });
-    const result = await response.json();
-    addParkMarkers(result.elements || []);
-  } catch {
-    if (status) status.textContent = '⚠ Impossible de charger les parcs.';
-    showToast('error', 'Erreur lors de la recherche des parcs sportifs.');
-  }
-}
-
-function clearParks() {
-  parkMarkers.forEach(m => activityMap && activityMap.removeLayer(m));
-  parkMarkers = [];
-}
-
-function addParkMarkers(elements) {
-  if (!activityMap) return;
-  const unique = new Map();
-  elements.forEach(el => {
-    const center = el.type === 'node' ? { lat: el.lat, lon: el.lon } : (el.center || {});
-    if (!center.lat || !center.lon) return;
-    const id = `${el.type}-${el.id}`;
-    if (unique.has(id)) return;
-    unique.set(id, true);
-    const label  = el.tags?.name || (el.tags?.sport ? `Parc ${el.tags.sport}` : 'Parc sportif');
-    const marker = L.marker([center.lat, center.lon], { title: label, alt: label }).addTo(activityMap);
-    marker.bindPopup(`<strong>${label}</strong><br>${el.tags?.leisure || el.tags?.sport || ''}`);
-    parkMarkers.push(marker);
-  });
-  const count  = parkMarkers.length;
-  const status = document.getElementById('parkStatus');
-  if (status) status.innerHTML = `<strong>Parcs :</strong> ${count} lieu${count !== 1 ? 'x' : ''} trouvé${count !== 1 ? 's' : ''}.`;
-  if (count === 0) showToast('info', 'Aucun parc sportif trouvé autour de cette zone.');
+    const cnt = parkMarkers.length;
+    if (st) st.innerHTML = `<strong>Parcs :</strong> ${cnt} lieu${cnt!==1?'x':''} trouvé${cnt!==1?'s':''}.`;
+    if (cnt===0) showToast('info','Aucun parc trouvé autour.');
+  } catch { if (st) st.textContent='⚠ Erreur recherche parcs.'; showToast('error','Erreur parcs sportifs.'); }
 }
 
 // ══════════════════════════════════════════════════════
@@ -1481,19 +1697,56 @@ function animateCounters() {
     const el = document.getElementById(id);
     if (!el) return;
     const target = parseInt(el.textContent) || 0;
-    if (target === 0) return;
+    if (!target) return;
     let start = 0;
-    const step = Math.ceil(target / 30);
-    const interval = setInterval(() => {
-      start = Math.min(start + step, target);
-      el.textContent = start;
-      if (start >= target) clearInterval(interval);
-    }, 30);
+    const step = Math.ceil(target/40);
+    const iv = setInterval(() => { start = Math.min(start+step,target); el.textContent=start; if(start>=target) clearInterval(iv); }, 25);
   });
 }
 
 // ══════════════════════════════════════════════════════
-// CHART — donut catégories
+// WEEKLY BARS — 7 derniers jours
+// ══════════════════════════════════════════════════════
+function buildWeeklyBars() {
+  const wrap = document.getElementById('weeklyBars');
+  if (!wrap) return;
+  // On lit les sessions depuis le DOM (ex-row dans les session-blocks)
+  const sessionBlocks = document.querySelectorAll('.session-block');
+  const counts = {};
+  sessionBlocks.forEach(block => {
+    const dateEl = block.querySelector('.session-date-big');
+    if (!dateEl) return;
+    const text = dateEl.textContent.replace('📅','').trim();
+    // format dd/mm/yyyy
+    const parts = text.split('/');
+    if (parts.length===3) {
+      const key = `${parts[2]}-${parts[1]}-${parts[0]}`;
+      counts[key] = (counts[key]||0) + (block.querySelectorAll('.ex-row').length);
+    }
+  });
+  const days = ['Lu','Ma','Me','Je','Ve','Sa','Di'];
+  const today = new Date();
+  const maxVal = Math.max(...Object.values(counts), 1);
+  wrap.innerHTML = '';
+  for (let i=6; i>=0; i--) {
+    const d = new Date(today); d.setDate(today.getDate()-i);
+    const key = d.toISOString().split('T')[0];
+    const dayLbl = days[d.getDay()===0?6:d.getDay()-1];
+    const val = counts[key]||0;
+    const pct = Math.round((val/maxVal)*100);
+    const isToday = (i===0);
+    const barDiv = document.createElement('div');
+    barDiv.className = 'weekly-bar-wrap';
+    barDiv.title = `${key} : ${val} exercice${val!==1?'s':''}`;
+    barDiv.innerHTML = `
+      <div class="weekly-bar-inner${isToday?' today':''}" style="height:${Math.max(pct,5)}%"></div>
+      <span class="weekly-bar-label">${dayLbl}</span>`;
+    wrap.appendChild(barDiv);
+  }
+}
+
+// ══════════════════════════════════════════════════════
+// CHART DONUT
 // ══════════════════════════════════════════════════════
 function initChart() {
   const cats = { Cardio:0, Force:0, Souplesse:0, Endurance:0, Perte:0 };
@@ -1506,53 +1759,47 @@ function initChart() {
     else if (dot.classList.contains('endurance')) cats.Endurance++;
     else if (dot.classList.contains('perte'))     cats.Perte++;
   });
+  const colors  = ['#FF4D6D','#3B82F6','#10B981','#F59E0B','#EF4444'];
+  const labels  = Object.keys(cats);
+  const data    = Object.values(cats);
+  const total   = data.reduce((a,b)=>a+b,0);
 
-  const colors = ['#FF6B6B','#5B8DEF','#43D39E','#F7B731','#FD7272'];
-  const labels = Object.keys(cats);
-  const data   = Object.values(cats);
-  const total  = data.reduce((a,b)=>a+b,0) || 1;
+  // Centre label
+  const cval = document.getElementById('chartTotalEx');
+  if (cval) cval.textContent = total;
 
-  const ctx = document.getElementById('catChart').getContext('2d');
+  const ctx = document.getElementById('catChart')?.getContext('2d');
+  if (!ctx) return;
   _catChart = new Chart(ctx, {
     type: 'doughnut',
     data: {
       labels,
-      datasets: [{
-        data,
-        backgroundColor: colors,
-        borderColor:     '#fff',
-        borderWidth:     3,
-        hoverOffset:     8,
-      }]
+      datasets: [{ data, backgroundColor:colors, borderColor:'#fff', borderWidth:3, hoverOffset:10 }]
     },
     options: {
-      responsive: true,
-      cutout: '68%',
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          callbacks: {
-            label: ctx => ` ${ctx.label}: ${ctx.raw} exercice${ctx.raw!==1?'s':''}`
-          }
-        }
-      }
+      responsive:false, cutout:'70%',
+      plugins:{ legend:{display:false}, tooltip:{ callbacks:{ label: c => ` ${c.label}: ${c.raw}` } } },
+      animation:{ animateRotate:true, duration:800 }
     }
   });
 
   const legend = document.getElementById('chartLegend');
+  if (!legend) return;
   legend.innerHTML = '';
-  labels.forEach((lbl, i) => {
-    const pct  = Math.round(data[i] / total * 100);
-    const item = document.createElement('div');
-    item.className = 'legend-item';
-    item.innerHTML = `
-      <div class="legend-dot-label">
-        <div class="legend-dot" style="background:${colors[i]}"></div>
-        <span class="legend-name">${lbl}</span>
-      </div>
-      <div class="legend-bar-wrap"><div class="legend-bar" style="width:${pct}%;background:${colors[i]}"></div></div>
-      <span class="legend-count">${data[i]}</span>`;
-    legend.appendChild(item);
+  const maxD = Math.max(...data,1);
+  labels.forEach((lbl,i) => {
+    const pct = total ? Math.round(data[i]/total*100) : 0;
+    const row = document.createElement('div');
+    row.className = 'legend-row';
+    row.innerHTML = `
+      <div class="legend-swatch" style="background:${colors[i]}"></div>
+      <span class="legend-label">${lbl}</span>
+      <span class="legend-val">${data[i]}</span>`;
+    // Bar de progression sous le row
+    const barTrack = document.createElement('div');
+    barTrack.style.cssText = 'grid-column:1/-1;';
+    row.appendChild(barTrack);
+    legend.appendChild(row);
   });
 }
 
@@ -1562,190 +1809,146 @@ function initChart() {
 function selectExercise(el) {
   document.querySelectorAll('.ex-card.selected').forEach(c => c.classList.remove('selected'));
   el.classList.add('selected');
-  selectedExercise = {
-    id:    el.dataset.id,
-    name:  el.dataset.name,
-    type:  el.dataset.type,
-    icon:  el.dataset.icon,
-    video: el.dataset.video,
-  };
+  selectedExercise = { id:el.dataset.id, name:el.dataset.name, type:el.dataset.type, icon:el.dataset.icon, video:el.dataset.video };
   document.getElementById('exerciseId').value = selectedExercise.id;
   const info = document.getElementById('selectedInfo');
   info.classList.add('show');
-  document.getElementById('selectedIcon').textContent = selectedExercise.icon;
-  document.getElementById('selectedName').textContent = selectedExercise.name;
-  document.getElementById('selectedType').textContent = (selectedExercise.type || '').replace(/_/g,' ');
-  document.getElementById('selectedBadge').textContent = (selectedExercise.type || '').split(' ')[0];
+  document.getElementById('selectedIcon').textContent  = selectedExercise.icon;
+  document.getElementById('selectedName').textContent  = selectedExercise.name;
+  document.getElementById('selectedType').textContent  = (selectedExercise.type||'').replace(/_/g,' ');
+  document.getElementById('selectedBadge').textContent = (selectedExercise.type||'').split(' ')[0];
   document.getElementById('err-exercice').classList.remove('show');
-
-  document.getElementById('step1').querySelector('.step-num').style.background = 'var(--green)';
-  document.getElementById('step1').querySelector('.step-num').style.color      = 'white';
+  document.getElementById('step1').querySelector('.step-num').style.cssText = 'background:#10B981;color:white';
   document.getElementById('step2').classList.add('active');
-
   showToast('info', selectedExercise.icon + ' ' + selectedExercise.name + ' sélectionné');
-  document.getElementById('logForm').scrollIntoView({behavior:'smooth',block:'center'});
+  document.getElementById('logForm').scrollIntoView({ behavior:'smooth', block:'center' });
 }
 
 // ══════════════════════════════════════════════════════
-// LOG FORM SUBMIT
+// LOG FORM
 // ══════════════════════════════════════════════════════
 async function handleLogSubmit(e) {
   e.preventDefault();
   let valid = true;
-
-  const exerciceId = document.getElementById('exerciseId').value;
+  const exId = document.getElementById('exerciseId').value;
   const errEx = document.getElementById('err-exercice');
-  if (!exerciceId) { errEx.classList.add('show'); valid = false; }
-  else errEx.classList.remove('show');
-
+  if (!exId) { errEx.classList.add('show'); valid=false; } else errEx.classList.remove('show');
   const dureeEl = document.getElementById('duree');
   const duree   = parseInt(dureeEl.value);
   const errDur  = document.getElementById('err-duree');
-  if (!duree || duree < 1 || duree > 300) {
-    dureeEl.classList.add('error'); errDur.classList.add('show'); valid = false;
-  } else { dureeEl.classList.remove('error'); errDur.classList.remove('show'); }
-
+  if (!duree||duree<1||duree>300) { dureeEl.classList.add('error'); errDur.classList.add('show'); valid=false; }
+  else { dureeEl.classList.remove('error'); errDur.classList.remove('show'); }
   const dateEl = document.getElementById('dateSeance');
   const date   = dateEl.value;
   const errDt  = document.getElementById('err-date');
-  if (!date) {
-    dateEl.classList.add('error'); errDt.classList.add('show'); valid = false;
-  } else { dateEl.classList.remove('error'); errDt.classList.remove('show'); }
-
+  if (!date) { dateEl.classList.add('error'); errDt.classList.add('show'); valid=false; }
+  else { dateEl.classList.remove('error'); errDt.classList.remove('show'); }
   if (!valid) return;
-
   const btn = document.getElementById('submitBtn');
-  btn.disabled    = true;
-  btn.innerHTML   = '⏳ Enregistrement...';
-
+  btn.disabled=true; btn.innerHTML='⏳ Enregistrement...';
   const payload = {
-    exercice_id:      exerciceId,
-    duree_minutes:    duree,
-    date_activite:    date,
-    calories_brulees: parseInt(document.getElementById('calories').value) || null,
-    poids:            parseFloat(document.getElementById('poids').value)  || null,
-    nb_series:        parseInt(document.getElementById('series').value)   || null,
-    nb_repetitions:   parseInt(document.getElementById('reps').value)     || null,
-    notes:            document.getElementById('notes').value.trim()       || null,
+    exercice_id:exId, duree_minutes:duree, date_activite:date,
+    calories_brulees:parseInt(document.getElementById('calories').value)||null,
+    poids:parseFloat(document.getElementById('poids').value)||null,
+    nb_series:parseInt(document.getElementById('series').value)||null,
+    nb_repetitions:parseInt(document.getElementById('reps').value)||null,
+    notes:document.getElementById('notes').value.trim()||null,
   };
-
   try {
-    const res  = await fetch(API.add, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload) });
+    const res = await fetch(API.add,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
     const data = await res.json();
-    if (data.success) {
-      showToast('success', '✅ Exercice ajouté à la séance du ' + formatDate(date));
-      updateStats(data.stats);
-      setTimeout(() => location.reload(), 800);
-    } else {
-      if (data.errors) {
-        Object.entries(data.errors).forEach(([k, msg]) => {
-          const el = document.getElementById('err-' + k);
-          if (el) { el.textContent = '⚠ ' + msg; el.classList.add('show'); }
-        });
-      }
-      showToast('error', '⚠ Erreur lors de l\'enregistrement.');
+    if (data.success) { showToast('success','✅ Exercice ajouté !'); updateStats(data.stats); setTimeout(()=>location.reload(),800); }
+    else {
+      if (data.errors) Object.entries(data.errors).forEach(([k,msg])=>{ const el=document.getElementById('err-'+k); if(el){el.textContent='⚠ '+msg;el.classList.add('show');} });
+      showToast('error','⚠ Erreur enregistrement.');
     }
-  } catch { showToast('error', '⚠ Erreur réseau.'); }
-  finally { btn.disabled = false; btn.innerHTML = '<span>💾</span> Enregistrer dans la séance'; }
+  } catch { showToast('error','⚠ Erreur réseau.'); }
+  finally { btn.disabled=false; btn.innerHTML='<span>💾</span> Enregistrer dans la séance'; }
 }
 
 // ══════════════════════════════════════════════════════
 // EDIT
 // ══════════════════════════════════════════════════════
-function openEdit(id, duree, cal, ser, reps, poids, notes) {
-  editingId = id;
-  document.getElementById('editId').value       = id;
-  document.getElementById('editDuree').value    = duree  || '';
-  document.getElementById('editCalories').value = cal    || '';
-  document.getElementById('editSeries').value   = ser    || '';
-  document.getElementById('editReps').value     = reps   || '';
-  document.getElementById('editPoids').value    = poids  || '';
-  document.getElementById('editNotes').value    = notes  || '';
+function openEdit(id,duree,cal,ser,reps,poids,notes) {
+  editingId=id;
+  document.getElementById('editId').value=id;
+  document.getElementById('editDuree').value=duree||'';
+  document.getElementById('editCalories').value=cal||'';
+  document.getElementById('editSeries').value=ser||'';
+  document.getElementById('editReps').value=reps||'';
+  document.getElementById('editPoids').value=poids||'';
+  document.getElementById('editNotes').value=notes||'';
   openModal('editModal');
 }
 
 async function handleEditSubmit(e) {
   e.preventDefault();
-  const dureeEl = document.getElementById('editDuree');
-  const duree   = parseInt(dureeEl.value);
-  const errEl   = document.getElementById('err-edit-duree');
-  if (!duree || duree < 1 || duree > 300) { dureeEl.classList.add('error'); errEl.classList.add('show'); return; }
+  const dureeEl=document.getElementById('editDuree');
+  const duree=parseInt(dureeEl.value);
+  const errEl=document.getElementById('err-edit-duree');
+  if (!duree||duree<1||duree>300) { dureeEl.classList.add('error'); errEl.classList.add('show'); return; }
   dureeEl.classList.remove('error'); errEl.classList.remove('show');
-
   const payload = {
-    duree_minutes:    duree,
-    calories_brulees: document.getElementById('editCalories').value || null,
-    nb_series:        document.getElementById('editSeries').value   || null,
-    nb_repetitions:   document.getElementById('editReps').value     || null,
-    poids:            document.getElementById('editPoids').value    || null,
-    notes:            document.getElementById('editNotes').value.trim() || null,
+    duree_minutes:duree,
+    calories_brulees:document.getElementById('editCalories').value||null,
+    nb_series:document.getElementById('editSeries').value||null,
+    nb_repetitions:document.getElementById('editReps').value||null,
+    poids:document.getElementById('editPoids').value||null,
+    notes:document.getElementById('editNotes').value.trim()||null,
   };
-
   try {
-    const res  = await fetch(API.update(editingId), { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload) });
-    const data = await res.json();
-    if (data.success) {
-      showToast('success', '✏️ Exercice modifié !');
-      updateStats(data.stats);
-      closeModal('editModal');
-      setTimeout(() => location.reload(), 600);
-    } else { showToast('error', '⚠ Erreur lors de la modification.'); }
-  } catch { showToast('error', '⚠ Erreur réseau.'); }
+    const res=await fetch(API.update(editingId),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    const data=await res.json();
+    if (data.success) { showToast('success','✏️ Modifié !'); updateStats(data.stats); closeModal('editModal'); setTimeout(()=>location.reload(),600); }
+    else showToast('error','⚠ Erreur modification.');
+  } catch { showToast('error','⚠ Erreur réseau.'); }
 }
 
 // ══════════════════════════════════════════════════════
 // DELETE EXERCISE
 // ══════════════════════════════════════════════════════
-function openDeleteModal(id, name) {
-  _deleteTargetId = id;
-  document.getElementById('deleteExName').textContent = name;
+function openDeleteModal(id,name) {
+  _deleteTargetId=id;
+  document.getElementById('deleteExName').textContent=name;
   openModal('deleteModal');
 }
 
 async function confirmDelete() {
   if (!_deleteTargetId) return;
-  const btn = document.getElementById('deleteConfirmBtn');
-  btn.innerHTML = '⏳ Suppression...'; btn.disabled = true;
+  const btn=document.getElementById('deleteConfirmBtn');
+  btn.innerHTML='⏳ Suppression...'; btn.disabled=true;
   try {
-    const res  = await fetch(API.delete(_deleteTargetId), { method:'POST' });
-    const data = await res.json();
-    if (data.success) {
-      closeModal('deleteModal');
-      showToast('error', '🗑 Exercice retiré de la séance');
-      updateStats(data.stats);
-      setTimeout(() => location.reload(), 500);
-    } else { showToast('error', '⚠ Erreur lors de la suppression.'); }
-  } catch { showToast('error', '⚠ Erreur réseau.'); }
-  finally { btn.innerHTML = '🗑 Supprimer'; btn.disabled = false; _deleteTargetId = null; }
+    const res=await fetch(API.delete(_deleteTargetId),{method:'POST'});
+    const data=await res.json();
+    if (data.success) { closeModal('deleteModal'); showToast('error','🗑 Exercice supprimé'); updateStats(data.stats); setTimeout(()=>location.reload(),500); }
+    else showToast('error','⚠ Erreur suppression.');
+  } catch { showToast('error','⚠ Erreur réseau.'); }
+  finally { btn.innerHTML='🗑 Supprimer'; btn.disabled=false; _deleteTargetId=null; }
 }
 
 // ══════════════════════════════════════════════════════
 // DELETE SESSION
 // ══════════════════════════════════════════════════════
 async function deleteSession(date) {
-  if (!confirm('Supprimer toute la séance du ' + formatDate(date) + ' ?')) return;
+  if (!confirm('Supprimer toute la séance du '+formatDate(date)+' ?')) return;
   try {
-    const res     = await fetch(API.list);
-    const allData = await res.json();
-    const session = allData.sessions.find(s => s.date === date);
-    if (!session) { showToast('error', 'Séance introuvable.'); return; }
-    for (const ex of session.exercises) {
-      await fetch(API.delete(ex.id), { method:'POST' });
-    }
-    showToast('error', '🗑 Séance du ' + formatDate(date) + ' supprimée');
-    setTimeout(() => location.reload(), 600);
-  } catch { showToast('error', '⚠ Erreur réseau.'); }
+    const res=await fetch(API.list);
+    const all=await res.json();
+    const session=all.sessions.find(s=>s.date===date);
+    if (!session) { showToast('error','Séance introuvable.'); return; }
+    for (const ex of session.exercises) await fetch(API.delete(ex.id),{method:'POST'});
+    showToast('error','🗑 Séance supprimée');
+    setTimeout(()=>location.reload(),600);
+  } catch { showToast('error','⚠ Erreur réseau.'); }
 }
 
 // ══════════════════════════════════════════════════════
 // SESSION ACCORDION
 // ══════════════════════════════════════════════════════
 function toggleSession(headEl) {
-  const block   = headEl.closest('.session-block');
-  const exDiv   = block.querySelector('.session-exercises');
-  const chevron = block.querySelector('.session-chevron');
-  exDiv.classList.toggle('open');
-  chevron.classList.toggle('open');
+  const block=headEl.closest('.session-block');
+  block.querySelector('.session-exercises').classList.toggle('open');
+  block.querySelector('.session-chevron').classList.toggle('open');
 }
 
 // ══════════════════════════════════════════════════════
@@ -1753,14 +1956,14 @@ function toggleSession(headEl) {
 // ══════════════════════════════════════════════════════
 function updateStats(stats) {
   if (!stats) return;
-  ['statSeances','sideSeances'].forEach(id => { const el=document.getElementById(id); if(el) el.textContent=stats.sessions; });
-  ['statMinutes','sideMin'].forEach(id => { const el=document.getElementById(id); if(el) el.textContent=stats.minutes; });
-  ['statCalories','sideCal'].forEach(id => { const el=document.getElementById(id); if(el) el.textContent=stats.calories; });
+  ['statSeances','sideSeances'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=stats.sessions;});
+  ['statMinutes','sideMin'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=stats.minutes;});
+  ['statCalories','sideCal'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=stats.calories;});
 }
 
 function updateSideTotal() {
-  const el = document.getElementById('sideTotal');
-  if (el) el.textContent = document.querySelectorAll('.ex-row').length;
+  const el=document.getElementById('sideTotal');
+  if (el) el.textContent=document.querySelectorAll('.ex-row').length;
 }
 
 // ══════════════════════════════════════════════════════
@@ -1769,184 +1972,153 @@ function updateSideTotal() {
 function openModal(id)  { document.getElementById(id).classList.add('open'); }
 function closeModal(id) {
   document.getElementById(id).classList.remove('open');
-  if (id === 'videoModal') document.getElementById('videoFrame').src = '';
-}
-function openVideo(url, name) {
-  document.getElementById('videoTitle').textContent = '▶ ' + name;
-  document.getElementById('videoFrame').src = url;
-  openModal('videoModal');
+  // Nettoie l'iframe vidéo pour stopper la lecture
+  if (id==='videoModal') {
+    const wrap=document.getElementById('videoWrap');
+    if (wrap) wrap.innerHTML='';
+  }
 }
 
 // ══════════════════════════════════════════════════════
-// FAVOURITES (localStorage)
+// FAVOURITES — version améliorée avec sélection rapide
 // ══════════════════════════════════════════════════════
-const FAV_KEY = 'harmony_favs';
-function loadFavs() { try { return JSON.parse(localStorage.getItem(FAV_KEY)) || {}; } catch { return {}; } }
-function saveFavs(favs) { localStorage.setItem(FAV_KEY, JSON.stringify(favs)); }
+const FAV_KEY = 'harmony_favs_v2';
+function loadFavs() { try { return JSON.parse(localStorage.getItem(FAV_KEY))||{}; } catch { return {}; } }
+function saveFavs(favs) { localStorage.setItem(FAV_KEY,JSON.stringify(favs)); }
 
 function toggleFav(btn) {
-  const { id, name, type, icon } = btn.dataset;
+  const { id, name, type, icon, cls } = btn.dataset;
   const favs = loadFavs();
   if (favs[id]) {
     delete favs[id];
-    btn.classList.remove('active');
-    btn.innerHTML = '⭐ Fav';
-    showToast('info', '⭐ Retiré des favoris');
+    btn.classList.remove('active'); btn.innerHTML='⭐ Fav';
+    showToast('info','Retiré des favoris');
   } else {
-    favs[id] = { id, name, type, icon };
-    btn.classList.add('active');
-    btn.innerHTML = '★ Favori';
-    showToast('success', '⭐ ' + name + ' ajouté aux favoris !');
+    favs[id] = { id, name, type, icon, cls:cls||'force' };
+    btn.classList.add('active'); btn.innerHTML='★ Favori';
+    showToast('success','⭐ '+name+' ajouté aux favoris !');
   }
   saveFavs(favs);
   renderFavList(favs);
 }
 
 function removeFav(id) {
-  const favs = loadFavs();
-  delete favs[id];
-  saveFavs(favs);
-  const btn = document.querySelector(`.fav-btn[data-id="${id}"]`);
-  if (btn) { btn.classList.remove('active'); btn.innerHTML = '⭐ Fav'; }
+  const favs=loadFavs();
+  delete favs[id]; saveFavs(favs);
+  const btn=document.querySelector(`.fav-btn[data-id="${id}"]`);
+  if (btn) { btn.classList.remove('active'); btn.innerHTML='⭐ Fav'; }
   renderFavList(favs);
+}
+
+/**
+ * selectFromFav(id)
+ * Sélectionne un exercice depuis les favoris — simule un clic sur la carte.
+ */
+function selectFromFav(id) {
+  const card = document.querySelector(`.ex-card[data-id="${id}"]`);
+  if (card) {
+    // Affiche l'exercice dans la grille et le sélectionne
+    card.style.display = '';
+    selectExercise(card);
+    card.scrollIntoView({ behavior:'smooth', block:'center' });
+    showToast('info', '📌 Exercice sélectionné depuis les favoris');
+  } else {
+    showToast('info','⚠ Exercice non visible. Choisissez "Tous" puis réessayez.');
+  }
 }
 
 function renderFavList(favs) {
   const list  = document.getElementById('favList');
   const empty = document.getElementById('favEmpty');
-  const count = document.getElementById('favCount');
+  const badge = document.getElementById('favCount');
   const keys  = Object.keys(favs);
-  count.textContent = keys.length === 0 ? '0 fav' : keys.length + ' favori' + (keys.length > 1 ? 's' : '');
-  if (keys.length === 0) {
-    list.innerHTML = '';
-    list.appendChild(empty);
-    empty.style.display = '';
-    return;
+  if (badge) badge.textContent = keys.length;
+  if (keys.length===0) {
+    list.innerHTML=''; list.appendChild(empty); empty.style.display=''; return;
   }
-  list.innerHTML = '';
+  list.innerHTML='';
   keys.forEach(id => {
-    const f       = favs[id];
-    const typeLow = (f.type || '').toLowerCase();
-    let tcls = 'force';
-    if (typeLow.includes('cardio'))       tcls = 'cardio';
-    else if (typeLow.includes('souplesse')) tcls = 'souplesse';
-    else if (typeLow.includes('endurance')) tcls = 'endurance';
-    else if (typeLow.includes('perte'))     tcls = 'perte';
+    const f    = favs[id];
+    const cls  = f.cls||getCls(f.type||'');
     const item = document.createElement('div');
-    item.className = 'fav-item';
+    item.className = `fav-item ${cls}`;
     item.innerHTML = `
-      <div class="fav-emoji">${f.icon}</div>
+      <div class="fav-emoji">${f.icon||'💪'}</div>
       <div class="fav-info">
         <div class="fav-name" title="${f.name}">${f.name}</div>
-        <span class="fav-type-badge ${tcls}">${(f.type||'').replace(/_/g,' ').split(' ')[0]}</span>
+        <div class="fav-meta">
+          <span class="fav-cat-pill ${cls}">${(f.type||'').replace(/_homme/i,'').replace(/_femme/i,'').replace(/_/g,' ').trim().split(' ')[0]||'Sport'}</span>
+        </div>
       </div>
-      <button class="fav-remove" title="Retirer des favoris" onclick="removeFav('${id}')">✕</button>`;
+      <div class="fav-actions">
+        <button class="btn-fav-select" onclick="selectFromFav('${id}')" title="Sélectionner">+ Ajouter</button>
+        <button class="btn-fav-remove" onclick="removeFav('${id}')" title="Retirer">✕</button>
+      </div>`;
     list.appendChild(item);
   });
 }
 
+function getCls(type) {
+  const t=(type||'').toLowerCase();
+  if (t.includes('cardio'))     return 'cardio';
+  if (t.includes('souplesse'))  return 'souplesse';
+  if (t.includes('endurance'))  return 'endurance';
+  if (t.includes('perte'))      return 'perte';
+  return 'force';
+}
+
 function initFavs() {
-  const favs = loadFavs();
-  document.querySelectorAll('.fav-btn').forEach(btn => {
-    if (favs[btn.dataset.id]) { btn.classList.add('active'); btn.innerHTML = '★ Favori'; }
+  const favs=loadFavs();
+  document.querySelectorAll('.fav-btn').forEach(btn=>{
+    if (favs[btn.dataset.id]) { btn.classList.add('active'); btn.innerHTML='★ Favori'; }
   });
   renderFavList(favs);
 }
 
 // ══════════════════════════════════════════════════════
-// QR CODE — Sans boite de chargement / spinner
-// Affiche directement le QR code ou un message d'erreur
+// QR CODE
 // ══════════════════════════════════════════════════════
 async function openQR(date) {
-  const wrap   = document.getElementById('qrImgWrap');
-  const waLink = document.getElementById('qrWaLink');
-
-  // Réinitialisation de la modale (texte simple, sans spinner animé)
-  document.getElementById('qrDate').textContent = '—';
-  document.getElementById('qrMeta').textContent = '—';
-  wrap.innerHTML = '<span class="qr-placeholder">Chargement…</span>';
-  waLink.href    = '#';
+  const wrap=document.getElementById('qrImgWrap');
+  const waLink=document.getElementById('qrWaLink');
+  document.getElementById('qrDate').textContent='—';
+  document.getElementById('qrMeta').textContent='—';
+  wrap.innerHTML='<span class="qr-placeholder">Chargement…</span>';
+  waLink.href='#';
   openModal('qrModal');
-
   let res;
   try {
-    res = await fetch(API.qr(date), {
-      method:      'GET',
-      credentials: 'include',
-      headers: {
-        'Accept':           'application/json',
-        'X-Requested-With': 'XMLHttpRequest',
-      },
-    });
+    res=await fetch(API.qr(date),{method:'GET',credentials:'include',headers:{'Accept':'application/json','X-Requested-With':'XMLHttpRequest'}});
   } catch {
-    wrap.innerHTML = '<div style="color:#EF4444;font-size:13px;text-align:center;padding:20px">⚠ Serveur injoignable.<br><small>Vérifiez que le serveur Symfony est lancé.</small></div>';
-    showToast('error', '⚠ Serveur injoignable.');
-    return;
+    wrap.innerHTML='<div style="color:#EF4444;font-size:13px;text-align:center;padding:20px">⚠ Serveur injoignable.</div>';
+    showToast('error','⚠ Serveur injoignable.'); return;
   }
-
-  if (res.status === 401) {
-    wrap.innerHTML = '<div style="color:#EF4444;font-size:13px;text-align:center;padding:20px">⚠ Session expirée.<br><a href="/login" style="color:#6A5ACD">→ Se reconnecter</a></div>';
-    showToast('error', '⚠ Session expirée.');
-    return;
-  }
-
-  if (res.status === 404) {
-    wrap.innerHTML = '<div style="color:#F59E0B;font-size:13px;text-align:center;padding:20px">📭 Aucune activité pour cette date.</div>';
-    showToast('error', '📭 Aucune activité pour la séance du ' + date + '.');
-    return;
-  }
-
-  const contentType = res.headers.get('Content-Type') || '';
-  if (!contentType.includes('application/json')) {
-    wrap.innerHTML = '<div style="color:#EF4444;font-size:13px;text-align:center;padding:20px">⚠ Erreur serveur (' + res.status + ').<br><small>Vérifiez que endroid/qr-code est installé.</small></div>';
-    showToast('error', '⚠ Erreur serveur ' + res.status + '.');
-    return;
-  }
-
+  if (res.status===401) { wrap.innerHTML='<div style="color:#EF4444;padding:20px;text-align:center">⚠ Session expirée.<br><a href="/login" style="color:var(--pu)">Reconnexion</a></div>'; return; }
+  if (res.status===404) { wrap.innerHTML='<div style="color:#F59E0B;padding:20px;text-align:center">📭 Aucune activité pour cette date.</div>'; return; }
+  const ct=res.headers.get('Content-Type')||'';
+  if (!ct.includes('application/json')) { wrap.innerHTML='<div style="color:#EF4444;padding:20px;text-align:center">⚠ Erreur serveur ('+res.status+').</div>'; return; }
   let data;
-  try {
-    data = await res.json();
-  } catch {
-    wrap.innerHTML = '<div style="color:#EF4444;font-size:13px;text-align:center;padding:20px">⚠ Réponse serveur invalide.</div>';
-    showToast('error', '⚠ Réponse serveur invalide.');
-    return;
-  }
-
-  if (!data.success) {
-    wrap.innerHTML = '<div style="color:#EF4444;font-size:13px;text-align:center;padding:20px">⚠ ' + (data.message || 'Séance introuvable') + '</div>';
-    showToast('error', '⚠ ' + (data.message || 'Impossible de générer le QR code.'));
-    return;
-  }
-
-  // Affichage direct du QR code (Data URI PNG)
-  wrap.innerHTML = `<img src="${data.qr}" alt="QR Code séance ${data.dateLabel}" style="width:100%;height:100%;object-fit:contain">`;
-
-  document.getElementById('qrDate').textContent = '📅 ' + data.dateLabel;
-  document.getElementById('qrMeta').textContent =
-    data.nbEx + ' exercice' + (data.nbEx !== 1 ? 's' : '') +
-    ' · ' + data.totalMin + ' min' +
-    (data.totalCal > 0 ? ' · ' + data.totalCal + ' kcal' : '');
-  waLink.href = data.waUrl;
-
-  showToast('success', '📲 QR Code généré pour la séance du ' + data.dateLabel);
+  try { data=await res.json(); } catch { wrap.innerHTML='<div style="color:#EF4444;padding:20px;text-align:center">⚠ Réponse invalide.</div>'; return; }
+  if (!data.success) { wrap.innerHTML='<div style="color:#EF4444;padding:20px;text-align:center">⚠ '+(data.message||'Erreur')+'</div>'; return; }
+  wrap.innerHTML=`<img src="${data.qr}" alt="QR Code ${data.dateLabel}" style="width:100%;height:100%;object-fit:contain">`;
+  document.getElementById('qrDate').textContent='📅 '+data.dateLabel;
+  document.getElementById('qrMeta').textContent=data.nbEx+' exercice'+(data.nbEx!==1?'s':'')+' · '+data.totalMin+' min'+(data.totalCal>0?' · '+data.totalCal+' kcal':'');
+  waLink.href=data.waUrl;
+  showToast('success','📲 QR Code généré !');
 }
 
 // ══════════════════════════════════════════════════════
 // UTILS
 // ══════════════════════════════════════════════════════
-function formatDate(dateStr) {
-  if (!dateStr) return '';
-  const d = new Date(dateStr + 'T00:00:00');
-  return d.toLocaleDateString('fr-FR', { day:'numeric', month:'long', year:'numeric' });
+function formatDate(d) {
+  if (!d) return '';
+  return new Date(d+'T00:00:00').toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'});
 }
 
-function showToast(type, msg) {
-  const t = document.getElementById('toast');
-  t.className = 'toast ' + type;
-  t.textContent = msg;
-  t.classList.add('show');
-  clearTimeout(t._timeout);
-  t._timeout = setTimeout(() => t.classList.remove('show'), 3500);
+function showToast(type,msg) {
+  const t=document.getElementById('toast');
+  t.className='toast '+type; t.textContent=msg; t.classList.add('show');
+  clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('show'),3500);
 }
 </script>
 {% endblock %}
