@@ -48,6 +48,7 @@ class NutritionController extends AbstractController
         $totalLip      = $consRepo->sumLipByUserAndDate($userId, $dt);
 
         $session = $request->getSession();
+
         $goalSettings = $session->get('nutrition_goals', [
             'cal'  => self::CAL_GOAL,
             'prot' => self::PROT_GOAL,
@@ -59,6 +60,9 @@ class NutritionController extends AbstractController
         $protGoal = (int) ($goalSettings['prot'] ?? self::PROT_GOAL);
         $glucGoal = (int) ($goalSettings['gluc'] ?? self::GLUC_GOAL);
         $lipGoal  = (int) ($goalSettings['lip']  ?? self::LIP_GOAL);
+
+        // Récupérer le profil BMR sauvegardé en session (si existant)
+        $bmrProfil = $session->get('bmr_profil', null);
 
         $prevDate = (clone $dt)->modify('-1 day')->format('Y-m-d');
         $nextDate = (clone $dt)->modify('+1 day')->format('Y-m-d');
@@ -82,6 +86,7 @@ class NutritionController extends AbstractController
             'waterGoal'  => self::WATER_GOAL_ML,
             'userId'     => $userId,
             'repasTypes' => $this->repasTypes(),
+            'bmrProfil'  => $bmrProfil,   // Profil anthropométrique sauvegardé
         ]);
     }
 
@@ -108,15 +113,7 @@ class NutritionController extends AbstractController
         ]);
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // ══ NOUVEAU : Page Recettes Spoonacular ══════════════════════════════════
-    // ─────────────────────────────────────────────────────────────────────────
-
-    /**
-     * Page principale du chercheur de recettes.
-     * Route : GET /nutrition/recettes
-     * Nom   : nutrition_recettes
-     */
+    // ── Page Recettes Spoonacular ─────────────────────────────────────
     #[Route('/recettes', name: 'nutrition_recettes', methods: ['GET'])]
     public function recettes(Request $request): Response
     {
@@ -130,6 +127,7 @@ class NutritionController extends AbstractController
         ]);
     }
 
+    // ─── API : objectifs nutritionnels ──────────────────────────────
     #[Route('/api/objectif', name: 'nutrition_api_objectif', methods: ['POST'])]
     public function apiObjectif(Request $request): JsonResponse
     {
@@ -144,7 +142,7 @@ class NutritionController extends AbstractController
         $lipGoal  = max(1, (int) ($data['lipGoal']  ?? 0));
 
         if ($calGoal <= 0 || $protGoal <= 0 || $glucGoal <= 0 || $lipGoal <= 0) {
-            return new JsonResponse(['success' => false, 'message' => 'Tous les objectifs doivent être des valeurs valides supérieures à zéro.'], Response::HTTP_BAD_REQUEST);
+            return new JsonResponse(['success' => false, 'message' => 'Tous les objectifs doivent être valides.'], Response::HTTP_BAD_REQUEST);
         }
 
         $request->getSession()->set('nutrition_goals', [
@@ -157,28 +155,160 @@ class NutritionController extends AbstractController
         return new JsonResponse(['success' => true, 'message' => 'Objectifs enregistrés.']);
     }
 
+    // ═══════════════════════════════════════════════════════════════════════
+    //  API : PROFIL BMR/IDEE — Sauvegarde et récupération via session
+    // ═══════════════════════════════════════════════════════════════════════
+
     /**
-     * API JSON : cherche des recettes par ingrédients via Spoonacular.
-     * Route : GET /nutrition/api/recettes?ingredients=apple,oats,milk&number=8
-     * Nom   : nutrition_api_recettes
+     * Enregistre le profil anthropométrique de l'utilisateur en session
+     * et retourne le BMR calculé (formule Mifflin-St Jeor) + IDEE + macros suggérées.
+     *
+     * Route : POST /nutrition/api/bmr-profil
+     * Corps JSON attendu :
+     *   {
+     *     "sexe":      "homme" | "femme",
+     *     "age":       integer (ans),
+     *     "poids":     float (kg),
+     *     "taille":    integer (cm),
+     *     "activite":  "sedentaire" | "leger" | "modere" | "actif" | "tres_actif",
+     *     "objectif":  "perte" | "maintien" | "prise"
+     *   }
      *
      * Réponse JSON :
-     *   { success: true, recettes: [...] }
-     *   { success: false, message: "..." }
+     *   {
+     *     "success": true,
+     *     "bmr":        float,   // Métabolisme de base (kcal/j)
+     *     "idee":       float,   // Dépense énergétique totale (kcal/j)
+     *     "calCible":   float,   // Calories recommandées selon objectif
+     *     "protCible":  float,   // Protéines recommandées (g)
+     *     "glucCible":  float,   // Glucides recommandés (g)
+     *     "lipCible":   float,   // Lipides recommandés (g)
+     *     "profil":     {...}    // Profil sauvegardé
+     *   }
      */
+    #[Route('/api/bmr-profil', name: 'nutrition_api_bmr_save', methods: ['POST'])]
+    public function apiBmrSave(Request $request): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+
+        if (!is_array($data)) {
+            return new JsonResponse(['success' => false, 'message' => 'Données JSON invalides.'], 400);
+        }
+
+        // ── Validation des champs obligatoires ──────────────────────────────
+        $sexe     = strtolower(trim($data['sexe']     ?? ''));
+        $age      = (int)   ($data['age']      ?? 0);
+        $poids    = (float) ($data['poids']    ?? 0);
+        $taille   = (int)   ($data['taille']   ?? 0);
+        $activite = strtolower(trim($data['activite'] ?? ''));
+        $objectif = strtolower(trim($data['objectif'] ?? ''));
+
+        $errors = [];
+        if (!in_array($sexe, ['homme', 'femme']))                                { $errors[] = 'Sexe invalide (homme|femme).'; }
+        if ($age < 10 || $age > 120)                                             { $errors[] = 'Âge invalide (10-120 ans).'; }
+        if ($poids < 20.0 || $poids > 300.0)                                    { $errors[] = 'Poids invalide (20-300 kg).'; }
+        if ($taille < 100 || $taille > 250)                                      { $errors[] = 'Taille invalide (100-250 cm).'; }
+        if (!in_array($activite, ['sedentaire','leger','modere','actif','tres_actif'])) { $errors[] = 'Niveau d\'activité invalide.'; }
+        if (!in_array($objectif, ['perte','maintien','prise']))                  { $errors[] = 'Objectif invalide (perte|maintien|prise).'; }
+
+        if ($errors) {
+            return new JsonResponse(['success' => false, 'message' => implode(' ', $errors)], 422);
+        }
+
+        // ── Calcul du BMR : formule Mifflin-St Jeor ─────────────────────────
+        // Homme : BMR = 10 × poids(kg) + 6.25 × taille(cm) − 5 × âge + 5
+        // Femme  : BMR = 10 × poids(kg) + 6.25 × taille(cm) − 5 × âge − 161
+        $bmr = (10 * $poids) + (6.25 * $taille) - (5 * $age) + ($sexe === 'homme' ? 5 : -161);
+
+        // ── Facteurs d'activité physique (PAL) ──────────────────────────────
+        // Source : classification OMS / Schofield
+        $palMap = [
+            'sedentaire' => 1.200,  // Travail de bureau, aucun sport
+            'leger'      => 1.375,  // Exercice léger 1-3 j/semaine
+            'modere'     => 1.550,  // Exercice modéré 3-5 j/semaine
+            'actif'      => 1.725,  // Sport intense 6-7 j/semaine
+            'tres_actif' => 1.900,  // Travail physique + sport quotidien
+        ];
+        $pal  = $palMap[$activite];
+        $idee = $bmr * $pal;
+
+        // ── Ajustement calorique selon l'objectif ────────────────────────────
+        // Perte de poids  : déficit de 500 kcal/j → ~0.5 kg/semaine de façon sûre
+        // Prise de masse  : surplus de 300 kcal/j → prise musculaire progressive
+        // Maintien        : IDEE sans ajustement
+        $calCible = match($objectif) {
+            'perte'    => $idee - 500,
+            'prise'    => $idee + 300,
+            default    => $idee,        // maintien
+        };
+
+        // Sécurité : ne jamais descendre en-dessous de 1200 kcal (femme) ou 1500 kcal (homme)
+        $calMin   = $sexe === 'homme' ? 1500 : 1200;
+        $calCible = max($calCible, $calMin);
+
+        // ── Calcul des macros recommandées ───────────────────────────────────
+        // Répartition standard équilibrée :
+        //   Protéines : 25 % des calories  → ÷ 4 kcal/g
+        //   Glucides  : 50 % des calories  → ÷ 4 kcal/g
+        //   Lipides   : 25 % des calories  → ÷ 9 kcal/g
+        $protCible = round(($calCible * 0.25) / 4);
+        $glucCible = round(($calCible * 0.50) / 4);
+        $lipCible  = round(($calCible * 0.25) / 9);
+
+        // ── Persistance en session ───────────────────────────────────────────
+        $profil = [
+            'sexe'     => $sexe,
+            'age'      => $age,
+            'poids'    => $poids,
+            'taille'   => $taille,
+            'activite' => $activite,
+            'objectif' => $objectif,
+        ];
+        $request->getSession()->set('bmr_profil', $profil);
+
+        return new JsonResponse([
+            'success'   => true,
+            'bmr'       => round($bmr,  1),
+            'idee'      => round($idee, 1),
+            'calCible'  => round($calCible),
+            'protCible' => (int) $protCible,
+            'glucCible' => (int) $glucCible,
+            'lipCible'  => (int) $lipCible,
+            'profil'    => $profil,
+        ]);
+    }
+
+    /**
+     * Récupère le profil BMR sauvegardé en session.
+     * Route : GET /nutrition/api/bmr-profil
+     *
+     * Réponse JSON :
+     *   { "success": true,  "profil": {...} }     si un profil existe
+     *   { "success": false, "message": "..." }    si aucun profil sauvegardé
+     */
+    #[Route('/api/bmr-profil', name: 'nutrition_api_bmr_get', methods: ['GET'])]
+    public function apiBmrGet(Request $request): JsonResponse
+    {
+        $profil = $request->getSession()->get('bmr_profil');
+
+        if (!$profil) {
+            return new JsonResponse(['success' => false, 'message' => 'Aucun profil BMR sauvegardé.'], 404);
+        }
+
+        return new JsonResponse(['success' => true, 'profil' => $profil]);
+    }
+
+    // ─── API : recherche recettes Spoonacular ────────────────────────
     #[Route('/api/recettes', name: 'nutrition_api_recettes', methods: ['GET'])]
     public function apiRecettes(
         Request $request,
         SpoonacularService $spoonacular
     ): JsonResponse {
         $ingredients = trim($request->query->get('ingredients', ''));
-        $number      = min((int) $request->query->get('number', 8), 20); // max 20
+        $number      = min((int) $request->query->get('number', 8), 20);
 
         if ($ingredients === '') {
-            return new JsonResponse([
-                'success' => false,
-                'message' => 'Veuillez saisir au moins un ingrédient.',
-            ], 400);
+            return new JsonResponse(['success' => false, 'message' => 'Veuillez saisir au moins un ingrédient.'], 400);
         }
 
         try {
@@ -186,45 +316,29 @@ class NutritionController extends AbstractController
             $recettes = [];
 
             foreach ($results as $r) {
-                // Extraire les noms des ingrédients utilisés / manquants
-                $used    = array_map(fn($i) => $i['name'], $r['usedIngredients']    ?? []);
-                $missed  = array_map(fn($i) => $i['name'], $r['missedIngredients']  ?? []);
+                $used   = array_map(fn($i) => $i['name'], $r['usedIngredients']   ?? []);
+                $missed = array_map(fn($i) => $i['name'], $r['missedIngredients'] ?? []);
 
                 $recettes[] = [
-                    'id'             => $r['id'],
-                    'titre'          => $r['title'],
-                    'image'          => $r['image'] ?? null,
-                    'usedCount'      => $r['usedIngredientCount']   ?? 0,
-                    'missedCount'    => $r['missedIngredientCount']  ?? 0,
+                    'id'                => $r['id'],
+                    'titre'             => $r['title'],
+                    'image'             => $r['image'] ?? null,
+                    'usedCount'         => $r['usedIngredientCount']  ?? 0,
+                    'missedCount'       => $r['missedIngredientCount'] ?? 0,
                     'usedIngredients'   => $used,
                     'missedIngredients' => $missed,
-                    'likes'          => $r['likes'] ?? 0,
+                    'likes'             => $r['likes'] ?? 0,
                 ];
             }
 
-            return new JsonResponse([
-                'success'  => true,
-                'recettes' => $recettes,
-                'total'    => count($recettes),
-            ]);
+            return new JsonResponse(['success' => true, 'recettes' => $recettes, 'total' => count($recettes)]);
 
         } catch (\RuntimeException $e) {
-            return new JsonResponse([
-                'success' => false,
-                'message' => $e->getMessage(),
-            ], 503);
+            return new JsonResponse(['success' => false, 'message' => $e->getMessage()], 503);
         }
     }
 
-    /**
-     * API JSON : détails complets d'une recette (nutrition incluse).
-     * Route : GET /nutrition/api/recette/{id}
-     * Nom   : nutrition_api_recette_detail
-     *
-     * Réponse JSON :
-     *   { success: true, recette: { id, titre, image, temps, portions, calories, proteines, glucides, lipides, ingredients: [...], sourceUrl } }
-     *   { success: false, message: "..." }
-     */
+    // ─── API : détail recette ───────────────────────────────────────
     #[Route('/api/recette/{id}', name: 'nutrition_api_recette_detail', methods: ['GET'])]
     public function apiRecetteDetail(
         int $id,
@@ -238,7 +352,6 @@ class NutritionController extends AbstractController
             $data   = $spoonacular->getRecipeDetails($id);
             $macros = $spoonacular->extractMacros($data);
 
-            // Liste des ingrédients formatée
             $ingredients = array_map(function ($ing) {
                 return [
                     'nom'      => $ing['nameClean'] ?? $ing['name'] ?? '',
@@ -248,9 +361,7 @@ class NutritionController extends AbstractController
                 ];
             }, $data['extendedIngredients'] ?? []);
 
-            // Résumé HTML → texte simple (strip_tags côté PHP)
             $resume = strip_tags($data['summary'] ?? '');
-            // Limiter à 300 caractères pour l'affichage dans la modal
             if (strlen($resume) > 300) {
                 $resume = substr($resume, 0, 300) . '…';
             }
@@ -270,15 +381,12 @@ class NutritionController extends AbstractController
                     'ingredients' => $ingredients,
                     'resume'      => $resume,
                     'sourceUrl'   => $data['sourceUrl'] ?? null,
-                    'instructions'=> $data['sourceUrl'] ?? null,  // Redirige vers la source
+                    'instructions'=> $data['sourceUrl'] ?? null,
                 ],
             ]);
 
         } catch (\RuntimeException $e) {
-            return new JsonResponse([
-                'success' => false,
-                'message' => $e->getMessage(),
-            ], 503);
+            return new JsonResponse(['success' => false, 'message' => $e->getMessage()], 503);
         }
     }
 
@@ -292,87 +400,54 @@ class NutritionController extends AbstractController
         try {
             $data = json_decode($request->getContent(), true);
 
-            // Validation des données
             $required = ['recipe_id', 'recipe_title', 'calories', 'meal_type', 'date'];
             foreach ($required as $field) {
-                if (!isset($data[$field]) || trim($data[$field]) === '') {
-                    return new JsonResponse([
-                        'success' => false,
-                        'message' => "Champ manquant: {$field}",
-                    ], 400);
+                if (!isset($data[$field]) || trim((string) $data[$field]) === '') {
+                    return new JsonResponse(['success' => false, 'message' => "Champ manquant: {$field}"], 400);
                 }
             }
 
-            $recipeId = (int)$data['recipe_id'];
             $recipeTitle = trim($data['recipe_title']);
-            $calories = (float)$data['calories'];
-            $mealType = trim($data['meal_type']);
-            $dateStr = $data['date'];
+            $calories    = (float) $data['calories'];
+            $mealType    = trim($data['meal_type']);
 
-            // Valider la date
             try {
-                $dateConsommation = new \DateTime($dateStr);
-            } catch (\Exception $e) {
-                return new JsonResponse([
-                    'success' => false,
-                    'message' => 'Date invalide.',
-                ], 400);
+                $dateConsommation = new \DateTime($data['date']);
+            } catch (\Exception) {
+                return new JsonResponse(['success' => false, 'message' => 'Date invalide.'], 400);
             }
 
-            // Valider le type de repas
-            $allowedMeals = array_keys($this->repasTypes());
-            if (!in_array($mealType, $allowedMeals)) {
-                return new JsonResponse([
-                    'success' => false,
-                    'message' => 'Type de repas invalide.',
-                ], 400);
+            if (!in_array($mealType, array_keys($this->repasTypes()))) {
+                return new JsonResponse(['success' => false, 'message' => 'Type de repas invalide.'], 400);
             }
 
-            // Chercher ou créer un aliment "Recette Spoonacular - [titre]"
             $alimentName = "🍳 Recette: " . substr($recipeTitle, 0, 40);
-            $aliment = $alimentRepo->findByName($alimentName);
+            $aliment     = $alimentRepo->findByName($alimentName);
 
             if (!$aliment) {
-                // Créer un nouvel aliment pour la recette
                 $aliment = new Aliment();
                 $aliment->setNomAliment($alimentName);
-                
-                // Calculer les calories pour 100g en fonction des calories totales
-                // Supposons 1 portion = 300g (valeur par défaut)
-                $caloriesPer100g = round(($calories * 100) / 300);
-                $aliment->setCaloriesPour100g($caloriesPer100g);
-                
-                // Macros : stocker une moyenne basée sur la portion
-                $aliment->setProteines((float)($data['proteines'] ?? 20));
-                $aliment->setGlucides((float)($data['glucides'] ?? 50));
-                $aliment->setLipides((float)($data['lipides'] ?? 15));
-
+                $aliment->setCaloriesPour100g(round(($calories * 100) / 300));
+                $aliment->setProteines((float) ($data['proteines'] ?? 20));
+                $aliment->setGlucides((float)  ($data['glucides']  ?? 50));
+                $aliment->setLipides((float)   ($data['lipides']   ?? 15));
                 $em->persist($aliment);
                 $em->flush();
             }
 
-            // Créer une Consommation
             $consommation = new Consommation();
             $consommation->setAliment($aliment);
             $consommation->setTypeRepas($mealType);
             $consommation->setDateConsommation($dateConsommation);
-            $consommation->setPoidsGrammes(300); // Supposé : 1 portion = 300g
+            $consommation->setPoidsGrammes(300);
             $consommation->setUserId(self::DEMO_USER_ID);
-
             $em->persist($consommation);
             $em->flush();
 
-            return new JsonResponse([
-                'success' => true,
-                'message' => 'Recette ajoutée au journal avec succès.',
-                'consommation_id' => $consommation->getId(),
-            ]);
+            return new JsonResponse(['success' => true, 'message' => 'Recette ajoutée au journal.', 'consommation_id' => $consommation->getId()]);
 
         } catch (\Exception $e) {
-            return new JsonResponse([
-                'success' => false,
-                'message' => 'Erreur: ' . $e->getMessage(),
-            ], 500);
+            return new JsonResponse(['success' => false, 'message' => 'Erreur : ' . $e->getMessage()], 500);
         }
     }
 
@@ -439,18 +514,10 @@ class NutritionController extends AbstractController
         $data   = json_decode($request->getContent(), true) ?? [];
         $errors = [];
 
-        if (empty($data['aliment_id'])) {
-            $errors['aliment'] = 'Veuillez sélectionner un aliment.';
-        }
-        if (!isset($data['poids_grammes']) || (float)$data['poids_grammes'] <= 0) {
-            $errors['poids'] = 'La quantité doit être supérieure à 0 g.';
-        }
-        if (empty($data['type_repas'])) {
-            $errors['repas'] = 'Le type de repas est requis.';
-        }
-        if (empty($data['date'])) {
-            $errors['date'] = 'La date est requise.';
-        }
+        if (empty($data['aliment_id']))                                      { $errors['aliment'] = 'Veuillez sélectionner un aliment.'; }
+        if (!isset($data['poids_grammes']) || (float)$data['poids_grammes'] <= 0) { $errors['poids'] = 'La quantité doit être supérieure à 0 g.'; }
+        if (empty($data['type_repas']))                                      { $errors['repas'] = 'Le type de repas est requis.'; }
+        if (empty($data['date']))                                            { $errors['date'] = 'La date est requise.'; }
 
         if ($errors) {
             return new JsonResponse(['success' => false, 'errors' => $errors], 422);

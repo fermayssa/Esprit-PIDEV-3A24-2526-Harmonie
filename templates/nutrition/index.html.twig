@@ -379,6 +379,77 @@ input.err,select.err{border-color:var(--red)}
   font-size:16px;
 }
 
+/* ── BMR / IDEE CALCULATOR CARD ── */
+.bmr-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--card-r); overflow: hidden; }
+.bmr-toggle-btn {
+  width: 100%; display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 18px 12px; border: none; background: none; cursor: pointer;
+  font-family: var(--font-b); text-align: left;
+}
+.bmr-toggle-btn:hover { background: var(--pu-ghost); }
+.bmr-toggle-arrow { font-size: 12px; color: var(--tx-muted); transition: transform .2s; }
+.bmr-toggle-arrow.open { transform: rotate(180deg); }
+
+.bmr-form-wrap { padding: 0 18px 16px; display: none; }
+.bmr-form-wrap.open { display: block; }
+
+.bmr-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+.bmr-group { display: flex; flex-direction: column; gap: 3px; }
+.bmr-group label { font-size: 10.5px; font-weight: 700; color: var(--tx-mid); text-transform: uppercase; letter-spacing: .4px; }
+.bmr-group input, .bmr-group select {
+  padding: 8px 11px; border: 1.5px solid var(--border); border-radius: 9px;
+  font-family: var(--font-b); font-size: 13px; color: var(--tx);
+  background: var(--white); outline: none; transition: border-color .15s; width: 100%;
+}
+.bmr-group input:focus, .bmr-group select:focus { border-color: var(--pu); }
+.bmr-group.full { grid-column: 1/-1; }
+
+.bmr-result-box {
+  margin-top: 12px; padding: 14px 16px; border-radius: 13px;
+  background: linear-gradient(135deg, var(--pu-ghost), #F0EDFF);
+  border: 1.5px solid rgba(106,90,205,.18); display: none;
+}
+.bmr-result-box.show { display: block; }
+.bmr-result-title { font-size: 11px; font-weight: 700; color: var(--pu); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 10px; }
+.bmr-result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+.bmr-result-item { background: var(--white); border-radius: 10px; padding: 10px 12px; border: 1px solid rgba(106,90,205,.12); }
+.bmr-result-label { font-size: 10px; color: var(--tx-muted); font-weight: 600; text-transform: uppercase; letter-spacing: .4px; }
+.bmr-result-value { font-family: var(--font-h); font-size: 19px; font-weight: 800; color: var(--pu-deep); margin-top: 2px; }
+.bmr-result-unit { font-size: 10px; color: var(--tx-muted); }
+
+.bmr-macros-title { font-size: 10.5px; font-weight: 700; color: var(--tx-mid); text-transform: uppercase; letter-spacing: .4px; margin-bottom: 8px; }
+.bmr-macros-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 6px; margin-bottom: 12px; }
+.bmr-macro-item { background: var(--white); border-radius: 9px; padding: 8px 10px; text-align: center; border: 1px solid rgba(106,90,205,.1); }
+.bmr-macro-label { font-size: 9.5px; font-weight: 700; color: var(--tx-muted); text-transform: uppercase; }
+.bmr-macro-value { font-family: var(--font-h); font-size: 15px; font-weight: 800; color: var(--tx); margin-top: 2px; }
+.bmr-macro-item.prot .bmr-macro-value { color: #D97706; }
+.bmr-macro-item.gluc .bmr-macro-value { color: #059669; }
+.bmr-macro-item.lip  .bmr-macro-value { color: #4338CA; }
+
+.bmr-info-row { display: flex; gap: 6px; align-items: flex-start; background: rgba(245,158,11,.08); border: 1px solid rgba(245,158,11,.2); border-radius: 9px; padding: 9px 11px; margin-bottom: 12px; }
+.bmr-info-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+.bmr-info-text { font-size: 11.5px; color: var(--tx-mid); line-height: 1.5; }
+
+.btn-bmr-apply {
+  width: 100%; padding: 10px; border-radius: 10px; border: none;
+  background: linear-gradient(135deg, var(--pu), var(--pu-dk));
+  color: white; font-family: var(--font-h); font-size: 13px; font-weight: 700;
+  cursor: pointer; transition: all .15s; display: flex; align-items: center; justify-content: center; gap: 7px;
+}
+.btn-bmr-apply:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(106,90,205,.3); }
+.btn-bmr-apply:disabled { background: var(--tx-muted); cursor: not-allowed; transform: none; box-shadow: none; }
+.btn-bmr-calc {
+  width: 100%; padding: 10px; border-radius: 10px; border: none;
+  background: var(--pu-ghost); color: var(--pu); font-family: var(--font-h); font-size: 13px; font-weight: 700;
+  cursor: pointer; transition: all .15s; margin-top: 10px;
+  border: 1.5px solid rgba(106,90,205,.2);
+}
+.btn-bmr-calc:hover { background: var(--pu-pale); }
+.bmr-objectif-badge {
+  display: inline-block; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px;
+  background: rgba(106,90,205,.12); color: var(--pu); margin-left: 6px;
+}
+
 /* ── RESPONSIVE ── */
 @media(max-width:1024px){.page{grid-template-columns:1fr;padding:20px 18px 60px}.side-col{position:static}}
 @media(max-width:640px){.topbar{padding:0 14px}.nav-links{display:none}.hero{padding:20px 18px 24px}.hero-inner{flex-direction:column}.hero-stats{flex-wrap:wrap}}
@@ -655,6 +726,119 @@ input.err,select.err{border-color:var(--red)}
             <button class="water-btn" onclick="addWater(500)">+500ml</button>
             <button class="water-btn" onclick="addWater(750)">+750ml</button>
           </div>
+        </div>
+      </div>
+    </div>
+
+    {# ── BMR / IDEE CALCULATOR ── #}
+    <div class="bmr-card fade d3">
+      <button class="bmr-toggle-btn" onclick="toggleBmr()" id="bmrToggleBtn">
+        <div class="card-title" style="margin:0">🔬 Calculateur BMR / IDEE</div>
+        <span class="bmr-toggle-arrow" id="bmrArrow">▼</span>
+      </button>
+      <div class="bmr-form-wrap" id="bmrFormWrap">
+        <div class="bmr-info-row">
+          <span class="bmr-info-icon">ℹ️</span>
+          <span class="bmr-info-text">
+            Le <strong>BMR</strong> (Métabolisme de Base) est l'énergie que votre corps brûle au repos.
+            L'<strong>IDEE</strong> tient compte de votre activité physique.
+            Formule : <strong>Mifflin-St Jeor</strong>.
+          </span>
+        </div>
+        <div class="bmr-row">
+          <div class="bmr-group">
+            <label>Genre *</label>
+            <select id="bmrSexe">
+              <option value="homme">👨 Homme</option>
+              <option value="femme">👩 Femme</option>
+            </select>
+          </div>
+          <div class="bmr-group">
+            <label>Âge (ans) *</label>
+            <input type="number" id="bmrAge" min="10" max="120" placeholder="Ex : 25">
+          </div>
+        </div>
+        <div class="bmr-row">
+          <div class="bmr-group">
+            <label>Poids (kg) *</label>
+            <input type="number" id="bmrPoids" min="20" max="300" step="0.1" placeholder="Ex : 70">
+          </div>
+          <div class="bmr-group">
+            <label>Taille (cm) *</label>
+            <input type="number" id="bmrTaille" min="100" max="250" placeholder="Ex : 175">
+          </div>
+        </div>
+        <div class="bmr-row">
+          <div class="bmr-group full">
+            <label>Niveau d'activité *</label>
+            <select id="bmrActivite">
+              <option value="sedentaire">🪑 Sédentaire (peu/pas sport)</option>
+              <option value="leger">🚶 Léger (1-3 j/sem.)</option>
+              <option value="modere" selected>🏃 Modéré (3-5 j/sem.)</option>
+              <option value="actif">🏋️ Actif (6-7 j/sem.)</option>
+              <option value="tres_actif">⚡ Très actif</option>
+            </select>
+          </div>
+        </div>
+        <div class="bmr-row">
+          <div class="bmr-group full">
+            <label>Objectif *</label>
+            <select id="bmrObjectif">
+              <option value="perte">📉 Perte de poids (−500 kcal)</option>
+              <option value="maintien" selected>⚖️ Maintien du poids</option>
+              <option value="prise">📈 Prise de masse (+300 kcal)</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn-bmr-calc" onclick="calculerBmr()">🔬 Calculer mon BMR / IDEE</button>
+
+        <div class="bmr-result-box" id="bmrResultBox">
+          <div class="bmr-result-title">📊 Résultats de votre analyse</div>
+          <div class="bmr-result-grid">
+            <div class="bmr-result-item">
+              <div class="bmr-result-label">BMR</div>
+              <div class="bmr-result-value" id="bmrValBmr">—</div>
+              <div class="bmr-result-unit">kcal / jour</div>
+            </div>
+            <div class="bmr-result-item">
+              <div class="bmr-result-label">IDEE</div>
+              <div class="bmr-result-value" id="bmrValIdee">—</div>
+              <div class="bmr-result-unit">kcal / jour</div>
+            </div>
+            <div class="bmr-result-item" style="grid-column:1/-1">
+              <div class="bmr-result-label">Objectif calorique recommandé</div>
+              <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+                <div class="bmr-result-value" id="bmrValCal">—</div>
+                <span class="bmr-objectif-badge" id="bmrObjectifLabel">—</span>
+              </div>
+              <div class="bmr-result-unit">kcal / jour</div>
+            </div>
+          </div>
+          <div class="bmr-macros-title">Macronutriments conseillés (25/50/25%)</div>
+          <div class="bmr-macros-row">
+            <div class="bmr-macro-item prot">
+              <div class="bmr-macro-label">Protéines</div>
+              <div class="bmr-macro-value" id="bmrMacroProt">—</div>
+              <div style="font-size:9px;color:var(--tx-muted)">g / jour</div>
+            </div>
+            <div class="bmr-macro-item gluc">
+              <div class="bmr-macro-label">Glucides</div>
+              <div class="bmr-macro-value" id="bmrMacroGluc">—</div>
+              <div style="font-size:9px;color:var(--tx-muted)">g / jour</div>
+            </div>
+            <div class="bmr-macro-item lip">
+              <div class="bmr-macro-label">Lipides</div>
+              <div class="bmr-macro-value" id="bmrMacroLip">—</div>
+              <div style="font-size:9px;color:var(--tx-muted)">g / jour</div>
+            </div>
+          </div>
+          <div class="bmr-info-row" id="bmrWarningRow" style="display:none">
+            <span class="bmr-info-icon">⚠️</span>
+            <span class="bmr-info-text" id="bmrWarningText"></span>
+          </div>
+          <button class="btn-bmr-apply" id="bmrApplyBtn" onclick="appliquerObjectifsBmr()">
+            🎯 Appliquer comme objectifs nutritionnels
+          </button>
         </div>
       </div>
     </div>
@@ -1002,6 +1186,209 @@ function showToast(type, msg) {
   t.classList.add('show');
   clearTimeout(t._to);
   t._to = setTimeout(() => t.classList.remove('show'), 3200);
+}
+
+// ═══════════════════════════════════════════════════════
+// BMR / IDEE CALCULATOR
+// ═══════════════════════════════════════════════════════
+
+// Facteurs PAL (Physical Activity Level)
+const PAL = {
+  sedentaire: 1.200,
+  leger:      1.375,
+  modere:     1.550,
+  actif:      1.725,
+  tres_actif: 1.900,
+};
+
+// Libellés des objectifs
+const OBJECTIF_LABELS = {
+  perte:    '📉 Perte de poids',
+  maintien: '⚖️ Maintien',
+  prise:    '📈 Prise de masse',
+};
+
+// Stockage du dernier résultat calculé (pour l'application des objectifs)
+let _bmrLastResult = null;
+
+/**
+ * Ouvre/ferme le panneau du calculateur BMR.
+ */
+function toggleBmr() {
+  const wrap  = document.getElementById('bmrFormWrap');
+  const arrow = document.getElementById('bmrArrow');
+  const open  = wrap.classList.toggle('open');
+  arrow.classList.toggle('open', open);
+
+  // Précharger le profil sauvegardé au premier ouverture
+  if (open) restoreBmrProfile();
+}
+
+/**
+ * Formule Mifflin-St Jeor (1990) — référence scientifique la plus précise
+ * sans machine learning ni API externe.
+ *
+ * Homme : BMR = 10×poids + 6.25×taille − 5×âge + 5
+ * Femme  : BMR = 10×poids + 6.25×taille − 5×âge − 161
+ *
+ * @param {string} sexe    'homme' | 'femme'
+ * @param {number} poids   kg
+ * @param {number} taille  cm
+ * @param {number} age     ans
+ * @returns {number} BMR en kcal/jour
+ */
+function mifflinStJeor(sexe, poids, taille, age) {
+  const base = 10 * poids + 6.25 * taille - 5 * age;
+  return sexe === 'homme' ? base + 5 : base - 161;
+}
+
+/**
+ * Lance le calcul complet côté client ET envoie le profil au serveur (session).
+ * L'envoi au serveur permet la persistance du profil entre les rechargements.
+ */
+async function calculerBmr() {
+  const sexe     = document.getElementById('bmrSexe').value;
+  const age      = parseInt(document.getElementById('bmrAge').value,   10);
+  const poids    = parseFloat(document.getElementById('bmrPoids').value);
+  const taille   = parseInt(document.getElementById('bmrTaille').value, 10);
+  const activite = document.getElementById('bmrActivite').value;
+  const objectif = document.getElementById('bmrObjectif').value;
+
+  // ── Validation côté client ──────────────────────────────────────────────
+  if (!age   || age   < 10  || age   > 120) { showToast('error', '⚠️ Entrez un âge valide (10-120 ans).');      return; }
+  if (!poids  || poids  < 20  || poids  > 300) { showToast('error', '⚠️ Entrez un poids valide (20-300 kg).'); return; }
+  if (!taille || taille < 100 || taille > 250) { showToast('error', '⚠️ Entrez une taille valide (100-250 cm).'); return; }
+
+  // ── Calcul BMR (Mifflin-St Jeor) ───────────────────────────────────────
+  const bmr  = mifflinStJeor(sexe, poids, taille, age);
+  const pal  = PAL[activite] ?? 1.55;
+  const idee = bmr * pal;
+
+  // ── Ajustement selon objectif ───────────────────────────────────────────
+  let calCible;
+  if (objectif === 'perte')    calCible = idee - 500;
+  else if (objectif === 'prise') calCible = idee + 300;
+  else                           calCible = idee;
+
+  // Sécurité plancher calorique (OMS : 1200 kcal femme, 1500 kcal homme)
+  const calMin  = sexe === 'homme' ? 1500 : 1200;
+  const clamped = calCible < calMin;
+  calCible      = Math.max(calCible, calMin);
+
+  // ── Macros (25% prot / 50% gluc / 25% lip) ─────────────────────────────
+  const protCible = Math.round((calCible * 0.25) / 4);   // 4 kcal/g
+  const glucCible = Math.round((calCible * 0.50) / 4);   // 4 kcal/g
+  const lipCible  = Math.round((calCible * 0.25) / 9);   // 9 kcal/g
+
+  // ── Mise à jour de l'interface ──────────────────────────────────────────
+  document.getElementById('bmrValBmr').textContent    = Math.round(bmr);
+  document.getElementById('bmrValIdee').textContent   = Math.round(idee);
+  document.getElementById('bmrValCal').textContent    = Math.round(calCible);
+  document.getElementById('bmrObjectifLabel').textContent = OBJECTIF_LABELS[objectif] ?? objectif;
+  document.getElementById('bmrMacroProt').textContent = protCible;
+  document.getElementById('bmrMacroGluc').textContent = glucCible;
+  document.getElementById('bmrMacroLip').textContent  = lipCible;
+
+  // Avertissement si la valeur a été contrainte par le plancher
+  const warnRow  = document.getElementById('bmrWarningRow');
+  const warnText = document.getElementById('bmrWarningText');
+  if (clamped) {
+    warnText.innerHTML = `L'objectif de perte a été limité à <strong>${Math.round(calCible)} kcal</strong> pour votre sécurité (plancher OMS : ${calMin} kcal).`;
+    warnRow.style.display = 'flex';
+  } else {
+    warnRow.style.display = 'none';
+  }
+
+  document.getElementById('bmrResultBox').classList.add('show');
+
+  // ── Sauvegarder le dernier résultat pour le bouton "Appliquer" ───────────
+  _bmrLastResult = {
+    calCible: Math.round(calCible),
+    protCible,
+    glucCible,
+    lipCible,
+  };
+
+  // ── Persistance en session (POST au contrôleur) ─────────────────────────
+  try {
+    await fetch('/nutrition/api/bmr-profil', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ sexe, age, poids, taille, activite, objectif }),
+    });
+  } catch (_) {
+    // Silencieux : la persistance session est optionnelle
+  }
+
+  showToast('success', '✅ Calcul BMR / IDEE effectué !');
+}
+
+/**
+ * Applique les objectifs calculés via la route /nutrition/api/objectif existante.
+ * Met à jour la session et recharge la page pour refléter les nouveaux objectifs.
+ */
+async function appliquerObjectifsBmr() {
+  if (!_bmrLastResult) {
+    showToast('error', '⚠️ Lancez d\'abord le calcul BMR.');
+    return;
+  }
+
+  const btn = document.getElementById('bmrApplyBtn');
+  btn.disabled = true;
+  btn.innerHTML = '⏳ Application en cours…';
+
+  try {
+    const res  = await fetch('/nutrition/api/objectif', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        calGoal:  _bmrLastResult.calCible,
+        protGoal: _bmrLastResult.protCible,
+        glucGoal: _bmrLastResult.glucCible,
+        lipGoal:  _bmrLastResult.lipCible,
+      }),
+    });
+    const data = await res.json();
+
+    if (data.success) {
+      showToast('success', '🎯 Objectifs nutritionnels mis à jour !');
+      setTimeout(() => location.reload(), 800);
+    } else {
+      showToast('error', data.message || 'Erreur lors de la sauvegarde.');
+      btn.disabled = false;
+      btn.innerHTML = '🎯 Appliquer comme objectifs nutritionnels';
+    }
+  } catch (e) {
+    showToast('error', '⚠ Erreur réseau.');
+    btn.disabled = false;
+    btn.innerHTML = '🎯 Appliquer comme objectifs nutritionnels';
+  }
+}
+
+/**
+ * Restaure le profil BMR depuis la session PHP (via GET /nutrition/api/bmr-profil).
+ * Si un profil existe, préremplit les champs du formulaire et relance le calcul.
+ */
+async function restoreBmrProfile() {
+  try {
+    const res = await fetch('/nutrition/api/bmr-profil');
+    if (!res.ok) return; // 404 = pas de profil → rien à faire
+    const data = await res.json();
+    if (!data.success || !data.profil) return;
+
+    const p = data.profil;
+    document.getElementById('bmrSexe').value     = p.sexe     ?? 'homme';
+    document.getElementById('bmrAge').value      = p.age      ?? '';
+    document.getElementById('bmrPoids').value    = p.poids    ?? '';
+    document.getElementById('bmrTaille').value   = p.taille   ?? '';
+    document.getElementById('bmrActivite').value = p.activite ?? 'modere';
+    document.getElementById('bmrObjectif').value = p.objectif ?? 'maintien';
+
+    // Recalculer automatiquement pour afficher les résultats
+    await calculerBmr();
+  } catch (_) {
+    // Silencieux : première visite sans profil sauvegardé
+  }
 }
 </script>
 {% endblock %}
