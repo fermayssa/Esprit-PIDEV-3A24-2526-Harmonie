@@ -4,7 +4,6 @@
 
 {% block stylesheets %}
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-o9N1j7kG8bChx9cArCdZUrw2s2tRoSI6eR7X9tUuCPk=" crossorigin="" />
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 
@@ -30,76 +29,100 @@
 
 html,body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--tx);overflow-x:hidden}
 
-/* ─────────────── HERO ─────────────── */
+/* ─────────────── HERO PHOTO PLEIN ECRAN ─────────────── */
 .hero{
-  position:relative;min-height:420px;overflow:hidden;
-  background:linear-gradient(135deg,#120A2E 0%,#1E1050 40%,#3A1F8A 100%);
+  position:relative;
+  height:100vh;
+  min-height:600px;
+  overflow:hidden;
 }
-.hero-mesh{
-  position:absolute;inset:0;z-index:0;
+/* Photo de fond plein écran */
+.hero-bg-img{
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;object-position:center 30%;
+  z-index:0;
+}
+/* Overlay dégradé sombre sur la photo pour lisibilité du texte */
+.hero-overlay{
+  position:absolute;inset:0;z-index:1;
   background:
-    radial-gradient(ellipse 60% 50% at 20% 50%,rgba(124,92,252,.35) 0%,transparent 70%),
-    radial-gradient(ellipse 40% 60% at 80% 30%,rgba(236,72,153,.2) 0%,transparent 65%),
-    radial-gradient(ellipse 50% 40% at 60% 80%,rgba(59,130,246,.25) 0%,transparent 70%);
+    linear-gradient(180deg,rgba(12,6,30,.45) 0%,rgba(18,10,46,.6) 50%,rgba(12,6,30,.85) 100%);
 }
+/* Grain subtil */
 .hero-noise{
-  position:absolute;inset:0;z-index:1;opacity:.04;
+  position:absolute;inset:0;z-index:2;opacity:.03;
   background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
+/* Grille décorative */
 .hero-grid{
-  position:absolute;inset:0;z-index:1;
-  background-image:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);
-  background-size:40px 40px;
+  position:absolute;inset:0;z-index:2;
+  background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);
+  background-size:50px 50px;
 }
+/* Fondu vers la page en bas */
 .hero-bottom-fade{
-  position:absolute;bottom:0;left:0;right:0;height:100px;z-index:3;
+  position:absolute;bottom:0;left:0;right:0;height:180px;z-index:3;
   background:linear-gradient(to bottom,transparent,var(--bg));
 }
+/* Contenu centré verticalement */
 .hero-content{
-  position:relative;z-index:4;
+  position:absolute;inset:0;z-index:4;
   display:flex;align-items:center;justify-content:space-between;
-  padding:54px 60px 80px;gap:40px;
+  padding:0 60px 60px;gap:40px;
 }
 .hero-badge{
   display:inline-flex;align-items:center;gap:8px;
-  background:rgba(255,255,255,.1);backdrop-filter:blur(12px);
-  border:1px solid rgba(255,255,255,.18);border-radius:40px;
-  padding:6px 16px;font-size:11px;font-weight:700;
-  color:rgba(255,255,255,.85);letter-spacing:.8px;
-  text-transform:uppercase;margin-bottom:16px;
+  background:rgba(255,255,255,.12);backdrop-filter:blur(12px);
+  border:1px solid rgba(255,255,255,.2);border-radius:40px;
+  padding:7px 18px;font-size:11px;font-weight:700;
+  color:rgba(255,255,255,.9);letter-spacing:.8px;
+  text-transform:uppercase;margin-bottom:18px;
 }
 .hero-badge-dot{width:7px;height:7px;border-radius:50%;background:#34D399;animation:pulse-dot 2s infinite}
 @keyframes pulse-dot{0%,100%{box-shadow:0 0 0 0 rgba(52,211,153,.5)}70%{box-shadow:0 0 0 8px rgba(52,211,153,0)}}
 .hero-title{
-  font-family:'Outfit',sans-serif;font-size:52px;font-weight:900;
-  line-height:1.05;color:white;letter-spacing:-2px;margin-bottom:14px;
-  text-shadow:0 4px 24px rgba(0,0,0,.3);
+  font-family:'Outfit',sans-serif;font-size:58px;font-weight:900;
+  line-height:1.02;color:white;letter-spacing:-2.5px;margin-bottom:16px;
+  text-shadow:0 6px 32px rgba(0,0,0,.5);
 }
 .hero-title em{
   font-style:normal;
   background:linear-gradient(90deg,#C084FC,#818CF8,#38BDF8);
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
 }
-.hero-sub{font-size:15px;color:rgba(255,255,255,.6);font-weight:400;line-height:1.6}
+.hero-sub{font-size:16px;color:rgba(255,255,255,.65);font-weight:400;line-height:1.65;max-width:460px}
+
+/* Indicateur scroll-down */
+.hero-scroll-hint{
+  position:absolute;bottom:100px;left:50%;transform:translateX(-50%);
+  z-index:5;display:flex;flex-direction:column;align-items:center;gap:8px;
+  animation:bounce-down 2.2s ease infinite;
+}
+.hero-scroll-hint span{font-size:10px;color:rgba(255,255,255,.5);font-weight:600;letter-spacing:1px;text-transform:uppercase}
+.hero-scroll-arrow{width:36px;height:36px;border-radius:50%;border:2px solid rgba(255,255,255,.25);display:grid;place-items:center;color:rgba(255,255,255,.55);font-size:14px}
+@keyframes bounce-down{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(8px)}}
+
+/* Stats dans le hero */
 .hero-stats{display:flex;gap:14px;flex-shrink:0;align-items:stretch}
 .hstat{
-  background:rgba(255,255,255,.08);backdrop-filter:blur(20px);
-  border:1px solid rgba(255,255,255,.15);border-radius:20px;
-  padding:20px 24px;text-align:center;min-width:110px;
+  background:rgba(255,255,255,.09);backdrop-filter:blur(24px);
+  border:1px solid rgba(255,255,255,.16);border-radius:22px;
+  padding:22px 26px;text-align:center;min-width:116px;
   transition:all .25s;position:relative;overflow:hidden;
+  box-shadow:0 8px 32px rgba(0,0,0,.2);
 }
 .hstat::before{
-  content:'';position:absolute;inset:0;border-radius:20px;
-  background:linear-gradient(135deg,rgba(255,255,255,.08),transparent);
+  content:'';position:absolute;inset:0;border-radius:22px;
+  background:linear-gradient(135deg,rgba(255,255,255,.1),transparent);
   pointer-events:none;
 }
-.hstat:hover{background:rgba(255,255,255,.15);transform:translateY(-4px);box-shadow:0 20px 40px rgba(0,0,0,.2)}
-.hstat-icon{font-size:22px;margin-bottom:6px;display:block}
+.hstat:hover{background:rgba(255,255,255,.16);transform:translateY(-5px);box-shadow:0 22px 44px rgba(0,0,0,.25)}
+.hstat-icon{font-size:24px;margin-bottom:7px;display:block}
 .hstat-val{
-  font-family:'Outfit',sans-serif;font-size:34px;font-weight:800;
+  font-family:'Outfit',sans-serif;font-size:36px;font-weight:900;
   color:white;line-height:1;display:block;
 }
-.hstat-lbl{font-size:9.5px;color:rgba(255,255,255,.55);margin-top:5px;text-transform:uppercase;letter-spacing:.8px;font-weight:600}
+.hstat-lbl{font-size:9.5px;color:rgba(255,255,255,.55);margin-top:6px;text-transform:uppercase;letter-spacing:.8px;font-weight:600}
 .hstat.gold .hstat-val{background:linear-gradient(135deg,#FCD34D,#F59E0B);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .hstat.teal .hstat-val{background:linear-gradient(135deg,#34D399,#0D9488);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .hstat.rose .hstat-val{background:linear-gradient(135deg,#FB7185,#F43F5E);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
@@ -412,22 +435,6 @@ textarea.finput{resize:vertical;min-height:72px;line-height:1.6}
 .btn-log:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(124,92,252,.5)}
 .btn-log:disabled{background:var(--tx-muted);cursor:not-allowed;transform:none;box-shadow:none}
 
-/* ─────────────── MAP CARD ─────────────── */
-.map-card .map-actions{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
-.map-control-btn{
-  height:42px;padding:0 16px;border:none;border-radius:14px;
-  background:var(--pu-ghost);color:var(--pu-dk);
-  font-size:13px;font-weight:700;cursor:pointer;
-  display:flex;align-items:center;gap:7px;
-  box-shadow:0 4px 12px rgba(124,92,252,.08);transition:all .18s;
-  font-family:'Plus Jakarta Sans',sans-serif;
-}
-.map-control-btn:hover{background:var(--pu-pale);transform:translateY(-1px)}
-.map-control-btn.active{background:linear-gradient(135deg,var(--pu),var(--pu-lt));color:white}
-.map-meta{display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--tx-mid);margin-bottom:14px}
-.map-meta strong{color:var(--tx)}
-#mapContainer{width:100%;height:380px;min-height:380px;border-radius:20px;overflow:hidden;box-shadow:0 16px 40px rgba(124,92,252,.12);position:relative;display:block}
-#activityMap{width:100%!important;height:100%!important;min-height:380px!important;border-radius:20px;display:block!important;position:relative!important}
 
 /* ─────────────── SESSIONS HISTORY ─────────────── */
 .timeline{display:flex;flex-direction:column;gap:0;position:relative}
@@ -832,12 +839,13 @@ textarea.finput{resize:vertical;min-height:72px;line-height:1.6}
 /* ─────────────── RESPONSIVE ─────────────── */
 @media(max-width:1100px){.page{grid-template-columns:1fr;padding:22px 20px 120px}.side-col{position:static}}
 @media(max-width:680px){
-  .hero-content{flex-direction:column;align-items:flex-start;padding:30px 24px 80px;gap:20px}
-  .hero-title{font-size:36px}
+  .hero-content{flex-direction:column;align-items:flex-start;padding:0 24px 80px;gap:20px}
+  .hero-title{font-size:38px}
   .hero-stats{flex-wrap:wrap;gap:10px}
   .form-row,.edit-row{grid-template-columns:1fr}
   .ex-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr))}
   .log-steps{display:none}
+  .hero-scroll-hint{bottom:80px}
 }
 </style>
 {% endblock %}
@@ -845,12 +853,20 @@ textarea.finput{resize:vertical;min-height:72px;line-height:1.6}
 {% block body %}
 {% include '_planning_topbar.html.twig' %}
 
-{# ══════════════ HERO ══════════════ #}
+{# ══════════════ HERO PHOTO PLEIN ECRAN ══════════════ #}
 <div class="hero">
-  <div class="hero-mesh"></div>
+  {# Photo de fond sport/fitness Unsplash — haute résolution #}
+  <img
+    class="hero-bg-img"
+    src="https://images.unsplash.com/photo-1571902943202-507ec2618e8f?w=1800&q=85&auto=format&fit=crop"
+    alt="Salle de sport — Harmony"
+    loading="eager">
+  <div class="hero-overlay"></div>
   <div class="hero-noise"></div>
   <div class="hero-grid"></div>
   <div class="hero-bottom-fade"></div>
+
+  {# Contenu : texte à gauche, stats à droite #}
   <div class="hero-content">
     <div class="hero-left">
       <div class="hero-badge">
@@ -877,6 +893,12 @@ textarea.finput{resize:vertical;min-height:72px;line-height:1.6}
         <span class="hstat-lbl">Calories</span>
       </div>
     </div>
+  </div>
+
+  {# Indicateur de défilement #}
+  <div class="hero-scroll-hint">
+    <div class="hero-scroll-arrow">▼</div>
+    <span>Défiler</span>
   </div>
 </div>
 
@@ -1091,28 +1113,6 @@ textarea.finput{resize:vertical;min-height:72px;line-height:1.6}
     </div>
   </div>
 
-  {# ── CARTE ── #}
-  <div class="card fade d3">
-    <div class="card-head">
-      <div>
-        <div class="card-title">🗺️ Carte d'entraînement</div>
-        <div style="font-size:11px;color:var(--tx-muted);margin-top:3px">Localisation, tracé de parcours et parcs sportifs</div>
-      </div>
-    </div>
-    <div class="card-body">
-      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
-        <button type="button" class="map-control-btn" onclick="locateUser()">📍 Me localiser</button>
-        <button type="button" class="map-control-btn" id="routeToggleBtn" onclick="toggleRouteMode()">✍️ Tracer</button>
-        <button type="button" class="map-control-btn" onclick="searchParks()">🏟️ Parcs</button>
-        <button type="button" class="map-control-btn" onclick="resetRoute()">♻️ Reset</button>
-      </div>
-      <div class="map-meta">
-        <span id="routeInfo"><strong>Parcours :</strong> Aucun tracé</span>
-        <span id="parkStatus"><strong>Parcs :</strong> Cliquez sur 🏟️ pour chercher les parcs sportifs.</span>
-      </div>
-      <div id="mapContainer"><div id="activityMap"></div></div>
-    </div>
-  </div>
 
   {# ── HISTORIQUE ── #}
   <div class="card fade d3">
@@ -1382,7 +1382,6 @@ textarea.finput{resize:vertical;min-height:72px;line-height:1.6}
 
 {# ══ SCRIPTS ══ #}
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-o9N1j7kG8bChx9cArCdZUrw2s2tRoSI6eR7X9tUuCPk=" crossorigin=""></script>
 <script>
 // ══════════════════════════════════════════════════════
 // APIS & STATE
@@ -1438,11 +1437,6 @@ document.addEventListener('DOMContentLoaded', () => {
   updateSideTotal();
   animateCounters();
   buildWeeklyBars();
-  setTimeout(initActivityMap, 300);
-});
-
-window.addEventListener('load', () => {
-  setTimeout(() => { if (activityMap) activityMap.invalidateSize(true); }, 500);
 });
 
 // ══════════════════════════════════════════════════════
@@ -1588,106 +1582,6 @@ function updateTabCounts(search) {
 
 function liveSearch(val) { applyFilters(); }
 
-// ══════════════════════════════════════════════════════
-// MAP LEAFLET
-// ══════════════════════════════════════════════════════
-let activityMap = null, routePolyline = null, routeCoords = [], routeMarkers = [], parkMarkers = [], routeMode = false;
-const DEFAULT_MAP_CENTER = [36.8065, 10.1815];
-const DEFAULT_MAP_ZOOM   = 13;
-
-function initActivityMap() {
-  const mapEl = document.getElementById('activityMap');
-  if (!mapEl || typeof L === 'undefined' || activityMap) return;
-  mapEl.style.width = '100%'; mapEl.style.height = '380px';
-  activityMap = L.map('activityMap', { zoomControl:false, scrollWheelZoom:false, preferCanvas:true })
-    .setView(DEFAULT_MAP_CENTER, DEFAULT_MAP_ZOOM);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution:'&copy; OpenStreetMap', maxZoom:19 }).addTo(activityMap);
-  routePolyline = L.polyline([], { color:'#7C5CFC', weight:5, opacity:.85, dashArray:'8 6' }).addTo(activityMap);
-  L.control.zoom({ position:'bottomright' }).addTo(activityMap);
-  activityMap.on('click', e => { if (routeMode) addRoutePoint(e.latlng); });
-  activityMap.whenReady(() => { setTimeout(() => { activityMap.invalidateSize(true); activityMap.setView(DEFAULT_MAP_CENTER, DEFAULT_MAP_ZOOM); }, 100); });
-  window.addEventListener('resize', () => { if (activityMap) activityMap.invalidateSize(true); });
-  locateUser(true);
-}
-
-function locateUser(silent=false) {
-  if (!navigator.geolocation) { if (!silent) showToast('error','🌍 Géoloc non supportée'); return; }
-  const st = document.getElementById('parkStatus');
-  if (st && !silent) st.textContent = '⏳ Localisation…';
-  navigator.geolocation.getCurrentPosition(pos => {
-    const { latitude: lat, longitude: lng } = pos.coords;
-    if (activityMap) {
-      activityMap.setView([lat,lng], DEFAULT_MAP_ZOOM);
-      activityMap.invalidateSize(true);
-      L.circle([lat,lng], { radius:80, color:'#7C5CFC', fillColor:'rgba(124,92,252,.12)', fillOpacity:.6 }).addTo(activityMap);
-      if (st) st.innerHTML = '<strong>Parcs :</strong> Localisé ! Cliquez sur 🏟️ pour voir les parcs sportifs.';
-    }
-  }, () => { if (!silent) showToast('error','⚠ Permission localisation refusée'); }, { enableHighAccuracy:true, timeout:10000 });
-}
-
-function toggleRouteMode() {
-  routeMode = !routeMode;
-  const btn = document.getElementById('routeToggleBtn');
-  if (!btn) return;
-  btn.classList.toggle('active', routeMode);
-  btn.textContent = routeMode ? '🛑 Terminer' : '✍️ Tracer';
-  const info = document.getElementById('routeInfo');
-  if (routeMode) { if (info) info.innerHTML = '<strong>Parcours :</strong> Cliquez pour ajouter des points.'; showToast('info','Cliquez sur la carte pour tracer.'); }
-  else { updateRouteMetrics(); showToast('success','Parcours sauvegardé.'); }
-}
-
-function addRoutePoint(latlng) {
-  if (!activityMap) return;
-  routeCoords.push([latlng.lat, latlng.lng]);
-  const m = L.circleMarker(latlng, { radius:8, fillColor:'#7C5CFC', color:'#fff', weight:2, fillOpacity:1 }).addTo(activityMap);
-  routeMarkers.push(m);
-  routePolyline.setLatLngs(routeCoords);
-  updateRouteMetrics();
-}
-
-function resetRoute() {
-  routeCoords = [];
-  routeMarkers.forEach(m => activityMap && activityMap.removeLayer(m));
-  routeMarkers = [];
-  if (routePolyline) routePolyline.setLatLngs([]);
-  const info = document.getElementById('routeInfo');
-  if (info) info.innerHTML = '<strong>Parcours :</strong> Aucun tracé';
-  showToast('info','Parcours réinitialisé.');
-}
-
-function updateRouteMetrics() {
-  if (!activityMap || routeCoords.length < 2) { const i=document.getElementById('routeInfo'); if(i) i.innerHTML='<strong>Parcours :</strong> Aucun tracé'; return; }
-  let d = 0;
-  for (let i=1; i<routeCoords.length; i++) d += activityMap.distance(routeCoords[i-1], routeCoords[i]);
-  const info = document.getElementById('routeInfo');
-  if (info) info.innerHTML = `<strong>Parcours :</strong> ${(d/1000).toFixed(2)} km · ${routeCoords.length} points`;
-}
-
-async function searchParks() {
-  if (!activityMap) return;
-  const c = activityMap.getCenter();
-  const st = document.getElementById('parkStatus');
-  if (st) st.textContent = '⏳ Recherche des parcs…';
-  parkMarkers.forEach(m => activityMap.removeLayer(m)); parkMarkers = [];
-  try {
-    const q = `[out:json][timeout:25];(node["leisure"="park"](around:3000,${c.lat},${c.lng});way["leisure"="park"](around:3000,${c.lat},${c.lng});node["sport"](around:3000,${c.lat},${c.lng}););out center;`;
-    const r = await fetch('https://overpass-api.de/api/interpreter', { method:'POST', body:q, headers:{'Content-Type':'text/plain;charset=UTF-8'} });
-    const d = await r.json();
-    const u = new Map();
-    (d.elements||[]).forEach(el => {
-      const ct = el.type==='node'?{lat:el.lat,lon:el.lon}:(el.center||{});
-      if (!ct.lat||!ct.lon||u.has(`${el.type}-${el.id}`)) return;
-      u.set(`${el.type}-${el.id}`,true);
-      const lbl = el.tags?.name||(el.tags?.sport?`Parc ${el.tags.sport}`:'Parc sportif');
-      const mk = L.marker([ct.lat,ct.lon],{title:lbl}).addTo(activityMap);
-      mk.bindPopup(`<strong>${lbl}</strong><br>${el.tags?.leisure||el.tags?.sport||''}`);
-      parkMarkers.push(mk);
-    });
-    const cnt = parkMarkers.length;
-    if (st) st.innerHTML = `<strong>Parcs :</strong> ${cnt} lieu${cnt!==1?'x':''} trouvé${cnt!==1?'s':''}.`;
-    if (cnt===0) showToast('info','Aucun parc trouvé autour.');
-  } catch { if (st) st.textContent='⚠ Erreur recherche parcs.'; showToast('error','Erreur parcs sportifs.'); }
-}
 
 // ══════════════════════════════════════════════════════
 // ANIMATED COUNTERS

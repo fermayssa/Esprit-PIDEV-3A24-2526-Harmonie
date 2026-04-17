@@ -1143,7 +1143,8 @@ input.err,select.err{border-color:var(--red)}
       <!-- Upload zone (état initial) -->
       <div id="aiUploadSection">
         <div class="ai-upload-zone" id="aiDropZone" onclick="document.getElementById('aiFileInput').click()">
-  <input type="file" id="aiFileInput" ... style="display:none" onchange="handleAiFile(this.files[0])">
+          <input type="file" id="aiFileInput" accept="image/jpeg,image/jpg,image/png,image/webp"
+                 style="display:none"
                  onchange="handleAiFile(this.files[0])">
           <span class="ai-upload-icon">📸</span>
           <div class="ai-upload-title">Déposez ou cliquez pour choisir une photo</div>
@@ -1933,7 +1934,6 @@ async function analyzePhoto() {
 
     if (!res.ok || !data.success) {
       showAiError(data.message || "Erreur lors de l'analyse. Réessayez.");
-
       return;
     }
 

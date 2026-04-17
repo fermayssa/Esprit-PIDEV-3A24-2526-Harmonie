@@ -287,6 +287,13 @@ class NutritionController extends AbstractController
             return new JsonResponse(['success' => true, 'analysis' => $analysis]);
         } catch (\RuntimeException $e) {
             return new JsonResponse(['success' => false, 'message' => $e->getMessage()], 500);
+        } catch (\Throwable $e) {
+            // Capturer toutes les exceptions inattendues (ex: service mal configuré)
+            return new JsonResponse([
+                'success' => false,
+                'message' => 'Erreur serveur : ' . $e->getMessage() .
+                    ' | Vérifiez GEMINI_API_KEY dans .env et services.yaml.',
+            ], 500);
         }
     }
 
