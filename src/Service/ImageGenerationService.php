@@ -1,58 +1,67 @@
 <?php
-
 namespace App\Service;
 
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
-
 class ImageGenerationService
 {
-    private const API_KEY = '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';
-    private const API_URL = 'https://router.huggingface.co/hf-inference/models/black-forest-labs/FLUX.1-schnell';
+    // Pollinations.AI — gratuit, sans clé, sans inscription
+    private const API_URL = 'https://image.pollinations.ai/prompt/';
 
-    public function __construct(private readonly HttpClientInterface $http) {}
+    public function __construct(
+        private readonly HttpClientInterface $httpClient
+    ) {}
 
-
-    public function generateImage(string $prompt): ?string
+    /**
+     * Génère une image via Pollinations.AI
+     * Retourne l'image encodée en base64
+     */
+    public function generateImageBytes(string $prompt, string $style = ''): ?string
     {
-        try {
-            $response = $this->http->request('POST', self::API_URL, [
-                'headers' => [
-                    'Authorization' => 'Bearer ' . self::API_KEY,
-                    'Content-Type'  => 'application/json',
-                    'Accept'        => 'image/png',
-                ],
-                'json'    => ['inputs' => $prompt],
-                'timeout' => 60,
-            ]);
-
-            if ($response->getStatusCode() === 200) {
-                return $response->getContent();
-            }
-        } catch (\Throwable $e) {
-            // Silently fail — caller handles null
+        if (empty(trim($prompt))) {
+            return null;
         }
 
-        return null;
-    }
+        // Combine prompt + style
+        $fullPrompt = $style ? $prompt . ', ' . $style : $prompt;
 
+        // Encode le prompt pour l'URL
+        $encodedPrompt = urlencode($fullPrompt);
 
-    public function generateCourseImage(string $courseTitle, string $subject): ?string
-    {
-        $prompt = sprintf(
-            'A sleek minimalist course cover icon for an online education platform. '
-            . 'The course is titled "%s" and teaches "%s" as an academic subject. '
-            . 'Interpret "%s" strictly as an educational or technical discipline, not literally. '
-            . 'For example if the subject is Python it means the programming language, '
-            . 'if it is Java it means software development, if it is Biology it means life sciences. '
-            . 'Flat vector illustration, modern app icon style, subtle gradient, '
-            . 'centered composition, soft geometric shapes, professional edu-tech aesthetic, '
-            . 'vibrant but clean color palette, no text, no letters, no words, no animals unless abstractly symbolic',
-            $courseTitle,
-            $subject,
-            $subject
-        );
+        // Paramètres optionnels pour améliorer la qualité
+        $url = self::API_URL . $encodedPrompt . '?' . http_build_query([
+            'width'  => 768,
+            'height' => 512,
+            'seed'   => rand(1, 999999), // image différente à chaque fois
+            'model'  => 'flux',          // meilleur modèle disponible
+            'nologo' => 'true',          // sans watermark
+        ]);
 
-        return $this->generateImage($prompt);
+        try {
+            $response = $this->httpClient->request('GET', $url, [
+                'timeout' => 60,
+                'headers' => [
+                    'User-Agent' => 'HarmonyApp/1.0',
+                ],
+            ]);
+
+            $statusCode = $response->getStatusCode();
+
+            if ($statusCode !== 200) {
+                return null;
+            }
+
+            $imageBytes = $response->getContent();
+
+            // Vérifie que c'est une vraie image
+            if (strlen($imageBytes) < 1000) {
+                return null;
+            }
+
+            return base64_encode($imageBytes);
+
+        } catch (\Exception $e) {
+            return null;
+        }
     }
 }

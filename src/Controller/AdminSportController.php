@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Exercice;
 use App\Repository\ExerciceRepository;
+use App\Service\ExerciceStatsService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -19,6 +20,7 @@ class AdminSportController extends AbstractController
     public function __construct(
         private readonly ExerciceRepository     $repo,
         private readonly EntityManagerInterface $em,
+        private readonly ExerciceStatsService   $statsService,
     ) {}
 
     // ── Page principale ──────────────────────────────────────────────
@@ -28,12 +30,53 @@ class AdminSportController extends AbstractController
         return $this->render('admin/sport.html.twig');
     }
 
-    // ── LIST (JSON) ──────────────────────────────────────────────────
+    // ── LIST (JSON) — supporte recherche, filtre type, section, tri côté serveur ──
     #[Route('/api/list', name: 'admin_sport_list', methods: ['GET'])]
-    public function list(): JsonResponse
+    public function list(Request $request): JsonResponse
     {
-        $exercices = $this->repo->findAllOrdered();
+        $search  = trim($request->query->get('search',  ''));
+        $type    = trim($request->query->get('type',    ''));
+        $section = strtolower(trim($request->query->get('section', '')));
+        $sort    = $request->query->get('sort', 'nom_asc');
+
+        // Valeurs autorisées pour le tri
+        $allowedSorts = ['nom_asc', 'nom_desc', 'type_asc', 'type_desc'];
+        if (!in_array($sort, $allowedSorts, true)) {
+            $sort = 'nom_asc';
+        }
+
+        // Valeurs autorisées pour la section
+        if (!in_array($section, ['homme', 'femme', ''], true)) {
+            $section = '';
+        }
+
+        $exercices = $this->repo->searchAndFilter($search, $type, $section, $sort);
+
         return $this->json(array_map([$this, 'serialize'], $exercices));
+    }
+
+    // ── TYPES (JSON) — liste des types distincts pour le datalist et le filtre ──
+    #[Route('/api/types', name: 'admin_sport_types', methods: ['GET'])]
+    public function types(): JsonResponse
+    {
+        return $this->json($this->repo->findDistinctTypes());
+    }
+
+    // ── STATS (JSON) — pour le graphique Chart.js ────────────────────
+    #[Route('/api/stats', name: 'admin_sport_stats', methods: ['GET'])]
+    public function stats(): JsonResponse
+    {
+        $byType  = $this->statsService->getExercicesByType();
+        $labels  = array_keys($byType);
+        $values  = array_values($byType);
+        $colors  = $this->statsService->getPalette(count($labels));
+
+        return $this->json([
+            'labels'           => $labels,
+            'values'           => $values,
+            'backgroundColors' => $colors,
+            'total'            => array_sum($values),
+        ]);
     }
 
     // ── CREATE ───────────────────────────────────────────────────────
@@ -64,7 +107,7 @@ class AdminSportController extends AbstractController
             return $this->json(['error' => 'Exercice introuvable'], 404);
         }
 
-        $data = json_decode($request->getContent(), true);
+        $data  = json_decode($request->getContent(), true);
         $error = $this->validateData($data);
         if ($error) {
             return $this->json(['error' => $error], 400);

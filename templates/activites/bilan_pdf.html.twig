@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bilan d'Activités — Harmony</title>
+<style>
+/*
+ * ══════════════════════════════════════════════════════
+ * HARMONY — BILAN PDF TEMPLATE
+ * Utilisé par KnpSnappyBundle (wkhtmltopdf 0.12.x)
+ *
+ * CORRECTIONS APPORTÉES :
+ *  1. Tous les styles sont INLINE dans ce fichier (pas de
+ *     fichier CSS externe) → wkhtmltopdf n'a pas besoin
+ *     d'accéder à un serveur web pour charger les styles.
+ *
+ *  2. Flexbox remplacé par display:table + table-cell
+ *     → wkhtmltopdf utilise QtWebKit qui a un support
+ *        limité de flexbox ; display:table est fiable.
+ *
+ *  3. emojis remplacés par texte pur ou codes HTML simples
+ *     → Certaines versions de wkhtmltopdf n'ont pas les
+ *        polices emoji (Segoe UI Emoji) → boîtes noires.
+ *
+ *  4. page-break-inside: avoid sur les blocs de session
+ *     → Évite qu'un bloc soit coupé entre deux pages.
+ *
+ *  5. position:fixed pour le footer
+ *     → wkhtmltopdf répète les éléments fixed sur chaque page
+ *        (comportement voulu pour le footer).
+ * ══════════════════════════════════════════════════════
+ */
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    color: #1C1733;
+    background: #fff;
+}
+
+/* ── PAGE WRAPPER ── */
+.page {
+    width: 210mm;
+    min-height: 297mm;
+    position: relative;
+    background: #ffffff;
+}
+
+/* ─── HEADER ─── */
+.header {
+    background: #2D1B69;
+    padding: 0 24px;
+    height: 72px;
+    display: table;
+    width: 100%;
+    position: relative;
+}
+.header-left {
+    display: table-cell;
+    vertical-align: middle;
+    width: 60%;
+}
+.header-right {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: right;
+    width: 40%;
+}
+.logo-mark {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.18);
+    border: 1.5px solid rgba(255,255,255,0.3);
+    text-align: center;
+    line-height: 40px;
+    font-size: 18px;
+    font-weight: 900;
+    color: #ffffff;
+    vertical-align: middle;
+    margin-right: 12px;
+}
+.header-title-wrap {
+    display: inline-block;
+    vertical-align: middle;
+}
+.header-title {
+    font-size: 20px;
+    font-weight: 900;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    line-height: 1.1;
+}
+.header-sub {
+    font-size: 10px;
+    color: rgba(255,255,255,0.65);
+    margin-top: 2px;
+    font-weight: 400;
+}
+.header-date {
+    font-size: 10px;
+    color: rgba(255,255,255,0.75);
+    font-weight: 400;
+}
+.header-badge {
+    display: inline-block;
+    margin-top: 4px;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 30px;
+    padding: 2px 10px;
+    font-size: 9px;
+    font-weight: 700;
+    color: #c3b1ff;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+/* ─── STATS STRIP ─── */
+.stats-strip {
+    background: #EDE8FA;
+    border-bottom: 2px solid rgba(106,27,154,0.12);
+    padding: 14px 24px;
+}
+.stat-item {
+    text-align: center;
+    vertical-align: middle;
+}
+.stat-val {
+    font-size: 26px;
+    font-weight: 900;
+    color: #6a1b9a;
+    line-height: 1;
+}
+.stat-lbl {
+    font-size: 9.5px;
+    color: #9590B8;
+    margin-top: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    font-weight: 700;
+}
+.stat-sep {
+    width: 1px;
+    background: rgba(106,27,154,0.2);
+    vertical-align: middle;
+    padding: 0 1px;
+}
+
+/* ─── SECTION TITLE ─── */
+.section-title {
+    font-size: 13px;
+    font-weight: 900;
+    color: #1C1733;
+    padding: 16px 24px 6px;
+    border-bottom: 1.5px solid rgba(106,27,154,0.2);
+    margin-bottom: 8px;
+}
+
+/* ─── CONTENT AREA ─── */
+.content {
+    padding: 0 24px 100px;
+}
+
+/* ─── SESSION BLOCK ─── */
+.session-block {
+    margin-bottom: 14px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid rgba(106,27,154,0.12);
+    page-break-inside: avoid;
+}
+.session-head {
+    background: #F0EAFE;
+    padding: 10px 16px;
+    border-bottom: 1px solid rgba(106,27,154,0.08);
+    display: table;
+    width: 100%;
+}
+.session-head-left {
+    display: table-cell;
+    vertical-align: middle;
+}
+.session-head-right {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: right;
+}
+.session-date {
+    font-size: 12px;
+    font-weight: 800;
+    color: #4B3B9E;
+}
+.stag {
+    display: inline-block;
+    font-size: 9px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 20px;
+    margin-left: 4px;
+}
+.stag.ex  { background: #EDE8FA; color: #6a1b9a; }
+.stag.min { background: #E8F8F1; color: #0B7A4C; }
+.stag.cal { background: #FFF3E0; color: #B45309; }
+
+/* ─── EXERCISE ROWS ─── */
+.ex-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.ex-row {
+    border-bottom: 1px solid rgba(106,27,154,0.05);
+}
+.ex-row:last-child { border-bottom: none; }
+.ex-row td {
+    padding: 8px 16px;
+    vertical-align: top;
+    font-size: 10.5px;
+}
+.ex-name {
+    font-weight: 700;
+    color: #1C1733;
+    width: 38%;
+}
+.ex-type-badge {
+    display: inline-block;
+    font-size: 8.5px;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 10px;
+    margin-left: 4px;
+    vertical-align: middle;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+.cardio    { background: #FF6B6B; color: white; }
+.force     { background: #5B8DEF; color: white; }
+.souplesse { background: #43D39E; color: white; }
+.endurance { background: #F7B731; color: white; }
+.perte     { background: #FD7272; color: white; }
+.default   { background: #9590B8; color: white; }
+
+.ex-meta {
+    color: #6A5ACD;
+    width: 44%;
+    font-size: 10px;
+}
+.ex-meta span {
+    display: inline-block;
+    margin-right: 8px;
+}
+.ex-notes {
+    color: #9590B8;
+    font-style: italic;
+    width: 18%;
+    font-size: 9.5px;
+}
+
+/* ─── EMPTY STATE ─── */
+.empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: #9590B8;
+    font-style: italic;
+    font-size: 12px;
+}
+
+/* ─── TAMPON CERTIFIÉ ─── */
+.stamp-wrap {
+    text-align: center;
+    padding: 20px 24px 0;
+}
+.stamp {
+    display: inline-block;
+    border: 3px solid #6a1b9a;
+    border-radius: 50%;
+    width: 110px;
+    height: 110px;
+    text-align: center;
+    padding: 14px 8px;
+    opacity: 0.75;
+    color: #6a1b9a;
+    /* CORRECTION : transform:rotate ne fonctionne pas toujours
+       dans wkhtmltopdf < 0.12.6 → on le laisse mais sans dépendance critique */
+    -webkit-transform: rotate(-8deg);
+    transform: rotate(-8deg);
+}
+.stamp-top {
+    font-size: 8px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    display: block;
+}
+.stamp-icon {
+    font-size: 16px;
+    font-weight: 900;
+    color: #6a1b9a;
+    display: block;
+    margin: 4px 0;
+    line-height: 1;
+}
+.stamp-main {
+    font-size: 10px;
+    font-weight: 900;
+    color: #4B3B9E;
+    display: block;
+    margin: 2px 0;
+}
+.stamp-bottom {
+    font-size: 7px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    display: block;
+    margin-top: 3px;
+}
+
+/* ─── FOOTER FIXE (répété sur chaque page par wkhtmltopdf) ─── */
+.footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 36px;
+    background: #1A1035;
+}
+.footer table {
+    width: 100%;
+    height: 36px;
+    border-collapse: collapse;
+}
+.footer-cell {
+    vertical-align: middle;
+    padding: 0 24px;
+}
+.footer-left {
+    font-size: 8px;
+    color: rgba(255,255,255,0.65);
+    letter-spacing: 0.3px;
+    width: 40%;
+}
+.footer-center {
+    font-size: 9px;
+    font-weight: 700;
+    color: #c3b1ff;
+    letter-spacing: 0.5px;
+    text-align: center;
+    width: 20%;
+}
+.footer-right {
+    font-size: 8px;
+    color: rgba(255,255,255,0.5);
+    text-align: right;
+    width: 40%;
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  {# ── HEADER ── #}
+  <div class="header">
+    <div class="header-left">
+      <span class="logo-mark">H</span>
+      <div class="header-title-wrap">
+        <div class="header-title">Harmony</div>
+        <div class="header-sub">Bilan d'Activites Sportives</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="header-date">
+        Exporte le {{ exportDate|date('d/m/Y') }} a {{ exportDate|date('H:i') }}
+      </div>
+      <span class="header-badge">&#9733; Document officiel</span>
+    </div>
+  </div>
+
+  {# ── STATS STRIP ── #}
+  {# CORRECTION : totalEx calculé ici pour éviter l'erreur de scope Twig #}
+  {% set totalEx = 0 %}
+  {% for date, exs in grouped %}{% set totalEx = totalEx + exs|length %}{% endfor %}
+
+  <div class="stats-strip">
+    <table style="width:100%;border-collapse:collapse">
+      <tr>
+        <td class="stat-item" style="width:23%;text-align:center">
+          <div class="stat-val">{{ stats.sessions }}</div>
+          <div class="stat-lbl">Seances</div>
+        </td>
+        <td class="stat-sep" style="width:1px;background:rgba(106,27,154,0.2)">&nbsp;</td>
+        <td class="stat-item" style="width:23%;text-align:center">
+          <div class="stat-val">{{ stats.minutes }}</div>
+          <div class="stat-lbl">Minutes</div>
+        </td>
+        <td class="stat-sep" style="width:1px;background:rgba(106,27,154,0.2)">&nbsp;</td>
+        <td class="stat-item" style="width:23%;text-align:center">
+          <div class="stat-val">{{ stats.calories }}</div>
+          <div class="stat-lbl">Calories</div>
+        </td>
+        <td class="stat-sep" style="width:1px;background:rgba(106,27,154,0.2)">&nbsp;</td>
+        <td class="stat-item" style="width:23%;text-align:center">
+          <div class="stat-val">{{ totalEx }}</div>
+          <div class="stat-lbl">Exercices</div>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  {# ── SECTION TITLE ── #}
+  <div class="section-title">Historique des Seances</div>
+
+  {# ── SESSIONS ── #}
+  <div class="content">
+    {% if grouped is empty %}
+      <div class="empty-state">Aucune seance enregistree. Commencez votre entrainement !</div>
+    {% else %}
+      {% for date, exercises in grouped %}
+        {#
+          CORRECTION BUG NULL : on utilise (ex.duree_minutes ?: 0) au lieu de
+          ex.duree_minutes directement → évite une erreur Twig si NULL en BDD.
+        #}
+        {% set totalMin = 0 %}
+        {% set totalCal = 0 %}
+        {% for ex in exercises %}
+          {% set totalMin = totalMin + (ex.duree_minutes ?: 0) %}
+          {% set totalCal = totalCal + (ex.calories_brulees ?: 0) %}
+        {% endfor %}
+
+        <div class="session-block">
+          <div class="session-head">
+            <div class="session-head-left">
+              <span class="session-date">{{ date|date('d/m/Y') }}</span>
+            </div>
+            <div class="session-head-right">
+              <span class="stag ex">{{ exercises|length }} ex.</span>
+              <span class="stag min">{{ totalMin }} min</span>
+              {% if totalCal > 0 %}<span class="stag cal">{{ totalCal }} kcal</span>{% endif %}
+            </div>
+          </div>
+
+          <table class="ex-table">
+            {% for ex in exercises %}
+              {% set typeLow = (ex.exercice_type ?: '')|lower %}
+              {% set cls = 'default' %}
+              {% if 'cardio' in typeLow %}{% set cls = 'cardio' %}
+              {% elseif 'force' in typeLow %}{% set cls = 'force' %}
+              {% elseif 'souplesse' in typeLow %}{% set cls = 'souplesse' %}
+              {% elseif 'endurance' in typeLow %}{% set cls = 'endurance' %}
+              {% elseif 'perte' in typeLow %}{% set cls = 'perte' %}
+              {% endif %}
+              <tr class="ex-row">
+                <td class="ex-name">
+                  {{ ex.exercice_nom ?: 'Exercice' }}
+                  {% if ex.exercice_type %}
+                    <span class="ex-type-badge {{ cls }}">{{ ex.exercice_type|replace({'_':' '}) }}</span>
+                  {% endif %}
+                </td>
+                <td class="ex-meta">
+                  <span>{{ (ex.duree_minutes ?: 0) }} min</span>
+                  {% if ex.calories_brulees %}<span>{{ ex.calories_brulees }} kcal</span>{% endif %}
+                  {% if ex.nb_series %}<span>{{ ex.nb_series }}x{{ ex.nb_repetitions ?: '?' }} rep.</span>{% endif %}
+                  {% if ex.poids %}<span>{{ ex.poids }} kg</span>{% endif %}
+                </td>
+                <td class="ex-notes">
+                  {% if ex.notes %}"{{ ex.notes }}"{% endif %}
+                </td>
+              </tr>
+            {% endfor %}
+          </table>
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    {# ── TAMPON CERTIFIÉ PAR HARMONY ── #}
+    <div class="stamp-wrap">
+      <div class="stamp">
+        <span class="stamp-top">Certifie par</span>
+        <span class="stamp-icon">&#9670;</span>
+        <span class="stamp-main">HARMONY</span>
+        <span class="stamp-bottom">Sport App &middot; {{ exportDate|date('Y') }}</span>
+      </div>
+    </div>
+  </div>
+
+  {# ── FOOTER FIXE (wkhtmltopdf le répète sur chaque page grâce à position:fixed) ── #}
+  <div class="footer">
+    <table>
+      <tr>
+        <td class="footer-cell footer-left">Harmony &mdash; Journal de Sport | Confidentiel</td>
+        <td class="footer-cell footer-center">harmony-app.fr</td>
+        <td class="footer-cell footer-right">{{ exportDate|date('d/m/Y') }}</td>
+      </tr>
+    </table>
+  </div>
+
+</div>
+</body>
+</html>
