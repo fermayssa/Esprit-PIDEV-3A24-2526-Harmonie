@@ -6,31 +6,26 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 /**
- * Service Google Gemini Vision — Analyse de photos de repas par IA (2026)
- * Modèle : gemini-1.5-flash (version stable)
+ * Service Google Gemini Vision — Analyse de photos de repas par IA (Avril 2026)
+ * Modèle utilisé : gemini-2.5-flash-lite → beaucoup plus stable et rapide
  */
 class GeminiVisionService
 {
-    private const BASE_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
+    // MODÈLE LÉGER ET STABLE (recommandé quand le flash normal est surchargé)
+    private const BASE_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent';
 
     public function __construct(
         private readonly HttpClientInterface $client,
         private readonly string $geminiApiKey
     ) {}
 
-    /**
-     * Analyse une photo de repas et retourne une estimation nutritionnelle structurée.
-     */
     public function analyzeMealPhoto(
         string $base64Image,
         string $mimeType = 'image/jpeg',
         string $repasType = 'Déjeuner'
     ): array {
-        // Validation clé API
         if (empty($this->geminiApiKey) || !str_starts_with($this->geminiApiKey, 'AIza')) {
-            throw new \RuntimeException(
-                'Clé API Gemini invalide ou manquante. Vérifie GEMINI_API_KEY dans .env'
-            );
+            throw new \RuntimeException('Clé API Gemini invalide ou manquante. Vérifie GEMINI_API_KEY dans .env');
         }
 
         if (empty($base64Image)) {
@@ -50,13 +45,13 @@ Réponds UNIQUEMENT avec un objet JSON valide (sans markdown, sans ```json) :
   "glucides_g": 40.0,
   "lipides_g": 15.0,
   "score_equilibre": 7,
-  "suggestions": ["suggestion courte 1", "suggestion courte 2"],
-  "note_nutritionnelle": "Commentaire bref et bienveillant"
+  "suggestions": ["suggestion courte et actionnable 1", "suggestion courte et actionnable 2"],
+  "note_nutritionnelle": "Commentaire bref et bienveillant pour un étudiant"
 }
 
-Règles :
-- score_equilibre : 1 à 10
-- suggestions : max 3, très courtes, adaptées étudiant/budget
+Règles strictes :
+- score_equilibre entre 1 et 10
+- suggestions : maximum 3, très courtes, pratiques et adaptées budget étudiant
 - Si l'image n'est pas un repas → calories_totales: 0 et note claire
 PROMPT;
 
@@ -95,7 +90,7 @@ PROMPT;
             return $this->parseGeminiResponse($textContent);
 
         } catch (TransportExceptionInterface $e) {
-            throw new \RuntimeException('Impossible de contacter Gemini (erreur réseau)');
+            throw new \RuntimeException('Impossible de contacter l’API Gemini (erreur réseau)');
         } catch (\Throwable $e) {
             throw new \RuntimeException($e->getMessage());
         }
@@ -118,7 +113,7 @@ PROMPT;
         $result = json_decode($text, true);
 
         if (!is_array($result)) {
-            throw new \RuntimeException('Gemini n’a pas renvoyé un JSON valide. Photo trop floue ?');
+            throw new \RuntimeException('Gemini n’a pas renvoyé un JSON valide. Essaie avec une photo plus nette.');
         }
 
         return [
