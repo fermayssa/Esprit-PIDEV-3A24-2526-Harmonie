@@ -36,8 +36,14 @@ services:
     App\Service\YouTubeService:
         arguments:
             $youtubeApiKey: '%env(YOUTUBE_API_KEY)%'
-    # Injecte la clé API — même principe que ton Java
-    
+
+    # ── Google Gemini Vision API Service ─────────────────────────────────────
+    # Lie la variable d'environnement GEMINI_API_KEY à l'argument $geminiApiKey
+    # du constructeur de GeminiVisionService.
+    # Utilisé pour l'analyse de photos de repas par IA (Gemini 1.5 Flash).
+    App\Service\GeminiVisionService:
+        arguments:
+            $geminiApiKey: '%env(GEMINI_API_KEY)%'
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
-   

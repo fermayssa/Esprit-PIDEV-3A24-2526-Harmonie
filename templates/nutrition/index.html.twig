@@ -450,6 +450,273 @@ input.err,select.err{border-color:var(--red)}
   background: rgba(106,90,205,.12); color: var(--pu); margin-left: 6px;
 }
 
+/* ── AI PHOTO BUTTON ── */
+.btn-ai-photo{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:7px 12px;border-radius:9px;border:1.5px solid transparent;
+  background:linear-gradient(135deg,#7C3AED,#A855F7);
+  color:white;font-family:var(--font-b);font-size:11.5px;font-weight:700;
+  cursor:pointer;text-decoration:none;transition:all .2s;
+  position:relative;overflow:hidden;
+  box-shadow:0 3px 10px rgba(124,58,237,.3);
+}
+.btn-ai-photo::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,.15),transparent);
+}
+.btn-ai-photo:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(124,58,237,.45);}
+.btn-ai-photo .ai-sparkle{font-size:13px;animation:sparkle 2s ease-in-out infinite;}
+@keyframes sparkle{0%,100%{transform:scale(1) rotate(0deg)}50%{transform:scale(1.2) rotate(10deg)}}
+
+/* ── AI PHOTO MODAL ── */
+.ai-modal-overlay{
+  position:fixed;inset:0;
+  background:rgba(10,5,30,.75);backdrop-filter:blur(12px);
+  z-index:1200;display:none;align-items:center;justify-content:center;padding:20px;
+}
+.ai-modal-overlay.open{display:flex;}
+
+.ai-modal{
+  background:var(--white);border-radius:24px;
+  width:100%;max-width:560px;overflow:hidden;
+  animation:aiSlideUp .32s cubic-bezier(.22,.84,.44,1) both;
+  box-shadow:0 40px 80px rgba(106,90,205,.25),0 0 0 1px rgba(106,90,205,.12);
+  position:relative;
+}
+@keyframes aiSlideUp{from{opacity:0;transform:translateY(32px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+
+.ai-modal-header{
+  padding:22px 24px 18px;
+  background:linear-gradient(135deg,#2D2060 0%,#4B2AAB 50%,#7C3AED 100%);
+  position:relative;overflow:hidden;
+}
+.ai-modal-header::before{
+  content:'';position:absolute;inset:0;
+  background:url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M20 20h20v20H20zM0 0h20v20H0z'/%3E%3C/g%3E%3C/svg%3E");
+}
+.ai-modal-header-inner{position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;}
+.ai-modal-title-wrap{display:flex;align-items:center;gap:12px;}
+.ai-modal-icon{
+  width:44px;height:44px;border-radius:14px;
+  background:rgba(255,255,255,.15);backdrop-filter:blur(4px);
+  border:1px solid rgba(255,255,255,.25);
+  display:grid;place-items:center;font-size:22px;
+}
+.ai-modal-title{
+  font-family:var(--font-h);font-size:18px;font-weight:800;color:white;
+  letter-spacing:-.2px;
+}
+.ai-modal-subtitle{font-size:12px;color:rgba(255,255,255,.65);margin-top:2px;}
+.ai-modal-close{
+  width:32px;height:32px;border-radius:9px;border:none;
+  background:rgba(255,255,255,.15);color:white;cursor:pointer;
+  display:grid;place-items:center;font-size:15px;transition:background .15s;
+}
+.ai-modal-close:hover{background:rgba(255,255,255,.3);}
+
+.ai-meal-badge{
+  display:inline-flex;align-items:center;gap:5px;
+  margin-top:10px;padding:5px 11px;border-radius:20px;
+  background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.2);
+  font-size:11.5px;font-weight:600;color:rgba(255,255,255,.9);
+}
+
+/* Upload zone */
+.ai-modal-body{padding:22px 24px;}
+
+.ai-upload-zone{
+  border:2px dashed rgba(106,90,205,.3);border-radius:16px;
+  background:linear-gradient(135deg,var(--pu-ghost),rgba(240,237,255,.5));
+  padding:32px 20px;text-align:center;cursor:pointer;
+  transition:all .2s;position:relative;overflow:hidden;
+}
+.ai-upload-zone:hover,.ai-upload-zone.drag-over{
+  border-color:var(--pu);background:var(--pu-pale);
+  box-shadow:0 0 0 4px rgba(106,90,205,.1);
+}
+.ai-upload-zone input[type="file"]{
+  position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;
+}
+.ai-upload-icon{font-size:40px;margin-bottom:10px;display:block;}
+.ai-upload-title{font-family:var(--font-h);font-size:15px;font-weight:700;color:var(--tx);margin-bottom:4px;}
+.ai-upload-sub{font-size:12px;color:var(--tx-muted);}
+.ai-upload-formats{
+  display:flex;justify-content:center;gap:6px;margin-top:12px;
+}
+.ai-fmt-badge{
+  padding:3px 8px;border-radius:6px;font-size:10px;font-weight:700;
+  background:rgba(106,90,205,.1);color:var(--pu);border:1px solid rgba(106,90,205,.15);
+}
+
+/* OR divider */
+.ai-divider{display:flex;align-items:center;gap:10px;margin:14px 0;}
+.ai-divider::before,.ai-divider::after{content:'';flex:1;height:1px;background:var(--border);}
+.ai-divider span{font-size:11px;color:var(--tx-muted);font-weight:600;}
+
+/* Camera button */
+.btn-camera{
+  width:100%;padding:11px;border-radius:11px;
+  border:1.5px solid rgba(106,90,205,.2);
+  background:rgba(106,90,205,.06);
+  color:var(--pu);font-family:var(--font-b);font-size:13px;font-weight:600;
+  cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.btn-camera:hover{background:var(--pu);color:white;border-color:var(--pu);}
+
+/* Preview */
+.ai-preview-wrap{
+  border-radius:14px;overflow:hidden;position:relative;
+  background:#000;margin-bottom:14px;
+  box-shadow:0 8px 24px rgba(0,0,0,.12);max-height:220px;display:flex;align-items:center;justify-content:center;
+}
+.ai-preview-wrap img{
+  width:100%;max-height:220px;object-fit:cover;display:block;
+}
+.ai-preview-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(0,0,0,.4) 0%,transparent 50%);
+  display:flex;align-items:flex-end;justify-content:space-between;padding:12px;
+}
+.ai-preview-label{
+  font-size:11px;font-weight:700;color:white;
+  background:rgba(0,0,0,.5);backdrop-filter:blur(4px);
+  padding:4px 10px;border-radius:6px;
+}
+.ai-preview-change{
+  font-size:11px;font-weight:700;color:white;
+  background:rgba(106,90,205,.8);
+  padding:4px 10px;border-radius:6px;cursor:pointer;border:none;
+  transition:background .15s;
+}
+.ai-preview-change:hover{background:var(--pu);}
+
+/* Analyze button */
+.btn-analyze{
+  width:100%;padding:13px;border-radius:12px;border:none;
+  background:linear-gradient(135deg,#7C3AED,#A855F7,#C026D3);
+  color:white;font-family:var(--font-h);font-size:14px;font-weight:700;
+  cursor:pointer;transition:all .2s;
+  display:flex;align-items:center;justify-content:center;gap:9px;
+  box-shadow:0 8px 24px rgba(124,58,237,.35);
+  position:relative;overflow:hidden;
+}
+.btn-analyze::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,.2),transparent);
+}
+.btn-analyze:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 12px 32px rgba(124,58,237,.45);}
+.btn-analyze:disabled{background:var(--tx-muted);box-shadow:none;cursor:not-allowed;}
+
+/* Loading state */
+.ai-loading{
+  display:none;flex-direction:column;align-items:center;justify-content:center;
+  padding:36px 20px;gap:16px;
+}
+.ai-loading.show{display:flex;}
+.ai-spinner{
+  width:56px;height:56px;border-radius:50%;
+  border:3px solid rgba(106,90,205,.15);
+  border-top-color:#7C3AED;
+  animation:aiSpin 1s linear infinite;
+  position:relative;
+}
+.ai-spinner::after{
+  content:'🧠';position:absolute;inset:0;display:grid;place-items:center;
+  font-size:20px;animation:aiSpin 1s linear infinite reverse;
+}
+@keyframes aiSpin{to{transform:rotate(360deg)}}
+.ai-loading-text{font-family:var(--font-h);font-size:15px;font-weight:700;color:var(--pu);}
+.ai-loading-sub{font-size:12px;color:var(--tx-muted);text-align:center;}
+
+/* Results panel */
+.ai-results{display:none;flex-direction:column;gap:14px;}
+.ai-results.show{display:flex;}
+
+.ai-results-header{
+  padding:14px 16px;border-radius:14px;
+  background:linear-gradient(135deg,rgba(124,58,237,.08),rgba(168,85,247,.06));
+  border:1px solid rgba(124,58,237,.15);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.ai-detected-title{font-size:11px;font-weight:700;color:var(--pu);text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px;}
+.ai-dishes-tags{display:flex;flex-wrap:wrap;gap:6px;}
+.ai-dish-tag{
+  padding:4px 11px;border-radius:8px;font-size:12px;font-weight:600;
+  background:white;border:1px solid rgba(124,58,237,.2);color:var(--pu-deep);
+}
+
+/* Calories big display */
+.ai-cal-display{
+  display:flex;align-items:center;justify-content:center;flex-direction:column;
+  padding:18px;border-radius:18px;
+  background:linear-gradient(135deg,#7C3AED,#A855F7);
+  color:white;position:relative;overflow:hidden;
+}
+.ai-cal-display::before{
+  content:'';position:absolute;right:-20px;top:-20px;width:100px;height:100px;
+  border-radius:50%;background:rgba(255,255,255,.1);
+}
+.ai-cal-number{font-family:var(--font-h);font-size:38px;font-weight:800;line-height:1;}
+.ai-cal-label{font-size:11px;font-weight:600;opacity:.75;text-transform:uppercase;letter-spacing:.5px;margin-top:3px;}
+
+/* Macros grid in results */
+.ai-macros-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.ai-macro-cell{
+  padding:12px 10px;border-radius:13px;text-align:center;
+  background:var(--pu-ghost);border:1px solid var(--border);
+}
+.ai-macro-cell .val{font-family:var(--font-h);font-size:16px;font-weight:800;color:var(--tx);}
+.ai-macro-cell .lbl{font-size:10px;font-weight:600;color:var(--tx-muted);text-transform:uppercase;margin-top:2px;}
+.ai-macro-cell.prot .val{color:#D97706;}
+.ai-macro-cell.gluc .val{color:#059669;}
+.ai-macro-cell.lip  .val{color:#4338CA;}
+
+/* Equilibre score */
+.ai-score-wrap{
+  display:flex;align-items:center;gap:14px;
+  padding:14px 16px;border-radius:14px;background:var(--pu-ghost);border:1px solid var(--border);
+}
+.ai-score-circle{
+  width:52px;height:52px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-h);font-size:18px;font-weight:800;color:white;
+}
+.ai-score-circle.bad{background:linear-gradient(135deg,#EF4444,#DC2626);}
+.ai-score-circle.ok{background:linear-gradient(135deg,#F59E0B,#D97706);}
+.ai-score-circle.good{background:linear-gradient(135deg,#10B981,#059669);}
+.ai-score-stars{display:flex;gap:2px;margin-top:4px;}
+.ai-score-stars span{font-size:13px;}
+.ai-score-label{font-family:var(--font-h);font-size:13px;font-weight:700;color:var(--tx);}
+
+/* Suggestions */
+.ai-suggestions{padding:14px 16px;border-radius:14px;background:#FFF7ED;border:1px solid rgba(245,158,11,.2);}
+.ai-sug-title{font-size:11px;font-weight:700;color:#D97706;text-transform:uppercase;letter-spacing:.5px;margin-bottom:9px;display:flex;align-items:center;gap:5px;}
+.ai-sug-item{display:flex;align-items:flex-start;gap:8px;margin-bottom:7px;}
+.ai-sug-item:last-child{margin-bottom:0;}
+.ai-sug-num{
+  width:20px;height:20px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,#F59E0B,#D97706);color:white;
+  font-size:10px;font-weight:700;display:grid;place-items:center;margin-top:1px;
+}
+.ai-sug-text{font-size:12.5px;color:var(--tx-mid);line-height:1.5;}
+
+/* Note nutritionnelle */
+.ai-note{
+  padding:12px 14px;border-radius:12px;
+  background:rgba(124,58,237,.06);border:1px solid rgba(124,58,237,.12);
+  font-size:12.5px;color:var(--tx-mid);line-height:1.6;font-style:italic;
+  display:flex;gap:8px;align-items:flex-start;
+}
+.ai-note-icon{font-size:16px;flex-shrink:0;margin-top:1px;}
+
+/* Retry button */
+.btn-retry{
+  width:100%;padding:10px;border-radius:10px;border:1.5px solid rgba(124,58,237,.2);
+  background:transparent;color:var(--pu);font-family:var(--font-b);font-size:13px;font-weight:600;
+  cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:6px;
+}
+.btn-retry:hover{background:var(--pu-pale);}
+
 /* ── RESPONSIVE ── */
 @media(max-width:1024px){.page{grid-template-columns:1fr;padding:20px 18px 60px}.side-col{position:static}}
 @media(max-width:640px){.topbar{padding:0 14px}.nav-links{display:none}.hero{padding:20px 18px 24px}.hero-inner{flex-direction:column}.hero-stats{flex-wrap:wrap}}
@@ -550,6 +817,11 @@ input.err,select.err{border-color:var(--red)}
             <span class="meal-cal-badge" id="mealCal-{{ cls }}">
               🔥 {{ mealCal|number_format(0, '.', '') }} kcal
             </span>
+            <button class="btn-ai-photo"
+                    onclick="openAiPhotoModal('{{ repasName|e("html_attr") }}', '{{ cls }}')"
+                    title="Analyser une photo de ce repas par IA">
+              <span class="ai-sparkle">✨</span> Analyser IA
+            </button>
             <a href="{{ path('nutrition_ajouter', {'repas': repasName, 'date': date}) }}"
                class="btn-add-food">
               ＋ Ajouter
@@ -843,6 +1115,140 @@ input.err,select.err{border-color:var(--red)}
       </div>
     </div>
 
+  </div>
+</div>
+
+<!-- ═══ AI PHOTO ANALYSIS MODAL ═══ -->
+<div class="ai-modal-overlay" id="aiPhotoModal">
+  <div class="ai-modal">
+
+    <!-- Header -->
+    <div class="ai-modal-header">
+      <div class="ai-modal-header-inner">
+        <div class="ai-modal-title-wrap">
+          <div class="ai-modal-icon">🧠</div>
+          <div>
+            <div class="ai-modal-title">Analyse IA du repas</div>
+            <div class="ai-modal-subtitle">Gemini 1.5 Flash · Estimation nutritionnelle</div>
+          </div>
+        </div>
+        <button class="ai-modal-close" onclick="closeAiModal()">✕</button>
+      </div>
+      <div class="ai-meal-badge" id="aiMealBadge">🍽️ Repas</div>
+    </div>
+
+    <!-- Body -->
+    <div class="ai-modal-body">
+
+      <!-- Upload zone (état initial) -->
+      <div id="aiUploadSection">
+        <div class="ai-upload-zone" id="aiDropZone" onclick="document.getElementById('aiFileInput').click()">
+  <input type="file" id="aiFileInput" ... style="display:none" onchange="handleAiFile(this.files[0])">
+                 onchange="handleAiFile(this.files[0])">
+          <span class="ai-upload-icon">📸</span>
+          <div class="ai-upload-title">Déposez ou cliquez pour choisir une photo</div>
+          <div class="ai-upload-sub">Prenez en photo votre plat ou importez une image</div>
+          <div class="ai-upload-formats">
+            <span class="ai-fmt-badge">JPEG</span>
+            <span class="ai-fmt-badge">PNG</span>
+            <span class="ai-fmt-badge">WebP</span>
+            <span class="ai-fmt-badge">Max 5Mo</span>
+          </div>
+        </div>
+
+        <div class="ai-divider"><span>ou</span></div>
+
+        <button class="btn-camera" onclick="openCamera()">
+          📷 Prendre une photo avec la caméra
+        </button>
+        <!-- Input caméra caché -->
+        <input type="file" id="aiCameraInput" accept="image/*" capture="environment"
+               style="display:none" onchange="handleAiFile(this.files[0])">
+      </div>
+
+      <!-- Preview + bouton analyser (après sélection) -->
+      <div id="aiPreviewSection" style="display:none;">
+        <div class="ai-preview-wrap">
+          <img id="aiPreviewImg" src="" alt="Aperçu du repas">
+          <div class="ai-preview-overlay">
+            <span class="ai-preview-label" id="aiPreviewLabel">Photo sélectionnée</span>
+            <button class="ai-preview-change" onclick="resetAiUpload()">🔄 Changer</button>
+          </div>
+        </div>
+        <button class="btn-analyze" id="aiAnalyzeBtn" onclick="analyzePhoto()">
+          🧠 Analyser ce repas avec l'IA
+        </button>
+      </div>
+
+      <!-- Loading -->
+      <div class="ai-loading" id="aiLoading">
+        <div class="ai-spinner"></div>
+        <div class="ai-loading-text">Analyse en cours…</div>
+        <div class="ai-loading-sub">Gemini 1.5 Flash identifie vos aliments<br>et estime les nutriments 🔬</div>
+      </div>
+
+      <!-- Résultats -->
+      <div class="ai-results" id="aiResults">
+
+        <!-- Plats détectés -->
+        <div class="ai-results-header">
+          <div style="flex:1">
+            <div class="ai-detected-title">🔍 Plats détectés</div>
+            <div class="ai-dishes-tags" id="aiDishTags"></div>
+          </div>
+        </div>
+
+        <!-- Calories grand format -->
+        <div class="ai-cal-display">
+          <div class="ai-cal-number" id="aiCalNumber">—</div>
+          <div class="ai-cal-label">kcal estimées</div>
+        </div>
+
+        <!-- Macros -->
+        <div class="ai-macros-grid">
+          <div class="ai-macro-cell prot">
+            <div class="val" id="aiProt">—</div>
+            <div class="lbl">🥩 Protéines</div>
+          </div>
+          <div class="ai-macro-cell gluc">
+            <div class="val" id="aiGluc">—</div>
+            <div class="lbl">🌾 Glucides</div>
+          </div>
+          <div class="ai-macro-cell lip">
+            <div class="val" id="aiLip">—</div>
+            <div class="lbl">💧 Lipides</div>
+          </div>
+        </div>
+
+        <!-- Score équilibre -->
+        <div class="ai-score-wrap">
+          <div class="ai-score-circle" id="aiScoreCircle">—</div>
+          <div>
+            <div class="ai-score-label" id="aiScoreLabel">Score d'équilibre nutritionnel</div>
+            <div class="ai-score-stars" id="aiScoreStars"></div>
+          </div>
+        </div>
+
+        <!-- Note nutritionnelle -->
+        <div class="ai-note" id="aiNote" style="display:none;">
+          <span class="ai-note-icon">💬</span>
+          <span id="aiNoteText"></span>
+        </div>
+
+        <!-- Suggestions -->
+        <div class="ai-suggestions" id="aiSuggestions" style="display:none;">
+          <div class="ai-sug-title">💡 Suggestions pour mieux équilibrer</div>
+          <div id="aiSugList"></div>
+        </div>
+
+        <!-- Bouton réessayer -->
+        <button class="btn-retry" onclick="resetAiUpload()">
+          📸 Analyser une autre photo
+        </button>
+
+      </div><!-- end ai-results -->
+
+    </div><!-- end ai-modal-body -->
   </div>
 </div>
 
@@ -1390,5 +1796,281 @@ async function restoreBmrProfile() {
     // Silencieux : première visite sans profil sauvegardé
   }
 }
+
+// ═══════════════════════════════════════════════════════════════════
+// AI PHOTO ANALYSIS — Google Gemini 1.5 Flash
+// ═══════════════════════════════════════════════════════════════════
+
+let _aiCurrentRepas  = '';
+let _aiCurrentCls    = '';
+let _aiCurrentFile   = null;
+let _aiCurrentBase64 = null;
+
+/**
+ * Ouvre la modale d'analyse IA pour un type de repas donné.
+ * @param {string} repasName  Ex: "Déjeuner"
+ * @param {string} cls        Ex: "lunch"
+ */
+function openAiPhotoModal(repasName, cls) {
+  _aiCurrentRepas = repasName;
+  _aiCurrentCls   = cls;
+
+  // Badge repas
+  const mealIcons = {
+    breakfast: '🌅', lunch: '☀️', dinner: '🌙', snack: '🍎'
+  };
+  document.getElementById('aiMealBadge').textContent =
+    (mealIcons[cls] || '🍽️') + ' ' + repasName;
+
+  // Réinitialiser l'interface
+  resetAiState();
+  document.getElementById('aiPhotoModal').classList.add('open');
+}
+
+/** Ferme la modale IA. */
+function closeAiModal() {
+  document.getElementById('aiPhotoModal').classList.remove('open');
+}
+
+/** Remet tout l'état interne à zéro sans fermer la modale. */
+function resetAiState() {
+  _aiCurrentFile   = null;
+  _aiCurrentBase64 = null;
+
+  showAiSection('upload');
+
+  // Reset file inputs
+  document.getElementById('aiFileInput').value   = '';
+  document.getElementById('aiCameraInput').value = '';
+
+  // Vider les résultats
+  document.getElementById('aiResults').classList.remove('show');
+  document.getElementById('aiLoading').classList.remove('show');
+}
+
+/** Revient à l'upload depuis la preview ou les résultats. */
+function resetAiUpload() {
+  resetAiState();
+}
+
+/**
+ * Affiche l'une des sections exclusives de la modale.
+ * @param {'upload'|'preview'|'loading'|'results'} section
+ */
+function showAiSection(section) {
+  document.getElementById('aiUploadSection').style.display  = section === 'upload'  ? ''      : 'none';
+  document.getElementById('aiPreviewSection').style.display = section === 'preview' ? ''      : 'none';
+  document.getElementById('aiLoading').classList.toggle('show', section === 'loading');
+  document.getElementById('aiResults').classList.toggle('show',  section === 'results');
+}
+
+/** Ouvre le sélecteur de caméra. */
+function openCamera() {
+  document.getElementById('aiCameraInput').click();
+}
+
+/**
+ * Traite le fichier sélectionné (upload ou caméra).
+ * @param {File} file
+ */
+function handleAiFile(file) {
+  if (!file) return;
+
+  // Vérification taille (5 Mo max)
+  if (file.size > 5 * 1024 * 1024) {
+    showToast('error', '⚠️ Image trop volumineuse (max 5 Mo).');
+    return;
+  }
+
+  // Vérification type MIME
+  const allowed = ['image/jpeg','image/jpg','image/png','image/webp'];
+  if (!allowed.includes(file.type)) {
+    showToast('error', '⚠️ Format non supporté. Utilisez JPEG, PNG ou WebP.');
+    return;
+  }
+
+  _aiCurrentFile = file;
+
+  // Lire et afficher la preview
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    _aiCurrentBase64 = e.target.result; // data URI complet
+    document.getElementById('aiPreviewImg').src    = _aiCurrentBase64;
+    document.getElementById('aiPreviewLabel').textContent =
+      file.name.length > 28 ? file.name.substring(0, 28) + '…' : file.name;
+    showAiSection('preview');
+  };
+  reader.readAsDataURL(file);
+}
+
+/**
+ * Envoie l'image au backend /nutrition/api/analyze-photo
+ * et affiche les résultats retournés par Gemini.
+ */
+async function analyzePhoto() {
+  if (!_aiCurrentBase64) {
+    showToast('error', "⚠️ Veuillez d'abord sélectionner une image.");
+    return;
+  }
+
+  const btn = document.getElementById('aiAnalyzeBtn');
+  btn.disabled = true;
+  btn.innerHTML = '⏳ Envoi en cours…';
+
+  showAiSection('loading');
+
+  try {
+    const res = await fetch('/nutrition/api/analyze-photo', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        image: _aiCurrentBase64,
+        repas: _aiCurrentRepas,
+      }),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok || !data.success) {
+      showAiError(data.message || "Erreur lors de l'analyse. Réessayez.");
+
+      return;
+    }
+
+    renderAiResults(data.analysis);
+
+  } catch (err) {
+    showAiError('Erreur réseau. Vérifiez votre connexion.');
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = "🧠 Analyser ce repas avec l'IA";
+  }
+}
+
+/**
+ * Affiche un message d'erreur dans la modale et revient à l'upload.
+ * @param {string} msg
+ */
+function showAiError(msg) {
+  showAiSection('upload');
+  showToast('error', '❌ ' + msg);
+}
+
+/**
+ * Remplit l'interface de résultats avec les données de l'IA.
+ * @param {Object} a  Objet analysis retourné par le backend
+ */
+function renderAiResults(a) {
+  // ── Plats détectés ─────────────────────────────────────────────
+  const tagsEl = document.getElementById('aiDishTags');
+  tagsEl.innerHTML = '';
+  const plats = a.plats_detectes || ['Plat non identifié'];
+  plats.forEach(p => {
+    const tag = document.createElement('span');
+    tag.className   = 'ai-dish-tag';
+    tag.textContent = p;
+    tagsEl.appendChild(tag);
+  });
+
+  // ── Calories ───────────────────────────────────────────────────
+  document.getElementById('aiCalNumber').textContent =
+    Math.round(a.calories_totales || 0).toLocaleString('fr-FR');
+
+  // ── Macros ─────────────────────────────────────────────────────
+  document.getElementById('aiProt').textContent = (a.proteines_g || 0).toFixed(1) + 'g';
+  document.getElementById('aiGluc').textContent = (a.glucides_g  || 0).toFixed(1) + 'g';
+  document.getElementById('aiLip').textContent  = (a.lipides_g   || 0).toFixed(1) + 'g';
+
+  // ── Score équilibre ────────────────────────────────────────────
+  const score = Math.max(1, Math.min(10, a.score_equilibre || 5));
+  const scoreCircle = document.getElementById('aiScoreCircle');
+  scoreCircle.textContent = score + '/10';
+  scoreCircle.className = 'ai-score-circle ' +
+    (score >= 7 ? 'good' : (score >= 4 ? 'ok' : 'bad'));
+
+  // Étoiles
+  const stars = document.getElementById('aiScoreStars');
+  const fullStars = Math.round(score / 2);
+  stars.innerHTML = '';
+  for (let i = 0; i < 5; i++) {
+    const s = document.createElement('span');
+    s.textContent = i < fullStars ? '⭐' : '☆';
+    stars.appendChild(s);
+  }
+
+  const labels = ['','Très déséquilibré','Très déséquilibré','Déséquilibré','Moyennement équilibré',
+    'Assez équilibré','Bien équilibré','Bien équilibré','Très bien équilibré','Excellent','Parfait !'];
+  document.getElementById('aiScoreLabel').textContent = labels[score] || 'Équilibré';
+
+  // ── Note nutritionnelle ────────────────────────────────────────
+  const noteEl = document.getElementById('aiNote');
+  if (a.note_nutritionnelle) {
+    document.getElementById('aiNoteText').textContent = a.note_nutritionnelle;
+    noteEl.style.display = 'flex';
+  } else {
+    noteEl.style.display = 'none';
+  }
+
+  // ── Suggestions ───────────────────────────────────────────────
+  const sugWrap = document.getElementById('aiSuggestions');
+  const sugList = document.getElementById('aiSugList');
+  sugList.innerHTML = '';
+
+  const suggestions = a.suggestions || [];
+  if (suggestions.length > 0) {
+    suggestions.forEach((s, i) => {
+      sugList.innerHTML += `
+        <div class="ai-sug-item">
+          <div class="ai-sug-num">${i + 1}</div>
+          <div class="ai-sug-text">${escapeHtml(s)}</div>
+        </div>`;
+    });
+    sugWrap.style.display = 'block';
+  } else {
+    sugWrap.style.display = 'none';
+  }
+
+  // Afficher le panneau résultats
+  showAiSection('results');
+
+  // Toast succès
+  showToast('success', '✅ Analyse terminée — ' + Math.round(a.calories_totales || 0) + ' kcal détectées');
+}
+
+/** Échappe les caractères HTML dangereux. */
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+// ── Fermeture de la modale IA en cliquant en dehors ──────────────
+document.addEventListener('DOMContentLoaded', () => {
+  const overlay = document.getElementById('aiPhotoModal');
+  if (overlay) {
+    overlay.addEventListener('click', e => {
+      if (e.target === overlay) closeAiModal();
+    });
+  }
+
+  // Drag & drop sur la zone d'upload
+  const dropZone = document.getElementById('aiDropZone');
+  if (dropZone) {
+    dropZone.addEventListener('dragover', e => {
+      e.preventDefault();
+      dropZone.classList.add('drag-over');
+    });
+    dropZone.addEventListener('dragleave', () => {
+      dropZone.classList.remove('drag-over');
+    });
+    dropZone.addEventListener('drop', e => {
+      e.preventDefault();
+      dropZone.classList.remove('drag-over');
+      const file = e.dataTransfer.files[0];
+      if (file) handleAiFile(file);
+    });
+  }
+});
+
 </script>
 {% endblock %}

@@ -79,6 +79,7 @@ return [
             [['_route' => 'nutrition_api_bmr_save', '_controller' => 'App\\Controller\\NutritionController::apiBmrSave'], null, ['POST' => 0], null, false, false, null],
             [['_route' => 'nutrition_api_bmr_get', '_controller' => 'App\\Controller\\NutritionController::apiBmrGet'], null, ['GET' => 0], null, false, false, null],
         ],
+        '/nutrition/api/analyze-photo' => [[['_route' => 'nutrition_api_analyze_photo', '_controller' => 'App\\Controller\\NutritionController::apiAnalyzePhoto'], null, ['POST' => 0], null, false, false, null]],
         '/nutrition/api/recettes' => [[['_route' => 'nutrition_api_recettes', '_controller' => 'App\\Controller\\NutritionController::apiRecettes'], null, ['GET' => 0], null, false, false, null]],
         '/nutrition/api/ajouter-recette' => [[['_route' => 'nutrition_api_ajouter_recette', '_controller' => 'App\\Controller\\NutritionController::apiAjouterRecette'], null, ['POST' => 0], null, false, false, null]],
         '/nutrition/api/journal' => [[['_route' => 'nutrition_api_journal', '_controller' => 'App\\Controller\\NutritionController::apiJournal'], null, ['GET' => 0], null, false, false, null]],

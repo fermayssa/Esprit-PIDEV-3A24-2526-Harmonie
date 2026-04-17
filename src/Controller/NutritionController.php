@@ -6,6 +6,7 @@ use App\Entity\Aliment;
 use App\Entity\Consommation;
 use App\Repository\AlimentRepository;
 use App\Repository\ConsommationRepository;
+use App\Service\GeminiVisionService;
 use App\Service\SpoonacularService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -61,7 +62,6 @@ class NutritionController extends AbstractController
         $glucGoal = (int) ($goalSettings['gluc'] ?? self::GLUC_GOAL);
         $lipGoal  = (int) ($goalSettings['lip']  ?? self::LIP_GOAL);
 
-        // Récupérer le profil BMR sauvegardé en session (si existant)
         $bmrProfil = $session->get('bmr_profil', null);
 
         $prevDate = (clone $dt)->modify('-1 day')->format('Y-m-d');
@@ -86,7 +86,7 @@ class NutritionController extends AbstractController
             'waterGoal'  => self::WATER_GOAL_ML,
             'userId'     => $userId,
             'repasTypes' => $this->repasTypes(),
-            'bmrProfil'  => $bmrProfil,   // Profil anthropométrique sauvegardé
+            'bmrProfil'  => $bmrProfil,
         ]);
     }
 
@@ -155,47 +155,15 @@ class NutritionController extends AbstractController
         return new JsonResponse(['success' => true, 'message' => 'Objectifs enregistrés.']);
     }
 
-    // ═══════════════════════════════════════════════════════════════════════
-    //  API : PROFIL BMR/IDEE — Sauvegarde et récupération via session
-    // ═══════════════════════════════════════════════════════════════════════
-
-    /**
-     * Enregistre le profil anthropométrique de l'utilisateur en session
-     * et retourne le BMR calculé (formule Mifflin-St Jeor) + IDEE + macros suggérées.
-     *
-     * Route : POST /nutrition/api/bmr-profil
-     * Corps JSON attendu :
-     *   {
-     *     "sexe":      "homme" | "femme",
-     *     "age":       integer (ans),
-     *     "poids":     float (kg),
-     *     "taille":    integer (cm),
-     *     "activite":  "sedentaire" | "leger" | "modere" | "actif" | "tres_actif",
-     *     "objectif":  "perte" | "maintien" | "prise"
-     *   }
-     *
-     * Réponse JSON :
-     *   {
-     *     "success": true,
-     *     "bmr":        float,   // Métabolisme de base (kcal/j)
-     *     "idee":       float,   // Dépense énergétique totale (kcal/j)
-     *     "calCible":   float,   // Calories recommandées selon objectif
-     *     "protCible":  float,   // Protéines recommandées (g)
-     *     "glucCible":  float,   // Glucides recommandés (g)
-     *     "lipCible":   float,   // Lipides recommandés (g)
-     *     "profil":     {...}    // Profil sauvegardé
-     *   }
-     */
+    // ─── API : BMR save ─────────────────────────────────────────────
     #[Route('/api/bmr-profil', name: 'nutrition_api_bmr_save', methods: ['POST'])]
     public function apiBmrSave(Request $request): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
-
         if (!is_array($data)) {
             return new JsonResponse(['success' => false, 'message' => 'Données JSON invalides.'], 400);
         }
 
-        // ── Validation des champs obligatoires ──────────────────────────────
         $sexe     = strtolower(trim($data['sexe']     ?? ''));
         $age      = (int)   ($data['age']      ?? 0);
         $poids    = (float) ($data['poids']    ?? 0);
@@ -204,98 +172,122 @@ class NutritionController extends AbstractController
         $objectif = strtolower(trim($data['objectif'] ?? ''));
 
         $errors = [];
-        if (!in_array($sexe, ['homme', 'femme']))                                { $errors[] = 'Sexe invalide (homme|femme).'; }
-        if ($age < 10 || $age > 120)                                             { $errors[] = 'Âge invalide (10-120 ans).'; }
-        if ($poids < 20.0 || $poids > 300.0)                                    { $errors[] = 'Poids invalide (20-300 kg).'; }
-        if ($taille < 100 || $taille > 250)                                      { $errors[] = 'Taille invalide (100-250 cm).'; }
-        if (!in_array($activite, ['sedentaire','leger','modere','actif','tres_actif'])) { $errors[] = 'Niveau d\'activité invalide.'; }
-        if (!in_array($objectif, ['perte','maintien','prise']))                  { $errors[] = 'Objectif invalide (perte|maintien|prise).'; }
+        if (!in_array($sexe, ['homme', 'femme']))                                            { $errors[] = 'Sexe invalide.'; }
+        if ($age < 10 || $age > 120)                                                         { $errors[] = 'Âge invalide.'; }
+        if ($poids < 20.0 || $poids > 300.0)                                                { $errors[] = 'Poids invalide.'; }
+        if ($taille < 100 || $taille > 250)                                                  { $errors[] = 'Taille invalide.'; }
+        if (!in_array($activite, ['sedentaire','leger','modere','actif','tres_actif']))      { $errors[] = 'Activité invalide.'; }
+        if (!in_array($objectif, ['perte','maintien','prise']))                              { $errors[] = 'Objectif invalide.'; }
 
         if ($errors) {
             return new JsonResponse(['success' => false, 'message' => implode(' ', $errors)], 422);
         }
 
-        // ── Calcul du BMR : formule Mifflin-St Jeor ─────────────────────────
-        // Homme : BMR = 10 × poids(kg) + 6.25 × taille(cm) − 5 × âge + 5
-        // Femme  : BMR = 10 × poids(kg) + 6.25 × taille(cm) − 5 × âge − 161
         $bmr = (10 * $poids) + (6.25 * $taille) - (5 * $age) + ($sexe === 'homme' ? 5 : -161);
+        $palMap = ['sedentaire'=>1.2,'leger'=>1.375,'modere'=>1.55,'actif'=>1.725,'tres_actif'=>1.9];
+        $idee     = $bmr * $palMap[$activite];
+        $calCible = match($objectif) { 'perte'=>$idee-500, 'prise'=>$idee+300, default=>$idee };
+        $calCible = max($calCible, $sexe === 'homme' ? 1500 : 1200);
 
-        // ── Facteurs d'activité physique (PAL) ──────────────────────────────
-        // Source : classification OMS / Schofield
-        $palMap = [
-            'sedentaire' => 1.200,  // Travail de bureau, aucun sport
-            'leger'      => 1.375,  // Exercice léger 1-3 j/semaine
-            'modere'     => 1.550,  // Exercice modéré 3-5 j/semaine
-            'actif'      => 1.725,  // Sport intense 6-7 j/semaine
-            'tres_actif' => 1.900,  // Travail physique + sport quotidien
-        ];
-        $pal  = $palMap[$activite];
-        $idee = $bmr * $pal;
-
-        // ── Ajustement calorique selon l'objectif ────────────────────────────
-        // Perte de poids  : déficit de 500 kcal/j → ~0.5 kg/semaine de façon sûre
-        // Prise de masse  : surplus de 300 kcal/j → prise musculaire progressive
-        // Maintien        : IDEE sans ajustement
-        $calCible = match($objectif) {
-            'perte'    => $idee - 500,
-            'prise'    => $idee + 300,
-            default    => $idee,        // maintien
-        };
-
-        // Sécurité : ne jamais descendre en-dessous de 1200 kcal (femme) ou 1500 kcal (homme)
-        $calMin   = $sexe === 'homme' ? 1500 : 1200;
-        $calCible = max($calCible, $calMin);
-
-        // ── Calcul des macros recommandées ───────────────────────────────────
-        // Répartition standard équilibrée :
-        //   Protéines : 25 % des calories  → ÷ 4 kcal/g
-        //   Glucides  : 50 % des calories  → ÷ 4 kcal/g
-        //   Lipides   : 25 % des calories  → ÷ 9 kcal/g
         $protCible = round(($calCible * 0.25) / 4);
         $glucCible = round(($calCible * 0.50) / 4);
         $lipCible  = round(($calCible * 0.25) / 9);
 
-        // ── Persistance en session ───────────────────────────────────────────
-        $profil = [
-            'sexe'     => $sexe,
-            'age'      => $age,
-            'poids'    => $poids,
-            'taille'   => $taille,
-            'activite' => $activite,
-            'objectif' => $objectif,
-        ];
+        $profil = compact('sexe','age','poids','taille','activite','objectif');
         $request->getSession()->set('bmr_profil', $profil);
 
         return new JsonResponse([
             'success'   => true,
-            'bmr'       => round($bmr,  1),
+            'bmr'       => round($bmr, 1),
             'idee'      => round($idee, 1),
             'calCible'  => round($calCible),
-            'protCible' => (int) $protCible,
-            'glucCible' => (int) $glucCible,
-            'lipCible'  => (int) $lipCible,
+            'protCible' => (int)$protCible,
+            'glucCible' => (int)$glucCible,
+            'lipCible'  => (int)$lipCible,
             'profil'    => $profil,
         ]);
     }
 
-    /**
-     * Récupère le profil BMR sauvegardé en session.
-     * Route : GET /nutrition/api/bmr-profil
-     *
-     * Réponse JSON :
-     *   { "success": true,  "profil": {...} }     si un profil existe
-     *   { "success": false, "message": "..." }    si aucun profil sauvegardé
-     */
+    // ─── API : BMR get ──────────────────────────────────────────────
     #[Route('/api/bmr-profil', name: 'nutrition_api_bmr_get', methods: ['GET'])]
     public function apiBmrGet(Request $request): JsonResponse
     {
         $profil = $request->getSession()->get('bmr_profil');
-
         if (!$profil) {
             return new JsonResponse(['success' => false, 'message' => 'Aucun profil BMR sauvegardé.'], 404);
         }
-
         return new JsonResponse(['success' => true, 'profil' => $profil]);
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════
+    //  API : ANALYSE PHOTO DE REPAS — Google Gemini 1.5 Flash
+    // ═══════════════════════════════════════════════════════════════════════
+
+    /**
+     * Analyse une photo de repas via Google Gemini 1.5 Flash Vision.
+     *
+     * Route : POST /nutrition/api/analyze-photo
+     *
+     * Corps JSON attendu :
+     * {
+     *   "image": "data:image/jpeg;base64,/9j/4AAQ...",
+     *   "repas": "Déjeuner"
+     * }
+     *
+     * Réponse :
+     * {
+     *   "success": true,
+     *   "analysis": {
+     *     "plats_detectes":       ["Pâtes bolognaise", "Salade"],
+     *     "calories_totales":     650,
+     *     "proteines_g":          35.0,
+     *     "glucides_g":           72.0,
+     *     "lipides_g":            18.0,
+     *     "score_equilibre":      7,
+     *     "suggestions":          ["Ajouter des légumes verts", ...],
+     *     "note_nutritionnelle":  "Repas bien équilibré..."
+     *   }
+     * }
+     */
+    #[Route('/api/analyze-photo', name: 'nutrition_api_analyze_photo', methods: ['POST'])]
+    public function apiAnalyzePhoto(
+        Request $request,
+        GeminiVisionService $gemini
+    ): JsonResponse {
+        $data = json_decode($request->getContent(), true) ?? [];
+
+        if (empty($data['image'])) {
+            return new JsonResponse(['success' => false, 'message' => 'Image manquante.'], 400);
+        }
+
+        $imageRaw = $data['image'];
+        $mimeType = 'image/jpeg';
+        $base64   = $imageRaw;
+
+        // Extraire mimeType + base64 pur depuis le data URI
+        if (preg_match('/^data:(image\/[a-zA-Z0-9+\-]+);base64,(.+)$/s', $imageRaw, $matches)) {
+            $mimeType = $matches[1];
+            $base64   = $matches[2];
+        }
+
+        // Limite de taille (~3 MB réel)
+        if (strlen($base64) > 5_000_000) {
+            return new JsonResponse(['success' => false, 'message' => 'Image trop volumineuse. Max 3 Mo.'], 400);
+        }
+
+        // Formats acceptés
+        if (!in_array(strtolower($mimeType), ['image/jpeg','image/jpg','image/png','image/webp','image/heic'])) {
+            return new JsonResponse(['success' => false, 'message' => 'Format non supporté. Utilisez JPEG, PNG ou WebP.'], 400);
+        }
+
+        $repasType = $data['repas'] ?? 'Déjeuner';
+
+        try {
+            $analysis = $gemini->analyzeMealPhoto($base64, $mimeType, $repasType);
+            return new JsonResponse(['success' => true, 'analysis' => $analysis]);
+        } catch (\RuntimeException $e) {
+            return new JsonResponse(['success' => false, 'message' => $e->getMessage()], 500);
+        }
     }
 
     // ─── API : recherche recettes Spoonacular ────────────────────────
@@ -332,7 +324,6 @@ class NutritionController extends AbstractController
             }
 
             return new JsonResponse(['success' => true, 'recettes' => $recettes, 'total' => count($recettes)]);
-
         } catch (\RuntimeException $e) {
             return new JsonResponse(['success' => false, 'message' => $e->getMessage()], 503);
         }
@@ -345,7 +336,7 @@ class NutritionController extends AbstractController
         SpoonacularService $spoonacular
     ): JsonResponse {
         if ($id <= 0) {
-            return new JsonResponse(['success' => false, 'message' => 'ID de recette invalide.'], 400);
+            return new JsonResponse(['success' => false, 'message' => 'ID invalide.'], 400);
         }
 
         try {
@@ -369,22 +360,21 @@ class NutritionController extends AbstractController
             return new JsonResponse([
                 'success' => true,
                 'recette' => [
-                    'id'          => $data['id'],
-                    'titre'       => $data['title'],
-                    'image'       => $data['image'] ?? null,
-                    'temps'       => $data['readyInMinutes'] ?? null,
-                    'portions'    => $data['servings']       ?? 1,
-                    'calories'    => $macros['calories'],
-                    'proteines'   => $macros['proteines'],
-                    'glucides'    => $macros['glucides'],
-                    'lipides'     => $macros['lipides'],
-                    'ingredients' => $ingredients,
-                    'resume'      => $resume,
-                    'sourceUrl'   => $data['sourceUrl'] ?? null,
-                    'instructions'=> $data['sourceUrl'] ?? null,
+                    'id'           => $data['id'],
+                    'titre'        => $data['title'],
+                    'image'        => $data['image'] ?? null,
+                    'temps'        => $data['readyInMinutes'] ?? null,
+                    'portions'     => $data['servings']       ?? 1,
+                    'calories'     => $macros['calories'],
+                    'proteines'    => $macros['proteines'],
+                    'glucides'     => $macros['glucides'],
+                    'lipides'      => $macros['lipides'],
+                    'ingredients'  => $ingredients,
+                    'resume'       => $resume,
+                    'sourceUrl'    => $data['sourceUrl'] ?? null,
+                    'instructions' => $data['sourceUrl'] ?? null,
                 ],
             ]);
-
         } catch (\RuntimeException $e) {
             return new JsonResponse(['success' => false, 'message' => $e->getMessage()], 503);
         }
@@ -398,17 +388,17 @@ class NutritionController extends AbstractController
         EntityManagerInterface $em
     ): JsonResponse {
         try {
-            $data = json_decode($request->getContent(), true);
+            $data     = json_decode($request->getContent(), true);
+            $required = ['recipe_id','recipe_title','calories','meal_type','date'];
 
-            $required = ['recipe_id', 'recipe_title', 'calories', 'meal_type', 'date'];
             foreach ($required as $field) {
-                if (!isset($data[$field]) || trim((string) $data[$field]) === '') {
+                if (!isset($data[$field]) || trim((string)$data[$field]) === '') {
                     return new JsonResponse(['success' => false, 'message' => "Champ manquant: {$field}"], 400);
                 }
             }
 
             $recipeTitle = trim($data['recipe_title']);
-            $calories    = (float) $data['calories'];
+            $calories    = (float)$data['calories'];
             $mealType    = trim($data['meal_type']);
 
             try {
@@ -428,9 +418,9 @@ class NutritionController extends AbstractController
                 $aliment = new Aliment();
                 $aliment->setNomAliment($alimentName);
                 $aliment->setCaloriesPour100g(round(($calories * 100) / 300));
-                $aliment->setProteines((float) ($data['proteines'] ?? 20));
-                $aliment->setGlucides((float)  ($data['glucides']  ?? 50));
-                $aliment->setLipides((float)   ($data['lipides']   ?? 15));
+                $aliment->setProteines((float)($data['proteines'] ?? 20));
+                $aliment->setGlucides((float) ($data['glucides']  ?? 50));
+                $aliment->setLipides((float)  ($data['lipides']   ?? 15));
                 $em->persist($aliment);
                 $em->flush();
             }
@@ -445,7 +435,6 @@ class NutritionController extends AbstractController
             $em->flush();
 
             return new JsonResponse(['success' => true, 'message' => 'Recette ajoutée au journal.', 'consommation_id' => $consommation->getId()]);
-
         } catch (\Exception $e) {
             return new JsonResponse(['success' => false, 'message' => 'Erreur : ' . $e->getMessage()], 500);
         }
@@ -514,10 +503,10 @@ class NutritionController extends AbstractController
         $data   = json_decode($request->getContent(), true) ?? [];
         $errors = [];
 
-        if (empty($data['aliment_id']))                                      { $errors['aliment'] = 'Veuillez sélectionner un aliment.'; }
-        if (!isset($data['poids_grammes']) || (float)$data['poids_grammes'] <= 0) { $errors['poids'] = 'La quantité doit être supérieure à 0 g.'; }
-        if (empty($data['type_repas']))                                      { $errors['repas'] = 'Le type de repas est requis.'; }
-        if (empty($data['date']))                                            { $errors['date'] = 'La date est requise.'; }
+        if (empty($data['aliment_id']))                                              { $errors['aliment'] = 'Veuillez sélectionner un aliment.'; }
+        if (!isset($data['poids_grammes']) || (float)$data['poids_grammes'] <= 0)   { $errors['poids']   = 'La quantité doit être supérieure à 0 g.'; }
+        if (empty($data['type_repas']))                                              { $errors['repas']   = 'Le type de repas est requis.'; }
+        if (empty($data['date']))                                                     { $errors['date']    = 'La date est requise.'; }
 
         if ($errors) {
             return new JsonResponse(['success' => false, 'errors' => $errors], 422);

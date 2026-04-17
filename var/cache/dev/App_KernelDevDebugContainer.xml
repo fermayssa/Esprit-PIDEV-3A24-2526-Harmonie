@@ -857,6 +857,10 @@
     </service>
     <service id="App\Service\Export\CalendarExportService" class="App\Service\Export\CalendarExportService" autowire="true" autoconfigure="true"/>
     <service id="App\Service\Export\KanbanExportService" class="App\Service\Export\KanbanExportService" autowire="true" autoconfigure="true"/>
+    <service id="App\Service\GeminiVisionService" class="App\Service\GeminiVisionService" autowire="true" autoconfigure="true">
+      <argument type="service" id="http_client.uri_template"/>
+      <argument>%env(GEMINI_API_KEY)%</argument>
+    </service>
     <service id="App\Service\ImageGenerationService" class="App\Service\ImageGenerationService" autowire="true" autoconfigure="true">
       <argument type="service" id="http_client.uri_template"/>
     </service>
@@ -907,7 +911,7 @@
     </service>
     <service id="argument_resolver.service" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver">
       <tag name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver" priority="-50">controller.argument_value_resolver</tag>
-      <argument type="service" id=".service_locator.VUx3CL9"/>
+      <argument type="service" id=".service_locator.w_ujyAu"/>
     </service>
     <service id="argument_resolver.default" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver">
       <tag name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver" priority="-100">controller.argument_value_resolver</tag>
@@ -4124,7 +4128,7 @@
     </service>
     <service id="argument_resolver.not_tagged_controller" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\NotTaggedControllerValueResolver">
       <tag name="controller.argument_value_resolver" priority="-200"/>
-      <argument type="service" id=".service_locator.VUx3CL9"/>
+      <argument type="service" id=".service_locator.w_ujyAu"/>
     </service>
     <service id="debug.log_processor" class="Symfony\Bridge\Monolog\Processor\DebugProcessor">
       <tag name="kernel.reset" method="reset"/>
@@ -10160,6 +10164,18 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.Cz8IWeY" method="withContext"/>
     </service>
+    <service id=".service_locator.D2n0thh" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="gemini" type="service_closure" id="App\Service\GeminiVisionService"/>
+      </argument>
+    </service>
+    <service id=".service_locator.D2n0thh.App\Controller\NutritionController::apiAnalyzePhoto()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\NutritionController::apiAnalyzePhoto()"/>
+      <argument>App\Controller\NutritionController::apiAnalyzePhoto()</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.D2n0thh" method="withContext"/>
+    </service>
     <service id=".service_locator.B_rP9ks" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
@@ -10388,7 +10404,7 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.z0A7H.F" method="withContext"/>
     </service>
-    <service id=".service_locator.VUx3CL9" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.w_ujyAu" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="kernel::registerContainerConfiguration" type="service_closure" id=".service_locator.1vYpZ1B.kernel::registerContainerConfiguration()"/>
@@ -10468,6 +10484,7 @@
         <argument key="App\Controller\MeditationController::show" type="service_closure" id=".service_locator.DS21UbZ.App\Controller\MeditationController::show()"/>
         <argument key="App\Controller\NutritionController::index" type="service_closure" id=".service_locator.eTqhGjo.App\Controller\NutritionController::index()"/>
         <argument key="App\Controller\NutritionController::ajouter" type="service_closure" id=".service_locator.Cz8IWeY.App\Controller\NutritionController::ajouter()"/>
+        <argument key="App\Controller\NutritionController::apiAnalyzePhoto" type="service_closure" id=".service_locator.D2n0thh.App\Controller\NutritionController::apiAnalyzePhoto()"/>
         <argument key="App\Controller\NutritionController::apiRecettes" type="service_closure" id=".service_locator.B_rP9ks.App\Controller\NutritionController::apiRecettes()"/>
         <argument key="App\Controller\NutritionController::apiRecetteDetail" type="service_closure" id=".service_locator.B_rP9ks.App\Controller\NutritionController::apiRecetteDetail()"/>
         <argument key="App\Controller\NutritionController::apiAjouterRecette" type="service_closure" id=".service_locator.U5qhPBr.App\Controller\NutritionController::apiAjouterRecette()"/>
@@ -10570,6 +10587,7 @@
         <argument key="App\Controller\MeditationController:show" type="service_closure" id=".service_locator.DS21UbZ.App\Controller\MeditationController::show()"/>
         <argument key="App\Controller\NutritionController:index" type="service_closure" id=".service_locator.eTqhGjo.App\Controller\NutritionController::index()"/>
         <argument key="App\Controller\NutritionController:ajouter" type="service_closure" id=".service_locator.Cz8IWeY.App\Controller\NutritionController::ajouter()"/>
+        <argument key="App\Controller\NutritionController:apiAnalyzePhoto" type="service_closure" id=".service_locator.D2n0thh.App\Controller\NutritionController::apiAnalyzePhoto()"/>
         <argument key="App\Controller\NutritionController:apiRecettes" type="service_closure" id=".service_locator.B_rP9ks.App\Controller\NutritionController::apiRecettes()"/>
         <argument key="App\Controller\NutritionController:apiRecetteDetail" type="service_closure" id=".service_locator.B_rP9ks.App\Controller\NutritionController::apiRecetteDetail()"/>
         <argument key="App\Controller\NutritionController:apiAjouterRecette" type="service_closure" id=".service_locator.U5qhPBr.App\Controller\NutritionController::apiAjouterRecette()"/>
@@ -13171,7 +13189,7 @@
     <service id="Symfony\UX\Chartjs\Builder\ChartBuilderInterface" alias="chartjs.builder"/>
     <service id="container.env_var_processors_locator" alias=".service_locator.ryAvHi4" public="true"/>
     <service id="twig.loader.filesystem" alias="twig.loader.native_filesystem"/>
-    <service id="argument_resolver.controller_locator" alias=".service_locator.VUx3CL9"/>
+    <service id="argument_resolver.controller_locator" alias=".service_locator.w_ujyAu"/>
     <service id="doctrine.id_generator_locator" alias=".service_locator.W55Po6X"/>
     <service id="twig.loader" alias="twig.loader.native_filesystem"/>
     <service id=".Psr\Log\LoggerInterface $request" alias="monolog.logger.request"/>
@@ -13275,6 +13293,7 @@
     <service id=".service_locator.a4BGQuG" alias=".service_locator.j4Wlmfc"/>
     <service id=".service_locator.qG0FeeQ" alias=".service_locator.eTqhGjo"/>
     <service id=".service_locator.HEogJwd" alias=".service_locator.Cz8IWeY"/>
+    <service id=".service_locator.KeZGr.t" alias=".service_locator.D2n0thh"/>
     <service id=".service_locator.mZEjAtj" alias=".service_locator.B_rP9ks"/>
     <service id=".service_locator.7Q28oLc" alias=".service_locator.U5qhPBr"/>
     <service id=".service_locator.RCAnKOx" alias=".service_locator.jFG7qVJ"/>
