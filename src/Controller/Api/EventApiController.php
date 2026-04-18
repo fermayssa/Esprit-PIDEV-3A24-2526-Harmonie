@@ -3,6 +3,7 @@
 namespace App\Controller\Api;
 
 use App\Entity\Evenement;
+use App\Entity\User;
 use App\Repository\EvenementRepository;
 use App\Repository\CalendrierRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -52,6 +53,12 @@ final class EventApiController extends AbstractController
             $event->setLieuType($data['lieuType'] ?? 'en_ligne');
             $event->setLieuAdresse($data['lieuAdresse'] ?? null);
             $event->setPriorite($data['priority'] ?? 1);
+            $event->setReminderSent(false);
+
+            $currentUser = $this->getUser();
+            if ($currentUser instanceof User) {
+                $event->setProprietaire($currentUser);
+            }
             
             if (!empty($data['startTime'])) {
                 $event->setDateDebut(new \DateTime($data['startTime']));
@@ -107,6 +114,9 @@ final class EventApiController extends AbstractController
             if (isset($data['endTime'])) {
                 $event->setDateFin(new \DateTime($data['endTime']));
             }
+
+            // Événement modifié => rappel à rejouer.
+            $event->setReminderSent(false);
             
             $em->flush();
             $googleService->syncEventToGoogle($event);

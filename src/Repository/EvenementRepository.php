@@ -143,4 +143,34 @@ class EvenementRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    /**
+     * Récupère les événements qui démarrent dans 15 minutes (fenêtre d'une minute)
+     * et qui n'ont pas encore reçu de rappel.
+     *
+     * @return list<Evenement>
+     */
+    public function findEventsStartingIn15MinutesNotReminded(\DateTimeImmutable $nowInTunis): array
+    {
+        $target = $nowInTunis->modify('+15 minutes')->setTime(
+            (int) $nowInTunis->modify('+15 minutes')->format('H'),
+            (int) $nowInTunis->modify('+15 minutes')->format('i'),
+            0,
+        );
+        $end = $target->modify('+1 minute');
+
+        return $this->createQueryBuilder('e')
+            ->leftJoin('e.proprietaire', 'p')->addSelect('p')
+            ->andWhere('e.dateDebut IS NOT NULL')
+            ->andWhere('e.dateDebut >= :target')
+            ->andWhere('e.dateDebut < :end')
+            ->andWhere('e.reminderSent = :sent')
+            ->setParameter('target', $target)
+            ->setParameter('end', $end)
+            ->setParameter('sent', false)
+            ->orderBy('e.dateDebut', 'ASC')
+            ->addOrderBy('e.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 }

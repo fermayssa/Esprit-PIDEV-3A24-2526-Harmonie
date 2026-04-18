@@ -120,6 +120,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $googleTokenExpiresAt = null;
 
+    #[ORM\Column(name: 'telegram_chat_id', type: Types::STRING, length: 64, nullable: true)]
+    private ?string $telegramChatId = null;
+
     // ── Symfony UserInterface ──────────────────────────────────────────────
 
     public function getUserIdentifier(): string
@@ -209,4 +212,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getGoogleTokenExpiresAt(): ?\DateTimeInterface { return $this->googleTokenExpiresAt; }
     public function setGoogleTokenExpiresAt(?\DateTimeInterface $v): self { $this->googleTokenExpiresAt = $v; return $this; }
+
+    public function getTelegramChatId(): ?string { return $this->telegramChatId; }
+    public function setTelegramChatId(?string $v): self { $this->telegramChatId = $v; return $this; }
 }

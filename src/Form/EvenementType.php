@@ -8,6 +8,7 @@ use App\Entity\User;
 use App\Repository\SalleRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -57,6 +58,11 @@ class EvenementType extends AbstractType
                 ],
                 'placeholder' => '— Choisir —',
                 'attr' => ['class' => 'form-control js-event-type-select'],
+            ])
+            ->add('rappelActif', CheckboxType::class, [
+                'label' => 'Activer le rappel Telegram (15 min avant)',
+                'required' => false,
+                'help' => 'Décochez si vous ne souhaitez pas recevoir de rappel pour cet événement.',
             ])
             ->add('lieuType', ChoiceType::class, [
                 'label' => 'Mode',

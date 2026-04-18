@@ -73,6 +73,9 @@ class Evenement
     #[ORM\Column(name: 'lieu_adresse', length: 255, nullable: true)]
     private ?string $lieuAdresse = null;
 
+    #[ORM\Column(name: 'reminder_sent', options: ['default' => false])]
+    private bool $reminderSent = false;
+
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(name: 'proprietaire_id', referencedColumnName: 'user_id', nullable: true, onDelete: 'SET NULL')]
     private ?User $proprietaire = null;
@@ -279,6 +282,23 @@ class Evenement
     public function setLieuAdresse(?string $lieuAdresse): static
     {
         $this->lieuAdresse = $lieuAdresse;
+
+        return $this;
+    }
+
+    public function isReminderSent(): bool
+    {
+        return $this->reminderSent;
+    }
+
+    public function getReminderSent(): bool
+    {
+        return $this->reminderSent;
+    }
+
+    public function setReminderSent(bool $reminderSent): static
+    {
+        $this->reminderSent = $reminderSent;
 
         return $this;
     }

@@ -60,6 +60,11 @@ final class PlanningDomainService
     public function saveEvenement(Evenement $evenement, ?User $demandeur = null): void
     {
         $isCreate = null === $evenement->getId();
+        if (!$isCreate) {
+            // Si l'événement est modifié après un premier rappel,
+            // on réactive le prochain rappel 15 minutes.
+            $evenement->setReminderSent(false);
+        }
         $debut = $evenement->getDateDebut();
         $fin = $evenement->getDateFin();
         if ($debut && $fin && $fin < $debut) {

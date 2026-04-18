@@ -4,6 +4,7 @@ namespace App\Controller\Api;
 
 use App\Entity\Evenement;
 use App\Entity\Tache;
+use App\Entity\User;
 use App\Repository\CalendrierRepository;
 use App\Repository\EvenementRepository;
 use App\Repository\TacheRepository;
@@ -337,10 +338,15 @@ final class ChatApiController extends AbstractController
                 $event->setTitre((string) ($data['title'] ?? 'Nouvel événement'));
                 $event->setDescription((string) ($data['description'] ?? null));
                 $event->setLieu((string) ($data['location'] ?? null));
+                $event->setReminderSent(false);
                 if (!empty($data['startTime'])) $event->setDateDebut(new \DateTime((string) $data['startTime']));
                 if (!empty($data['endTime'])) $event->setDateFin(new \DateTime((string) $data['endTime']));
                 if ($cal = $this->calendrierRepository->findPrimary()) {
                     $event->setCalendrier($cal);
+                }
+                $currentUser = $this->getUser();
+                if ($currentUser instanceof User) {
+                    $event->setProprietaire($currentUser);
                 }
                 $this->em->persist($event);
                 $this->em->flush();
@@ -358,6 +364,7 @@ final class ChatApiController extends AbstractController
                 if (isset($data['location'])) $event->setLieu((string) $data['location']);
                 if (!empty($data['startTime'])) $event->setDateDebut(new \DateTime((string) $data['startTime']));
                 if (!empty($data['endTime'])) $event->setDateFin(new \DateTime((string) $data['endTime']));
+                $event->setReminderSent(false);
                 $this->em->flush();
                 $this->telegramNotifier->notifyEventUpdated($event, true);
 
