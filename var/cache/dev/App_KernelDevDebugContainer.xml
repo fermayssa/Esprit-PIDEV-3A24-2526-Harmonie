@@ -27,6 +27,7 @@
       <parameter key="MakerBundle">Symfony\Bundle\MakerBundle\MakerBundle</parameter>
       <parameter key="KnpPaginatorBundle">Knp\Bundle\PaginatorBundle\KnpPaginatorBundle</parameter>
       <parameter key="DoctrineFixturesBundle">Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle</parameter>
+      <parameter key="MercureBundle">Symfony\Bundle\MercureBundle\MercureBundle</parameter>
     </parameter>
     <parameter key="kernel.bundles_metadata" type="collection">
       <parameter key="FrameworkBundle" type="collection">
@@ -85,6 +86,10 @@
         <parameter key="path">C:\Users\mayss\IdeaProjects\PI_Web\vendor\doctrine\doctrine-fixtures-bundle</parameter>
         <parameter key="namespace">Doctrine\Bundle\FixturesBundle</parameter>
       </parameter>
+      <parameter key="MercureBundle" type="collection">
+        <parameter key="path">C:\Users\mayss\IdeaProjects\PI_Web\vendor\symfony\mercure-bundle\src</parameter>
+        <parameter key="namespace">Symfony\Bundle\MercureBundle</parameter>
+      </parameter>
     </parameter>
     <parameter key="kernel.charset">UTF-8</parameter>
     <parameter key="kernel.container_class">App_KernelDevDebugContainer</parameter>
@@ -139,6 +144,9 @@
       <parameter key="Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle" type="collection">
         <parameter key="dev">true</parameter>
         <parameter key="test">true</parameter>
+      </parameter>
+      <parameter key="Symfony\Bundle\MercureBundle\MercureBundle" type="collection">
+        <parameter key="all">true</parameter>
       </parameter>
     </parameter>
     <parameter key="posts_images_directory">C:\Users\mayss\IdeaProjects\PI_Web/public/uploads/posts</parameter>
@@ -430,6 +438,10 @@
       <parameter key="serializer.data_collector" type="collection">
         <parameter>serializer</parameter>
         <parameter>@WebProfiler/Collector/serializer.html.twig</parameter>
+      </parameter>
+      <parameter key="data_collector.mercure" type="collection">
+        <parameter>mercure</parameter>
+        <parameter>@Mercure/Collector/mercure.html.twig</parameter>
       </parameter>
       <parameter key="data_collector.config" type="collection">
         <parameter>config</parameter>
@@ -835,8 +847,16 @@
     <service id="App\Service\ModerationService" class="App\Service\ModerationService" autowire="true" autoconfigure="true">
       <argument type="service" id="http_client.uri_template"/>
     </service>
+    <service id="App\Service\SentimentService" class="App\Service\SentimentService" autowire="true" autoconfigure="true">
+      <argument type="service" id="http_client.uri_template"/>
+      <argument>%env(GROQ_API_KEY)%</argument>
+    </service>
     <service id="App\Service\SpellCheckService" class="App\Service\SpellCheckService" autowire="true" autoconfigure="true">
       <argument type="service" id="http_client.uri_template"/>
+    </service>
+    <service id="App\Service\SummaryService" class="App\Service\SummaryService" autowire="true" autoconfigure="true">
+      <argument type="service" id="http_client.uri_template"/>
+      <argument>%env(GROQ_API_KEY)%</argument>
     </service>
     <service id="App\Service\SuspicionScoreService" class="App\Service\SuspicionScoreService" autowire="true" autoconfigure="true"/>
     <service id="App\Service\TranslationService" class="App\Service\TranslationService" autowire="true" autoconfigure="true">
@@ -870,7 +890,7 @@
     </service>
     <service id="argument_resolver.service" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver">
       <tag name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver" priority="-50">controller.argument_value_resolver</tag>
-      <argument type="service" id=".service_locator.Plam6Y5"/>
+      <argument type="service" id=".service_locator.aEubbCY"/>
     </service>
     <service id="argument_resolver.default" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver">
       <tag name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver" priority="-100">controller.argument_value_resolver</tag>
@@ -1623,6 +1643,12 @@
           <argument key="Symfony\Component\Notifier\Message\DesktopMessage" type="collection">
             <argument type="collection">
               <argument>texter.messenger.desktop_handler</argument>
+              <argument type="collection"/>
+            </argument>
+          </argument>
+          <argument key="Symfony\Component\Mercure\Update" type="collection">
+            <argument type="collection">
+              <argument>mercure.hub.default.message_handler</argument>
               <argument type="collection"/>
             </argument>
           </argument>
@@ -3013,6 +3039,7 @@
           <argument>C:\Users\mayss\IdeaProjects\PI_Web\vendor\symfony\monolog-bundle\src/translations</argument>
           <argument>C:\Users\mayss\IdeaProjects\PI_Web\vendor\symfony\maker-bundle/translations</argument>
           <argument>C:\Users\mayss\IdeaProjects\PI_Web\vendor\doctrine\doctrine-fixtures-bundle/translations</argument>
+          <argument>C:\Users\mayss\IdeaProjects\PI_Web\vendor\symfony\mercure-bundle\src/translations</argument>
         </argument>
         <argument key="cache_vary" type="collection">
           <argument key="scanned_directories" type="collection">
@@ -3034,6 +3061,7 @@
             <argument>C:\Users\mayss\IdeaProjects\PI_Web\vendor\symfony\monolog-bundle\src/translations</argument>
             <argument>C:\Users\mayss\IdeaProjects\PI_Web\vendor\symfony\maker-bundle/translations</argument>
             <argument>C:\Users\mayss\IdeaProjects\PI_Web\vendor\doctrine\doctrine-fixtures-bundle/translations</argument>
+            <argument>C:\Users\mayss\IdeaProjects\PI_Web\vendor\symfony\mercure-bundle\src/translations</argument>
           </argument>
         </argument>
       </argument>
@@ -4047,6 +4075,14 @@
         <argument>1</argument>
       </call>
       <call method="addListener">
+        <argument>kernel.response</argument>
+        <argument type="collection">
+          <argument type="service_closure" id="Symfony\Component\Mercure\EventSubscriber\SetCookieSubscriber"/>
+          <argument>onKernelResponse</argument>
+        </argument>
+        <argument>0</argument>
+      </call>
+      <call method="addListener">
         <argument>Symfony\Component\Security\Http\Event\CheckPassportEvent</argument>
         <argument type="collection">
           <argument type="service_closure" id="security.listener.csrf_protection"/>
@@ -4084,7 +4120,7 @@
     </service>
     <service id="argument_resolver.not_tagged_controller" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\NotTaggedControllerValueResolver">
       <tag name="controller.argument_value_resolver" priority="-200"/>
-      <argument type="service" id=".service_locator.Plam6Y5"/>
+      <argument type="service" id=".service_locator.aEubbCY"/>
     </service>
     <service id="debug.log_processor" class="Symfony\Bridge\Monolog\Processor\DebugProcessor">
       <tag name="kernel.reset" method="reset"/>
@@ -5626,6 +5662,9 @@
         <argument type="service" id="serializer.data_collector"/>
       </call>
       <call method="add">
+        <argument type="service" id="data_collector.mercure"/>
+      </call>
+      <call method="add">
         <argument type="service" id="data_collector.config"/>
       </call>
     </service>
@@ -6833,6 +6872,9 @@
         <argument type="service" id="knp_paginator.twig.extension.pagination"/>
       </call>
       <call method="addExtension">
+        <argument type="service" id="Symfony\Component\Mercure\Twig\MercureExtension"/>
+      </call>
+      <call method="addExtension">
         <argument type="service" id="stimulus.twig_extension"/>
       </call>
       <call method="addGlobal">
@@ -6967,6 +7009,14 @@
       <call method="addPath">
         <argument>C:\Users\mayss\IdeaProjects\PI_Web\vendor\knplabs\knp-paginator-bundle/templates</argument>
         <argument>!KnpPaginator</argument>
+      </call>
+      <call method="addPath">
+        <argument>C:\Users\mayss\IdeaProjects\PI_Web\vendor\symfony\mercure-bundle\src/Resources/views</argument>
+        <argument>Mercure</argument>
+      </call>
+      <call method="addPath">
+        <argument>C:\Users\mayss\IdeaProjects\PI_Web\vendor\symfony\mercure-bundle\src/Resources/views</argument>
+        <argument>!Mercure</argument>
       </call>
       <call method="addPath">
         <argument>C:\Users\mayss\IdeaProjects\PI_Web/templates</argument>
@@ -7258,7 +7308,7 @@
     </service>
     <service id="turbo.twig.runtime" class="Symfony\UX\Turbo\Twig\TurboRuntime">
       <tag name="twig.runtime"/>
-      <argument type="service" id=".service_locator.dpiLQ5O"/>
+      <argument type="service" id=".service_locator.nT7rZtz"/>
       <argument>default</argument>
     </service>
     <service id="turbo.doctrine.event_listener" class="Symfony\UX\Turbo\Doctrine\BroadcastListener">
@@ -7508,6 +7558,13 @@
       </call>
       <call method="add">
         <argument type="service" id=".security.request_matcher.7hffHUr"/>
+        <argument type="collection">
+          <argument>PUBLIC_ACCESS</argument>
+        </argument>
+        <argument>null</argument>
+      </call>
+      <call method="add">
+        <argument type="service" id=".security.request_matcher.iDIBSUS"/>
         <argument type="collection">
           <argument>PUBLIC_ACCESS</argument>
         </argument>
@@ -8251,6 +8308,14 @@
         <argument type="service" id=".security.request_matcher.LORg6t3"/>
       </argument>
     </service>
+    <service id=".security.request_matcher.m10zPmT" class="Symfony\Component\HttpFoundation\RequestMatcher\PathRequestMatcher">
+      <argument>^/forum/post/\d+/summarize</argument>
+    </service>
+    <service id=".security.request_matcher.iDIBSUS" class="Symfony\Component\HttpFoundation\ChainRequestMatcher">
+      <argument type="collection">
+        <argument type="service" id=".security.request_matcher.m10zPmT"/>
+      </argument>
+    </service>
     <service id=".security.request_matcher.pqyCXG8" class="Symfony\Component\HttpFoundation\RequestMatcher\PathRequestMatcher">
       <argument>^/admin</argument>
     </service>
@@ -8644,6 +8709,86 @@
     </service>
     <service id="doctrine.fixtures.purger.orm_purger_factory" class="Doctrine\Bundle\FixturesBundle\Purger\ORMPurgerFactory">
       <tag name="doctrine.fixtures.purger_factory" alias="default"/>
+    </service>
+    <service id="mercure.hub.default.jwt.factory" class="Symfony\Component\Mercure\Jwt\LcobucciFactory">
+      <tag name="mercure.jwt.factory"/>
+      <argument>%env(MERCURE_JWT_SECRET)%</argument>
+      <argument>hmac.sha256</argument>
+      <argument>null</argument>
+      <argument/>
+    </service>
+    <service id=".lazy.mercure.hub.default.jwt.factory" class="Symfony\Component\Mercure\Jwt\TokenFactoryInterface">
+      <argument type="collection">
+        <argument type="service" id="mercure.hub.default.jwt.factory"/>
+        <argument>create</argument>
+      </argument>
+      <factory class="Closure" method="fromCallable"/>
+    </service>
+    <service id="mercure.hub.default.jwt.provider" class="Symfony\Component\Mercure\Jwt\FactoryTokenProvider">
+      <tag name="mercure.jwt.factory"/>
+      <argument type="service" id=".lazy.mercure.hub.default.jwt.factory"/>
+      <argument type="collection"/>
+      <argument type="collection">
+        <argument>*</argument>
+      </argument>
+    </service>
+    <service id="mercure.hub.default.message_handler" class="Symfony\Component\Mercure\Messenger\UpdateHandler">
+      <tag name="messenger.message_handler"/>
+      <argument type="service" id="mercure.hub.default.traceable"/>
+    </service>
+    <service id="mercure.hub.default.publisher.traceable" class="Symfony\Component\Mercure\Debug\TraceablePublisher">
+      <tag name="mercure.publisher"/>
+      <tag name="container.decorator" id="mercure.hub.default.publisher" inner="mercure.hub.default.publisher.traceable.inner"/>
+      <argument type="service" id="mercure.hub.default.publisher.traceable.inner"/>
+      <argument type="service" id="debug.stopwatch"/>
+      <deprecated package="symfony/mercure-bundle" version="0.2">The "%service_id%" service is deprecated. Use "mercure.hub.default.traceable" instead.</deprecated>
+    </service>
+    <service id="mercure.hub.default.traceable" class="Symfony\Component\Mercure\Debug\TraceableHub">
+      <tag name="mercure.hub"/>
+      <tag name="container.decorator" id="mercure.hub.default" inner="mercure.hub.default.traceable.inner"/>
+      <argument type="service" id="mercure.hub.default.traceable.inner"/>
+      <argument type="service" id="debug.stopwatch"/>
+    </service>
+    <service id="turbo.mercure.default.renderer" class="Symfony\UX\Turbo\Bridge\Mercure\TurboStreamListenRenderer">
+      <tag name="turbo.renderer.stream_listen" transport="default"/>
+      <argument type="service" id="mercure.hub.default.traceable"/>
+      <argument type="service" id="stimulus.helper"/>
+      <argument type="service" id="turbo.id_accessor"/>
+      <argument type="service" id="twig"/>
+    </service>
+    <service id="turbo.mercure.default.broadcaster" class="Symfony\UX\Turbo\Bridge\Mercure\Broadcaster">
+      <tag name="turbo.broadcaster"/>
+      <argument>default</argument>
+      <argument type="service" id="mercure.hub.default.traceable"/>
+    </service>
+    <service id="data_collector.mercure" class="Symfony\Bundle\MercureBundle\DataCollector\MercureDataCollector">
+      <tag name="data_collector" template="@Mercure/Collector/mercure.html.twig" id="mercure"/>
+      <argument type="iterator">
+        <argument key="default" type="service" id="mercure.hub.default.traceable"/>
+      </argument>
+    </service>
+    <service id="Symfony\Component\Mercure\HubRegistry" class="Symfony\Component\Mercure\HubRegistry">
+      <argument type="service" id="mercure.hub.default.traceable"/>
+      <argument type="collection">
+        <argument key="default" type="service" id="mercure.hub.default.traceable"/>
+      </argument>
+    </service>
+    <service id="Symfony\Component\Mercure\Authorization" class="Symfony\Component\Mercure\Authorization">
+      <argument type="service" id="Symfony\Component\Mercure\HubRegistry"/>
+      <argument>null</argument>
+    </service>
+    <service id="Symfony\Component\Mercure\Discovery" class="Symfony\Component\Mercure\Discovery">
+      <argument type="service" id="Symfony\Component\Mercure\HubRegistry"/>
+    </service>
+    <service id="Symfony\Component\Mercure\EventSubscriber\SetCookieSubscriber" class="Symfony\Component\Mercure\EventSubscriber\SetCookieSubscriber">
+      <tag name="kernel.event_subscriber" priority="-10"/>
+      <tag name="container.hot_path"/>
+    </service>
+    <service id="Symfony\Component\Mercure\Twig\MercureExtension" class="Symfony\Component\Mercure\Twig\MercureExtension">
+      <tag name="twig.extension"/>
+      <argument type="service" id="Symfony\Component\Mercure\HubRegistry"/>
+      <argument type="service" id="Symfony\Component\Mercure\Authorization"/>
+      <argument type="service" id="request_stack"/>
     </service>
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\ActivitesController" class="App\Controller\ActivitesController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\ActivitesController" class="App\Controller\ActivitesController" autowire="true" abstract="true"/>
@@ -9913,6 +10058,33 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.NsUdOW3" method="withContext"/>
     </service>
+    <service id=".service_locator.OjfPVxO" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="commentaireRepo" type="service_closure" id="App\Repository\CommentaireRepository"/>
+        <argument key="sentimentService" type="service_closure" id="App\Service\SentimentService"/>
+      </argument>
+    </service>
+    <service id=".service_locator.OjfPVxO.App\Controller\ForumController::analyzeSentiment()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\ForumController::analyzeSentiment()"/>
+      <argument>App\Controller\ForumController::analyzeSentiment()</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.OjfPVxO" method="withContext"/>
+    </service>
+    <service id=".service_locator.3tuF.ti" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="commentaireRepo" type="service_closure" id="App\Repository\CommentaireRepository"/>
+        <argument key="postRepo" type="service_closure" id="App\Repository\PostRepository"/>
+        <argument key="summaryService" type="service_closure" id="App\Service\SummaryService"/>
+      </argument>
+    </service>
+    <service id=".service_locator.3tuF.ti.App\Controller\ForumController::summarizeDiscussion()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\ForumController::summarizeDiscussion()"/>
+      <argument>App\Controller\ForumController::summarizeDiscussion()</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.3tuF.ti" method="withContext"/>
+    </service>
     <service id=".service_locator.Caw3WyG" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
@@ -10302,7 +10474,7 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.z0A7H.F" method="withContext"/>
     </service>
-    <service id=".service_locator.Plam6Y5" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.aEubbCY" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="kernel::registerContainerConfiguration" type="service_closure" id=".service_locator.1vYpZ1B.kernel::registerContainerConfiguration()"/>
@@ -10360,6 +10532,8 @@
         <argument key="App\Controller\EvenementsController::show" type="service_closure" id=".service_locator.ZILOSg7.App\Controller\EvenementsController::show()"/>
         <argument key="App\Controller\EvenementsController::edit" type="service_closure" id=".service_locator.NsUdOW3.App\Controller\EvenementsController::edit()"/>
         <argument key="App\Controller\EvenementsController::delete" type="service_closure" id=".service_locator.NsUdOW3.App\Controller\EvenementsController::delete()"/>
+        <argument key="App\Controller\ForumController::analyzeSentiment" type="service_closure" id=".service_locator.OjfPVxO.App\Controller\ForumController::analyzeSentiment()"/>
+        <argument key="App\Controller\ForumController::summarizeDiscussion" type="service_closure" id=".service_locator.3tuF.ti.App\Controller\ForumController::summarizeDiscussion()"/>
         <argument key="App\Controller\ForumController::generateImage" type="service_closure" id=".service_locator.Caw3WyG.App\Controller\ForumController::generateImage()"/>
         <argument key="App\Controller\ForumController::spellcheck" type="service_closure" id=".service_locator.XxmUxmk.App\Controller\ForumController::spellcheck()"/>
         <argument key="App\Controller\ForumController::translatePost" type="service_closure" id=".service_locator.ZQw413b.App\Controller\ForumController::translatePost()"/>
@@ -10457,6 +10631,8 @@
         <argument key="App\Controller\EvenementsController:show" type="service_closure" id=".service_locator.ZILOSg7.App\Controller\EvenementsController::show()"/>
         <argument key="App\Controller\EvenementsController:edit" type="service_closure" id=".service_locator.NsUdOW3.App\Controller\EvenementsController::edit()"/>
         <argument key="App\Controller\EvenementsController:delete" type="service_closure" id=".service_locator.NsUdOW3.App\Controller\EvenementsController::delete()"/>
+        <argument key="App\Controller\ForumController:analyzeSentiment" type="service_closure" id=".service_locator.OjfPVxO.App\Controller\ForumController::analyzeSentiment()"/>
+        <argument key="App\Controller\ForumController:summarizeDiscussion" type="service_closure" id=".service_locator.3tuF.ti.App\Controller\ForumController::summarizeDiscussion()"/>
         <argument key="App\Controller\ForumController:generateImage" type="service_closure" id=".service_locator.Caw3WyG.App\Controller\ForumController::generateImage()"/>
         <argument key="App\Controller\ForumController:spellcheck" type="service_closure" id=".service_locator.XxmUxmk.App\Controller\ForumController::spellcheck()"/>
         <argument key="App\Controller\ForumController:translatePost" type="service_closure" id=".service_locator.ZQw413b.App\Controller\ForumController::translatePost()"/>
@@ -10790,6 +10966,10 @@
       <argument type="service" id="texter.messenger.desktop_handler"/>
       <argument type="collection"/>
     </service>
+    <service id=".messenger.handler_descriptor.Upry6Iy" class="Symfony\Component\Messenger\Handler\HandlerDescriptor">
+      <argument type="service" id="mercure.hub.default.message_handler"/>
+      <argument type="collection"/>
+    </service>
     <service id=".signing.messenger.default_serializer" class="Symfony\Component\Messenger\Transport\Serialization\SigningSerializer">
       <argument type="service" id="messenger.transport.native_php_serializer"/>
       <argument type="service">
@@ -10831,6 +11011,9 @@
         </argument>
         <argument key="Symfony\Component\Notifier\Message\DesktopMessage" type="iterator">
           <argument type="service" id=".messenger.handler_descriptor.Dkv9sRY"/>
+        </argument>
+        <argument key="Symfony\Component\Mercure\Update" type="iterator">
+          <argument type="service" id=".messenger.handler_descriptor.Upry6Iy"/>
         </argument>
       </argument>
     </service>
@@ -11462,6 +11645,12 @@
         <argument key="profiler" type="service_closure" id="profiler" on-invalid="ignore_uninitialized"/>
       </argument>
     </service>
+    <service id=".service_locator.nT7rZtz" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="default" type="service_closure" id="turbo.mercure.default.renderer"/>
+      </argument>
+    </service>
     <service id=".service_locator.1mjVCan" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
@@ -11758,6 +11947,19 @@
     </service>
     <service id="debug.security.firewall.authenticator.main.inner" class="Symfony\Component\Security\Http\Firewall\AuthenticatorManagerListener">
       <argument type="service" id="security.authenticator.manager.main"/>
+    </service>
+    <service id="mercure.hub.default.publisher.traceable.inner" class="Symfony\Component\Mercure\Publisher">
+      <argument>%env(default::MERCURE_URL)%</argument>
+      <argument type="service" id="mercure.hub.default.jwt.provider"/>
+      <argument type="service" id="http_client.uri_template" on-invalid="ignore"/>
+      <deprecated package="symfony/mercure-bundle" version="0.2">The "%service_id%" service is deprecated. You should stop using it, as it will be removed in the future, use "mercure.hub.default" instead.</deprecated>
+    </service>
+    <service id="mercure.hub.default.traceable.inner" class="Symfony\Component\Mercure\Hub">
+      <argument>%env(default::MERCURE_URL)%</argument>
+      <argument type="service" id="mercure.hub.default.jwt.provider"/>
+      <argument type="service" id=".lazy.mercure.hub.default.jwt.factory"/>
+      <argument>%env(default::MERCURE_PUBLIC_URL)%</argument>
+      <argument type="service" id="http_client.uri_template" on-invalid="ignore"/>
     </service>
     <service id="debug.security.event_dispatcher.main.inner" class="Symfony\Component\EventDispatcher\EventDispatcher"/>
     <service id="debug.traced.messenger.bus.default.inner" class="Symfony\Component\Messenger\MessageBus">
@@ -13056,9 +13258,30 @@
     <service id="Knp\Component\Pager\PaginatorInterface" alias="knp_paginator"/>
     <service id="Knp\Component\Pager\ArgumentAccess\ArgumentAccessInterface" alias="Knp\Component\Pager\ArgumentAccess\RequestArgumentAccess"/>
     <service id="doctrine.fixtures.provider" alias="doctrine.fixtures.loader"/>
+    <service id="Symfony\Component\Mercure\Jwt\TokenFactoryInterface $default" alias=".lazy.mercure.hub.default.jwt.factory"/>
+    <service id="Symfony\Component\Mercure\Jwt\TokenFactoryInterface $defaultFactory" alias=".lazy.mercure.hub.default.jwt.factory"/>
+    <service id="Symfony\Component\Mercure\Jwt\TokenFactoryInterface $defaultTokenFactory" alias=".lazy.mercure.hub.default.jwt.factory"/>
+    <service id="Symfony\Component\Mercure\Jwt\TokenProviderInterface $default" alias="mercure.hub.default.jwt.provider"/>
+    <service id="Symfony\Component\Mercure\Jwt\TokenProviderInterface $defaultProvider" alias="mercure.hub.default.jwt.provider"/>
+    <service id="Symfony\Component\Mercure\Jwt\TokenProviderInterface $defaultTokenProvider" alias="mercure.hub.default.jwt.provider"/>
+    <service id="Symfony\Component\Mercure\HubInterface $defaultHub" alias="mercure.hub.default.traceable"/>
+    <service id="Symfony\Component\Mercure\HubInterface $default" alias="mercure.hub.default.traceable"/>
+    <service id="Symfony\Component\Mercure\PublisherInterface $defaultPublisher" alias="mercure.hub.default.publisher.traceable">
+      <deprecated package="symfony/mercure-bundle" version="0.2">The "%alias_id%" service is deprecated. You should stop using it, as it will be removed in the future, use "mercure.hub.default" instead.</deprecated>
+    </service>
+    <service id="Symfony\Component\Mercure\PublisherInterface $default" alias="mercure.hub.default.publisher.traceable">
+      <deprecated package="symfony/mercure-bundle" version="0.2">The "%alias_id%" service is deprecated. You should stop using it, as it will be removed in the future, use "mercure.hub.default" instead.</deprecated>
+    </service>
+    <service id="Symfony\Component\Mercure\HubInterface" alias="mercure.hub.default.traceable"/>
+    <service id="Symfony\Component\Mercure\Publisher" alias="mercure.hub.default.publisher.traceable">
+      <deprecated package="symfony/mercure-bundle" version="0.2">The "%alias_id%" service alias is deprecated. Use "Symfony\Component\Mercure\Hub" instead.</deprecated>
+    </service>
+    <service id="Symfony\Component\Mercure\PublisherInterface" alias="mercure.hub.default.publisher.traceable">
+      <deprecated package="symfony/mercure-bundle" version="0.2">The "%alias_id%" service alias is deprecated. Use "Symfony\Component\Mercure\HubInterface" instead.</deprecated>
+    </service>
     <service id="container.env_var_processors_locator" alias=".service_locator.ryAvHi4" public="true"/>
     <service id="twig.loader.filesystem" alias="twig.loader.native_filesystem"/>
-    <service id="argument_resolver.controller_locator" alias=".service_locator.Plam6Y5"/>
+    <service id="argument_resolver.controller_locator" alias=".service_locator.aEubbCY"/>
     <service id="doctrine.id_generator_locator" alias=".service_locator.W55Po6X"/>
     <service id="twig.loader" alias="twig.loader.native_filesystem"/>
     <service id=".Psr\Log\LoggerInterface $request" alias="monolog.logger.request"/>
@@ -13093,6 +13316,7 @@
     <service id="Psr\Log\LoggerInterface $securityLogger" alias="monolog.logger.security"/>
     <service id=".Psr\Log\LoggerInterface $deprecation" alias="monolog.logger.deprecation"/>
     <service id="Psr\Log\LoggerInterface $deprecationLogger" alias="monolog.logger.deprecation"/>
+    <service id="turbo.mercure.stimulus_helper" alias="stimulus.helper"/>
     <service id=".service_locator.O8.cMm9" alias="messenger.receiver_locator"/>
     <service id=".service_locator.oeWXF0n" alias="messenger.retry_strategy_locator"/>
     <service id=".service_locator.S9tnIXR" alias=".service_locator.DA6YX9k"/>
@@ -13112,6 +13336,8 @@
     <service id="turbo.broadcaster.imux" alias="turbo.broadcaster.action_renderer"/>
     <service id="security.access.decision_manager" alias="debug.security.access.decision_manager"/>
     <service id="security.firewall.authenticator.main" alias="debug.security.firewall.authenticator.main"/>
+    <service id="mercure.hub.default.publisher" alias="mercure.hub.default.publisher.traceable"/>
+    <service id="mercure.hub.default" alias="mercure.hub.default.traceable"/>
     <service id="security.event_dispatcher.main" alias="debug.security.event_dispatcher.main"/>
     <service id="messenger.bus.default" alias="debug.traced.messenger.bus.default"/>
     <service id=".signing.messenger.default_serializer.inner" alias="messenger.transport.native_php_serializer"/>
@@ -13147,6 +13373,8 @@
     <service id=".service_locator.L.ivR_d" alias=".service_locator.OwMsx8r"/>
     <service id=".service_locator.23Ydx6f" alias=".service_locator.NgPr0wp"/>
     <service id=".service_locator.KNSic_m" alias=".service_locator.n60qnZK"/>
+    <service id=".service_locator.izXAeg4" alias=".service_locator.OjfPVxO"/>
+    <service id=".service_locator.WhnM2Hf" alias=".service_locator.3tuF.ti"/>
     <service id=".service_locator.hJ9UXta" alias=".service_locator.Caw3WyG"/>
     <service id=".service_locator.XLMlRSU" alias=".service_locator.XxmUxmk"/>
     <service id=".service_locator.qCBSz9Q" alias=".service_locator.ZQw413b"/>

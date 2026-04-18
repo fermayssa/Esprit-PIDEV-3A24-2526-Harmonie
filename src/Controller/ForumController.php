@@ -19,12 +19,78 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 use App\Service\ModerationService;
 use Knp\Component\Pager\PaginatorInterface;
 use App\Service\TranslationService;
-//use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Service\SpellCheckService;
 use App\Service\ImageGenerationService;
+// ── Résumer la discussion ──────────────────────────────
+use App\Service\SummaryService;
+use App\Repository\CommentaireRepository;
 
+use App\Repository\PostRepository;
+use App\Service\SentimentService;
 class ForumController extends AbstractController
 {
+    // ── analyse du sentiment comment ──────────────────────────────
+    #[Route('/forum/comment/{id}/sentiment', name: 'comment_sentiment', methods: ['POST'])]
+    public function analyzeSentiment(
+        int $id,
+        CommentaireRepository $commentaireRepo,
+        SentimentService $sentimentService
+    ): JsonResponse {
+        try {
+            $commentaire = $commentaireRepo->find($id);
+            if (!$commentaire) {
+                return new JsonResponse(['error' => 'Commentaire introuvable'], 404);
+            }
+
+            $result = $sentimentService->analyze($commentaire->getContenu());
+
+            return new JsonResponse($result);
+
+        } catch (\Exception $e) {
+            return new JsonResponse(['error' => $e->getMessage()], 500);
+        }
+    }
+
+     // ── Résumer la discussion ──────────────────────────────
+
+    #[Route('/forum/post/{id}/summarize', name: 'summarize_discussion', methods: ['POST'])]
+    public function summarizeDiscussion(
+        int $id,
+        CommentaireRepository $commentaireRepo,
+        PostRepository $postRepo,
+        SummaryService $summaryService
+    ): JsonResponse {
+        try {
+             // Vérifie si connecté, retourne JSON au lieu de rediriger
+            if (!$this->getUser()) {
+                return new JsonResponse(['error' => 'Non connecté'], 401);
+            }
+
+            $post = $postRepo->find($id);
+            if (!$post) {
+                return new JsonResponse(['error' => 'Post introuvable'], 404);
+            }
+
+            $commentaires = $commentaireRepo->findBy(['idPost' => $id]);
+
+            if (empty($commentaires)) {
+                return new JsonResponse(['summary' => 'Aucun commentaire à résumer pour le moment.']);
+            }
+
+            $resume = $summaryService->summarizeDiscussion(
+                $post->getTitre(),
+                $commentaires
+            );
+
+            return new JsonResponse(['summary' => $resume]);
+
+        } catch (\Exception $e) {
+            return new JsonResponse(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    
+
     // ── GÉNÉRATION IMAGE IA ──────────────────────────────
     #[Route('/forum/generate-image', name: 'forum_generate_image', methods: ['POST'])]
     public function generateImage(
