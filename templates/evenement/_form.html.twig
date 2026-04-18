@@ -27,6 +27,15 @@
         {{ form_errors(form.eventType) }}
     </div>
 
+    <div class="mb-3">
+        <div class="form-check">
+            {{ form_widget(form.rappelActif, {'attr': {'class': 'form-check-input'}}) }}
+            {{ form_label(form.rappelActif, null, {'label_attr': {'class': 'form-check-label'}}) }}
+        </div>
+        {{ form_help(form.rappelActif) }}
+        {{ form_errors(form.rappelActif) }}
+    </div>
+
     <!-- Conteneur pour les boutons Présentiel/En ligne : apparaît si Cours ou Réunion -->
     <div class="js-lieu-buttons-container" style="display: none;">
         <div class="mb-3">
