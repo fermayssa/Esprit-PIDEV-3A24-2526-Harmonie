@@ -17,7 +17,6 @@ use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
-use Symfony\Component\Security\Http\Authentication\ExposeSecurityLevel;
 use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface;
 use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy;
 
@@ -37,13 +36,16 @@ class MainConfiguration implements ConfigurationInterface
     /** @internal */
     public const STRATEGY_PRIORITY = 'priority';
 
+    private array $factories;
+    private array $userProviderFactories;
+
     /**
      * @param array<AuthenticatorFactoryInterface> $factories
      */
-    public function __construct(
-        private array $factories,
-        private array $userProviderFactories,
-    ) {
+    public function __construct(array $factories, array $userProviderFactories)
+    {
+        $this->factories = $factories;
+        $this->userProviderFactories = $userProviderFactories;
     }
 
     /**
@@ -55,36 +57,15 @@ class MainConfiguration implements ConfigurationInterface
         $rootNode = $tb->getRootNode();
 
         $rootNode
-            ->docUrl('https://symfony.com/doc/{version:major}.{version:minor}/reference/configuration/security.html', 'symfony/security-bundle')
-            ->beforeNormalization()
-                ->ifArray()
-                ->then(static function ($v) {
-                    if (isset($v['hide_user_not_found']) && isset($v['expose_security_errors'])) {
-                        throw new InvalidConfigurationException('You cannot use both "hide_user_not_found" and "expose_security_errors" at the same time.');
-                    }
-
-                    if (isset($v['hide_user_not_found']) && !isset($v['expose_security_errors'])) {
-                        $v['expose_security_errors'] = $v['hide_user_not_found'] ? ExposeSecurityLevel::None : ExposeSecurityLevel::All;
-                    }
-
-                    return $v;
-                })
-            ->end()
             ->children()
                 ->scalarNode('access_denied_url')->defaultNull()->example('/foo/error403')->end()
                 ->enumNode('session_fixation_strategy')
                     ->values([SessionAuthenticationStrategy::NONE, SessionAuthenticationStrategy::MIGRATE, SessionAuthenticationStrategy::INVALIDATE])
                     ->defaultValue(SessionAuthenticationStrategy::MIGRATE)
                 ->end()
-                ->booleanNode('hide_user_not_found')
-                    ->setDeprecated('symfony/security-bundle', '7.3', 'The "%node%" option is deprecated and will be removed in 8.0. Use the "expose_security_errors" option instead.')
-                ->end()
-                ->enumNode('expose_security_errors')
-                    ->beforeNormalization()->ifString()->then(static fn ($v) => ExposeSecurityLevel::tryFrom($v))->end()
-                    ->values(ExposeSecurityLevel::cases())
-                    ->defaultValue(ExposeSecurityLevel::None)
-                ->end()
+                ->booleanNode('hide_user_not_found')->defaultTrue()->end()
                 ->booleanNode('erase_credentials')->defaultTrue()->end()
+                ->booleanNode('enable_authenticator_manager')->setDeprecated('symfony/security-bundle', '6.2', 'The "%node%" option at "%path%" is deprecated.')->defaultTrue()->end()
                 ->arrayNode('access_decision_manager')
                     ->addDefaultsIfNotSet()
                     ->children()
@@ -124,12 +105,17 @@ class MainConfiguration implements ConfigurationInterface
     private function addRoleHierarchySection(ArrayNodeDefinition $rootNode): void
     {
         $rootNode
+            ->fixXmlConfig('role', 'role_hierarchy')
             ->children()
-                ->arrayNode('role_hierarchy', 'role')
+                ->arrayNode('role_hierarchy')
                     ->useAttributeAsKey('id')
                     ->prototype('array')
                         ->performNoDeepMerging()
-                        ->beforeNormalization()->ifString()->then(static fn ($v) => preg_split('/\s*,\s*/', $v))->end()
+                        ->beforeNormalization()->ifString()->then(fn ($v) => ['value' => $v])->end()
+                        ->beforeNormalization()
+                            ->ifTrue(fn ($v) => \is_array($v) && isset($v['value']))
+                            ->then(fn ($v) => preg_split('/\s*,\s*/', $v['value']))
+                        ->end()
                         ->prototype('scalar')->end()
                     ->end()
                 ->end()
@@ -140,38 +126,43 @@ class MainConfiguration implements ConfigurationInterface
     private function addAccessControlSection(ArrayNodeDefinition $rootNode): void
     {
         $rootNode
+            ->fixXmlConfig('rule', 'access_control')
             ->children()
-                ->arrayNode('access_control', 'rule')
+                ->arrayNode('access_control')
                     ->cannotBeOverwritten()
                     ->prototype('array')
+                        ->fixXmlConfig('ip')
+                        ->fixXmlConfig('method')
+                        ->fixXmlConfig('attribute')
                         ->children()
                             ->scalarNode('request_matcher')->defaultNull()->end()
                             ->scalarNode('requires_channel')->defaultNull()->end()
                             ->scalarNode('path')
                                 ->defaultNull()
-                                ->info('Use the urldecoded format.')
+                                ->info('use the urldecoded format')
                                 ->example('^/path to resource/')
                             ->end()
                             ->scalarNode('host')->defaultNull()->end()
                             ->integerNode('port')->defaultNull()->end()
-                            ->arrayNode('ips', 'ip')
-                                ->acceptAndWrap(['string'])
+                            ->arrayNode('ips')
+                                ->beforeNormalization()->ifString()->then(fn ($v) => [$v])->end()
                                 ->prototype('scalar')->end()
                             ->end()
-                            ->arrayNode('attributes', 'attribute')
+                            ->arrayNode('attributes')
                                 ->useAttributeAsKey('key')
                                 ->prototype('scalar')->end()
                             ->end()
                             ->scalarNode('route')->defaultNull()->end()
-                            ->arrayNode('methods', 'method')
-                                ->beforeNormalization()->ifString()->then(static fn ($v) => preg_split('/\s*,\s*/', $v))->end()
+                            ->arrayNode('methods')
+                                ->beforeNormalization()->ifString()->then(fn ($v) => preg_split('/\s*,\s*/', $v))->end()
                                 ->prototype('scalar')->end()
                             ->end()
                             ->scalarNode('allow_if')->defaultNull()->end()
                         ->end()
+                        ->fixXmlConfig('role')
                         ->children()
-                            ->arrayNode('roles', 'role')
-                                ->beforeNormalization()->ifString()->then(static fn ($v) => preg_split('/\s*,\s*/', $v))->end()
+                            ->arrayNode('roles')
+                                ->beforeNormalization()->ifString()->then(fn ($v) => preg_split('/\s*,\s*/', $v))->end()
                                 ->prototype('scalar')->end()
                             ->end()
                         ->end()
@@ -187,13 +178,15 @@ class MainConfiguration implements ConfigurationInterface
     private function addFirewallsSection(ArrayNodeDefinition $rootNode, array $factories): void
     {
         $firewallNodeBuilder = $rootNode
+            ->fixXmlConfig('firewall')
             ->children()
-                ->arrayNode('firewalls', 'firewall')
+                ->arrayNode('firewalls')
                     ->isRequired()
                     ->requiresAtLeastOneElement()
                     ->disallowNewKeysInSubsequentConfigs()
                     ->useAttributeAsKey('name')
                     ->prototype('array')
+                        ->fixXmlConfig('required_badge')
                         ->children()
         ;
 
@@ -201,12 +194,12 @@ class MainConfiguration implements ConfigurationInterface
             ->scalarNode('pattern')
                 ->beforeNormalization()
                     ->ifArray()
-                    ->then(static fn ($v) => \sprintf('(?:%s)', implode('|', $v)))
+                    ->then(fn ($v) => \sprintf('(?:%s)', implode('|', $v)))
                 ->end()
             ->end()
             ->scalarNode('host')->end()
             ->arrayNode('methods')
-                ->beforeNormalization()->ifString()->then(static fn ($v) => preg_split('/\s*,\s*/', $v))->end()
+                ->beforeNormalization()->ifString()->then(fn ($v) => preg_split('/\s*,\s*/', $v))->end()
                 ->prototype('scalar')->end()
             ->end()
             ->booleanNode('security')->defaultTrue()->end()
@@ -219,7 +212,7 @@ class MainConfiguration implements ConfigurationInterface
             ->scalarNode('access_denied_url')->end()
             ->scalarNode('access_denied_handler')->end()
             ->scalarNode('entry_point')
-                ->info(\sprintf('An enabled authenticator name or a service id that implements "%s".', AuthenticationEntryPointInterface::class))
+                ->info(\sprintf('An enabled authenticator name or a service id that implements "%s"', AuthenticationEntryPointInterface::class))
             ->end()
             ->scalarNode('provider')->end()
             ->booleanNode('stateless')->defaultFalse()->end()
@@ -229,11 +222,19 @@ class MainConfiguration implements ConfigurationInterface
                 ->treatTrueLike([])
                 ->canBeUnset()
                 ->beforeNormalization()
-                    ->ifArray()
-                    ->then(static function ($v) {
+                    ->ifTrue(fn ($v): bool => isset($v['csrf_token_generator']) && !isset($v['csrf_token_manager']))
+                    ->then(function (array $v): array {
+                        $v['csrf_token_manager'] = $v['csrf_token_generator'];
+
+                        return $v;
+                    })
+                ->end()
+                ->beforeNormalization()
+                    ->ifTrue(fn ($v): bool => \is_array($v) && (isset($v['csrf_token_manager']) xor isset($v['enable_csrf'])))
+                    ->then(function (array $v): array {
                         if (isset($v['csrf_token_manager'])) {
-                            $v['enable_csrf'] ??= true;
-                        } elseif ($v['enable_csrf'] ?? false) {
+                            $v['enable_csrf'] = true;
+                        } elseif ($v['enable_csrf']) {
                             $v['csrf_token_manager'] = 'security.csrf.token_manager';
                         }
 
@@ -244,13 +245,20 @@ class MainConfiguration implements ConfigurationInterface
                     ->booleanNode('enable_csrf')->defaultNull()->end()
                     ->scalarNode('csrf_token_id')->defaultValue('logout')->end()
                     ->scalarNode('csrf_parameter')->defaultValue('_csrf_token')->end()
+                    ->scalarNode('csrf_token_generator')
+                        ->setDeprecated(
+                            'symfony/security-bundle',
+                            '6.3',
+                            'The "%node%" option is deprecated. Use "csrf_token_manager" instead.'
+                        )
+                    ->end()
                     ->scalarNode('csrf_token_manager')->end()
                     ->scalarNode('path')->defaultValue('/logout')->end()
                     ->scalarNode('target')->defaultValue('/')->end()
                     ->booleanNode('invalidate_session')->defaultTrue()->end()
                     ->arrayNode('clear_site_data')
                         ->performNoDeepMerging()
-                        ->beforeNormalization()->ifString()->then(static fn ($v) => $v ? array_map('trim', explode(',', $v)) : [])->end()
+                        ->beforeNormalization()->ifString()->then(fn ($v) => $v ? array_map('trim', explode(',', $v)) : [])->end()
                         ->enumPrototype()
                             ->values([
                                 '*', 'cache', 'cookies', 'storage', 'executionContexts',
@@ -258,13 +266,13 @@ class MainConfiguration implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end()
+                ->fixXmlConfig('delete_cookie')
                 ->children()
-                    ->arrayNode('delete_cookies', 'delete_cookie')
+                    ->arrayNode('delete_cookies')
                         ->normalizeKeys(false)
-                        ->acceptAndWrap(['string'])
                         ->beforeNormalization()
-                            ->ifArray()
-                            ->then(static fn ($v) => array_map(static fn ($v) => \is_string($v) ? ['name' => $v] : $v, $v))
+                            ->ifTrue(fn ($v) => \is_array($v) && \is_int(key($v)))
+                            ->then(fn ($v) => array_map(fn ($v) => ['name' => $v], $v))
                         ->end()
                         ->useAttributeAsKey('name')
                         ->prototype('array')
@@ -288,7 +296,7 @@ class MainConfiguration implements ConfigurationInterface
                     ->scalarNode('target_route')->defaultValue(null)->end()
                 ->end()
             ->end()
-            ->arrayNode('required_badges', 'required_badge')
+            ->arrayNode('required_badges')
                 ->info('A list of badges that must be present on the authenticated passport.')
                 ->validate()
                     ->always()
@@ -352,8 +360,9 @@ class MainConfiguration implements ConfigurationInterface
     private function addProvidersSection(ArrayNodeDefinition $rootNode): void
     {
         $providerNodeBuilder = $rootNode
+            ->fixXmlConfig('provider')
             ->children()
-                ->arrayNode('providers', 'provider')
+                ->arrayNode('providers')
                     ->example([
                         'my_memory_provider' => [
                             'memory' => [
@@ -374,9 +383,13 @@ class MainConfiguration implements ConfigurationInterface
             ->children()
                 ->scalarNode('id')->end()
                 ->arrayNode('chain')
+                    ->fixXmlConfig('provider')
                     ->children()
-                        ->arrayNode('providers', 'provider')
-                            ->beforeNormalization()->ifString()->then(static fn ($v) => preg_split('/\s*,\s*/', $v))->end()
+                        ->arrayNode('providers')
+                            ->beforeNormalization()
+                                ->ifString()
+                                ->then(fn ($v) => preg_split('/\s*,\s*/', $v))
+                            ->end()
                             ->prototype('scalar')->end()
                         ->end()
                     ->end()
@@ -406,8 +419,9 @@ class MainConfiguration implements ConfigurationInterface
     private function addPasswordHashersSection(ArrayNodeDefinition $rootNode): void
     {
         $rootNode
+            ->fixXmlConfig('password_hasher')
             ->children()
-                ->arrayNode('password_hashers', 'password_hasher')
+                ->arrayNode('password_hashers')
                     ->example([
                         'App\Entity\User1' => 'auto',
                         'App\Entity\User2' => [
@@ -421,7 +435,7 @@ class MainConfiguration implements ConfigurationInterface
                     ->prototype('array')
                         ->canBeUnset()
                         ->performNoDeepMerging()
-                        ->acceptAndWrap(['string'], 'algorithm')
+                        ->beforeNormalization()->ifString()->then(fn ($v) => ['algorithm' => $v])->end()
                         ->children()
                             ->scalarNode('algorithm')
                                 ->cannotBeEmpty()
@@ -431,8 +445,8 @@ class MainConfiguration implements ConfigurationInterface
                                 ->end()
                             ->end()
                             ->arrayNode('migrate_from')
-                                ->acceptAndWrap(['string'])
                                 ->prototype('scalar')->end()
+                                ->beforeNormalization()->castToArray()->end()
                             ->end()
                             ->scalarNode('hash_algorithm')->info('Name of hashing algorithm for PBKDF2 (i.e. sha256, sha512, etc..) See hash_algos() for a list of supported algorithms.')->defaultValue('sha512')->end()
                             ->scalarNode('key_length')->defaultValue(40)->end()

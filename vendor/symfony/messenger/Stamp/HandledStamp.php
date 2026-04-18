@@ -12,8 +12,6 @@
 namespace Symfony\Component\Messenger\Stamp;
 
 use Symfony\Component\Messenger\Handler\HandlerDescriptor;
-use Symfony\Component\Messenger\HandleTrait;
-use Symfony\Component\Messenger\Middleware\HandleMessageMiddleware;
 
 /**
  * Stamp identifying a message handled by the `HandleMessageMiddleware` middleware
@@ -22,17 +20,20 @@ use Symfony\Component\Messenger\Middleware\HandleMessageMiddleware;
  * This is used by synchronous command buses expecting a return value and the retry logic
  * to only execute handlers that didn't succeed.
  *
- * @see HandleMessageMiddleware
- * @see HandleTrait
+ * @see \Symfony\Component\Messenger\Middleware\HandleMessageMiddleware
+ * @see \Symfony\Component\Messenger\HandleTrait
  *
  * @author Maxime Steinhausser <maxime.steinhausser@gmail.com>
  */
 final class HandledStamp implements StampInterface
 {
-    public function __construct(
-        private mixed $result,
-        private string $handlerName,
-    ) {
+    private mixed $result;
+    private string $handlerName;
+
+    public function __construct(mixed $result, string $handlerName)
+    {
+        $this->result = $result;
+        $this->handlerName = $handlerName;
     }
 
     public static function fromDescriptor(HandlerDescriptor $handler, mixed $result): self

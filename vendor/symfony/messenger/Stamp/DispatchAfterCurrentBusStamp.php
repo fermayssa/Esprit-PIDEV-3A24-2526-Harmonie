@@ -11,12 +11,10 @@
 
 namespace Symfony\Component\Messenger\Stamp;
 
-use Symfony\Component\Messenger\Middleware\DispatchAfterCurrentBusMiddleware;
-
 /**
  * Marker item to tell this message should be handled in after the current bus has finished.
  *
- * @see DispatchAfterCurrentBusMiddleware
+ * @see \Symfony\Component\Messenger\Middleware\DispatchAfterCurrentBusMiddleware
  *
  * @author Tobias Nyholm <tobias.nyholm@gmail.com>
  */

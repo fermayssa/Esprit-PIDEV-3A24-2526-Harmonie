@@ -21,7 +21,6 @@ use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Contracts\HttpClient\Exception\HttpExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
-use Symfony\Contracts\HttpClient\ResponseInterface;
 
 final class JsDelivrEsmResolver implements PackageResolverInterface
 {
@@ -167,7 +166,6 @@ final class JsDelivrEsmResolver implements PackageResolverInterface
      */
     public function downloadPackages(array $importMapEntries, ?callable $progressCallback = null): array
     {
-        /** @var array<string, array{0: ResponseInterface, 1: ImportMapEntry}> $responses */
         $responses = [];
         foreach ($importMapEntries as $package => $entry) {
             if (!$entry->isRemotePackage()) {
@@ -187,6 +185,7 @@ final class JsDelivrEsmResolver implements PackageResolverInterface
         $errors = [];
         $contents = [];
         $extraFileResponses = [];
+        /** @var ImportMapEntry $entry */
         foreach ($responses as $package => [$response, $entry]) {
             if (200 !== $response->getStatusCode()) {
                 $errors[] = [$package, $response];

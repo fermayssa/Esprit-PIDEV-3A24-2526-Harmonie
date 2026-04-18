@@ -38,11 +38,13 @@ use Symfony\Component\Form\Guess\ValueGuess;
 
 class DoctrineOrmTypeGuesser implements FormTypeGuesserInterface
 {
+    protected $registry;
+
     private array $cache = [];
 
-    public function __construct(
-        protected ManagerRegistry $registry,
-    ) {
+    public function __construct(ManagerRegistry $registry)
+    {
+        $this->registry = $registry;
     }
 
     public function guessType(string $class, string $property): ?TypeGuess
@@ -125,7 +127,7 @@ class DoctrineOrmTypeGuesser implements FormTypeGuesserInterface
     public function guessMaxLength(string $class, string $property): ?ValueGuess
     {
         $ret = $this->getMetadata($class);
-        if ($ret && isset($ret[0]->fieldMappings[$property])) {
+        if ($ret && isset($ret[0]->fieldMappings[$property]) && !$ret[0]->hasAssociation($property)) {
             $mapping = $ret[0]->getFieldMapping($property);
 
             $length = $mapping instanceof FieldMapping ? $mapping->length : ($mapping['length'] ?? null);
@@ -134,7 +136,7 @@ class DoctrineOrmTypeGuesser implements FormTypeGuesserInterface
                 return new ValueGuess($length, Guess::HIGH_CONFIDENCE);
             }
 
-            if (\in_array($ret[0]->getTypeOfField($property), [Types::DECIMAL, Types::FLOAT], true)) {
+            if (\in_array($ret[0]->getTypeOfField($property), [Types::DECIMAL, Types::FLOAT])) {
                 return new ValueGuess(null, Guess::MEDIUM_CONFIDENCE);
             }
         }
@@ -145,8 +147,8 @@ class DoctrineOrmTypeGuesser implements FormTypeGuesserInterface
     public function guessPattern(string $class, string $property): ?ValueGuess
     {
         $ret = $this->getMetadata($class);
-        if ($ret && isset($ret[0]->fieldMappings[$property])) {
-            if (\in_array($ret[0]->getTypeOfField($property), [Types::DECIMAL, Types::FLOAT], true)) {
+        if ($ret && isset($ret[0]->fieldMappings[$property]) && !$ret[0]->hasAssociation($property)) {
+            if (\in_array($ret[0]->getTypeOfField($property), [Types::DECIMAL, Types::FLOAT])) {
                 return new ValueGuess(null, Guess::MEDIUM_CONFIDENCE);
             }
         }
@@ -161,7 +163,7 @@ class DoctrineOrmTypeGuesser implements FormTypeGuesserInterface
      *
      * @return array{0:ClassMetadata<T>, 1:string}|null
      */
-    protected function getMetadata(string $class): ?array
+    protected function getMetadata(string $class)
     {
         // normalize class name
         $class = self::getRealClass(ltrim($class, '\\'));

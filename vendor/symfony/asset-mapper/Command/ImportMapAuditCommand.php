@@ -15,8 +15,6 @@ use Symfony\Component\AssetMapper\ImportMap\ImportMapAuditor;
 use Symfony\Component\AssetMapper\ImportMap\ImportMapPackageAuditVulnerability;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Completion\CompletionInput;
-use Symfony\Component\Console\Completion\CompletionSuggestions;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -43,19 +41,12 @@ class ImportMapAuditCommand extends Command
 
     protected function configure(): void
     {
-        $this
-            ->addOption(
-                name: 'format',
-                mode: InputOption::VALUE_REQUIRED,
-                description: \sprintf('The output format ("%s")', implode(', ', $this->getAvailableFormatOptions())),
-                default: 'txt',
-            )
-            ->setHelp(<<<'EOT'
-                The <info>--format</info> option specifies the format of the command output:
-
-                  <info>php %command.full_name% --format=json</info>
-                EOT
-            );
+        $this->addOption(
+            name: 'format',
+            mode: InputOption::VALUE_REQUIRED,
+            description: \sprintf('The output format ("%s")', implode(', ', $this->getAvailableFormatOptions())),
+            default: 'txt',
+        );
     }
 
     protected function initialize(InputInterface $input, OutputInterface $output): void
@@ -189,14 +180,6 @@ class ImportMapAuditCommand extends Command
         return 0 < array_sum($json['summary']) ? self::FAILURE : self::SUCCESS;
     }
 
-    public function complete(CompletionInput $input, CompletionSuggestions $suggestions): void
-    {
-        if ($input->mustSuggestOptionValuesFor('format')) {
-            $suggestions->suggestValues($this->getAvailableFormatOptions());
-        }
-    }
-
-    /** @return string[] */
     private function getAvailableFormatOptions(): array
     {
         return ['txt', 'json'];

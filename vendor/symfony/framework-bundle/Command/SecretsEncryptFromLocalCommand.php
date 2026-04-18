@@ -27,10 +27,14 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 #[AsCommand(name: 'secrets:encrypt-from-local', description: 'Encrypt all local secrets to the vault')]
 final class SecretsEncryptFromLocalCommand extends Command
 {
-    public function __construct(
-        private AbstractVault $vault,
-        private ?AbstractVault $localVault = null,
-    ) {
+    private AbstractVault $vault;
+    private ?AbstractVault $localVault;
+
+    public function __construct(AbstractVault $vault, ?AbstractVault $localVault = null)
+    {
+        $this->vault = $vault;
+        $this->localVault = $localVault;
+
         parent::__construct();
     }
 
@@ -38,10 +42,10 @@ final class SecretsEncryptFromLocalCommand extends Command
     {
         $this
             ->setHelp(<<<'EOF'
-                The <info>%command.name%</info> command encrypts all locally overridden secrets to the vault.
+The <info>%command.name%</info> command encrypts all locally overridden secrets to the vault.
 
-                    <info>%command.full_name%</info>
-                EOF
+    <info>%command.full_name%</info>
+EOF
             )
         ;
     }

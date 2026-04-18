@@ -6,7 +6,7 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
-    'phpDocumentor\\Reflection\\' => array($vendorDir . '/phpdocumentor/reflection-docblock/src', $vendorDir . '/phpdocumentor/type-resolver/src', $vendorDir . '/phpdocumentor/reflection-common/src'),
+    'phpDocumentor\\Reflection\\' => array($vendorDir . '/phpdocumentor/reflection-common/src', $vendorDir . '/phpdocumentor/type-resolver/src', $vendorDir . '/phpdocumentor/reflection-docblock/src'),
     'ZipStream\\' => array($vendorDir . '/maennchen/zipstream-php/src'),
     'Webmozart\\Assert\\' => array($vendorDir . '/webmozart/assert/src'),
     'Twig\\Extra\\TwigExtraBundle\\' => array($vendorDir . '/twig/extra-bundle'),
@@ -14,7 +14,6 @@ return array(
     'Symfony\\UX\\Turbo\\' => array($vendorDir . '/symfony/ux-turbo/src'),
     'Symfony\\UX\\StimulusBundle\\' => array($vendorDir . '/symfony/stimulus-bundle/src'),
     'Symfony\\Runtime\\Symfony\\Component\\' => array($vendorDir . '/symfony/runtime/Internal'),
-    'Symfony\\Polyfill\\Php85\\' => array($vendorDir . '/symfony/polyfill-php85'),
     'Symfony\\Polyfill\\Php84\\' => array($vendorDir . '/symfony/polyfill-php84'),
     'Symfony\\Polyfill\\Php83\\' => array($vendorDir . '/symfony/polyfill-php83'),
     'Symfony\\Polyfill\\Mbstring\\' => array($vendorDir . '/symfony/polyfill-mbstring'),
@@ -33,7 +32,6 @@ return array(
     'Symfony\\Component\\VarExporter\\' => array($vendorDir . '/symfony/var-exporter'),
     'Symfony\\Component\\VarDumper\\' => array($vendorDir . '/symfony/var-dumper'),
     'Symfony\\Component\\Validator\\' => array($vendorDir . '/symfony/validator'),
-    'Symfony\\Component\\TypeInfo\\' => array($vendorDir . '/symfony/type-info'),
     'Symfony\\Component\\Translation\\' => array($vendorDir . '/symfony/translation'),
     'Symfony\\Component\\String\\' => array($vendorDir . '/symfony/string'),
     'Symfony\\Component\\Stopwatch\\' => array($vendorDir . '/symfony/stopwatch'),
@@ -112,7 +110,8 @@ return array(
     'Doctrine\\DBAL\\' => array($vendorDir . '/doctrine/dbal/src'),
     'Doctrine\\Common\\Lexer\\' => array($vendorDir . '/doctrine/lexer/src'),
     'Doctrine\\Common\\Collections\\' => array($vendorDir . '/doctrine/collections/src'),
-    'Doctrine\\Common\\' => array($vendorDir . '/doctrine/event-manager/src'),
+    'Doctrine\\Common\\Cache\\' => array($vendorDir . '/doctrine/cache/lib/Doctrine/Common/Cache'),
+    'Doctrine\\Common\\' => array($vendorDir . '/doctrine/common/src', $vendorDir . '/doctrine/event-manager/src'),
     'Doctrine\\Bundle\\MigrationsBundle\\' => array($vendorDir . '/doctrine/doctrine-migrations-bundle/src'),
     'Doctrine\\Bundle\\DoctrineBundle\\' => array($vendorDir . '/doctrine/doctrine-bundle/src'),
     'DeepCopy\\' => array($vendorDir . '/myclabs/deep-copy/src/DeepCopy'),

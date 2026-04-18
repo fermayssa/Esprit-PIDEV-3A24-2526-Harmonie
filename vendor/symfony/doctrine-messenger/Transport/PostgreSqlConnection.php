@@ -71,12 +71,19 @@ final class PostgreSqlConnection extends Connection
 
         $this->listening = true;
 
-        /** @var \PDO $nativeConnection */
-        $nativeConnection = $this->driverConnection->getNativeConnection();
+        // The condition should be removed once support for DBAL <3.3 is dropped
+        if (method_exists($this->driverConnection, 'getNativeConnection')) {
+            $wrappedConnection = $this->driverConnection->getNativeConnection();
+        } else {
+            $wrappedConnection = $this->driverConnection;
+            while (method_exists($wrappedConnection, 'getWrappedConnection')) {
+                $wrappedConnection = $wrappedConnection->getWrappedConnection();
+            }
+        }
 
-        $notification = \PHP_VERSION_ID >= 80400
-            ? $nativeConnection->getNotify(\PDO::FETCH_ASSOC, $this->configuration['get_notify_timeout'])
-            : $nativeConnection->pgsqlGetNotify(\PDO::FETCH_ASSOC, $this->configuration['get_notify_timeout']);
+        $notification = \PHP_VERSION_ID >= 80500
+            ? $wrappedConnection->getNotify(\PDO::FETCH_ASSOC, $this->configuration['get_notify_timeout'])
+            : $wrappedConnection->pgsqlGetNotify(\PDO::FETCH_ASSOC, $this->configuration['get_notify_timeout']);
         if (
             // no notifications, or for another table or queue
             (false === $notification || $notification['message'] !== $this->configuration['table_name'] || $notification['payload'] !== $this->configuration['queue_name'])

@@ -13,10 +13,11 @@ use Stringable;
  */
 class Orx extends Composite
 {
-    protected string $separator = ' OR ';
+    /** @var string */
+    protected $separator = ' OR ';
 
     /** @var list<class-string<Stringable>> */
-    protected array $allowedClasses = [
+    protected $allowedClasses = [
         Comparison::class,
         Func::class,
         Andx::class,
@@ -24,10 +25,10 @@ class Orx extends Composite
     ];
 
     /** @phpstan-var list<string|Comparison|Func|Andx|self> */
-    protected array $parts = [];
+    protected $parts = [];
 
     /** @phpstan-return list<string|Comparison|Func|Andx|self> */
-    public function getParts(): array
+    public function getParts()
     {
         return $this->parts;
     }

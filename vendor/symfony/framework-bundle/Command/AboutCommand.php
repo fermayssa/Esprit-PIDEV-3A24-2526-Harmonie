@@ -25,7 +25,6 @@ use Symfony\Component\HttpKernel\KernelInterface;
  * A console command to display information about the current installation.
  *
  * @author Roland Franssen <franssen.roland@gmail.com>
- * @author Joppe De Cuyper <hello@joppe.dev>
  *
  * @final
  */
@@ -36,11 +35,11 @@ class AboutCommand extends Command
     {
         $this
             ->setHelp(<<<'EOT'
-                The <info>%command.name%</info> command displays information about the current Symfony project.
+The <info>%command.name%</info> command displays information about the current Symfony project.
 
-                The <info>PHP</info> section displays important configuration that could affect your application. The values might
-                be different between web and CLI.
-                EOT
+The <info>PHP</info> section displays important configuration that could affect your application. The values might
+be different between web and CLI.
+EOT
             )
         ;
     }
@@ -58,14 +57,6 @@ class AboutCommand extends Command
             $buildDir = $kernel->getCacheDir();
         }
 
-        if (method_exists($kernel, 'getShareDir')) {
-            $shareDir = $kernel->getShareDir();
-        } else {
-            $shareDir = $kernel->getCacheDir();
-        }
-
-        $xdebugMode = getenv('XDEBUG_MODE') ?: \ini_get('xdebug.mode');
-
         $rows = [
             ['<info>Symfony</>'],
             new TableSeparator(),
@@ -82,7 +73,6 @@ class AboutCommand extends Command
             ['Charset', $kernel->getCharset()],
             ['Cache directory', self::formatPath($kernel->getCacheDir(), $kernel->getProjectDir()).' (<comment>'.self::formatFileSize($kernel->getCacheDir()).'</>)'],
             ['Build directory', self::formatPath($buildDir, $kernel->getProjectDir()).' (<comment>'.self::formatFileSize($buildDir).'</>)'],
-            ['Share directory', null === $shareDir ? 'none' : self::formatPath($shareDir, $kernel->getProjectDir()).' (<comment>'.self::formatFileSize($shareDir).'</>)'],
             ['Log directory', self::formatPath($kernel->getLogDir(), $kernel->getProjectDir()).' (<comment>'.self::formatFileSize($kernel->getLogDir()).'</>)'],
             new TableSeparator(),
             ['<info>PHP</>'],
@@ -91,9 +81,9 @@ class AboutCommand extends Command
             ['Architecture', (\PHP_INT_SIZE * 8).' bits'],
             ['Intl locale', class_exists(\Locale::class, false) && \Locale::getDefault() ? \Locale::getDefault() : 'n/a'],
             ['Timezone', date_default_timezone_get().' (<comment>'.(new \DateTimeImmutable())->format(\DateTimeInterface::W3C).'</>)'],
-            ['OPcache', \extension_loaded('Zend OPcache') ? (filter_var(\ini_get('opcache.enable'), \FILTER_VALIDATE_BOOLEAN) ? 'Enabled' : 'Not enabled') : 'Not installed'],
-            ['APCu', \extension_loaded('apcu') ? (filter_var(\ini_get('apc.enabled'), \FILTER_VALIDATE_BOOLEAN) ? 'Enabled' : 'Not enabled') : 'Not installed'],
-            ['Xdebug', \extension_loaded('xdebug') ? ($xdebugMode && 'off' !== $xdebugMode ? 'Enabled ('.$xdebugMode.')' : 'Not enabled') : 'Not installed'],
+            ['OPcache', \extension_loaded('Zend OPcache') && filter_var(\ini_get('opcache.enable'), \FILTER_VALIDATE_BOOL) ? 'true' : 'false'],
+            ['APCu', \extension_loaded('apcu') && filter_var(\ini_get('apc.enabled'), \FILTER_VALIDATE_BOOL) ? 'true' : 'false'],
+            ['Xdebug', \extension_loaded('xdebug') ? 'true' : 'false'],
         ];
 
         $io->table([], $rows);

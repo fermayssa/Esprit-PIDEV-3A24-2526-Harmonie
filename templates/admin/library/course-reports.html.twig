@@ -187,9 +187,17 @@
         <a href="{{ path('admin_course_reports_index', {status: 'reviewed',  q: search}) }}" class="ftab {{ currentStatus == 'reviewed'  ? 'active' }}">✅ Traités</a>
         <a href="{{ path('admin_course_reports_index', {status: 'dismissed', q: search}) }}" class="ftab {{ currentStatus == 'dismissed' ? 'active' }}">🗑 Rejetés</a>
     </div>
-    <form method="GET" action="{{ path('admin_course_reports_index') }}" class="search-wrap">
+    <form method="GET" action="{{ path('admin_course_reports_index') }}" class="search-wrap" id="reportSearchForm">
         <input type="hidden" name="status" value="{{ currentStatus }}">
-        <input type="text" name="q" value="{{ search }}" class="search-input" placeholder="Rechercher cours ou email…">
+        <input
+            type="text"
+            name="q"
+            value="{{ search }}"
+            class="search-input"
+            id="reportSearchInput"
+            placeholder="Rechercher cours ou email"
+            autocomplete="off"
+        >
         <button type="submit" class="btn-search">🔍</button>
     </form>
 </div>
@@ -329,67 +337,91 @@
 {% endblock %}
 
 {% block javascripts %}
-<script>
-    let pendingCourseId = null;
+    <script>
+        let pendingCourseId = null;
 
-    /* ── Confirm unpublish modal ─────────────────────────────────────────── */
-    function confirmUnpublish(courseId, courseTitle) {
-        pendingCourseId = courseId;
-        document.getElementById('modalCourseTitle').textContent = courseTitle;
-        document.getElementById('confirmModal').classList.add('open');
-    }
+        // Dynamic search
+        const reportSearchForm = document.getElementById('reportSearchForm');
+        const reportSearchInput = document.getElementById('reportSearchInput');
+        let searchTimer = null;
 
-    function closeModal() {
-        document.getElementById('confirmModal').classList.remove('open');
-        pendingCourseId = null;
-    }
+        if (reportSearchForm && reportSearchInput) {
+            reportSearchInput.addEventListener('input', function () {
+                clearTimeout(searchTimer);
 
-    document.getElementById('btnConfirm').addEventListener('click', function () {
-        if (!pendingCourseId) return;
-        this.disabled = true;
-        this.textContent = 'En cours…';
-        fetch(`/admin/course-reports/unpublish/${pendingCourseId}`, { method: 'POST' })
-            .then(r => r.json())
-            .then(data => {
-                if (data.ok) { location.reload(); }
-                else { alert(data.message || 'Erreur'); this.disabled = false; }
-            })
-            .catch(() => { alert('Erreur réseau'); this.disabled = false; });
-    });
-
-    /* Close modal on overlay click */
-    document.getElementById('confirmModal').addEventListener('click', function (e) {
-        if (e.target === this) closeModal();
-    });
-
-    /* ── Dismiss report ──────────────────────────────────────────────────── */
-    function doDismiss(reportId, btn) {
-        if (!confirm('Rejeter ce signalement ?')) return;
-        btn.disabled = true;
-        fetch(`/admin/course-reports/dismiss/${reportId}`, { method: 'POST' })
-            .then(r => r.json())
-            .then(data => {
-                if (data.ok) { location.reload(); }
-                else { alert(data.message || 'Erreur'); btn.disabled = false; }
+                searchTimer = setTimeout(() => {
+                    reportSearchForm.submit();
+                }, 300);
             });
-    }
+        }
 
-    /* ── Restore course ──────────────────────────────────────────────────── */
-    function doRestore(courseId, btn) {
-        if (!confirm('Restaurer et republier ce cours ?')) return;
-        btn.disabled = true;
-        fetch(`/admin/course-reports/restore/${courseId}`, { method: 'POST' })
-            .then(r => r.json())
-            .then(data => {
-                if (data.ok) { location.reload(); }
-                else { alert(data.message || 'Erreur'); btn.disabled = false; }
-            });
-    }
+        // Confirm unpublish modal
+        function confirmUnpublish(courseId, courseTitle) {
+            pendingCourseId = courseId;
+            document.getElementById('modalCourseTitle').textContent = courseTitle;
+            document.getElementById('confirmModal').classList.add('open');
+        }
 
-    /* ── Toggle detail row ───────────────────────────────────────────────── */
-    function toggleDetail(reportId) {
-        const row = document.getElementById('detail-' + reportId);
-        if (row) row.classList.toggle('open');
-    }
-</script>
+        function closeModal() {
+            document.getElementById('confirmModal').classList.remove('open');
+            pendingCourseId = null;
+        }
+
+        document.getElementById('btnConfirm').addEventListener('click', function () {
+            if (!pendingCourseId) return;
+            this.disabled = true;
+            this.textContent = 'En cours...';
+
+            fetch('/admin/course-reports/unpublish/' + pendingCourseId, { method: 'POST' })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.ok) location.reload();
+                    else alert(data.message || 'Erreur');
+                    this.disabled = false;
+                })
+                .catch(() => {
+                    alert('Erreur réseau');
+                    this.disabled = false;
+                });
+        });
+
+        // Close modal on overlay click
+        document.getElementById('confirmModal').addEventListener('click', function (e) {
+            if (e.target === this) closeModal();
+        });
+
+        // Dismiss report
+        function doDismiss(reportId, btn) {
+            if (!confirm('Rejeter ce signalement ?')) return;
+            btn.disabled = true;
+
+            fetch('/admin/course-reports/dismiss/' + reportId, { method: 'POST' })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.ok) location.reload();
+                    else alert(data.message || 'Erreur');
+                    btn.disabled = false;
+                });
+        }
+
+        // Restore course
+        function doRestore(courseId, btn) {
+            if (!confirm('Restaurer et republier ce cours ?')) return;
+            btn.disabled = true;
+
+            fetch('/admin/course-reports/restore/' + courseId, { method: 'POST' })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.ok) location.reload();
+                    else alert(data.message || 'Erreur');
+                    btn.disabled = false;
+                });
+        }
+
+        // Toggle detail row
+        function toggleDetail(reportId) {
+            const row = document.getElementById('detail-' + reportId);
+            if (row) row.classList.toggle('open');
+        }
+    </script>
 {% endblock %}

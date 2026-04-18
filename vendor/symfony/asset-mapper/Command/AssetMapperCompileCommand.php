@@ -50,11 +50,11 @@ final class AssetMapperCompileCommand extends Command
     {
         $this
             ->setHelp(<<<'EOT'
-                The <info>%command.name%</info> command compiles and dumps all the assets in
-                the asset mapper into the final public directory (usually <comment>public/assets</comment>).
+The <info>%command.name%</info> command compiles and dumps all the assets in
+the asset mapper into the final public directory (usually <comment>public/assets</comment>).
 
-                This command is meant to be run during deployment.
-                EOT
+This command is meant to be run during deployment.
+EOT
             );
     }
 
@@ -62,7 +62,7 @@ final class AssetMapperCompileCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        $this->eventDispatcher?->dispatch(new PreAssetsCompileEvent($io));
+        $this->eventDispatcher?->dispatch(new PreAssetsCompileEvent($output));
 
         // remove existing config files
         $this->compiledConfigReader->removeConfig(AssetMapper::MANIFEST_FILE_NAME);
@@ -89,7 +89,7 @@ final class AssetMapperCompileCommand extends Command
 
         if ($this->isDebug) {
             $io->warning(\sprintf(
-                'Debug mode is enabled in your project: Symfony will not serve any changed assets until you delete the files in the "%s" directory again.',
+                'You are compiling assets in development. Symfony will not serve any changed assets until you delete the files in the "%s" directory.',
                 $this->shortenPath(\dirname($manifestPath))
             ));
         }

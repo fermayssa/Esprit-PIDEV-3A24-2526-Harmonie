@@ -62,6 +62,7 @@ class HandleMessageMiddleware implements MiddlewareInterface
                 $handler = $handlerDescriptor->getHandler();
                 $batchHandler = $handlerDescriptor->getBatchHandler();
 
+                /** @var AckStamp $ackStamp */
                 if ($batchHandler && $ackStamp = $envelope->last(AckStamp::class)) {
                     $ack = new Acknowledger(get_debug_type($batchHandler), static function (?\Throwable $e = null, $result = null) use ($envelope, $ackStamp, $handlerDescriptor) {
                         if (null !== $e) {
@@ -98,7 +99,9 @@ class HandleMessageMiddleware implements MiddlewareInterface
             }
         }
 
+        /** @var FlushBatchHandlersStamp $flushStamp */
         if ($flushStamp = $envelope->last(FlushBatchHandlersStamp::class)) {
+            /** @var NoAutoAckStamp $stamp */
             foreach ($envelope->all(NoAutoAckStamp::class) as $stamp) {
                 try {
                     $handler = $stamp->getHandlerDescriptor()->getBatchHandler();
@@ -126,6 +129,7 @@ class HandleMessageMiddleware implements MiddlewareInterface
 
     private function messageHasAlreadyBeenHandled(Envelope $envelope, HandlerDescriptor $handlerDescriptor): bool
     {
+        /** @var HandledStamp $stamp */
         foreach ($envelope->all(HandledStamp::class) as $stamp) {
             if ($stamp->getHandlerName() === $handlerDescriptor->getName()) {
                 return true;
@@ -135,7 +139,7 @@ class HandleMessageMiddleware implements MiddlewareInterface
         return false;
     }
 
-    private function callHandler(\Closure $handler, object $message, ?Acknowledger $ack, ?HandlerArgumentsStamp $handlerArgumentsStamp): mixed
+    private function callHandler(callable $handler, object $message, ?Acknowledger $ack, ?HandlerArgumentsStamp $handlerArgumentsStamp): mixed
     {
         $arguments = [$message];
         if (null !== $ack) {

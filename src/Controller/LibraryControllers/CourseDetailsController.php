@@ -16,10 +16,17 @@ class CourseDetailsController extends AbstractController
 {
     public function __construct(private Connection $db) {}
 
-    private function getMockUserId(): int
+    private function getCurrentUserId(): ?int
     {
-        $session = $this->container->get('request_stack')->getSession();
-        return (int) ($session->get('mock_user_id') ?? 0);
+        $user = $this->getUser();
+
+        if (!$user || !method_exists($user, 'getId')) {
+            return null;
+        }
+
+        $userId = $user->getId();
+
+        return $userId !== null ? (int) $userId : null;
     }
 
     // ── MAIN PAGE ──────────────────────────────────────────────────────────────
@@ -37,7 +44,7 @@ class CourseDetailsController extends AbstractController
 
         if (!$course) throw $this->createNotFoundException('Course not found.');
 
-        $currentUserId = $this->getMockUserId();
+        $currentUserId = $this->getCurrentUserId() ?? 0;
         $isOwner       = (int) $course['userid'] === $currentUserId && $currentUserId > 0;
 
         $isSaved = false;
@@ -303,7 +310,8 @@ class CourseDetailsController extends AbstractController
 
         $response = new Response($pdf);
         $response->headers->set('Content-Type', 'application/pdf');
-        $response->headers->set('Content-Disposition',
+        $response->headers->set(
+            'Content-Disposition',
             $response->headers->makeDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $baseName . '.pdf')
         );
         return $response;
@@ -337,18 +345,18 @@ class CourseDetailsController extends AbstractController
         }
 
         // ── Partition into pages
-        $yStart      = $pageH - $margin;
-        $yMin        = $margin + $leading;
+        $yStart       = $pageH - $margin;
+        $yMin         = $margin + $leading;
         $linesPerPage = (int) (($yStart - $yMin) / $leading);
         $pages        = array_chunk($lines, max(1, $linesPerPage));
         if (empty($pages)) $pages = [[]];
 
         // ── Assemble raw PDF
-        $objects   = [];
-        $offsets   = [];
-        $objCount  = 0;
+        $objects  = [];
+        $offsets  = [];
+        $objCount = 0;
 
-        $addObj = function(string $content) use (&$objects, &$objCount): int {
+        $addObj = function (string $content) use (&$objects, &$objCount): int {
             $objCount++;
             $objects[$objCount] = $content;
             return $objCount;
@@ -360,8 +368,8 @@ class CourseDetailsController extends AbstractController
         $fontId = $addObj("<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>");
 
         // Build page content streams
-        $pageIds     = [];
-        $contentIds  = [];
+        $pageIds    = [];
+        $contentIds = [];
 
         foreach ($pages as $pageLines) {
             $stream  = "BT\n";
@@ -404,18 +412,23 @@ class CourseDetailsController extends AbstractController
                 $textW = strlen($lineData['text']) * $fontSize * 0.5;
                 $x     = $margin;
                 if ($align === 'center') $x = $margin + max(0.0, ($usableW - $textW) / 2.0);
-                elseif ($align === 'right')  $x = $margin + max(0.0, $usableW - $textW);
+                elseif ($align === 'right') $x = $margin + max(0.0, $usableW - $textW);
 
-                $stream .= sprintf("BT /F1 %.1f Tf %.2f %.2f Td (%s) Tj ET\n",
-                    $fontSize, $x, $y, $text);
+                $stream .= sprintf(
+                    "BT /F1 %.1f Tf %.2f %.2f Td (%s) Tj ET\n",
+                    $fontSize,
+                    $x,
+                    $y,
+                    $text
+                );
                 $y -= $leading;
             }
 
-            $streamLen = strlen($stream);
-            $contentId = $addObj("<< /Length {$streamLen} >>\nstream\n{$stream}\nendstream");
+            $streamLen    = strlen($stream);
+            $contentId    = $addObj("<< /Length {$streamLen} >>\nstream\n{$stream}\nendstream");
             $contentIds[] = $contentId;
 
-            $pageId = $addObj(''); // placeholder, filled after we know page tree id
+            $pageId    = $addObj(''); // placeholder, filled after we know page tree id
             $pageIds[] = $pageId;
         }
 
@@ -524,7 +537,8 @@ class CourseDetailsController extends AbstractController
 
         $response = new Response($data);
         $response->headers->set('Content-Type', $mime);
-        $response->headers->set('Content-Disposition',
+        $response->headers->set(
+            'Content-Disposition',
             $response->headers->makeDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $row['originalname'])
         );
         return $response;
@@ -549,7 +563,8 @@ class CourseDetailsController extends AbstractController
 
         $response = new Response($data);
         $response->headers->set('Content-Type', $mime);
-        $response->headers->set('Content-Disposition',
+        $response->headers->set(
+            'Content-Disposition',
             $response->headers->makeDisposition(ResponseHeaderBag::DISPOSITION_INLINE, $row['originalname'])
         );
         return $response;
@@ -559,7 +574,7 @@ class CourseDetailsController extends AbstractController
     #[Route('/save-to-library', name: '_save_library', methods: ['POST'])]
     public function saveToLibrary(int $id): JsonResponse
     {
-        $userId = $this->getMockUserId();
+        $userId = $this->getCurrentUserId();
         if (!$userId) return $this->json(['message' => 'Not authenticated'], 401);
 
         $exists = $this->db->fetchOne(
@@ -584,7 +599,7 @@ class CourseDetailsController extends AbstractController
     #[Route('/report', name: '_report', methods: ['POST'])]
     public function reportCourse(int $id, Request $req): JsonResponse
     {
-        $reporterId = $this->getMockUserId();
+        $reporterId = $this->getCurrentUserId();
         if (!$reporterId) {
             return $this->json(['message' => 'Not authenticated'], 401);
         }
