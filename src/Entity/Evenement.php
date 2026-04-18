@@ -40,6 +40,9 @@ class Evenement
     #[ORM\Column(name: 'rappel_actif', nullable: true)]
     private ?bool $rappelActif = null;
 
+    #[ORM\Column(name: 'reminder_minutes', options: ['default' => 15])]
+    private int $reminderMinutes = 15;
+
     #[ORM\Column(name: 'type_evenement', length: 50, nullable: true)]
     private ?string $typeEvenement = null;
 
@@ -174,6 +177,18 @@ class Evenement
     public function setRappelActif(?bool $rappelActif): static
     {
         $this->rappelActif = $rappelActif;
+
+        return $this;
+    }
+
+    public function getReminderMinutes(): int
+    {
+        return $this->reminderMinutes;
+    }
+
+    public function setReminderMinutes(int $reminderMinutes): static
+    {
+        $this->reminderMinutes = max(1, $reminderMinutes);
 
         return $this;
     }

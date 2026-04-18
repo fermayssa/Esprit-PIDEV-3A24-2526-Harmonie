@@ -13,7 +13,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
     name: 'app:events:send-reminders',
-    description: 'Envoie les rappels Telegram 15 minutes avant les événements.',
+    description: 'Envoie les rappels Telegram selon le délai choisi par événement.',
 )]
 final class SendEventRemindersCommand extends Command
 {
@@ -33,11 +33,15 @@ final class SendEventRemindersCommand extends Command
         $tz = new \DateTimeZone('Africa/Tunis');
         $now = new \DateTimeImmutable('now', $tz);
 
-        $events = $this->evenementRepository->findEventsStartingIn15MinutesNotReminded($now);
+        $events = $this->evenementRepository->findUpcomingEventsNotReminded($now, 180);
 
         $sent = 0;
         $skipped = 0;
         foreach ($events as $event) {
+            if (!$this->isReminderDueNow($event, $now)) {
+                continue;
+            }
+
             $owner = $event->getProprietaire();
             $chatId = $owner?->getTelegramChatId();
 
@@ -49,7 +53,7 @@ final class SendEventRemindersCommand extends Command
                 continue;
             }
 
-            if ($this->eventReminderService->sendRappel15min($event, (string) $chatId)) {
+            if ($this->eventReminderService->sendReminder($event, (string) $chatId)) {
                 ++$sent;
             }
         }
@@ -57,5 +61,32 @@ final class SendEventRemindersCommand extends Command
         $io->success(sprintf('Rappels traités. Envoyés=%d, ignorés=%d, trouvés=%d', $sent, $skipped, count($events)));
 
         return Command::SUCCESS;
+    }
+
+    private function isReminderDueNow(\App\Entity\Evenement $event, \DateTimeImmutable $now): bool
+    {
+        $start = $event->getDateDebut();
+        if (!$start instanceof \DateTimeInterface) {
+            return false;
+        }
+
+        $minutes = max(1, (int) $event->getReminderMinutes());
+
+        // Les DATETIME MySQL sont stockés sans timezone.
+        // On les interprète explicitement dans le fuseau métier Tunisie.
+        $tz = new \DateTimeZone('Africa/Tunis');
+        $startAt = \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $start->format('Y-m-d H:i:s'), $tz);
+        if (!$startAt instanceof \DateTimeImmutable) {
+            return false;
+        }
+
+        $triggerAt = $startAt->modify('-'.$minutes.' minutes')->setTime(
+            (int) $startAt->modify('-'.$minutes.' minutes')->format('H'),
+            (int) $startAt->modify('-'.$minutes.' minutes')->format('i'),
+            0,
+        );
+        $triggerEnd = $triggerAt->modify('+1 minute');
+
+        return $now >= $triggerAt && $now < $triggerEnd;
     }
 }

@@ -53,6 +53,8 @@ final class EventApiController extends AbstractController
             $event->setLieuType($data['lieuType'] ?? 'en_ligne');
             $event->setLieuAdresse($data['lieuAdresse'] ?? null);
             $event->setPriorite($data['priority'] ?? 1);
+            $event->setRappelActif((bool) ($data['rappelActif'] ?? true));
+            $event->setReminderMinutes(max(1, (int) ($data['reminderMinutes'] ?? 15)));
             $event->setReminderSent(false);
 
             $currentUser = $this->getUser();
@@ -113,6 +115,12 @@ final class EventApiController extends AbstractController
             }
             if (isset($data['endTime'])) {
                 $event->setDateFin(new \DateTime($data['endTime']));
+            }
+            if (array_key_exists('rappelActif', $data)) {
+                $event->setRappelActif((bool) $data['rappelActif']);
+            }
+            if (array_key_exists('reminderMinutes', $data)) {
+                $event->setReminderMinutes(max(1, (int) $data['reminderMinutes']));
             }
 
             // Événement modifié => rappel à rejouer.

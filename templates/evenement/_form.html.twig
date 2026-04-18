@@ -36,6 +36,13 @@
         {{ form_errors(form.rappelActif) }}
     </div>
 
+    <div class="mb-3">
+        {{ form_label(form.reminderMinutes) }}
+        {{ form_widget(form.reminderMinutes) }}
+        {{ form_help(form.reminderMinutes) }}
+        {{ form_errors(form.reminderMinutes) }}
+    </div>
+
     <!-- Conteneur pour les boutons Présentiel/En ligne : apparaît si Cours ou Réunion -->
     <div class="js-lieu-buttons-container" style="display: none;">
         <div class="mb-3">

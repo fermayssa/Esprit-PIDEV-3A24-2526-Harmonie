@@ -175,4 +175,32 @@ class EvenementRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    /**
+     * Récupère les événements à venir (fenêtre proche) potentiellement éligibles
+     * à un rappel personnalisé selon reminder_minutes.
+     *
+     * @return list<Evenement>
+     */
+    public function findUpcomingEventsNotReminded(\DateTimeImmutable $nowInTunis, int $maxMinutesAhead = 180): array
+    {
+        $start = $nowInTunis;
+        $end = $nowInTunis->modify('+'.$maxMinutesAhead.' minutes');
+
+        return $this->createQueryBuilder('e')
+            ->leftJoin('e.proprietaire', 'p')->addSelect('p')
+            ->andWhere('e.dateDebut IS NOT NULL')
+            ->andWhere('e.dateDebut >= :start')
+            ->andWhere('e.dateDebut <= :end')
+            ->andWhere('e.rappelActif = :rappelActif OR e.rappelActif IS NULL')
+            ->andWhere('e.reminderSent = :sent')
+            ->setParameter('start', $start)
+            ->setParameter('end', $end)
+            ->setParameter('rappelActif', true)
+            ->setParameter('sent', false)
+            ->orderBy('e.dateDebut', 'ASC')
+            ->addOrderBy('e.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 }

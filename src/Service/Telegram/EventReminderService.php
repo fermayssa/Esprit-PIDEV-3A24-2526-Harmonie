@@ -20,10 +20,10 @@ final class EventReminderService
     }
 
     /**
-     * Envoie un rappel Telegram 15 min avant l'événement.
+     * Envoie un rappel Telegram selon le délai configuré sur l'événement.
      * Si l'envoi réussit, l'événement est marqué reminder_sent=true.
      */
-    public function sendRappel15min(Evenement $event, string $chatId): bool
+    public function sendReminder(Evenement $event, string $chatId): bool
     {
         $chatId = trim($chatId);
         if ('' === $chatId || '' === trim($this->botToken)) {
@@ -74,9 +74,10 @@ final class EventReminderService
         $time = $event->getDateDebut()?->format('H:i') ?? '--:--';
         $location = $this->escapeMarkdown((string) ($event->getLieu() ?? 'Non précisé'));
         $description = trim((string) ($event->getDescription() ?? ''));
+        $minutes = max(1, (int) $event->getReminderMinutes());
 
         $message = "⏰ *Rappel Harmonie*\n"
-            ."Ton événement commence dans *15 minutes* !\n\n"
+            ."Ton événement commence dans *{$minutes} minutes* !\n\n"
             ."📌 *{$title}*\n"
             ."🕐 Heure : *{$time}*\n"
             ."📍 Lieu : *{$location}*";

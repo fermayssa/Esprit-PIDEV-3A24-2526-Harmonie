@@ -82,11 +82,178 @@
     }
 
     function parseTime(text) {
-        const m = normalizeText(text).match(/(\d{1,2})\s*h(?:\s*(\d{2}))?/);
+        const msg = normalizeText(text);
+        const colon = msg.match(/\b(\d{1,2})[:h](\d{2})\b/);
+        if (colon) {
+            const h = Math.min(23, Math.max(0, Number(colon[1])));
+            const m = Math.min(59, Math.max(0, Number(colon[2])));
+            return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:00`;
+        }
+        const m = msg.match(/\b(\d{1,2})\s*h(?:\s*(\d{2}))?\b/);
         if (!m) return null;
-        const hours = String(m[1]).padStart(2, '0');
-        const minutes = String(m[2] || '00').padStart(2, '0');
+        const hours = String(Math.min(23, Math.max(0, Number(m[1])))).padStart(2, '0');
+        const minutes = String(Math.min(59, Math.max(0, Number(m[2] || '00')))).padStart(2, '0');
         return `${hours}:${minutes}:00`;
+    }
+
+    function toYmd(dateObj) {
+        const y = dateObj.getFullYear();
+        const m = String(dateObj.getMonth() + 1).padStart(2, '0');
+        const d = String(dateObj.getDate()).padStart(2, '0');
+        return `${y}-${m}-${d}`;
+    }
+
+    function parseNaturalDateScope(text) {
+        const msg = normalizeText(text);
+        const now = new Date();
+
+        if (msg.includes('demain')) {
+            const d = new Date(now.getTime() + 86400000);
+            const ymd = toYmd(d);
+            return { type: 'single', start: ymd, end: ymd, label: 'demain' };
+        }
+        if (msg.includes('aujourd')) {
+            const ymd = toYmd(now);
+            return { type: 'single', start: ymd, end: ymd, label: 'aujourd’hui' };
+        }
+        if (msg.includes('cette semaine')) {
+            const day = now.getDay() || 7;
+            const monday = new Date(now);
+            monday.setDate(now.getDate() - day + 1);
+            const sunday = new Date(monday);
+            sunday.setDate(monday.getDate() + 6);
+            return { type: 'range', start: toYmd(monday), end: toYmd(sunday), label: 'cette semaine' };
+        }
+        if (msg.includes('ce weekend') || msg.includes('ce week-end')) {
+            const day = now.getDay() || 7;
+            const saturday = new Date(now);
+            saturday.setDate(now.getDate() + (6 - day));
+            const sunday = new Date(saturday);
+            sunday.setDate(saturday.getDate() + 1);
+            return { type: 'range', start: toYmd(saturday), end: toYmd(sunday), label: 'ce weekend' };
+        }
+        if (msg.includes('mois prochain')) {
+            const first = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+            const last = new Date(now.getFullYear(), now.getMonth() + 2, 0);
+            return { type: 'range', start: toYmd(first), end: toYmd(last), label: 'le mois prochain' };
+        }
+
+        const parsedFrench = parseFrenchDate(msg);
+        if (parsedFrench) {
+            return { type: 'single', start: parsedFrench, end: parsedFrench, label: parsedFrench };
+        }
+
+        const slash = msg.match(/\b(\d{1,2})\/(\d{1,2})(?:\/(\d{4}))?\b/);
+        if (slash) {
+            const day = String(slash[1]).padStart(2, '0');
+            const month = String(slash[2]).padStart(2, '0');
+            const year = slash[3] || String(now.getFullYear());
+            const ymd = `${year}-${month}-${day}`;
+            return { type: 'single', start: ymd, end: ymd, label: `${day}/${month}` };
+        }
+
+        const weekdays = { lundi: 1, mardi: 2, mercredi: 3, jeudi: 4, vendredi: 5, samedi: 6, dimanche: 0 };
+        for (const [name, d] of Object.entries(weekdays)) {
+            if (msg.includes(name)) {
+                const dt = getNextDayOfWeek(d);
+                const ymd = toYmd(dt);
+                return { type: 'single', start: ymd, end: ymd, label: name };
+            }
+        }
+
+        return null;
+    }
+
+    function parseUserIntent(message) {
+        const msg = normalizeText(message);
+        const dateScope = parseNaturalDateScope(msg);
+        const time = parseTime(msg);
+
+        let entity = null;
+        if (/(evenement|evenements|reunion|rendez vous|rdv|agenda|calendrier)/.test(msg)) entity = 'event';
+        if (/(tache|taches|todo|kanban|projet)/.test(msg)) entity = 'task';
+
+        let action = null;
+        if (/(supprime|annule|efface|retire)/.test(msg)) action = 'delete';
+        else if (/(deplace|change|modifie|marque|passe|met)/.test(msg)) action = 'update';
+        else if (/(ajoute|cree|creer|programme|j ai|j'ai|nouvel|nouvelle)/.test(msg)) action = 'create';
+        else if (/(qu est ce que|qu'est ce que|montre|cite|combien|quelles|est ce que|est-ce que|liste)/.test(msg)) action = 'read';
+
+        if (!entity && /todo|urgent|priorite|terminee|terminees/.test(msg)) entity = 'task';
+        if (!entity && dateScope) entity = 'event';
+
+        const all = /(tous|toutes|tout)/.test(msg);
+        const doneOnly = /(terminee|terminees|done)/.test(msg);
+        const priority = msg.includes('haute') || msg.includes('urgent') ? 'haute' : (msg.includes('basse') ? 'basse' : null);
+
+        const taskNameMatch = msg.match(/(?:tache|task)\s+(.+?)(?:\s+comme|\s+a\s+|\s+en\s+|$)/i);
+        const eventNameMatch = msg.match(/(?:reunion|rendez vous|rdv|evenement)\s+(?:de\s+)?(.+?)(?:\s+a\s+|\s+du\s+|\s+de\s+|\s+en\s+|$)/i);
+
+        const name = (taskNameMatch && taskNameMatch[1])
+            || (eventNameMatch && eventNameMatch[1])
+            || (msg.match(/supprime\s+la\s+tache\s+(.+)$/i) || [null, null])[1]
+            || (msg.match(/annule\s+la\s+reunion\s+(.+)$/i) || [null, null])[1]
+            || null;
+
+        const updateStatus = /(terminee|done|fini|finie)/.test(msg) ? 'TERMINEE'
+            : (/(en cours|doing)/.test(msg) ? 'EN_COURS' : null);
+
+        const locationMatch = msg.match(/(?:au|a|en)\s+(salle\s+[^,!.]+|bureau[^,!.]*|[^,!.]*conference[^,!.]*)/i);
+
+        return {
+            action,
+            entity,
+            dateScope,
+            time,
+            all,
+            doneOnly,
+            priority,
+            name: name ? name.trim() : null,
+            updateStatus,
+            location: locationMatch ? locationMatch[1].trim() : null,
+            raw: msg,
+        };
+    }
+
+    function findEventsByDate(scope) {
+        if (!scope) return [...state.events];
+        return state.events.filter(e => {
+            const d = (e.startTime || '').substring(0, 10);
+            return d >= scope.start && d <= scope.end;
+        });
+    }
+
+    function findEventsByName(name, scope = null) {
+        const base = scope ? findEventsByDate(scope) : state.events;
+        if (!name) return base;
+        const needle = normalizeText(name);
+        return base.filter(e => normalizeText(e.title || '').includes(needle));
+    }
+
+    function findTasksByStatus(status) {
+        const wanted = status === 'done' ? 'TERMINEE' : (status === 'todo' ? 'A_FAIRE' : 'EN_COURS');
+        return state.tasks.filter(t => (t.statut || (t.completed ? 'TERMINEE' : 'A_FAIRE')) === wanted);
+    }
+
+    function findTasksByName(name) {
+        if (!name) return [...state.tasks];
+        const needle = normalizeText(name);
+        return state.tasks.filter(t => normalizeText(t.title || '').includes(needle));
+    }
+
+    async function deleteEventsByDate(scope) {
+        const list = findEventsByDate(scope);
+        for (const ev of list) {
+            await deleteEventInApi(ev.id);
+        }
+        return list.length;
+    }
+
+    async function updateTaskByName(name, data) {
+        const list = findTasksByName(name);
+        if (!list.length) throw new Error('Aucune tâche trouvée');
+        if (list.length > 1) throw new Error('AMBIGU');
+        return updateTaskInApi(list[0].id, data);
     }
 
     function findTaskByTitle(title) {
@@ -114,6 +281,231 @@
     function requestConfirmation(action) {
         state.pendingAction = action;
         return `⚠️ Voulez-vous vraiment ${action.label} ? Répondez OUI pour confirmer.`;
+    }
+
+    async function handlePendingAction(userMessage) {
+        if (!state.pendingAction) return null;
+
+        const pending = state.pendingAction;
+        const msg = normalizeText(userMessage);
+
+        if (pending.type === 'confirm_delete_events') {
+            if (isNo(msg)) {
+                state.pendingAction = null;
+                return 'ℹ️ Suppression annulée.';
+            }
+            if (!isYes(msg)) {
+                return 'ℹ️ Répondez par OUI ou NON.';
+            }
+            state.pendingAction = null;
+            let count = 0;
+            for (const id of pending.eventIds) {
+                await deleteEventInApi(id);
+                count += 1;
+            }
+            document.dispatchEvent(new CustomEvent('harmonie_data_updated'));
+            return `✅ ${count} événement(s) supprimé(s) !`;
+        }
+
+        if (pending.type === 'confirm_delete_tasks') {
+            if (isNo(msg)) {
+                state.pendingAction = null;
+                return 'ℹ️ Suppression annulée.';
+            }
+            if (!isYes(msg)) {
+                return 'ℹ️ Répondez par OUI ou NON.';
+            }
+            state.pendingAction = null;
+            let count = 0;
+            for (const id of pending.taskIds) {
+                await deleteTaskInApi(id);
+                count += 1;
+            }
+            document.dispatchEvent(new CustomEvent('harmonie_data_updated'));
+            return `✅ ${count} tâche(s) supprimée(s) !`;
+        }
+
+        if (pending.type === 'choose_event') {
+            const n = Number((msg.match(/\d+/) || [])[0] || NaN);
+            if (!Number.isInteger(n) || n < 1 || n > pending.options.length) {
+                return `ℹ️ Donnez un numéro entre 1 et ${pending.options.length}.`;
+            }
+            const selected = pending.options[n - 1];
+            state.pendingAction = null;
+            await updateEventInApi(selected.id, pending.updateData);
+            document.dispatchEvent(new CustomEvent('harmonie_data_updated'));
+            return `✅ Événement mis à jour : ${selected.title}.`;
+        }
+
+        return null;
+    }
+
+    function renderEventList(events) {
+        if (!events.length) return 'Aucun événement trouvé.';
+        return events.map(e => `- ${e.title} (${(e.startTime || '').substring(0, 16).replace('T', ' ')})`).join('\n');
+    }
+
+    function renderTaskList(tasks) {
+        if (!tasks.length) return 'Aucune tâche trouvée.';
+        return tasks.map(t => `- [${t.statut || (t.completed ? 'DONE' : 'TODO')}] ${t.title}`).join('\n');
+    }
+
+    async function handleSmartIntent(userMessage) {
+        const intent = parseUserIntent(userMessage);
+        if (!intent.action || !intent.entity) return { handled: false };
+
+        await refreshData();
+
+        // ÉVÉNEMENTS
+        if (intent.entity === 'event') {
+            if (intent.action === 'read') {
+                let events = intent.name ? findEventsByName(intent.name, intent.dateScope) : findEventsByDate(intent.dateScope);
+                if (/reunion/.test(intent.raw)) {
+                    events = events.filter(e => normalizeText(e.title || '').includes('reunion'));
+                }
+                if (/est ce que|est-ce que/.test(intent.raw)) {
+                    if (!events.length) return { handled: true, message: '❌ Non, aucun événement correspondant trouvé.' };
+                    return { handled: true, message: `✅ Oui, voici ce que j'ai trouvé :\n${renderEventList(events)}` };
+                }
+                if (!events.length) {
+                    const label = intent.dateScope?.label || 'la période demandée';
+                    return { handled: true, message: `ℹ️ Aucun événement trouvé pour ${label}.` };
+                }
+                return { handled: true, message: `📅 Voici vos événements :\n${renderEventList(events)}` };
+            }
+
+            if (intent.action === 'create') {
+                const date = intent.dateScope?.start || toYmd(new Date());
+                const time = intent.time || '09:00:00';
+                const title = intent.name || extractEventTitle(userMessage);
+                const startTime = `${date} ${time}`;
+                const endHour = String((Number(time.substring(0, 2)) + 1) % 24).padStart(2, '0');
+                const endTime = `${date} ${endHour}:${time.substring(3, 5)}:00`;
+                await createEventInApi({
+                    title,
+                    startTime,
+                    endTime,
+                    location: intent.location || extractLocation(userMessage) || 'Non précisé'
+                });
+                document.dispatchEvent(new CustomEvent('harmonie_data_updated'));
+                return { handled: true, message: `✅ ${title} créé pour ${date} à ${time.substring(0, 5)} !` };
+            }
+
+            if (intent.action === 'update') {
+                const candidates = intent.name
+                    ? findEventsByName(intent.name, intent.dateScope)
+                    : findEventsByDate(intent.dateScope);
+                if (!candidates.length) {
+                    const label = intent.dateScope?.label || 'cette recherche';
+                    return { handled: true, message: `ℹ️ Aucun événement trouvé pour ${label}.` };
+                }
+                const updateData = {};
+                if (intent.time) {
+                    const date = (candidates[0].startTime || '').substring(0, 10) || (intent.dateScope?.start || toYmd(new Date()));
+                    const endHour = String((Number(intent.time.substring(0, 2)) + 1) % 24).padStart(2, '0');
+                    updateData.startTime = `${date} ${intent.time}`;
+                    updateData.endTime = `${date} ${endHour}:${intent.time.substring(3, 5)}:00`;
+                }
+                if (intent.location) updateData.location = intent.location;
+
+                if (candidates.length > 1) {
+                    state.pendingAction = { type: 'choose_event', options: candidates.slice(0, 5), updateData };
+                    const options = candidates.slice(0, 5).map((e, i) => `${i + 1}. ${e.title} (${(e.startTime || '').substring(0, 16).replace('T', ' ')})`).join('\n');
+                    return { handled: true, message: `ℹ️ J'ai trouvé ${candidates.length} événements. Lequel voulez-vous modifier ?\n${options}` };
+                }
+
+                await updateEventInApi(candidates[0].id, updateData);
+                document.dispatchEvent(new CustomEvent('harmonie_data_updated'));
+                return { handled: true, message: `✅ Événement mis à jour : ${candidates[0].title}.` };
+            }
+
+            if (intent.action === 'delete') {
+                const targets = intent.name
+                    ? findEventsByName(intent.name, intent.dateScope)
+                    : findEventsByDate(intent.dateScope);
+                if (!targets.length) {
+                    const label = intent.dateScope?.label || 'la période demandée';
+                    return { handled: true, message: `ℹ️ Aucun événement trouvé pour ${label}.` };
+                }
+                if (intent.all || targets.length > 1) {
+                    state.pendingAction = { type: 'confirm_delete_events', eventIds: targets.map(e => e.id) };
+                    const list = targets.map(e => `- ${e.title} (${(e.startTime || '').substring(11, 16) || '--:--'})`).join('\n');
+                    return { handled: true, message: `⚠️ J'ai trouvé ${targets.length} événement(s) :\n${list}\nConfirmer la suppression ? (OUI/NON)` };
+                }
+                await deleteEventInApi(targets[0].id);
+                document.dispatchEvent(new CustomEvent('harmonie_data_updated'));
+                return { handled: true, message: `✅ Événement supprimé : ${targets[0].title}.` };
+            }
+        }
+
+        // TÂCHES
+        if (intent.entity === 'task') {
+            if (intent.action === 'read') {
+                if (/retard/.test(intent.raw)) {
+                    const today = toYmd(new Date());
+                    const late = state.tasks.filter(t => {
+                        const st = t.statut || (t.completed ? 'TERMINEE' : 'A_FAIRE');
+                        return st !== 'TERMINEE' && t.dueDate && t.dueDate < today;
+                    });
+                    if (!late.length) return { handled: true, message: '✅ Vous n\'avez aucune tâche en retard.' };
+                    return { handled: true, message: `⚠️ Vous avez ${late.length} tâche(s) en retard :\n${renderTaskList(late)}` };
+                }
+                if (/urgent|haute/.test(intent.raw)) {
+                    const urgent = state.tasks.filter(t => (t.priority || '').toLowerCase() === 'haute');
+                    return { handled: true, message: urgent.length ? `🔥 Tâches urgentes :\n${renderTaskList(urgent)}` : 'ℹ️ Aucune tâche urgente.' };
+                }
+                if (/todo|a faire/.test(intent.raw)) {
+                    const todo = findTasksByStatus('todo');
+                    return { handled: true, message: todo.length ? `📋 Vos tâches TODO :\n${renderTaskList(todo)}` : 'ℹ️ Aucune tâche TODO.' };
+                }
+                return { handled: true, message: state.tasks.length ? `📌 Vos tâches :\n${renderTaskList(state.tasks)}` : 'ℹ️ Aucune tâche trouvée.' };
+            }
+
+            if (intent.action === 'create') {
+                const title = intent.name || extractTaskTitle(userMessage);
+                const due = intent.dateScope?.start || extractDueDate(userMessage);
+                const created = await createTaskInApi({
+                    title,
+                    priority: intent.priority || extractPriority(userMessage),
+                    dueDate: due,
+                    statut: 'A_FAIRE'
+                });
+                document.dispatchEvent(new CustomEvent('harmonie_data_updated'));
+                return { handled: true, message: `✅ Tâche créée : ${created.title} (échéance ${due}).` };
+            }
+
+            if (intent.action === 'update') {
+                if (!intent.name) return { handled: true, message: 'ℹ️ Donnez le nom de la tâche à modifier.' };
+                const list = findTasksByName(intent.name);
+                if (!list.length) return { handled: true, message: `ℹ️ Aucune tâche trouvée pour "${intent.name}".` };
+                if (list.length > 1) {
+                    return { handled: true, message: `ℹ️ J'ai trouvé plusieurs tâches :\n${renderTaskList(list.slice(0, 5))}\nPrécisez le nom exact.` };
+                }
+                const data = {};
+                if (intent.updateStatus) data.statut = intent.updateStatus;
+                if (intent.priority) data.priority = intent.priority;
+                await updateTaskInApi(list[0].id, data);
+                document.dispatchEvent(new CustomEvent('harmonie_data_updated'));
+                return { handled: true, message: `✅ Tâche mise à jour : ${list[0].title}.` };
+            }
+
+            if (intent.action === 'delete') {
+                if (intent.doneOnly || /taches? terminees|tasks? done/.test(intent.raw)) {
+                    const done = findTasksByStatus('done');
+                    if (!done.length) return { handled: true, message: 'ℹ️ Aucune tâche terminée à supprimer.' };
+                    state.pendingAction = { type: 'confirm_delete_tasks', taskIds: done.map(t => t.id) };
+                    return { handled: true, message: `⚠️ Supprimer ${done.length} tâche(s) terminée(s) ? (OUI/NON)` };
+                }
+                const list = findTasksByName(intent.name || '');
+                if (!list.length) return { handled: true, message: `ℹ️ Aucune tâche trouvée${intent.name ? ` pour "${intent.name}"` : ''}.` };
+                if (list.length > 1) return { handled: true, message: `ℹ️ Plusieurs tâches trouvées. Précisez le nom exact.` };
+                await deleteTaskInApi(list[0].id);
+                document.dispatchEvent(new CustomEvent('harmonie_data_updated'));
+                return { handled: true, message: `✅ Tâche supprimée : ${list[0].title}.` };
+            }
+        }
+
+        return { handled: false };
     }
 
     function injectStyles() {
@@ -577,6 +969,20 @@
 
     async function processUserMessage(userMessage, input, sendBtn) {
         try {
+            const pendingReply = await handlePendingAction(userMessage);
+            if (pendingReply) {
+                removeTypingIndicator();
+                addMessage(pendingReply, 'bot', false);
+                return;
+            }
+
+            const smart = await handleSmartIntent(userMessage);
+            if (smart.handled) {
+                removeTypingIndicator();
+                addMessage(smart.message, 'bot', false);
+                return;
+            }
+
             await refreshData();
             const response = await callGeminiAPI(userMessage);
             removeTypingIndicator();

@@ -57,6 +57,11 @@ final class ChatApiController extends AbstractController
 
         $systemPrompt = "Tu es Harmonie Assistant. Réponds toujours en français.\n"
             ."Formate tes réponses de manière lisible et structurée avec du Markdown.\n"
+            ."RÈGLE CRITIQUE: Ne demande JAMAIS l'ID technique à l'utilisateur.\n"
+            ."Pour modifier/supprimer, retrouve toujours les éléments par nom, date, heure, lieu, statut, priorité, ou texte proche.\n"
+            ."Comprends les dates en langage naturel: aujourd'hui, demain, vendredi, 19 avril, cette semaine, weekend, mois prochain.\n"
+            ."En cas de suppression multiple, demande confirmation explicite OUI/NON avec la liste des éléments détectés.\n"
+            ."En cas d'ambiguïté, pose UNE seule question de clarification avec options numérotées.\n"
             ."Pour les événements, affiche-les comme des cartes ou des lignes formatées ainsi :\n"
             ."📅 **[Date]**\n🕐 <span style=\"color:#667eea;font-weight:bold;\">[Heure]</span>\n📌 **[Titre]**\n"
             ."Séparé par une ligne.\n"
@@ -338,6 +343,8 @@ final class ChatApiController extends AbstractController
                 $event->setTitre((string) ($data['title'] ?? 'Nouvel événement'));
                 $event->setDescription((string) ($data['description'] ?? null));
                 $event->setLieu((string) ($data['location'] ?? null));
+                $event->setRappelActif((bool) ($data['rappelActif'] ?? true));
+                $event->setReminderMinutes(max(1, (int) ($data['reminderMinutes'] ?? 15)));
                 $event->setReminderSent(false);
                 if (!empty($data['startTime'])) $event->setDateDebut(new \DateTime((string) $data['startTime']));
                 if (!empty($data['endTime'])) $event->setDateFin(new \DateTime((string) $data['endTime']));
@@ -364,6 +371,8 @@ final class ChatApiController extends AbstractController
                 if (isset($data['location'])) $event->setLieu((string) $data['location']);
                 if (!empty($data['startTime'])) $event->setDateDebut(new \DateTime((string) $data['startTime']));
                 if (!empty($data['endTime'])) $event->setDateFin(new \DateTime((string) $data['endTime']));
+                if (array_key_exists('rappelActif', $data)) $event->setRappelActif((bool) $data['rappelActif']);
+                if (array_key_exists('reminderMinutes', $data)) $event->setReminderMinutes(max(1, (int) $data['reminderMinutes']));
                 $event->setReminderSent(false);
                 $this->em->flush();
                 $this->telegramNotifier->notifyEventUpdated($event, true);

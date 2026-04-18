@@ -64,6 +64,20 @@ class EvenementType extends AbstractType
                 'required' => false,
                 'help' => 'Décochez si vous ne souhaitez pas recevoir de rappel pour cet événement.',
             ])
+            ->add('reminderMinutes', ChoiceType::class, [
+                'label' => 'Rappel avant (minutes)',
+                'required' => true,
+                'choices' => [
+                    '5 minutes' => 5,
+                    '10 minutes' => 10,
+                    '15 minutes' => 15,
+                    '30 minutes' => 30,
+                    '45 minutes' => 45,
+                    '60 minutes' => 60,
+                ],
+                'attr' => ['class' => 'form-control'],
+                'help' => 'Choisissez combien de minutes avant le début envoyer le rappel.',
+            ])
             ->add('lieuType', ChoiceType::class, [
                 'label' => 'Mode',
                 'required' => true,
