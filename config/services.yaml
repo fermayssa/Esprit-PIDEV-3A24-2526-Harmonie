@@ -59,3 +59,12 @@ services:
             $groqSttUrl:    '%env(GROQ_STT_URL)%'
             $groqChatModel: '%env(GROQ_CHAT_MODEL)%'
             $groqSttModel:  '%env(GROQ_STT_MODEL)%'
+# ----------------------résumé -------------------------------------------
+    App\Service\SummaryService:
+        arguments:
+            $apiKey: '%env(GROQ_API_KEY)%'
+
+    # ----------------------sentiment -------------------------------------------
+    App\Service\SentimentService:
+        arguments:
+            $apiKey: '%env(GROQ_API_KEY)%'
