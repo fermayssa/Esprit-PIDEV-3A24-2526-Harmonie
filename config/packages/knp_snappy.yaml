@@ -1,0 +1,32 @@
+# config/packages/knp_snappy.yaml
+# ═══════════════════════════════════════════════════════════════════
+# KnpSnappyBundle — Configuration PDF
+# ═══════════════════════════════════════════════════════════════════
+#
+# CORRECTIONS APPORTÉES :
+#
+#   1. Suppression de l'option "lowquality" des options globales
+#      → Elle était ici ET dans le contrôleur → doublon inutile
+#      → Sa suppression améliore la qualité du PDF final
+#
+#   2. Ajout de "enable-local-file-access: true" en option globale
+#      → Nécessaire pour que wkhtmltopdf puisse accéder aux ressources
+#        CSS/images locales dans le template Twig (sinon CSS ignoré)
+#
+#   3. image.enabled gardé à false
+#      → Évite l'erreur "WKHTMLTOIMAGE_PATH never used"
+#
+# Le chemin du binaire est défini dans .env (variable WKHTMLTOPDF_PATH)
+# ═══════════════════════════════════════════════════════════════════
+
+knp_snappy:
+    pdf:
+        enabled: true
+        binary:  '%env(WKHTMLTOPDF_PATH)%'
+        options:
+            encoding:                 'UTF-8'
+            no-outline:               true
+            enable-local-file-access: true
+            # 'lowquality' RETIRÉ → meilleur rendu pour un document officiel
+    image:
+        enabled: false
