@@ -5,6 +5,7 @@ namespace App\Controller\LibraryControllers;
 use App\Service\LibraryServices\SuggestionsService;
 use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
 use Knp\Snappy\Pdf;
+use PhpOffice\PhpWord\IOFactory as WordIOFactory;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,6 +18,31 @@ use Doctrine\DBAL\ParameterType;
 #[Route('/courses/{id}', name: 'app_courses_detail', requirements: ['id' => '\d+'])]
 class CourseDetailsController extends AbstractController
 {
+    // ── Allowed upload MIME types + extensions ────────────────────────────────
+    private const ALLOWED_MIME_TYPES = [
+        'application/pdf',
+        'application/msword',                                                       // .doc
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',  // .docx
+        'application/vnd.ms-powerpoint',                                            // .ppt
+        'application/vnd.openxmlformats-officedocument.presentationml.presentation',// .pptx
+        'application/vnd.ms-excel',                                                 // .xls
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',        // .xlsx
+        'text/plain',
+        'text/markdown',
+        'application/json',
+        'image/jpeg',
+        'image/png',
+        'image/gif',
+        'image/webp',
+        'image/svg+xml',
+    ];
+
+    private const ALLOWED_EXTENSIONS = [
+        'pdf', 'doc', 'docx', 'ppt', 'pptx', 'xls', 'xlsx',
+        'txt', 'md', 'rtfx',
+        'jpg', 'jpeg', 'png', 'gif', 'webp', 'svg',
+    ];
+
     public function __construct(
         private Connection         $db,
         private SuggestionsService $suggestionsService,
@@ -26,14 +52,17 @@ class CourseDetailsController extends AbstractController
     private function getCurrentUserId(): ?int
     {
         $user = $this->getUser();
-
-        if (!$user || !method_exists($user, 'getId')) {
-            return null;
-        }
-
+        if (!$user || !method_exists($user, 'getId')) return null;
         $userId = $user->getId();
-
         return $userId !== null ? (int) $userId : null;
+    }
+
+    private function isAllowedFile(\Symfony\Component\HttpFoundation\File\UploadedFile $file): bool
+    {
+        $ext  = strtolower($file->getClientOriginalExtension());
+        $mime = strtolower($file->getMimeType() ?? '');
+        return in_array($ext, self::ALLOWED_EXTENSIONS, true)
+            || in_array($mime, self::ALLOWED_MIME_TYPES, true);
     }
 
     // ── MAIN PAGE ──────────────────────────────────────────────────────────────
@@ -76,8 +105,6 @@ class CourseDetailsController extends AbstractController
             'SELECT id, name FROM subject ORDER BY name'
         );
 
-        // Read origin from query string so the back button knows where to return.
-        // Only allow known values to avoid open-redirect issues.
         $origin = in_array($req->query->get('origin'), ['library', 'courses'], true)
             ? $req->query->get('origin')
             : 'courses';
@@ -98,7 +125,6 @@ class CourseDetailsController extends AbstractController
     {
         $title = trim((string) $req->request->get('title', ''));
         if ($title === '') return $this->json(['message' => 'Title required'], 400);
-
         $this->db->executeStatement('UPDATE courses SET title = ? WHERE id = ?', [$title, $id]);
         return $this->json(['ok' => true]);
     }
@@ -126,7 +152,6 @@ class CourseDetailsController extends AbstractController
     #[Route('/publish', name: '_publish', methods: ['POST'])]
     public function publish(int $id, Request $req): JsonResponse
     {
-        // Prevent owners from republishing a course that was locked by an admin.
         $locked = (bool) $this->db->fetchOne('SELECT admin_locked FROM courses WHERE id = ?', [$id]);
         if ($locked) {
             return $this->json([
@@ -147,8 +172,15 @@ class CourseDetailsController extends AbstractController
         if (!is_array($files)) $files = [$files];
 
         $uploaded = [];
+        $rejected = [];
+
         foreach ($files as $file) {
             if (!$file) continue;
+
+            if (!$this->isAllowedFile($file)) {
+                $rejected[] = $file->getClientOriginalName();
+                continue;
+            }
 
             $bytes = file_get_contents($file->getPathname());
             if ($bytes === false) {
@@ -156,11 +188,12 @@ class CourseDetailsController extends AbstractController
             }
 
             $size = mb_strlen($bytes, '8bit');
+            $mime = $file->getMimeType() ?? 'application/octet-stream';
 
             $this->db->executeStatement(
                 'INSERT INTO coursefile (courseid, originalname, mimetype, sizebytes, filedata)
                  VALUES (?, ?, ?, ?, ?)',
-                [$id, $file->getClientOriginalName(), $file->getMimeType(), $size, $bytes],
+                [$id, $file->getClientOriginalName(), $mime, $size, $bytes],
                 [
                     0 => ParameterType::INTEGER,
                     1 => ParameterType::STRING,
@@ -173,23 +206,25 @@ class CourseDetailsController extends AbstractController
             $uploaded[] = [
                 'id'   => (int) $this->db->lastInsertId(),
                 'name' => $file->getClientOriginalName(),
+                'mime' => $mime,
                 'size' => $size,
             ];
         }
 
-        return $this->json(['ok' => true, 'uploaded' => $uploaded]);
+        return $this->json([
+            'ok'       => true,
+            'uploaded' => $uploaded,
+            'rejected' => $rejected,
+        ]);
     }
 
     // ── CREATE NOTE ───────────────────────────────────────────────────────────
-    // Creates a new empty note stored as our JSON rich-text format (.rtfx)
     #[Route('/note', name: '_note', methods: ['POST'])]
     public function createNote(int $id, Request $req): JsonResponse
     {
         $name = trim((string) $req->request->get('name', 'note')) ?: 'note';
-        // Always store as .rtfx — our web rich-text JSON format
         $name = preg_replace('/\.(txt|rtfx|md)$/i', '', $name) . '.rtfx';
 
-        // Bootstrap an empty rich-text JSON document
         $emptyDoc = json_encode(['paragraphs' => [['text' => '', 'align' => 'left', 'font' => 'Inter', 'size' => 14]]]);
         $size     = mb_strlen($emptyDoc, '8bit');
 
@@ -211,9 +246,7 @@ class CourseDetailsController extends AbstractController
     }
 
     // ── LOAD NOTE CONTENT ─────────────────────────────────────────────────────
-    // Returns note content as our JSON rich-text format.
-    // Handles legacy .txt (wraps as plain paragraphs) and binary .rtfx from JavaFX
-    // (extracts printable text as graceful fallback).
+    // Handles: .rtfx (native JSON), .txt, .md, and .docx/.doc (PhpWord)
     #[Route('/note/{fileId}/content', name: '_note_content', requirements: ['fileId' => '\d+'], methods: ['GET'])]
     public function noteContent(int $id, int $fileId): JsonResponse
     {
@@ -224,55 +257,40 @@ class CourseDetailsController extends AbstractController
         if (!$row) return $this->json(['message' => 'Not found'], 404);
 
         $data = is_resource($row['filedata']) ? stream_get_contents($row['filedata']) : $row['filedata'];
-        $name = $row['originalname'] ?? '';
+        $name = strtolower($row['originalname'] ?? '');
 
-        // Already our JSON format — validate and return as-is
-        if (str_ends_with(strtolower($name), '.rtfx') || $row['mimetype'] === 'application/json') {
+        // ── Native JSON format (.rtfx) ─────────────────────────────────────
+        if (str_ends_with($name, '.rtfx') || $row['mimetype'] === 'application/json') {
             $decoded = json_decode($data, true);
-            if (isset($decoded['paragraphs'])) {
-                return $this->json($decoded);
-            }
-            // Binary JavaFX .rtfx — extract printable text as fallback
-            $text = preg_replace('/[^\x20-\x7E\n\r\t]/', '', $data);
-            $text = trim($text);
-        } else {
-            // Plain .txt / .md
-            $text = mb_convert_encoding($data, 'UTF-8', 'auto');
+            if (isset($decoded['paragraphs'])) return $this->json($decoded);
+            $text = trim(preg_replace('/[^\x20-\x7E\n\r\t]/', '', $data));
+            return $this->json(['paragraphs' => $this->textToParagraphs($text)]);
         }
 
-        // Convert plain text to our paragraph JSON structure
-        $lines = explode("\n", str_replace(["\r\n", "\r"], "\n", $text));
-        $paragraphs = array_map(fn($l) => [
-            'text'  => $l,
-            'align' => 'left',
-            'font'  => 'Inter',
-            'size'  => 14,
-        ], $lines);
-
-        if (empty($paragraphs)) {
-            $paragraphs = [['text' => '', 'align' => 'left', 'font' => 'Inter', 'size' => 14]];
+        // ── Word documents (.docx / .doc) ──────────────────────────────────
+        if (str_ends_with($name, '.docx') || str_ends_with($name, '.doc')) {
+            return $this->json(['paragraphs' => $this->wordToParagraphs($data, $name)]);
         }
 
-        return $this->json(['paragraphs' => $paragraphs]);
+        // ── Plain text / markdown ──────────────────────────────────────────
+        $text = mb_convert_encoding($data, 'UTF-8', 'auto');
+        return $this->json(['paragraphs' => $this->textToParagraphs($text)]);
     }
 
     // ── SAVE NOTE ─────────────────────────────────────────────────────────────
-    // Accepts our JSON rich-text payload and stores it.
     #[Route('/note/{fileId}/save', name: '_note_save', requirements: ['fileId' => '\d+'], methods: ['POST'])]
     public function saveNote(int $id, int $fileId, Request $req): JsonResponse
     {
         $name    = trim((string) $req->request->get('name', '')) ?: null;
         $content = (string) $req->request->get('content', '');
 
-        // Ensure name uses .rtfx extension
+        // Always save as .rtfx regardless of original format
         if ($name !== null) {
-            $name = preg_replace('/\.(txt|rtfx|md)$/i', '', $name) . '.rtfx';
+            $name = preg_replace('/\.(txt|rtfx|md|docx|doc)$/i', '', $name) . '.rtfx';
         }
 
-        // Validate JSON content
         $decoded = json_decode($content, true);
         if (!isset($decoded['paragraphs'])) {
-            // Wrap plain text as paragraph JSON if something went wrong
             $content = json_encode(['paragraphs' => [['text' => $content, 'align' => 'left', 'font' => 'Inter', 'size' => 14]]]);
         }
 
@@ -291,8 +309,7 @@ class CourseDetailsController extends AbstractController
         return $this->json(['ok' => true]);
     }
 
-    // ── EXPORT NOTE AS PDF ────────────────────────────────────────────────────
-    // Uses KnpSnappyBundle to render the note as HTML and convert it to PDF.
+    // ── EXPORT NOTE AS PDF (KnpSnappyBundle) ─────────────────────────────────
     #[Route('/note/{fileId}/export-pdf', name: '_note_export_pdf', requirements: ['fileId' => '\d+'], methods: ['GET'])]
     public function exportNotePdf(int $id, int $fileId): Response
     {
@@ -305,13 +322,12 @@ class CourseDetailsController extends AbstractController
         $data = is_resource($row['filedata']) ? stream_get_contents($row['filedata']) : $row['filedata'];
         $doc  = json_decode($data, true);
 
-        // Fallback: wrap plain text as paragraph structure
         if (!isset($doc['paragraphs'])) {
             $lines = explode("\n", str_replace(["\r\n", "\r"], "\n", $data));
             $doc   = ['paragraphs' => array_map(fn($l) => ['text' => $l, 'align' => 'left', 'font' => 'Inter', 'size' => 14], $lines)];
         }
 
-        $baseName = preg_replace('/\.(rtfx|txt|md)$/i', '', $row['originalname'] ?? 'note');
+        $baseName = preg_replace('/\.(rtfx|txt|md|docx|doc)$/i', '', $row['originalname'] ?? 'note');
 
         $html = $this->renderView('library/note-pdf.html.twig', [
             'title'      => $baseName,
@@ -322,6 +338,76 @@ class CourseDetailsController extends AbstractController
             $this->snappy->getOutputFromHtml($html),
             $baseName . '.pdf'
         );
+    }
+
+    // ── PREVIEW FILE ─────────────────────────────────────────────────────────
+    // Word docs → converted to HTML inline. Everything else served as-is.
+    #[Route('/file/{fileId}/preview', name: '_file_preview', requirements: ['fileId' => '\d+'], methods: ['GET'])]
+    public function previewFile(int $id, int $fileId): Response
+    {
+        $row = $this->db->fetchAssociative(
+            'SELECT originalname, mimetype, filedata FROM coursefile WHERE id = ? AND courseid = ?',
+            [$fileId, $id]
+        );
+        if (!$row) throw $this->createNotFoundException('File not found.');
+
+        $data = is_resource($row['filedata']) ? stream_get_contents($row['filedata']) : $row['filedata'];
+        $name = strtolower($row['originalname'] ?? '');
+        $mime = $row['mimetype'] ?: 'application/octet-stream';
+
+        // Word docs: render as HTML for the preview modal
+        if (str_ends_with($name, '.docx') || str_ends_with($name, '.doc')) {
+            $html = $this->wordToHtml($data, $name);
+            return new Response($html, 200, ['Content-Type' => 'text/html; charset=UTF-8']);
+        }
+
+        if (str_ends_with($name, '.pdf'))  $mime = 'application/pdf';
+        if (str_ends_with($name, '.svg'))  $mime = 'image/svg+xml';
+
+        $response = new Response($data);
+        $response->headers->set('Content-Type', $mime);
+        $response->headers->set(
+            'Content-Disposition',
+            $response->headers->makeDisposition(ResponseHeaderBag::DISPOSITION_INLINE, $row['originalname'])
+        );
+        return $response;
+    }
+
+    // ── DOWNLOAD FILE ─────────────────────────────────────────────────────────
+    #[Route('/file/{fileId}/download', name: '_file_download', requirements: ['fileId' => '\d+'], methods: ['GET'])]
+    public function downloadFile(int $id, int $fileId): Response
+    {
+        $row = $this->db->fetchAssociative(
+            'SELECT originalname, mimetype, filedata FROM coursefile WHERE id = ? AND courseid = ?',
+            [$fileId, $id]
+        );
+        if (!$row) throw $this->createNotFoundException('File not found.');
+
+        $data = is_resource($row['filedata']) ? stream_get_contents($row['filedata']) : $row['filedata'];
+        $name = strtolower($row['originalname'] ?? '');
+        $mime = $row['mimetype'] ?: 'application/octet-stream';
+
+        // Correct MIME for download headers
+        $mimeMap = [
+            '.pdf'  => 'application/pdf',
+            '.docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            '.doc'  => 'application/msword',
+            '.pptx' => 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+            '.ppt'  => 'application/vnd.ms-powerpoint',
+            '.xlsx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            '.xls'  => 'application/vnd.ms-excel',
+        ];
+        foreach ($mimeMap as $ext => $correctMime) {
+            if (str_ends_with($name, $ext)) { $mime = $correctMime; break; }
+        }
+
+        $response = new Response($data);
+        $response->headers->set('Content-Type', $mime);
+        $response->headers->set(
+            'Content-Disposition',
+            $response->headers->makeDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $row['originalname'])
+        );
+        return $response;
     }
 
     // ── RENAME FILE ───────────────────────────────────────────────────────────
@@ -349,58 +435,6 @@ class CourseDetailsController extends AbstractController
         return $this->json(['ok' => true]);
     }
 
-    // ── DOWNLOAD FILE ─────────────────────────────────────────────────────────
-    #[Route('/file/{fileId}/download', name: '_file_download', requirements: ['fileId' => '\d+'], methods: ['GET'])]
-    public function downloadFile(int $id, int $fileId): Response
-    {
-        $row = $this->db->fetchAssociative(
-            'SELECT originalname, mimetype, filedata FROM coursefile WHERE id = ? AND courseid = ?',
-            [$fileId, $id]
-        );
-        if (!$row) throw $this->createNotFoundException('File not found.');
-
-        $data = is_resource($row['filedata']) ? stream_get_contents($row['filedata']) : $row['filedata'];
-
-        $mime = $row['mimetype'] ?: 'application/octet-stream';
-        if (str_ends_with(strtolower($row['originalname']), '.pdf')) {
-            $mime = 'application/pdf';
-        }
-
-        $response = new Response($data);
-        $response->headers->set('Content-Type', $mime);
-        $response->headers->set(
-            'Content-Disposition',
-            $response->headers->makeDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $row['originalname'])
-        );
-        return $response;
-    }
-
-    // ── PREVIEW FILE ─────────────────────────────────────────────────────────
-    #[Route('/file/{fileId}/preview', name: '_file_preview', requirements: ['fileId' => '\d+'], methods: ['GET'])]
-    public function previewFile(int $id, int $fileId): Response
-    {
-        $row = $this->db->fetchAssociative(
-            'SELECT originalname, mimetype, filedata FROM coursefile WHERE id = ? AND courseid = ?',
-            [$fileId, $id]
-        );
-        if (!$row) throw $this->createNotFoundException('File not found.');
-
-        $data = is_resource($row['filedata']) ? stream_get_contents($row['filedata']) : $row['filedata'];
-
-        $mime = $row['mimetype'] ?: 'application/octet-stream';
-        if (str_ends_with(strtolower($row['originalname']), '.pdf')) {
-            $mime = 'application/pdf';
-        }
-
-        $response = new Response($data);
-        $response->headers->set('Content-Type', $mime);
-        $response->headers->set(
-            'Content-Disposition',
-            $response->headers->makeDisposition(ResponseHeaderBag::DISPOSITION_INLINE, $row['originalname'])
-        );
-        return $response;
-    }
-
     // ── SAVE TO LIBRARY (toggle) ──────────────────────────────────────────────
     #[Route('/save-to-library', name: '_save_library', methods: ['POST'])]
     public function saveToLibrary(int $id): JsonResponse
@@ -425,23 +459,17 @@ class CourseDetailsController extends AbstractController
     }
 
     // ── REPORT COURSE ─────────────────────────────────────────────────────────
-    // Inserts a row into course_reports.
-    // A user may not report the same course twice (UNIQUE on reporter_id + course_id).
     #[Route('/report', name: '_report', methods: ['POST'])]
     public function reportCourse(int $id, Request $req): JsonResponse
     {
         $reporterId = $this->getCurrentUserId();
-        if (!$reporterId) {
-            return $this->json(['message' => 'Not authenticated'], 401);
-        }
+        if (!$reporterId) return $this->json(['message' => 'Not authenticated'], 401);
 
-        // Prevent owners from reporting their own course
         $ownerId = $this->db->fetchOne('SELECT userid FROM courses WHERE id = ?', [$id]);
         if ((int) $ownerId === $reporterId) {
             return $this->json(['message' => 'You cannot report your own course.'], 403);
         }
 
-        // Check for duplicate report
         $alreadyReported = $this->db->fetchOne(
             'SELECT 1 FROM course_reports WHERE reporter_id = ? AND course_id = ?',
             [$reporterId, $id]
@@ -453,9 +481,7 @@ class CourseDetailsController extends AbstractController
         $reason  = trim((string) $req->request->get('reason', ''));
         $details = trim((string) $req->request->get('details', ''));
 
-        if ($reason === '') {
-            return $this->json(['message' => 'A reason is required.'], 400);
-        }
+        if ($reason === '') return $this->json(['message' => 'A reason is required.'], 400);
 
         $this->db->executeStatement(
             'INSERT INTO course_reports (course_id, reporter_id, reason, details, status, created_at)
@@ -466,7 +492,7 @@ class CourseDetailsController extends AbstractController
         return $this->json(['ok' => true]);
     }
 
-    // ── SUGGESTIONS — Open Library + YouTube ──────────────────────────────────
+    // ── SUGGESTIONS ───────────────────────────────────────────────────────────
     #[Route('/suggestions', name: '_suggestions', methods: ['GET'])]
     public function suggestions(int $id): JsonResponse
     {
@@ -480,13 +506,132 @@ class CourseDetailsController extends AbstractController
 
         if (!$course) return $this->json(['books' => [], 'videos' => []]);
 
-        $query = !empty($course['subject_name'])
-            ? $course['subject_name']
-            : $course['title'];
+        $query = !empty($course['subject_name']) ? $course['subject_name'] : $course['title'];
 
         return $this->json([
             'books'  => $this->suggestionsService->fetchBooks($query, 10),
             'videos' => $this->suggestionsService->fetchVideos($query, 10),
         ]);
+    }
+
+    // ── PRIVATE HELPERS ───────────────────────────────────────────────────────
+
+    /**
+     * Convert a plain text string to our internal paragraph JSON format.
+     */
+    private function textToParagraphs(string $text): array
+    {
+        $lines = explode("\n", str_replace(["\r\n", "\r"], "\n", $text));
+        $paragraphs = array_map(fn($l) => [
+            'text'  => $l,
+            'align' => 'left',
+            'font'  => 'Inter',
+            'size'  => 14,
+        ], $lines);
+        return $paragraphs ?: [['text' => '', 'align' => 'left', 'font' => 'Inter', 'size' => 14]];
+    }
+
+    /**
+     * Parse a .docx/.doc binary blob and return our internal paragraph format
+     * so it can be opened and edited in the note editor.
+     */
+    private function wordToParagraphs(string $blob, string $filename): array
+    {
+        $paragraphs = [];
+        try {
+            $ext = pathinfo($filename, PATHINFO_EXTENSION);
+            $tmp = tempnam(sys_get_temp_dir(), 'phpdocx_') . '.' . $ext;
+            file_put_contents($tmp, $blob);
+
+            $type   = strtolower($ext) === 'docx' ? 'Word2007' : 'MsDoc';
+            $reader = WordIOFactory::createReader($type);
+            $doc    = $reader->load($tmp);
+            @unlink($tmp);
+
+            foreach ($doc->getSections() as $section) {
+                foreach ($section->getElements() as $element) {
+                    $text  = '';
+                    $align = 'left';
+
+                    if ($element instanceof \PhpOffice\PhpWord\Element\TextRun
+                        || $element instanceof \PhpOffice\PhpWord\Element\Paragraph) {
+                        $pStyle = $element->getParagraphStyle();
+                        if (is_object($pStyle)) {
+                            $a = $pStyle->getAlignment();
+                            if (in_array($a, ['center', 'right', 'justify'], true)) $align = $a;
+                        }
+                        foreach ($element->getElements() as $child) {
+                            if ($child instanceof \PhpOffice\PhpWord\Element\Text) {
+                                $text .= $child->getText();
+                            } elseif ($child instanceof \PhpOffice\PhpWord\Element\TextBreak) {
+                                $text .= "\n";
+                            }
+                        }
+                    } elseif ($element instanceof \PhpOffice\PhpWord\Element\Text) {
+                        $text = $element->getText();
+                    } elseif ($element instanceof \PhpOffice\PhpWord\Element\TextBreak
+                        || $element instanceof \PhpOffice\PhpWord\Element\PageBreak) {
+                        $paragraphs[] = ['text' => '', 'align' => 'left', 'font' => 'Inter', 'size' => 14];
+                        continue;
+                    } else {
+                        continue; // skip tables, images, drawings
+                    }
+
+                    $paragraphs[] = [
+                        'text'  => $text,
+                        'align' => $align,
+                        'font'  => 'Inter',
+                        'size'  => 14,
+                    ];
+                }
+            }
+        } catch (\Throwable) {
+            // PhpWord failed — fall back to raw printable text extraction
+            $paragraphs = $this->textToParagraphs(
+                trim(preg_replace('/[^\x20-\x7E\n\r\t]/', '', $blob))
+            );
+        }
+
+        return $paragraphs ?: [['text' => '', 'align' => 'left', 'font' => 'Inter', 'size' => 14]];
+    }
+
+    /**
+     * Convert a .docx/.doc blob to a self-contained HTML string
+     * for rendering inside the preview modal iframe.
+     */
+    private function wordToHtml(string $blob, string $filename): string
+    {
+        try {
+            $ext    = pathinfo($filename, PATHINFO_EXTENSION);
+            $tmp    = tempnam(sys_get_temp_dir(), 'phpdocx_') . '.' . $ext;
+            file_put_contents($tmp, $blob);
+
+            $type   = strtolower($ext) === 'docx' ? 'Word2007' : 'MsDoc';
+            $reader = WordIOFactory::createReader($type);
+            $doc    = $reader->load($tmp);
+            @unlink($tmp);
+
+            $tmpOut = tempnam(sys_get_temp_dir(), 'phpdocx_out_') . '.html';
+            $writer = WordIOFactory::createWriter($doc, 'HTML');
+            $writer->save($tmpOut);
+
+            $html = file_get_contents($tmpOut);
+            @unlink($tmpOut);
+
+            return '<!DOCTYPE html><html><head><meta charset="UTF-8">
+                <style>
+                    body { font-family: Inter, Arial, sans-serif; font-size: 13px;
+                           line-height: 1.7; color: #111; padding: 24px 32px; margin: 0; }
+                    table { border-collapse: collapse; width: 100%; margin: 12px 0; }
+                    td, th { border: 1px solid #e5e7eb; padding: 6px 10px; }
+                    img { max-width: 100%; height: auto; }
+                    p { margin: 0 0 6px; }
+                </style></head><body>' . $html . '</body></html>';
+
+        } catch (\Throwable) {
+            return '<html><body style="font-family:sans-serif;padding:32px;color:#6b7280;">
+                        <p>Preview not available for this file. Please use the Download button.</p>
+                    </body></html>';
+        }
     }
 }

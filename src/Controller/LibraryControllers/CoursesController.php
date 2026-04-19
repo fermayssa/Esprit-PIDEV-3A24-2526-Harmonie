@@ -13,6 +13,31 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/courses')]
 class CoursesController extends AbstractController
 {
+    // Keep in sync with CourseDetailsController::ALLOWED_*
+    private const ALLOWED_MIME_TYPES = [
+        'application/pdf',
+        'application/msword',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'application/vnd.ms-powerpoint',
+        'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+        'application/vnd.ms-excel',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'text/plain',
+        'text/markdown',
+        'application/json',
+        'image/jpeg',
+        'image/png',
+        'image/gif',
+        'image/webp',
+        'image/svg+xml',
+    ];
+
+    private const ALLOWED_EXTENSIONS = [
+        'pdf', 'doc', 'docx', 'ppt', 'pptx', 'xls', 'xlsx',
+        'txt', 'md', 'rtfx',
+        'jpg', 'jpeg', 'png', 'gif', 'webp', 'svg',
+    ];
+
     public function __construct(
         private readonly Connection             $db,
         private readonly ImageGenerationService $imageGenerationService,
@@ -22,13 +47,19 @@ class CoursesController extends AbstractController
     {
         $user = $this->getUser();
         if (!$user) return 0;
-        // getIdentifier() returns the value of your user identifier field
-        // Since your PK is user_id, fetch it from DB by email/identifier
         $row = $this->db->fetchAssociative(
             'SELECT user_id FROM `user` WHERE user_email = ?',
             [$user->getUserIdentifier()]
         );
         return $row ? (int) $row['user_id'] : 0;
+    }
+
+    private function isAllowedFile(\Symfony\Component\HttpFoundation\File\UploadedFile $file): bool
+    {
+        $ext  = strtolower($file->getClientOriginalExtension());
+        $mime = strtolower($file->getMimeType() ?? '');
+        return in_array($ext, self::ALLOWED_EXTENSIONS, true)
+            || in_array($mime, self::ALLOWED_MIME_TYPES, true);
     }
 
     // ── GET /courses ───────────────────────────────────────────────────────
@@ -37,7 +68,6 @@ class CoursesController extends AbstractController
     {
         $userId = $this->getMockUserId();
 
-        // Courses the user owns
         $ownedRows = $this->db->fetchAllAssociative(
             "SELECT c.id, c.title, s.name AS subject_name, c.cover_image_path, c.is_published
              FROM courses c
@@ -47,7 +77,6 @@ class CoursesController extends AbstractController
             [$userId]
         );
 
-        // Courses the user saved from the library (saved_courses uses user_id / course_id)
         $savedRows = $this->db->fetchAllAssociative(
             "SELECT c.id, c.title, s.name AS subject_name, c.cover_image_path, c.is_published
              FROM saved_courses sc
@@ -58,8 +87,6 @@ class CoursesController extends AbstractController
             [$userId]
         );
 
-        // Build courses list: owned first (isSaved=false), then saved (isSaved=true)
-        // Skip duplicates in case someone saved their own course
         $ownedIds = array_column($ownedRows, 'id');
 
         $courses = array_map(fn($r) => [
@@ -137,27 +164,33 @@ class CoursesController extends AbstractController
 
             if ($bytes) {
                 $dir = 'C:/wamp64/www/covers';
-                if (!is_dir($dir)) {
-                    mkdir($dir, 0777, true);
-                }
+                if (!is_dir($dir)) mkdir($dir, 0777, true);
                 $filename = 'cover_gen_' . time() . '_' . uniqid() . '.png';
                 file_put_contents($dir . '/' . $filename, $bytes);
                 $coverPath = $filename;
             }
         }
 
-        // Insert course with userid
+        // Insert course
         $this->db->executeStatement(
             'INSERT INTO courses (title, subjectid, cover_image_path, userid) VALUES (:title, :subjectId, :cover, :userId)',
             ['title' => $title, 'subjectId' => $subjectId, 'cover' => $coverPath, 'userId' => $userId ?: null]
         );
         $courseId = (int) $this->db->lastInsertId();
 
-        // Insert uploaded files as blobs
-        $files = $request->files->get('files') ?? [];
+        // Insert uploaded files — validate type before storing
+        $files    = $request->files->get('files') ?? [];
         if (!is_array($files)) $files = [$files];
+
+        $rejected = [];
         foreach ($files as $file) {
             if (!$file) continue;
+
+            if (!$this->isAllowedFile($file)) {
+                $rejected[] = $file->getClientOriginalName();
+                continue;
+            }
+
             $data     = file_get_contents($file->getRealPath());
             $mime     = $file->getMimeType() ?? 'application/octet-stream';
             $origName = $file->getClientOriginalName();
@@ -168,7 +201,13 @@ class CoursesController extends AbstractController
             );
         }
 
-        return new JsonResponse(['id' => $courseId, 'title' => $title, 'message' => 'Course created successfully.'], 201);
+        $response = ['id' => $courseId, 'title' => $title, 'message' => 'Course created successfully.'];
+        if ($rejected) {
+            $response['rejected'] = $rejected;
+            $response['warning']  = 'Some files were skipped due to unsupported format: ' . implode(', ', $rejected);
+        }
+
+        return new JsonResponse($response, 201);
     }
 
     // ── POST /courses/{id}/update ──────────────────────────────────────────
@@ -192,7 +231,6 @@ class CoursesController extends AbstractController
             return new JsonResponse(['message' => 'Title is required.'], 422);
         }
 
-        // Resolve or create subject
         $subjectId = null;
         if ($subjectStr !== '') {
             $subject = $this->db->fetchAssociative(
@@ -239,7 +277,6 @@ class CoursesController extends AbstractController
             $coverFile->move('C:/wamp64/www/covers', $filename);
             $coverPath = $filename;
         } elseif ($autoGen) {
-            // Fetch subject name for the prompt
             $subjectName = '';
             if ($course['subjectid']) {
                 $sub = $this->db->fetchAssociative('SELECT name FROM subject WHERE id = :id', ['id' => $course['subjectid']]);
@@ -282,7 +319,6 @@ class CoursesController extends AbstractController
             return new JsonResponse(['message' => 'Course not found or access denied.'], 404);
         }
 
-        // Toggle if no explicit value given
         $publish = $request->request->has('published')
             ? ($request->request->get('published') === '1')
             : !(bool) $course['is_published'];
@@ -304,7 +340,6 @@ class CoursesController extends AbstractController
     {
         $userId = $this->getMockUserId();
 
-        // Ensure the course belongs to the current user
         $course = $this->db->fetchAssociative(
             'SELECT id FROM courses WHERE id = :id AND userid = :userId',
             ['id' => $id, 'userId' => $userId]
@@ -314,7 +349,6 @@ class CoursesController extends AbstractController
             return new JsonResponse(['message' => 'Course not found or access denied.'], 404);
         }
 
-        // saved_courses uses course_id (confirmed from Java source)
         $this->db->executeStatement('DELETE FROM saved_courses WHERE course_id = :id', ['id' => $id]);
         $this->db->executeStatement('DELETE FROM coursefile WHERE courseid = :id',     ['id' => $id]);
         $this->db->executeStatement('DELETE FROM courses WHERE id = :id',              ['id' => $id]);

@@ -547,77 +547,6 @@
             pointer-events: none;
         }
         .suggestions-sub-section { margin-bottom: 32px; }
-
-        /* ── VIDEO PLAYER MODAL ─────────────────────────────────────────── */
-        .video-modal-backdrop {
-            position: fixed; inset: 0; z-index: 700;
-            background: rgba(0,0,0,.75); backdrop-filter: blur(6px);
-            display: flex; align-items: center; justify-content: center;
-            opacity: 0; pointer-events: none; transition: opacity .2s ease;
-        }
-        .video-modal-backdrop.open { opacity: 1; pointer-events: all; }
-
-        .video-modal {
-            background: #000;
-            border-radius: 14px;
-            box-shadow: 0 32px 80px rgba(0,0,0,.55);
-            width: min(94vw, 900px);
-            overflow: hidden;
-            transform: translateY(22px) scale(.97);
-            transition: transform .2s ease;
-            display: flex; flex-direction: column;
-        }
-        .video-modal-backdrop.open .video-modal { transform: translateY(0) scale(1); }
-
-        .video-modal-header {
-            display: flex; align-items: flex-start; justify-content: space-between;
-            gap: 12px; padding: 14px 16px 10px;
-            background: #111;
-        }
-        .video-modal-header-info { min-width: 0; }
-        .video-modal-title {
-            font-size: 14px; font-weight: 600; color: #fff;
-            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-            margin: 0 0 2px;
-        }
-        .video-modal-channel {
-            font-size: 12px; color: #9ca3af; margin: 0;
-        }
-        .video-modal-close {
-            flex-shrink: 0; background: rgba(255,255,255,.1);
-            border: none; border-radius: 8px; color: #fff;
-            width: 30px; height: 30px; cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 18px; line-height: 1;
-            transition: background .14s;
-        }
-        .video-modal-close:hover { background: rgba(255,255,255,.22); }
-
-        .video-modal-player {
-            position: relative; width: 100%; padding-top: 56.25%; /* 16:9 */
-            background: #000;
-        }
-        .video-modal-player iframe {
-            position: absolute; inset: 0;
-            width: 100%; height: 100%;
-            border: none;
-        }
-
-        .video-modal-footer {
-            display: flex; justify-content: flex-end;
-            padding: 10px 16px; background: #111; gap: 8px;
-        }
-        .video-modal-yt-link {
-            display: inline-flex; align-items: center; gap: 6px;
-            font-size: 12px; color: #9ca3af; text-decoration: none;
-            padding: 5px 10px; border-radius: 7px;
-            border: 1px solid rgba(255,255,255,.12);
-            transition: color .13s, border-color .13s, background .13s;
-        }
-        .video-modal-yt-link:hover {
-            color: #fff; border-color: rgba(255,255,255,.3);
-            background: rgba(255,255,255,.07);
-        }
     </style>
 {% endblock %}
 
@@ -764,11 +693,16 @@
             {% if files is not empty %}
                 {% for file in files %}
                     {% set lname = file.originalname|lower %}
+                    {% set isWord  = lname ends with '.docx' or lname ends with '.doc' %}
+                    {% set isPpt   = lname ends with '.pptx' or lname ends with '.ppt' %}
+                    {% set isXls   = lname ends with '.xlsx' or lname ends with '.xls' %}
+                    {% set isNote  = lname ends with '.rtfx' or lname ends with '.txt' or lname ends with '.md' or file.mimetype starts with 'text/' or file.mimetype == 'application/json' %}
                     <div class="file-card"
                          data-id="{{ file.id }}"
                          data-name="{{ file.originalname|e('html_attr') }}"
                          data-mime="{{ file.mimetype|e('html_attr') }}"
-                         data-is-note="{{ (lname ends with '.rtfx' or lname ends with '.txt' or lname ends with '.md' or file.mimetype starts with 'text/' or file.mimetype == 'application/json') ? '1' : '0' }}"
+                         data-is-note="{{ (isNote or isWord) ? '1' : '0' }}"
+                         data-is-word="{{ isWord ? '1' : '0' }}"
                          data-preview-url="{{ path('app_courses_detail_file_preview', {id: course.id, fileId: file.id}) }}"
                          data-download-url="{{ path('app_courses_detail_file_download', {id: course.id, fileId: file.id}) }}"
                          data-content-url="{{ path('app_courses_detail_note_content', {id: course.id, fileId: file.id}) }}"
@@ -780,7 +714,13 @@
                                      alt="{{ file.originalname }}" loading="lazy">
                             {% elseif file.mimetype == 'application/pdf' %}
                                 📄
-                            {% elseif lname ends with '.rtfx' or lname ends with '.txt' or lname ends with '.md' or file.mimetype starts with 'text/' or file.mimetype == 'application/json' %}
+                            {% elseif isWord %}
+                                📝
+                            {% elseif isPpt %}
+                                📊
+                            {% elseif isXls %}
+                                📈
+                            {% elseif isNote %}
                                 📝
                             {% else %}
                                 📎
@@ -826,35 +766,6 @@
         </div>
 
     </section>
-
-    {# ── YOUTUBE VIDEO PLAYER MODAL ───────────────────────────────── #}
-    <div class="video-modal-backdrop" id="videoModal" role="dialog" aria-modal="true" aria-labelledby="videoModalTitle">
-        <div class="video-modal">
-            <div class="video-modal-header">
-                <div class="video-modal-header-info">
-                    <p class="video-modal-title" id="videoModalTitle"></p>
-                    <p class="video-modal-channel" id="videoModalChannel"></p>
-                </div>
-                <button class="video-modal-close" id="videoModalClose" type="button" aria-label="Close video">✕</button>
-            </div>
-            <div class="video-modal-player">
-                <iframe id="videoModalIframe"
-                        src=""
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowfullscreen
-                        title="YouTube video player"></iframe>
-            </div>
-            <div class="video-modal-footer">
-                <a id="videoModalYtLink" class="video-modal-yt-link" href="#" target="_blank" rel="noopener noreferrer">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                        <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 4.83 4.83 0 0 1-3.77 2.75C7.1 6.69 4 9.79 4 14c0 5 4 8 8 8s8-3 8-8c0-4.21-3.1-7.31-7.81-7.31H12z"/>
-                        <path d="M10 15l5-3-5-3v6z"/>
-                    </svg>
-                    Watch on YouTube
-                </a>
-            </div>
-        </div>
-    </div>
 
     {# ── FILE PREVIEW MODAL ───────────────────────────────────────── #}
     <div class="preview-modal-backdrop" id="previewModal" role="dialog" aria-modal="true" aria-labelledby="previewTitle">
@@ -1096,7 +1007,8 @@
     </div>
 
     <div class="toast-container" id="toastContainer" aria-live="polite" aria-atomic="true"></div>
-    <input type="file" id="addFilesInput" multiple style="display:none;" aria-label="Add files">
+    <input type="file" id="addFilesInput" multiple style="display:none;" aria-label="Add files"
+           accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.txt,.md,.jpg,.jpeg,.png,.gif,.webp,.svg">
 
     <datalist id="subjectsList">
         {% for s in subjects|default([]) %}
@@ -1205,6 +1117,7 @@
                             contentUrl: card.dataset.contentUrl,
                             exportUrl:  card.dataset.exportUrl,
                             downloadUrl:card.dataset.downloadUrl,
+                            isWord:     card.dataset.isWord === '1',
                         });
                     } else {
                         openFilePreview({
@@ -1252,8 +1165,13 @@
                     Array.from(addFilesInput.files).forEach(f => fd.append('files[]', f));
                     const res  = await post(`/courses/${COURSE_ID}/upload`, fd);
                     const data = await res.json();
-                    if (res.ok) { toast(`${data.uploaded.length} file(s) uploaded`, 'success'); setTimeout(() => location.reload(), 800); }
-                    else toast(data.message || 'Upload failed', 'error');
+                    if (res.ok) {
+                        if (data.uploaded.length) toast(`${data.uploaded.length} file(s) uploaded`, 'success');
+                        if (data.rejected && data.rejected.length) toast(`Skipped unsupported file(s): ${data.rejected.join(', ')}`, 'error');
+                        if (data.uploaded.length) setTimeout(() => location.reload(), 800);
+                    } else {
+                        toast(data.message || 'Upload failed', 'error');
+                    }
                 });
             }
 
@@ -1290,16 +1208,19 @@
                 previewDownload.download = name;
                 previewBody.innerHTML = '';
 
-                // Toggle pdf-mode on the backdrop for sizing + fullscreen visibility
-                const isPdf = mime === 'application/pdf';
-                previewModal.classList.toggle('pdf-mode', isPdf);
+                const isPdf  = mime === 'application/pdf';
+                const isWord = name.match(/\.(docx?)\s*$/i);
+
+                previewModal.classList.toggle('pdf-mode', isPdf || !!isWord);
 
                 if (mime && mime.startsWith('image/')) {
                     const img = document.createElement('img');
                     img.src = previewUrl; img.alt = name;
                     img.style.cssText = 'max-width:100%;max-height:100%;object-fit:contain;';
                     previewBody.appendChild(img);
-                } else if (isPdf) {
+                } else if (isPdf || isWord) {
+                    // PDFs and Word docs both render via iframe
+                    // (Word docs: server returns converted HTML; PDFs: serve inline)
                     const iframe = document.createElement('iframe');
                     iframe.src = previewUrl;
                     iframe.style.cssText = 'width:100%;height:100%;border:none;';
@@ -1648,7 +1569,6 @@
                 closeModal('confirmModal');
                 closeModal2('previewModal');
                 closeReportModal();
-                if (videoModal && videoModal.classList.contains('open')) closeVideoModal();
                 if (noteModal.classList.contains('open')) {
                     if (noteDirty && !confirm('Unsaved changes — close anyway?')) return;
                     closeNoteModal();
@@ -1776,14 +1696,12 @@
             }
 
             function makeVideoCard(v) {
-                const card = document.createElement('div');
-                card.className = 'suggestion-card';
-                card.style.width = '240px';
-                card.style.cursor = 'pointer';
-                card.setAttribute('role', 'button');
-                card.setAttribute('tabindex', '0');
-                card.setAttribute('aria-label', 'Play: ' + (v.title || 'video'));
-                card.innerHTML = `
+                const a = document.createElement('a');
+                a.href = v.videoUrl;
+                a.target = '_blank'; a.rel = 'noopener noreferrer';
+                a.className = 'suggestion-card';
+                a.style.width = '240px';
+                a.innerHTML = `
                     <div class="suggestion-card-thumb" style="width:240px;height:135px;">
                         ${v.thumbnailUrl
                     ? `<img src="${esc(v.thumbnailUrl)}" alt="${esc(v.title)}" loading="lazy">`
@@ -1794,41 +1712,8 @@
                         <div class="suggestion-card-title">${esc(v.title)}</div>
                         ${v.channelName ? `<div class="suggestion-card-sub">${esc(v.channelName)}</div>` : ''}
                     </div>`;
-                card.addEventListener('click', () => openVideoModal(v));
-                card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openVideoModal(v); } });
-                return card;
+                return a;
             }
-
-            // ── VIDEO MODAL ──────────────────────────────────────────────────
-            const videoModal       = document.getElementById('videoModal');
-            const videoModalIframe = document.getElementById('videoModalIframe');
-            const videoModalTitle  = document.getElementById('videoModalTitle');
-            const videoModalChan   = document.getElementById('videoModalChannel');
-            const videoModalYtLink = document.getElementById('videoModalYtLink');
-            const videoModalClose  = document.getElementById('videoModalClose');
-
-            function openVideoModal(v) {
-                // Extract video ID from URL and build embed URL
-                const match = (v.videoUrl || '').match(/[?&]v=([^&#]+)/);
-                const videoId = match ? match[1] : null;
-                if (!videoId) { window.open(v.videoUrl, '_blank', 'noopener'); return; }
-
-                videoModalIframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
-                videoModalTitle.textContent  = v.title || '';
-                videoModalChan.textContent   = v.channelName || '';
-                videoModalYtLink.href        = v.videoUrl;
-                videoModal.classList.add('open');
-                document.body.style.overflow = 'hidden';
-            }
-
-            function closeVideoModal() {
-                videoModal.classList.remove('open');
-                videoModalIframe.src = ''; // stop playback
-                document.body.style.overflow = '';
-            }
-
-            if (videoModalClose) videoModalClose.addEventListener('click', closeVideoModal);
-            if (videoModal) videoModal.addEventListener('click', e => { if (e.target === videoModal) closeVideoModal(); });
 
             function esc(str) {
                 return (str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
