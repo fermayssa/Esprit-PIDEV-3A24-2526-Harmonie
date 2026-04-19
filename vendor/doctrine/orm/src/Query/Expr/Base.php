@@ -7,11 +7,12 @@ namespace Doctrine\ORM\Query\Expr;
 use InvalidArgumentException;
 use Stringable;
 
+use function array_key_exists;
 use function count;
-use function get_class;
 use function get_debug_type;
 use function implode;
 use function in_array;
+use function is_array;
 use function is_object;
 use function is_string;
 use function sprintf;
@@ -21,26 +22,24 @@ use function sprintf;
  *
  * @link    www.doctrine-project.org
  */
-abstract class Base
+abstract class Base implements Stringable
 {
-    /** @var string */
-    protected $preSeparator = '(';
-
-    /** @var string */
-    protected $separator = ', ';
-
-    /** @var string */
-    protected $postSeparator = ')';
+    protected string $preSeparator  = '(';
+    protected string $separator     = ', ';
+    protected string $postSeparator = ')';
 
     /** @var list<class-string<Stringable>> */
-    protected $allowedClasses = [];
+    protected array $allowedClasses = [];
 
     /** @var list<string|Stringable> */
-    protected $parts = [];
+    protected array $parts = [];
 
-    /** @param mixed $args */
-    public function __construct($args = [])
+    public function __construct(mixed $args = [])
     {
+        if (is_array($args) && array_key_exists(0, $args) && is_array($args[0])) {
+            $args = $args[0];
+        }
+
         $this->addMultiple($args);
     }
 
@@ -50,7 +49,7 @@ abstract class Base
      *
      * @return $this
      */
-    public function addMultiple($args = [])
+    public function addMultiple(array|string|object $args = []): static
     {
         foreach ((array) $args as $arg) {
             $this->add($arg);
@@ -66,15 +65,15 @@ abstract class Base
      *
      * @throws InvalidArgumentException
      */
-    public function add($arg)
+    public function add(mixed $arg): static
     {
         if ($arg !== null && (! $arg instanceof self || $arg->count() > 0)) {
             // If we decide to keep Expr\Base instances, we can use this check
             // @phpstan-ignore function.alreadyNarrowedType (input validation)
-            if (! is_string($arg) && ! (is_object($arg) && in_array(get_class($arg), $this->allowedClasses, true))) {
+            if (! is_string($arg) && ! (is_object($arg) && in_array($arg::class, $this->allowedClasses, true))) {
                 throw new InvalidArgumentException(sprintf(
                     "Expression of type '%s' not allowed in this context.",
-                    get_debug_type($arg)
+                    get_debug_type($arg),
                 ));
             }
 
@@ -84,17 +83,13 @@ abstract class Base
         return $this;
     }
 
-    /**
-     * @return int
-     * @phpstan-return 0|positive-int
-     */
-    public function count()
+    /** @phpstan-return 0|positive-int */
+    public function count(): int
     {
         return count($this->parts);
     }
 
-    /** @return string */
-    public function __toString()
+    public function __toString(): string
     {
         if ($this->count() === 1) {
             return (string) $this->parts[0];

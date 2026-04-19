@@ -13,20 +13,17 @@ use Stringable;
  */
 class Select extends Base
 {
-    /** @var string */
-    protected $preSeparator = '';
-
-    /** @var string */
-    protected $postSeparator = '';
+    protected string $preSeparator  = '';
+    protected string $postSeparator = '';
 
     /** @var list<class-string<Stringable>> */
-    protected $allowedClasses = [Func::class];
+    protected array $allowedClasses = [Func::class];
 
     /** @phpstan-var list<string|Func> */
-    protected $parts = [];
+    protected array $parts = [];
 
     /** @phpstan-return list<string|Func> */
-    public function getParts()
+    public function getParts(): array
     {
         return $this->parts;
     }
