@@ -243,3 +243,16 @@ e64f96,127.0.0.1,POST,http://127.0.0.1:8000/courses/69/file/111/delete,177661887
 cf4c38,127.0.0.1,GET,http://127.0.0.1:8000/courses/69/suggestions,1776618916,,200,request
 ab3837,127.0.0.1,GET,http://127.0.0.1:8000/courses/69/file/110/preview,1776618917,,200,request
 2b1199,127.0.0.1,GET,http://127.0.0.1:8000/courses/69/note/112/content,1776618917,,200,request
+6fe0a4,127.0.0.1,GET,http://127.0.0.1:8000/,1776626030,,302,request
+102fff,127.0.0.1,GET,http://127.0.0.1:8000/login,1776626031,,200,request
+53d58c,127.0.0.1,GET,http://127.0.0.1:8000/login,1776626040,5c0937,500,request
+5c0937,127.0.0.1,POST,http://127.0.0.1:8000/login,1776626040,,500,request
+7ed816,127.0.0.1,GET,http://127.0.0.1:8000/login,1776626059,346a32,500,request
+346a32,127.0.0.1,POST,http://127.0.0.1:8000/login,1776626059,,500,request
+e044ef,127.0.0.1,POST,http://127.0.0.1:8000/login,1776626064,,302,request
+8bde02,127.0.0.1,POST,http://127.0.0.1:8000/login,1776626064,,302,request
+df4e29,127.0.0.1,GET,http://127.0.0.1:8000/,1776626064,,302,request
+4b5b0e,127.0.0.1,GET,http://127.0.0.1:8000/admin,1776626065,,200,request
+dbd3cd,127.0.0.1,GET,http://127.0.0.1:8000/favicon.ico,1776626067,188a05,404,request
+188a05,127.0.0.1,GET,http://127.0.0.1:8000/favicon.ico,1776626067,,404,request
+8d7695,127.0.0.1,GET,http://127.0.0.1:8000/admin/course-reports,1776626068,,200,request
