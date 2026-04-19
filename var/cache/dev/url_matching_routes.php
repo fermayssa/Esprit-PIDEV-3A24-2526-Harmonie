@@ -19,6 +19,7 @@ return [
         '/activites/api/add' => [[['_route' => 'activites_api_add', '_controller' => 'App\\Controller\\ActivitesController::apiAdd'], null, ['POST' => 0], null, false, false, null]],
         '/activites/bilan/pdf' => [[['_route' => 'activites_bilan_pdf', '_controller' => 'App\\Controller\\ActivitesController::bilanPdf'], null, ['GET' => 0], null, false, false, null]],
         '/admin/course-reports' => [[['_route' => 'admin_course_reports_index', '_controller' => 'App\\Controller\\AdminCourseReportsController::index'], null, ['GET' => 0], null, false, false, null]],
+        '/admin/courses' => [[['_route' => 'admin_courses_index', '_controller' => 'App\\Controller\\AdminCoursesController::index'], null, ['GET' => 0], null, false, false, null]],
         '/admin' => [[['_route' => 'admin_dashboard', '_controller' => 'App\\Controller\\AdminDashboardController::index'], null, null, null, false, false, null]],
         '/admin/demandes' => [[['_route' => 'admin_demande_index', '_controller' => 'App\\Controller\\AdminDemandeController::index'], null, ['GET' => 0], null, false, false, null]],
         '/admin/evenements' => [[['_route' => 'admin_evenement_index', '_controller' => 'App\\Controller\\AdminEvenementController::index'], null, ['GET' => 0], null, false, false, null]],
@@ -183,157 +184,163 @@ return [
                         .'|qr/(\\d{4}-\\d{2}-\\d{2})(*:295)'
                     .')'
                     .'|dmin/(?'
-                        .'|course\\-reports/(?'
-                            .'|unpublish/(\\d+)(*:346)'
-                            .'|dismiss/(\\d+)(*:367)'
-                            .'|restore/(\\d+)(*:388)'
+                        .'|course(?'
+                            .'|\\-reports/(?'
+                                .'|unpublish/(\\d+)(*:349)'
+                                .'|dismiss/(\\d+)(*:370)'
+                                .'|restore/(\\d+)(*:391)'
+                            .')'
+                            .'|s/(?'
+                                .'|unpublish/(\\d+)(*:420)'
+                                .'|view/(\\d+)(*:438)'
+                            .')'
                         .')'
                         .'|demandes/(?'
-                            .'|(\\d+)/accepter(*:423)'
-                            .'|(\\d+)/refuser(*:444)'
+                            .'|(\\d+)/accepter(*:474)'
+                            .'|(\\d+)/refuser(*:495)'
                         .')'
                         .'|evenements/(?'
-                            .'|(\\d+)(*:472)'
-                            .'|(\\d+)/edit(*:490)'
-                            .'|(\\d+)(*:503)'
+                            .'|(\\d+)(*:523)'
+                            .'|(\\d+)/edit(*:541)'
+                            .'|(\\d+)(*:554)'
                         .')'
                         .'|journal/user/(?'
-                            .'|(\\d+)(*:533)'
-                            .'|(\\d+)/rapport(*:554)'
+                            .'|(\\d+)(*:584)'
+                            .'|(\\d+)/rapport(*:605)'
                         .')'
                         .'|meditation/(?'
-                            .'|(\\d+)(*:582)'
-                            .'|(\\d+)/edit(*:600)'
-                            .'|(\\d+)/delete(*:620)'
-                            .'|(\\d+)/regenerate\\-conseils(*:654)'
-                            .'|(\\d+)/regenerate\\-session(*:687)'
-                            .'|(\\d+)/conseil/new(*:712)'
+                            .'|(\\d+)(*:633)'
+                            .'|(\\d+)/edit(*:651)'
+                            .'|(\\d+)/delete(*:671)'
+                            .'|(\\d+)/regenerate\\-conseils(*:705)'
+                            .'|(\\d+)/regenerate\\-session(*:738)'
+                            .'|(\\d+)/conseil/new(*:763)'
                             .'|conseil/(?'
-                                .'|(\\d+)/edit(*:741)'
-                                .'|(\\d+)/delete(*:761)'
+                                .'|(\\d+)/edit(*:792)'
+                                .'|(\\d+)/delete(*:812)'
                             .')'
-                            .'|(\\d+)/pdf(*:779)'
+                            .'|(\\d+)/pdf(*:830)'
                         .')'
                         .'|nutrition/api/(?'
-                            .'|update/(\\d+)(*:817)'
-                            .'|delete/(\\d+)(*:837)'
+                            .'|update/(\\d+)(*:868)'
+                            .'|delete/(\\d+)(*:888)'
                         .')'
                         .'|s(?'
                             .'|alles/(?'
-                                .'|(\\d+)/edit(*:869)'
-                                .'|(\\d+)/toggle(*:889)'
-                                .'|(\\d+)(*:902)'
+                                .'|(\\d+)/edit(*:920)'
+                                .'|(\\d+)/toggle(*:940)'
+                                .'|(\\d+)(*:953)'
                             .')'
                             .'|port/api/(?'
-                                .'|update/(\\d+)(*:935)'
-                                .'|delete/(\\d+)(*:955)'
+                                .'|update/(\\d+)(*:986)'
+                                .'|delete/(\\d+)(*:1006)'
                             .')'
                         .')'
                         .'|taches/(?'
-                            .'|(\\d+)(*:980)'
-                            .'|(\\d+)/edit(*:998)'
-                            .'|(\\d+)(*:1011)'
+                            .'|(\\d+)(*:1032)'
+                            .'|(\\d+)/edit(*:1051)'
+                            .'|(\\d+)(*:1065)'
                         .')'
                         .'|users/(?'
-                            .'|(\\d+)(*:1035)'
+                            .'|(\\d+)(*:1089)'
                             .'|([^/]++)/(?'
-                                .'|edit(*:1060)'
-                                .'|toggle(*:1075)'
+                                .'|edit(*:1114)'
+                                .'|toggle(*:1129)'
                             .')'
-                            .'|(\\d+)/suspicion(*:1100)'
+                            .'|(\\d+)/suspicion(*:1154)'
                         .')'
                     .')'
                     .'|pi/(?'
                         .'|events/([^/]++)(?'
-                            .'|(*:1135)'
+                            .'|(*:1189)'
                         .')'
                         .'|tasks/([^/]++)(?'
-                            .'|(*:1162)'
+                            .'|(*:1216)'
                         .')'
-                        .'|messaging/conversations/([^/]++)/messages(*:1213)'
+                        .'|messaging/conversations/([^/]++)/messages(*:1267)'
                     .')'
                 .')'
                 .'|/back/(?'
                     .'|c(?'
-                        .'|ategories/([^/]++)/delete(*:1262)'
-                        .'|ommentaires/([^/]++)/delete(*:1298)'
+                        .'|ategories/([^/]++)/delete(*:1316)'
+                        .'|ommentaires/([^/]++)/delete(*:1352)'
                     .')'
-                    .'|posts/([^/]++)/delete(*:1329)'
+                    .'|posts/([^/]++)/delete(*:1383)'
                 .')'
                 .'|/co(?'
-                    .'|vers/(.+)(*:1354)'
+                    .'|vers/(.+)(*:1408)'
                     .'|urses/(?'
-                        .'|(\\d+)(*:1377)'
-                        .'|(\\d+)/rename(*:1398)'
-                        .'|(\\d+)/subject(*:1420)'
-                        .'|(\\d+)/publish(*:1442)'
-                        .'|(\\d+)/upload(*:1463)'
-                        .'|(\\d+)/note(*:1482)'
-                        .'|(\\d+)/note/(\\d+)/content(*:1515)'
-                        .'|(\\d+)/note/(\\d+)/save(*:1545)'
-                        .'|(\\d+)/note/(\\d+)/export\\-pdf(*:1582)'
-                        .'|(\\d+)/file/(\\d+)/preview(*:1615)'
-                        .'|(\\d+)/file/(\\d+)/download(*:1649)'
-                        .'|(\\d+)/file/(\\d+)/rename(*:1681)'
-                        .'|(\\d+)/file/(\\d+)/delete(*:1713)'
-                        .'|(\\d+)/save\\-to\\-library(*:1745)'
-                        .'|(\\d+)/report(*:1766)'
-                        .'|(\\d+)/suggestions(*:1792)'
-                        .'|(\\d+)/update(*:1813)'
-                        .'|(\\d+)/cover(*:1833)'
-                        .'|(\\d+)/publish(*:1855)'
-                        .'|(\\d+)/delete(*:1876)'
+                        .'|(\\d+)(*:1431)'
+                        .'|(\\d+)/rename(*:1452)'
+                        .'|(\\d+)/subject(*:1474)'
+                        .'|(\\d+)/publish(*:1496)'
+                        .'|(\\d+)/upload(*:1517)'
+                        .'|(\\d+)/note(*:1536)'
+                        .'|(\\d+)/note/(\\d+)/content(*:1569)'
+                        .'|(\\d+)/note/(\\d+)/save(*:1599)'
+                        .'|(\\d+)/note/(\\d+)/export\\-pdf(*:1636)'
+                        .'|(\\d+)/file/(\\d+)/preview(*:1669)'
+                        .'|(\\d+)/file/(\\d+)/download(*:1703)'
+                        .'|(\\d+)/file/(\\d+)/rename(*:1735)'
+                        .'|(\\d+)/file/(\\d+)/delete(*:1767)'
+                        .'|(\\d+)/save\\-to\\-library(*:1799)'
+                        .'|(\\d+)/report(*:1820)'
+                        .'|(\\d+)/suggestions(*:1846)'
+                        .'|(\\d+)/update(*:1867)'
+                        .'|(\\d+)/cover(*:1887)'
+                        .'|(\\d+)/publish(*:1909)'
+                        .'|(\\d+)/delete(*:1930)'
                     .')'
                 .')'
                 .'|/evenement/([^/]++)(?'
-                    .'|(*:1909)'
-                    .'|/edit(*:1923)'
-                    .'|(*:1932)'
+                    .'|(*:1963)'
+                    .'|/edit(*:1977)'
+                    .'|(*:1986)'
                 .')'
                 .'|/forum/(?'
                     .'|post/([^/]++)/(?'
-                        .'|translate(*:1978)'
-                        .'|like(*:1991)'
-                        .'|edit(*:2004)'
-                        .'|delete(*:2019)'
-                        .'|comment/new(*:2039)'
+                        .'|translate(*:2032)'
+                        .'|like(*:2045)'
+                        .'|edit(*:2058)'
+                        .'|delete(*:2073)'
+                        .'|comment/new(*:2093)'
                     .')'
                     .'|c(?'
                         .'|ategorie/([^/]++)(?'
                             .'|/(?'
-                                .'|edit(*:2081)'
-                                .'|delete(*:2096)'
-                                .'|post/new(*:2113)'
+                                .'|edit(*:2135)'
+                                .'|delete(*:2150)'
+                                .'|post/new(*:2167)'
                             .')'
-                            .'|(*:2123)'
+                            .'|(*:2177)'
                         .')'
                         .'|omment/([^/]++)/(?'
-                            .'|edit(*:2156)'
-                            .'|delete(*:2171)'
+                            .'|edit(*:2210)'
+                            .'|delete(*:2225)'
                         .')'
                     .')'
                 .')'
                 .'|/journal/(?'
-                    .'|(\\d+)/edit(*:2205)'
-                    .'|(\\d+)/delete(*:2226)'
+                    .'|(\\d+)/edit(*:2259)'
+                    .'|(\\d+)/delete(*:2280)'
                 .')'
-                .'|/meditation/(\\d+)(*:2253)'
+                .'|/meditation/(\\d+)(*:2307)'
                 .'|/nutrition/api/(?'
-                    .'|recette/([^/]++)(*:2296)'
-                    .'|modifier/([^/]++)(*:2322)'
-                    .'|supprimer/([^/]++)(*:2349)'
+                    .'|recette/([^/]++)(*:2350)'
+                    .'|modifier/([^/]++)(*:2376)'
+                    .'|supprimer/([^/]++)(*:2403)'
                 .')'
                 .'|/salle/([^/]++)(?'
-                    .'|(*:2377)'
-                    .'|/edit(*:2391)'
-                    .'|(*:2400)'
+                    .'|(*:2431)'
+                    .'|/edit(*:2445)'
+                    .'|(*:2454)'
                 .')'
                 .'|/tache/(?'
-                    .'|(\\d+)/statut(*:2432)'
+                    .'|(\\d+)/statut(*:2486)'
                     .'|([^/]++)(?'
-                        .'|(*:2452)'
-                        .'|/edit(*:2466)'
-                        .'|(*:2475)'
+                        .'|(*:2506)'
+                        .'|/edit(*:2520)'
+                        .'|(*:2529)'
                     .')'
                 .')'
             .')/?$}sDu',
@@ -350,99 +357,101 @@ return [
         241 => [[['_route' => 'activites_api_update', '_controller' => 'App\\Controller\\ActivitesController::apiUpdate'], ['id'], ['PUT' => 0, 'POST' => 1], null, false, true, null]],
         264 => [[['_route' => 'activites_api_delete', '_controller' => 'App\\Controller\\ActivitesController::apiDelete'], ['id'], ['DELETE' => 0, 'POST' => 1], null, false, true, null]],
         295 => [[['_route' => 'activites_qr_session', '_controller' => 'App\\Controller\\ActivitesController::qrSession'], ['date'], ['GET' => 0], null, false, true, null]],
-        346 => [[['_route' => 'admin_course_reports_unpublish', '_controller' => 'App\\Controller\\AdminCourseReportsController::unpublish'], ['courseId'], ['POST' => 0], null, false, true, null]],
-        367 => [[['_route' => 'admin_course_reports_dismiss', '_controller' => 'App\\Controller\\AdminCourseReportsController::dismiss'], ['reportId'], ['POST' => 0], null, false, true, null]],
-        388 => [[['_route' => 'admin_course_reports_restore', '_controller' => 'App\\Controller\\AdminCourseReportsController::restore'], ['courseId'], ['POST' => 0], null, false, true, null]],
-        423 => [[['_route' => 'admin_demande_accepter', '_controller' => 'App\\Controller\\AdminDemandeController::accepter'], ['id'], ['POST' => 0], null, false, false, null]],
-        444 => [[['_route' => 'admin_demande_refuser', '_controller' => 'App\\Controller\\AdminDemandeController::refuser'], ['id'], ['POST' => 0], null, false, false, null]],
-        472 => [[['_route' => 'admin_evenement_show', '_controller' => 'App\\Controller\\AdminEvenementController::show'], ['id'], ['GET' => 0], null, false, true, null]],
-        490 => [[['_route' => 'admin_evenement_edit', '_controller' => 'App\\Controller\\AdminEvenementController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        503 => [[['_route' => 'admin_evenement_delete', '_controller' => 'App\\Controller\\AdminEvenementController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
-        533 => [[['_route' => 'admin_journal_user', '_controller' => 'App\\Controller\\AdminJournalController::userJournal'], ['id'], ['GET' => 0], null, false, true, null]],
-        554 => [[['_route' => 'admin_journal_rapport', '_controller' => 'App\\Controller\\AdminJournalController::rapport'], ['id'], ['GET' => 0], null, false, false, null]],
-        582 => [[['_route' => 'admin_meditation_show', '_controller' => 'App\\Controller\\AdminMeditationController::show'], ['id'], ['GET' => 0], null, false, true, null]],
-        600 => [[['_route' => 'admin_meditation_edit', '_controller' => 'App\\Controller\\AdminMeditationController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        620 => [[['_route' => 'admin_meditation_delete', '_controller' => 'App\\Controller\\AdminMeditationController::delete'], ['id'], ['POST' => 0], null, false, false, null]],
-        654 => [[['_route' => 'admin_meditation_regenerate_conseils', '_controller' => 'App\\Controller\\AdminMeditationController::regenerateConseils'], ['id'], ['POST' => 0], null, false, false, null]],
-        687 => [[['_route' => 'admin_meditation_regenerate_session', '_controller' => 'App\\Controller\\AdminMeditationController::regenerateSession'], ['id'], ['POST' => 0], null, false, false, null]],
-        712 => [[['_route' => 'admin_conseil_new', '_controller' => 'App\\Controller\\AdminMeditationController::newConseil'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        741 => [[['_route' => 'admin_conseil_edit', '_controller' => 'App\\Controller\\AdminMeditationController::editConseil'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        761 => [[['_route' => 'admin_conseil_delete', '_controller' => 'App\\Controller\\AdminMeditationController::deleteConseil'], ['id'], ['POST' => 0], null, false, false, null]],
-        779 => [[['_route' => 'admin_meditation_pdf_detail', '_controller' => 'App\\Controller\\AdminMeditationController::pdfDetail'], ['id'], ['GET' => 0], null, false, false, null]],
-        817 => [[['_route' => 'admin_nutrition_update', '_controller' => 'App\\Controller\\AdminNutritionController::update'], ['id'], ['POST' => 0], null, false, true, null]],
-        837 => [[['_route' => 'admin_nutrition_delete', '_controller' => 'App\\Controller\\AdminNutritionController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
-        869 => [[['_route' => 'admin_salle_edit', '_controller' => 'App\\Controller\\AdminSalleController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        889 => [[['_route' => 'admin_salle_toggle', '_controller' => 'App\\Controller\\AdminSalleController::toggle'], ['id'], ['POST' => 0], null, false, false, null]],
-        902 => [[['_route' => 'admin_salle_delete', '_controller' => 'App\\Controller\\AdminSalleController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
-        935 => [[['_route' => 'admin_sport_update', '_controller' => 'App\\Controller\\AdminSportController::update'], ['id'], ['POST' => 0], null, false, true, null]],
-        955 => [[['_route' => 'admin_sport_delete', '_controller' => 'App\\Controller\\AdminSportController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
-        980 => [[['_route' => 'admin_tache_show', '_controller' => 'App\\Controller\\AdminTacheController::show'], ['id'], ['GET' => 0], null, false, true, null]],
-        998 => [[['_route' => 'admin_tache_edit', '_controller' => 'App\\Controller\\AdminTacheController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        1011 => [[['_route' => 'admin_tache_delete', '_controller' => 'App\\Controller\\AdminTacheController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
-        1035 => [[['_route' => 'admin_users_show', '_controller' => 'App\\Controller\\AdminUserController::show'], ['id'], ['GET' => 0], null, false, true, null]],
-        1060 => [[['_route' => 'admin_users_edit', '_controller' => 'App\\Controller\\AdminUserController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        1075 => [[['_route' => 'admin_users_toggle', '_controller' => 'App\\Controller\\AdminUserController::toggle'], ['id'], ['POST' => 0], null, false, false, null]],
-        1100 => [[['_route' => 'admin_users_suspicion', '_controller' => 'App\\Controller\\AdminUserController::suspicionDetail'], ['id'], ['GET' => 0], null, false, false, null]],
-        1135 => [
+        349 => [[['_route' => 'admin_course_reports_unpublish', '_controller' => 'App\\Controller\\AdminCourseReportsController::unpublish'], ['courseId'], ['POST' => 0], null, false, true, null]],
+        370 => [[['_route' => 'admin_course_reports_dismiss', '_controller' => 'App\\Controller\\AdminCourseReportsController::dismiss'], ['reportId'], ['POST' => 0], null, false, true, null]],
+        391 => [[['_route' => 'admin_course_reports_restore', '_controller' => 'App\\Controller\\AdminCourseReportsController::restore'], ['courseId'], ['POST' => 0], null, false, true, null]],
+        420 => [[['_route' => 'admin_courses_unpublish', '_controller' => 'App\\Controller\\AdminCoursesController::unpublish'], ['courseId'], ['POST' => 0], null, false, true, null]],
+        438 => [[['_route' => 'admin_courses_view', '_controller' => 'App\\Controller\\AdminCoursesController::view'], ['courseId'], ['GET' => 0], null, false, true, null]],
+        474 => [[['_route' => 'admin_demande_accepter', '_controller' => 'App\\Controller\\AdminDemandeController::accepter'], ['id'], ['POST' => 0], null, false, false, null]],
+        495 => [[['_route' => 'admin_demande_refuser', '_controller' => 'App\\Controller\\AdminDemandeController::refuser'], ['id'], ['POST' => 0], null, false, false, null]],
+        523 => [[['_route' => 'admin_evenement_show', '_controller' => 'App\\Controller\\AdminEvenementController::show'], ['id'], ['GET' => 0], null, false, true, null]],
+        541 => [[['_route' => 'admin_evenement_edit', '_controller' => 'App\\Controller\\AdminEvenementController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        554 => [[['_route' => 'admin_evenement_delete', '_controller' => 'App\\Controller\\AdminEvenementController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
+        584 => [[['_route' => 'admin_journal_user', '_controller' => 'App\\Controller\\AdminJournalController::userJournal'], ['id'], ['GET' => 0], null, false, true, null]],
+        605 => [[['_route' => 'admin_journal_rapport', '_controller' => 'App\\Controller\\AdminJournalController::rapport'], ['id'], ['GET' => 0], null, false, false, null]],
+        633 => [[['_route' => 'admin_meditation_show', '_controller' => 'App\\Controller\\AdminMeditationController::show'], ['id'], ['GET' => 0], null, false, true, null]],
+        651 => [[['_route' => 'admin_meditation_edit', '_controller' => 'App\\Controller\\AdminMeditationController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        671 => [[['_route' => 'admin_meditation_delete', '_controller' => 'App\\Controller\\AdminMeditationController::delete'], ['id'], ['POST' => 0], null, false, false, null]],
+        705 => [[['_route' => 'admin_meditation_regenerate_conseils', '_controller' => 'App\\Controller\\AdminMeditationController::regenerateConseils'], ['id'], ['POST' => 0], null, false, false, null]],
+        738 => [[['_route' => 'admin_meditation_regenerate_session', '_controller' => 'App\\Controller\\AdminMeditationController::regenerateSession'], ['id'], ['POST' => 0], null, false, false, null]],
+        763 => [[['_route' => 'admin_conseil_new', '_controller' => 'App\\Controller\\AdminMeditationController::newConseil'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        792 => [[['_route' => 'admin_conseil_edit', '_controller' => 'App\\Controller\\AdminMeditationController::editConseil'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        812 => [[['_route' => 'admin_conseil_delete', '_controller' => 'App\\Controller\\AdminMeditationController::deleteConseil'], ['id'], ['POST' => 0], null, false, false, null]],
+        830 => [[['_route' => 'admin_meditation_pdf_detail', '_controller' => 'App\\Controller\\AdminMeditationController::pdfDetail'], ['id'], ['GET' => 0], null, false, false, null]],
+        868 => [[['_route' => 'admin_nutrition_update', '_controller' => 'App\\Controller\\AdminNutritionController::update'], ['id'], ['POST' => 0], null, false, true, null]],
+        888 => [[['_route' => 'admin_nutrition_delete', '_controller' => 'App\\Controller\\AdminNutritionController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
+        920 => [[['_route' => 'admin_salle_edit', '_controller' => 'App\\Controller\\AdminSalleController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        940 => [[['_route' => 'admin_salle_toggle', '_controller' => 'App\\Controller\\AdminSalleController::toggle'], ['id'], ['POST' => 0], null, false, false, null]],
+        953 => [[['_route' => 'admin_salle_delete', '_controller' => 'App\\Controller\\AdminSalleController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
+        986 => [[['_route' => 'admin_sport_update', '_controller' => 'App\\Controller\\AdminSportController::update'], ['id'], ['POST' => 0], null, false, true, null]],
+        1006 => [[['_route' => 'admin_sport_delete', '_controller' => 'App\\Controller\\AdminSportController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
+        1032 => [[['_route' => 'admin_tache_show', '_controller' => 'App\\Controller\\AdminTacheController::show'], ['id'], ['GET' => 0], null, false, true, null]],
+        1051 => [[['_route' => 'admin_tache_edit', '_controller' => 'App\\Controller\\AdminTacheController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        1065 => [[['_route' => 'admin_tache_delete', '_controller' => 'App\\Controller\\AdminTacheController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
+        1089 => [[['_route' => 'admin_users_show', '_controller' => 'App\\Controller\\AdminUserController::show'], ['id'], ['GET' => 0], null, false, true, null]],
+        1114 => [[['_route' => 'admin_users_edit', '_controller' => 'App\\Controller\\AdminUserController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        1129 => [[['_route' => 'admin_users_toggle', '_controller' => 'App\\Controller\\AdminUserController::toggle'], ['id'], ['POST' => 0], null, false, false, null]],
+        1154 => [[['_route' => 'admin_users_suspicion', '_controller' => 'App\\Controller\\AdminUserController::suspicionDetail'], ['id'], ['GET' => 0], null, false, false, null]],
+        1189 => [
             [['_route' => 'api_events_update', '_controller' => 'App\\Controller\\Api\\EventApiController::update'], ['id'], ['PUT' => 0], null, false, true, null],
             [['_route' => 'api_events_delete', '_controller' => 'App\\Controller\\Api\\EventApiController::delete'], ['id'], ['DELETE' => 0], null, false, true, null],
         ],
-        1162 => [
+        1216 => [
             [['_route' => 'api_tasks_update', '_controller' => 'App\\Controller\\Api\\TaskApiController::update'], ['id'], ['PUT' => 0], null, false, true, null],
             [['_route' => 'api_tasks_delete', '_controller' => 'App\\Controller\\Api\\TaskApiController::delete'], ['id'], ['DELETE' => 0], null, false, true, null],
         ],
-        1213 => [[['_route' => 'api_messaging_messages', '_controller' => 'App\\Controller\\MessagingController::messages'], ['id'], ['GET' => 0], null, false, false, null]],
-        1262 => [[['_route' => 'back_categorie_delete', '_controller' => 'App\\Controller\\BackController::deleteCategorie'], ['id'], ['POST' => 0], null, false, false, null]],
-        1298 => [[['_route' => 'back_commentaire_delete', '_controller' => 'App\\Controller\\BackController::deleteCommentaire'], ['id'], ['POST' => 0], null, false, false, null]],
-        1329 => [[['_route' => 'back_post_delete', '_controller' => 'App\\Controller\\BackController::deletePost'], ['id'], ['POST' => 0], null, false, false, null]],
-        1354 => [[['_route' => 'app_cover_image', '_controller' => 'App\\Controller\\CoversController::serve'], ['filename'], null, null, false, true, null]],
-        1377 => [[['_route' => 'app_courses_detail', '_controller' => 'App\\Controller\\LibraryControllers\\CourseDetailsController::index'], ['id'], ['GET' => 0], null, false, true, null]],
-        1398 => [[['_route' => 'app_courses_detail_rename', '_controller' => 'App\\Controller\\LibraryControllers\\CourseDetailsController::rename'], ['id'], ['POST' => 0], null, false, false, null]],
-        1420 => [[['_route' => 'app_courses_detail_subject', '_controller' => 'App\\Controller\\LibraryControllers\\CourseDetailsController::changeSubject'], ['id'], ['POST' => 0], null, false, false, null]],
-        1442 => [[['_route' => 'app_courses_detail_publish', '_controller' => 'App\\Controller\\LibraryControllers\\CourseDetailsController::publish'], ['id'], ['POST' => 0], null, false, false, null]],
-        1463 => [[['_route' => 'app_courses_detail_upload', '_controller' => 'App\\Controller\\LibraryControllers\\CourseDetailsController::upload'], ['id'], ['POST' => 0], null, false, false, null]],
-        1482 => [[['_route' => 'app_courses_detail_note', '_controller' => 'App\\Controller\\LibraryControllers\\CourseDetailsController::createNote'], ['id'], ['POST' => 0], null, false, false, null]],
-        1515 => [[['_route' => 'app_courses_detail_note_content', '_controller' => 'App\\Controller\\LibraryControllers\\CourseDetailsController::noteContent'], ['id', 'fileId'], ['GET' => 0], null, false, false, null]],
-        1545 => [[['_route' => 'app_courses_detail_note_save', '_controller' => 'App\\Controller\\LibraryControllers\\CourseDetailsController::saveNote'], ['id', 'fileId'], ['POST' => 0], null, false, false, null]],
-        1582 => [[['_route' => 'app_courses_detail_note_export_pdf', '_controller' => 'App\\Controller\\LibraryControllers\\CourseDetailsController::exportNotePdf'], ['id', 'fileId'], ['GET' => 0], null, false, false, null]],
-        1615 => [[['_route' => 'app_courses_detail_file_preview', '_controller' => 'App\\Controller\\LibraryControllers\\CourseDetailsController::previewFile'], ['id', 'fileId'], ['GET' => 0], null, false, false, null]],
-        1649 => [[['_route' => 'app_courses_detail_file_download', '_controller' => 'App\\Controller\\LibraryControllers\\CourseDetailsController::downloadFile'], ['id', 'fileId'], ['GET' => 0], null, false, false, null]],
-        1681 => [[['_route' => 'app_courses_detail_file_rename', '_controller' => 'App\\Controller\\LibraryControllers\\CourseDetailsController::renameFile'], ['id', 'fileId'], ['POST' => 0], null, false, false, null]],
-        1713 => [[['_route' => 'app_courses_detail_file_delete', '_controller' => 'App\\Controller\\LibraryControllers\\CourseDetailsController::deleteFile'], ['id', 'fileId'], ['POST' => 0], null, false, false, null]],
-        1745 => [[['_route' => 'app_courses_detail_save_library', '_controller' => 'App\\Controller\\LibraryControllers\\CourseDetailsController::saveToLibrary'], ['id'], ['POST' => 0], null, false, false, null]],
-        1766 => [[['_route' => 'app_courses_detail_report', '_controller' => 'App\\Controller\\LibraryControllers\\CourseDetailsController::reportCourse'], ['id'], ['POST' => 0], null, false, false, null]],
-        1792 => [[['_route' => 'app_courses_detail_suggestions', '_controller' => 'App\\Controller\\LibraryControllers\\CourseDetailsController::suggestions'], ['id'], ['GET' => 0], null, false, false, null]],
-        1813 => [[['_route' => 'app_courses_update', '_controller' => 'App\\Controller\\LibraryControllers\\CoursesController::update'], ['id'], ['POST' => 0], null, false, false, null]],
-        1833 => [[['_route' => 'app_courses_cover', '_controller' => 'App\\Controller\\LibraryControllers\\CoursesController::cover'], ['id'], ['POST' => 0], null, false, false, null]],
-        1855 => [[['_route' => 'app_courses_publish', '_controller' => 'App\\Controller\\LibraryControllers\\CoursesController::publish'], ['id'], ['POST' => 0], null, false, false, null]],
-        1876 => [[['_route' => 'app_courses_delete', '_controller' => 'App\\Controller\\LibraryControllers\\CoursesController::delete'], ['id'], ['POST' => 0], null, false, false, null]],
-        1909 => [[['_route' => 'app_evenement_show', '_controller' => 'App\\Controller\\EvenementsController::show'], ['id'], ['GET' => 0], null, false, true, null]],
-        1923 => [[['_route' => 'app_evenement_edit', '_controller' => 'App\\Controller\\EvenementsController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        1932 => [[['_route' => 'app_evenement_delete', '_controller' => 'App\\Controller\\EvenementsController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
-        1978 => [[['_route' => 'forum_post_translate', '_controller' => 'App\\Controller\\ForumController::translatePost'], ['id'], ['POST' => 0], null, false, false, null]],
-        1991 => [[['_route' => 'forum_post_like', '_controller' => 'App\\Controller\\ForumController::toggleLike'], ['id'], ['POST' => 0, 'GET' => 1], null, false, false, null]],
-        2004 => [[['_route' => 'forum_post_edit', '_controller' => 'App\\Controller\\ForumController::editPost'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        2019 => [[['_route' => 'forum_post_delete', '_controller' => 'App\\Controller\\ForumController::deletePost'], ['id'], ['POST' => 0], null, false, false, null]],
-        2039 => [[['_route' => 'forum_comment_new', '_controller' => 'App\\Controller\\ForumController::newComment'], ['idPost'], ['POST' => 0], null, false, false, null]],
-        2081 => [[['_route' => 'forum_categorie_edit', '_controller' => 'App\\Controller\\ForumController::editCategorie'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        2096 => [[['_route' => 'forum_categorie_delete', '_controller' => 'App\\Controller\\ForumController::deleteCategorie'], ['id'], ['POST' => 0], null, false, false, null]],
-        2113 => [[['_route' => 'forum_post_new', '_controller' => 'App\\Controller\\ForumController::newPost'], ['idCat'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        2123 => [[['_route' => 'forum_posts', '_controller' => 'App\\Controller\\ForumController::posts'], ['id'], null, null, false, true, null]],
-        2156 => [[['_route' => 'forum_comment_edit', '_controller' => 'App\\Controller\\ForumController::editComment'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        2171 => [[['_route' => 'forum_comment_delete', '_controller' => 'App\\Controller\\ForumController::deleteComment'], ['id'], ['POST' => 0], null, false, false, null]],
-        2205 => [[['_route' => 'journal_edit', '_controller' => 'App\\Controller\\JournalController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        2226 => [[['_route' => 'journal_delete', '_controller' => 'App\\Controller\\JournalController::delete'], ['id'], ['POST' => 0], null, false, false, null]],
-        2253 => [[['_route' => 'meditation_show', '_controller' => 'App\\Controller\\MeditationController::show'], ['id'], ['GET' => 0], null, false, true, null]],
-        2296 => [[['_route' => 'nutrition_api_recette_detail', '_controller' => 'App\\Controller\\NutritionController::apiRecetteDetail'], ['id'], ['GET' => 0], null, false, true, null]],
-        2322 => [[['_route' => 'nutrition_api_modifier', '_controller' => 'App\\Controller\\NutritionController::apiModifier'], ['id'], ['POST' => 0, 'PUT' => 1], null, false, true, null]],
-        2349 => [[['_route' => 'nutrition_api_supprimer', '_controller' => 'App\\Controller\\NutritionController::apiSupprimer'], ['id'], ['POST' => 0, 'DELETE' => 1], null, false, true, null]],
-        2377 => [[['_route' => 'app_salle_show', '_controller' => 'App\\Controller\\SalleController::show'], ['id'], ['GET' => 0], null, false, true, null]],
-        2391 => [[['_route' => 'app_salle_edit', '_controller' => 'App\\Controller\\SalleController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        2400 => [[['_route' => 'app_salle_delete', '_controller' => 'App\\Controller\\SalleController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
-        2432 => [[['_route' => 'app_tache_update_statut', '_controller' => 'App\\Controller\\TachesController::updateStatut'], ['id'], ['POST' => 0], null, false, false, null]],
-        2452 => [[['_route' => 'app_tache_show', '_controller' => 'App\\Controller\\TachesController::show'], ['id'], ['GET' => 0], null, false, true, null]],
-        2466 => [[['_route' => 'app_tache_edit', '_controller' => 'App\\Controller\\TachesController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
-        2475 => [
+        1267 => [[['_route' => 'api_messaging_messages', '_controller' => 'App\\Controller\\MessagingController::messages'], ['id'], ['GET' => 0], null, false, false, null]],
+        1316 => [[['_route' => 'back_categorie_delete', '_controller' => 'App\\Controller\\BackController::deleteCategorie'], ['id'], ['POST' => 0], null, false, false, null]],
+        1352 => [[['_route' => 'back_commentaire_delete', '_controller' => 'App\\Controller\\BackController::deleteCommentaire'], ['id'], ['POST' => 0], null, false, false, null]],
+        1383 => [[['_route' => 'back_post_delete', '_controller' => 'App\\Controller\\BackController::deletePost'], ['id'], ['POST' => 0], null, false, false, null]],
+        1408 => [[['_route' => 'app_cover_image', '_controller' => 'App\\Controller\\CoversController::serve'], ['filename'], null, null, false, true, null]],
+        1431 => [[['_route' => 'app_courses_detail', '_controller' => 'App\\Controller\\LibraryControllers\\CourseDetailsController::index'], ['id'], ['GET' => 0], null, false, true, null]],
+        1452 => [[['_route' => 'app_courses_detail_rename', '_controller' => 'App\\Controller\\LibraryControllers\\CourseDetailsController::rename'], ['id'], ['POST' => 0], null, false, false, null]],
+        1474 => [[['_route' => 'app_courses_detail_subject', '_controller' => 'App\\Controller\\LibraryControllers\\CourseDetailsController::changeSubject'], ['id'], ['POST' => 0], null, false, false, null]],
+        1496 => [[['_route' => 'app_courses_detail_publish', '_controller' => 'App\\Controller\\LibraryControllers\\CourseDetailsController::publish'], ['id'], ['POST' => 0], null, false, false, null]],
+        1517 => [[['_route' => 'app_courses_detail_upload', '_controller' => 'App\\Controller\\LibraryControllers\\CourseDetailsController::upload'], ['id'], ['POST' => 0], null, false, false, null]],
+        1536 => [[['_route' => 'app_courses_detail_note', '_controller' => 'App\\Controller\\LibraryControllers\\CourseDetailsController::createNote'], ['id'], ['POST' => 0], null, false, false, null]],
+        1569 => [[['_route' => 'app_courses_detail_note_content', '_controller' => 'App\\Controller\\LibraryControllers\\CourseDetailsController::noteContent'], ['id', 'fileId'], ['GET' => 0], null, false, false, null]],
+        1599 => [[['_route' => 'app_courses_detail_note_save', '_controller' => 'App\\Controller\\LibraryControllers\\CourseDetailsController::saveNote'], ['id', 'fileId'], ['POST' => 0], null, false, false, null]],
+        1636 => [[['_route' => 'app_courses_detail_note_export_pdf', '_controller' => 'App\\Controller\\LibraryControllers\\CourseDetailsController::exportNotePdf'], ['id', 'fileId'], ['GET' => 0], null, false, false, null]],
+        1669 => [[['_route' => 'app_courses_detail_file_preview', '_controller' => 'App\\Controller\\LibraryControllers\\CourseDetailsController::previewFile'], ['id', 'fileId'], ['GET' => 0], null, false, false, null]],
+        1703 => [[['_route' => 'app_courses_detail_file_download', '_controller' => 'App\\Controller\\LibraryControllers\\CourseDetailsController::downloadFile'], ['id', 'fileId'], ['GET' => 0], null, false, false, null]],
+        1735 => [[['_route' => 'app_courses_detail_file_rename', '_controller' => 'App\\Controller\\LibraryControllers\\CourseDetailsController::renameFile'], ['id', 'fileId'], ['POST' => 0], null, false, false, null]],
+        1767 => [[['_route' => 'app_courses_detail_file_delete', '_controller' => 'App\\Controller\\LibraryControllers\\CourseDetailsController::deleteFile'], ['id', 'fileId'], ['POST' => 0], null, false, false, null]],
+        1799 => [[['_route' => 'app_courses_detail_save_library', '_controller' => 'App\\Controller\\LibraryControllers\\CourseDetailsController::saveToLibrary'], ['id'], ['POST' => 0], null, false, false, null]],
+        1820 => [[['_route' => 'app_courses_detail_report', '_controller' => 'App\\Controller\\LibraryControllers\\CourseDetailsController::reportCourse'], ['id'], ['POST' => 0], null, false, false, null]],
+        1846 => [[['_route' => 'app_courses_detail_suggestions', '_controller' => 'App\\Controller\\LibraryControllers\\CourseDetailsController::suggestions'], ['id'], ['GET' => 0], null, false, false, null]],
+        1867 => [[['_route' => 'app_courses_update', '_controller' => 'App\\Controller\\LibraryControllers\\CoursesController::update'], ['id'], ['POST' => 0], null, false, false, null]],
+        1887 => [[['_route' => 'app_courses_cover', '_controller' => 'App\\Controller\\LibraryControllers\\CoursesController::cover'], ['id'], ['POST' => 0], null, false, false, null]],
+        1909 => [[['_route' => 'app_courses_publish', '_controller' => 'App\\Controller\\LibraryControllers\\CoursesController::publish'], ['id'], ['POST' => 0], null, false, false, null]],
+        1930 => [[['_route' => 'app_courses_delete', '_controller' => 'App\\Controller\\LibraryControllers\\CoursesController::delete'], ['id'], ['POST' => 0], null, false, false, null]],
+        1963 => [[['_route' => 'app_evenement_show', '_controller' => 'App\\Controller\\EvenementsController::show'], ['id'], ['GET' => 0], null, false, true, null]],
+        1977 => [[['_route' => 'app_evenement_edit', '_controller' => 'App\\Controller\\EvenementsController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        1986 => [[['_route' => 'app_evenement_delete', '_controller' => 'App\\Controller\\EvenementsController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
+        2032 => [[['_route' => 'forum_post_translate', '_controller' => 'App\\Controller\\ForumController::translatePost'], ['id'], ['POST' => 0], null, false, false, null]],
+        2045 => [[['_route' => 'forum_post_like', '_controller' => 'App\\Controller\\ForumController::toggleLike'], ['id'], ['POST' => 0, 'GET' => 1], null, false, false, null]],
+        2058 => [[['_route' => 'forum_post_edit', '_controller' => 'App\\Controller\\ForumController::editPost'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        2073 => [[['_route' => 'forum_post_delete', '_controller' => 'App\\Controller\\ForumController::deletePost'], ['id'], ['POST' => 0], null, false, false, null]],
+        2093 => [[['_route' => 'forum_comment_new', '_controller' => 'App\\Controller\\ForumController::newComment'], ['idPost'], ['POST' => 0], null, false, false, null]],
+        2135 => [[['_route' => 'forum_categorie_edit', '_controller' => 'App\\Controller\\ForumController::editCategorie'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        2150 => [[['_route' => 'forum_categorie_delete', '_controller' => 'App\\Controller\\ForumController::deleteCategorie'], ['id'], ['POST' => 0], null, false, false, null]],
+        2167 => [[['_route' => 'forum_post_new', '_controller' => 'App\\Controller\\ForumController::newPost'], ['idCat'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        2177 => [[['_route' => 'forum_posts', '_controller' => 'App\\Controller\\ForumController::posts'], ['id'], null, null, false, true, null]],
+        2210 => [[['_route' => 'forum_comment_edit', '_controller' => 'App\\Controller\\ForumController::editComment'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        2225 => [[['_route' => 'forum_comment_delete', '_controller' => 'App\\Controller\\ForumController::deleteComment'], ['id'], ['POST' => 0], null, false, false, null]],
+        2259 => [[['_route' => 'journal_edit', '_controller' => 'App\\Controller\\JournalController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        2280 => [[['_route' => 'journal_delete', '_controller' => 'App\\Controller\\JournalController::delete'], ['id'], ['POST' => 0], null, false, false, null]],
+        2307 => [[['_route' => 'meditation_show', '_controller' => 'App\\Controller\\MeditationController::show'], ['id'], ['GET' => 0], null, false, true, null]],
+        2350 => [[['_route' => 'nutrition_api_recette_detail', '_controller' => 'App\\Controller\\NutritionController::apiRecetteDetail'], ['id'], ['GET' => 0], null, false, true, null]],
+        2376 => [[['_route' => 'nutrition_api_modifier', '_controller' => 'App\\Controller\\NutritionController::apiModifier'], ['id'], ['POST' => 0, 'PUT' => 1], null, false, true, null]],
+        2403 => [[['_route' => 'nutrition_api_supprimer', '_controller' => 'App\\Controller\\NutritionController::apiSupprimer'], ['id'], ['POST' => 0, 'DELETE' => 1], null, false, true, null]],
+        2431 => [[['_route' => 'app_salle_show', '_controller' => 'App\\Controller\\SalleController::show'], ['id'], ['GET' => 0], null, false, true, null]],
+        2445 => [[['_route' => 'app_salle_edit', '_controller' => 'App\\Controller\\SalleController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        2454 => [[['_route' => 'app_salle_delete', '_controller' => 'App\\Controller\\SalleController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
+        2486 => [[['_route' => 'app_tache_update_statut', '_controller' => 'App\\Controller\\TachesController::updateStatut'], ['id'], ['POST' => 0], null, false, false, null]],
+        2506 => [[['_route' => 'app_tache_show', '_controller' => 'App\\Controller\\TachesController::show'], ['id'], ['GET' => 0], null, false, true, null]],
+        2520 => [[['_route' => 'app_tache_edit', '_controller' => 'App\\Controller\\TachesController::edit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        2529 => [
             [['_route' => 'app_tache_delete', '_controller' => 'App\\Controller\\TachesController::delete'], ['id'], ['POST' => 0], null, false, true, null],
             [null, null, null, null, false, false, 0],
         ],

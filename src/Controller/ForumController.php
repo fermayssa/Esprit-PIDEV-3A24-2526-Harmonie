@@ -21,7 +21,7 @@ use Knp\Component\Pager\PaginatorInterface;
 use App\Service\TranslationService;
 //use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Service\SpellCheckService;
-use App\Service\ImageGenerationService;
+use App\Service\ImageGen;
 
 class ForumController extends AbstractController
 {
@@ -192,7 +192,7 @@ public function editCategorie(int $id, Request $request, EntityManagerInterface 
     //  POSTS — avec recherche, tri, pagination
     // ════════════════════════════════════════════════
 
-    
+
 
 #[Route('/forum/categorie/{id}', name: 'forum_posts')]
 public function posts(
@@ -346,7 +346,7 @@ public function posts(
     //  POSTS CRUD
     // ════════════════════════════════════════════════
 
-    
+
 #[Route('/forum/categorie/{idCat}/post/new', name: 'forum_post_new', methods: ['GET','POST'])]
 public function newPost(
     int $idCat,
@@ -367,7 +367,7 @@ public function newPost(
         // ── Vérification gros mots ──
         $texteAVerifier = $post->getTitre() . ' ' . $post->getContenu();
         if ($moderation->containsProfanity($texteAVerifier)) {
-            $this->addFlash('error_moderation', 
+            $this->addFlash('error_moderation',
                 '🚫 Votre post contient des termes inappropriés. Merci de le reformuler.');
             return $this->render('forum/post_form.html.twig', [
                 'form'      => $form->createView(),
@@ -461,7 +461,7 @@ public function editPost(
     ]);
 }
 
-    
+
 
     #[Route('/forum/post/{id}/delete', name: 'forum_post_delete', methods: ['POST'])]
     public function deletePost(int $id, EntityManagerInterface $em): Response
@@ -510,7 +510,7 @@ public function editPost(
             'id'        => $post->getIdCategorie(),
             'open_post' => $idPost,
         ]);
-    } 
+    }
 
     $c = new Commentaire();
     $c->setContenu($contenu);

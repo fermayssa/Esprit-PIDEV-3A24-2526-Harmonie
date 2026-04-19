@@ -9,8 +9,8 @@
     <parameter key="kernel.runtime_mode.cli">%env(not:default:kernel.runtime_mode.web:)%</parameter>
     <parameter key="kernel.runtime_mode.worker">%env(bool:default::key:worker:default:kernel.runtime_mode:)%</parameter>
     <parameter key="kernel.debug">true</parameter>
-    <parameter key="kernel.build_dir">D:/web/var/cache/dev</parameter>
-    <parameter key="kernel.cache_dir">D:/web/var/cache/dev</parameter>
+    <parameter key="kernel.build_dir">D:\web\var\cache\dev</parameter>
+    <parameter key="kernel.cache_dir">D:\web\var\cache\dev</parameter>
     <parameter key="kernel.logs_dir">D:\web\var\log</parameter>
     <parameter key="kernel.bundles" type="collection">
       <parameter key="FrameworkBundle">Symfony\Bundle\FrameworkBundle\FrameworkBundle</parameter>
@@ -141,15 +141,15 @@
     <parameter key="translator.logging">false</parameter>
     <parameter key="translator.default_path">D:\web/translations</parameter>
     <parameter key="debug.error_handler.throw_at">-1</parameter>
-    <parameter key="debug.container.dump">D:/web/var/cache/dev/App_KernelDevDebugContainer.xml</parameter>
+    <parameter key="debug.container.dump">D:\web\var\cache\dev/App_KernelDevDebugContainer.xml</parameter>
     <parameter key="router.request_context.host">localhost</parameter>
     <parameter key="router.request_context.scheme">http</parameter>
     <parameter key="router.request_context.base_url"></parameter>
     <parameter key="router.resource">kernel::loadRoutes</parameter>
-    <parameter key="router.cache_dir">D:/web/var/cache/dev</parameter>
+    <parameter key="router.cache_dir">D:\web\var\cache\dev</parameter>
     <parameter key="request_listener.http_port">80</parameter>
     <parameter key="request_listener.https_port">443</parameter>
-    <parameter key="serializer.mapping.cache.file">D:/web/var/cache/dev/serialization.php</parameter>
+    <parameter key="serializer.mapping.cache.file">D:\web\var\cache\dev/serialization.php</parameter>
     <parameter key="cache.prefix.seed">_D:\web.App_KernelDevDebugContainer</parameter>
     <parameter key="session.metadata.storage_key">_sf2_meta</parameter>
     <parameter key="session.storage.options" type="collection">
@@ -158,15 +158,15 @@
       <parameter key="gc_probability">1</parameter>
     </parameter>
     <parameter key="session.metadata.cookie_lifetime">null</parameter>
-    <parameter key="session.save_path">D:/web/var/cache/dev/sessions</parameter>
+    <parameter key="session.save_path">D:\web\var\cache\dev/sessions</parameter>
     <parameter key="session.metadata.update_threshold">0</parameter>
     <parameter key="form.type_extension.csrf.enabled">true</parameter>
     <parameter key="form.type_extension.csrf.field_name">_token</parameter>
-    <parameter key="validator.mapping.cache.file">D:/web/var/cache/dev/validation.php</parameter>
+    <parameter key="validator.mapping.cache.file">D:\web\var\cache\dev/validation.php</parameter>
     <parameter key="validator.translation_domain">validators</parameter>
     <parameter key="profiler_listener.only_exceptions">false</parameter>
     <parameter key="profiler_listener.only_main_requests">false</parameter>
-    <parameter key="profiler.storage.dsn">file:D:/web/var/cache/dev/profiler</parameter>
+    <parameter key="profiler.storage.dsn">file:D:\web\var\cache\dev/profiler</parameter>
     <parameter key="doctrine.dbal.configuration.class">Doctrine\DBAL\Configuration</parameter>
     <parameter key="doctrine.data_collector.class">Doctrine\Bundle\DoctrineBundle\DataCollector\DoctrineDataCollector</parameter>
     <parameter key="doctrine.dbal.connection.event_manager.class">Symfony\Bridge\Doctrine\ContainerAwareEventManager</parameter>
@@ -233,7 +233,7 @@
     <parameter key="doctrine.orm.auto_generate_proxy_classes">true</parameter>
     <parameter key="doctrine.orm.enable_lazy_ghost_objects">true</parameter>
     <parameter key="doctrine.orm.enable_native_lazy_objects">false</parameter>
-    <parameter key="doctrine.orm.proxy_dir">D:/web/var/cache/dev/doctrine/orm/Proxies</parameter>
+    <parameter key="doctrine.orm.proxy_dir">D:\web\var\cache\dev/doctrine/orm/Proxies</parameter>
     <parameter key="doctrine.orm.proxy_namespace">Proxies</parameter>
     <parameter key="doctrine.migrations.preferred_em">null</parameter>
     <parameter key="doctrine.migrations.preferred_connection">null</parameter>
@@ -426,6 +426,14 @@
       <argument type="service" id="doctrine.dbal.default_connection"/>
       <call method="setContainer">
         <argument type="service" id=".service_locator.O2p6Lk7.App\Controller\AdminCourseReportsController"/>
+      </call>
+    </service>
+    <service id="App\Controller\AdminCoursesController" class="App\Controller\AdminCoursesController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
+      <tag name="container.service_subscriber"/>
+      <argument type="service" id="doctrine.dbal.default_connection"/>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.O2p6Lk7.App\Controller\AdminCoursesController"/>
       </call>
     </service>
     <service id="App\Controller\AdminDashboardController" class="App\Controller\AdminDashboardController" public="true" autowire="true" autoconfigure="true">
@@ -662,7 +670,7 @@
       <tag name="controller.service_arguments"/>
       <tag name="container.service_subscriber"/>
       <argument type="service" id="doctrine.dbal.default_connection"/>
-      <argument type="service" id="App\Service\ImageGenerationService"/>
+      <argument type="service" id="App\Service\ImageGen"/>
       <call method="setContainer">
         <argument type="service" id=".service_locator.O2p6Lk7.App\Controller\LibraryControllers\CoursesController"/>
       </call>
@@ -976,6 +984,9 @@
       <argument>%env(GROQ_CHAT_MODEL)%</argument>
       <argument>%env(GROQ_STT_MODEL)%</argument>
     </service>
+    <service id="App\Service\ImageGen" class="App\Service\ImageGen" autowire="true" autoconfigure="true">
+      <argument type="service" id=".debug.http_client"/>
+    </service>
     <service id="App\Service\ImageGenerationService" class="App\Service\ImageGenerationService" autowire="true" autoconfigure="true">
       <argument type="service" id=".debug.http_client"/>
     </service>
@@ -1046,7 +1057,7 @@
     </service>
     <service id="argument_resolver.service" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver">
       <tag priority="-50" name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver">controller.argument_value_resolver</tag>
-      <argument type="service" id=".service_locator.mOysAvW"/>
+      <argument type="service" id=".service_locator.N3GNCKU"/>
     </service>
     <service id="argument_resolver.default" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver">
       <tag priority="-100" name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver">controller.argument_value_resolver</tag>
@@ -1134,7 +1145,7 @@
       </argument>
     </service>
     <service id="http_cache.store" class="Symfony\Component\HttpKernel\HttpCache\Store">
-      <argument>D:/web/var/cache/dev/http_cache</argument>
+      <argument>D:\web\var\cache\dev/http_cache</argument>
     </service>
     <service id="url_helper" class="Symfony\Component\HttpFoundation\UrlHelper">
       <argument type="service" id="request_stack"/>
@@ -1144,7 +1155,7 @@
       <tag name="container.no_preload"/>
       <argument type="tagged_iterator" tag="kernel.cache_warmer"/>
       <argument>true</argument>
-      <argument>D:/web/var/cache/dev/App_KernelDevDebugContainerDeprecations.log</argument>
+      <argument>D:\web\var\cache\dev/App_KernelDevDebugContainerDeprecations.log</argument>
     </service>
     <service id="cache_clearer" class="Symfony\Component\HttpKernel\CacheClearer\ChainCacheClearer">
       <argument type="tagged_iterator" tag="kernel.cache_clearer"/>
@@ -2165,7 +2176,7 @@
       <argument></argument>
       <argument>0</argument>
       <argument>%container.build_id%</argument>
-      <argument>D:/web/var/cache/dev/pools/system</argument>
+      <argument>D:\web\var\cache\dev/pools/system</argument>
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
     </service>
@@ -2184,7 +2195,7 @@
       <tag name="monolog.logger" channel="cache"/>
       <argument></argument>
       <argument>0</argument>
-      <argument>D:/web/var/cache/dev/pools/app</argument>
+      <argument>D:\web\var\cache\dev/pools/app</argument>
       <argument type="service" id="cache.default_marshaller" on-invalid="ignore"/>
       <call method="setLogger">
         <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
@@ -2355,7 +2366,7 @@
     <service id="asset_mapper.cached_mapped_asset_factory" class="Symfony\Component\AssetMapper\Factory\CachedMappedAssetFactory">
       <tag name="container.decorator" id="asset_mapper.mapped_asset_factory" inner="asset_mapper.cached_mapped_asset_factory.inner"/>
       <argument type="service" id="asset_mapper.cached_mapped_asset_factory.inner"/>
-      <argument>D:/web/var/cache/dev/asset_mapper</argument>
+      <argument>D:\web\var\cache\dev/asset_mapper</argument>
       <argument>true</argument>
     </service>
     <service id="asset_mapper.repository" class="Symfony\Component\AssetMapper\AssetMapperRepository">
@@ -2726,7 +2737,7 @@
         </argument>
       </argument>
       <argument type="collection">
-        <argument key="cache_dir">D:/web/var/cache/dev/translations</argument>
+        <argument key="cache_dir">D:\web\var\cache\dev/translations</argument>
         <argument key="debug">true</argument>
         <argument key="resource_files" type="collection">
           <argument key="af" type="collection">
@@ -4152,7 +4163,7 @@
     </service>
     <service id="argument_resolver.not_tagged_controller" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\NotTaggedControllerValueResolver">
       <tag name="controller.argument_value_resolver" priority="-200"/>
-      <argument type="service" id=".service_locator.mOysAvW"/>
+      <argument type="service" id=".service_locator.N3GNCKU"/>
     </service>
     <service id="debug.log_processor" class="Symfony\Bridge\Monolog\Processor\DebugProcessor">
       <tag name="kernel.reset" method="reset"/>
@@ -4255,7 +4266,7 @@
       <argument type="service" id=".service_locator.bN.V_Nq.router.default"/>
       <argument>kernel::loadRoutes</argument>
       <argument type="collection">
-        <argument key="cache_dir">D:/web/var/cache/dev</argument>
+        <argument key="cache_dir">D:\web\var\cache\dev</argument>
         <argument key="debug">true</argument>
         <argument key="generator_class">Symfony\Component\Routing\Generator\CompiledUrlGenerator</argument>
         <argument key="generator_dumper_class">Symfony\Component\Routing\Generator\Dumper\CompiledUrlGeneratorDumper</argument>
@@ -4434,10 +4445,10 @@
           </service>
         </argument>
       </argument>
-      <argument>D:/web/var/cache/dev/serialization.php</argument>
+      <argument>D:\web\var\cache\dev/serialization.php</argument>
     </service>
     <service id="serializer.mapping.cache.symfony" class="Psr\Cache\CacheItemPoolInterface">
-      <argument>D:/web/var/cache/dev/serialization.php</argument>
+      <argument>D:\web\var\cache\dev/serialization.php</argument>
       <argument type="service" id="cache.serializer"/>
       <factory class="Symfony\Component\Cache\Adapter\PhpArrayAdapter" method="create"/>
     </service>
@@ -4575,7 +4586,7 @@
       <argument>false</argument>
     </service>
     <service id="session.storage.factory.mock_file" class="Symfony\Component\HttpFoundation\Session\Storage\MockFileSessionStorageFactory">
-      <argument>D:/web/var/cache/dev/sessions</argument>
+      <argument>D:\web\var\cache\dev/sessions</argument>
       <argument>MOCKSESSID</argument>
       <argument type="service">
         <service class="Symfony\Component\HttpFoundation\Session\Storage\MetadataBag">
@@ -4593,7 +4604,7 @@
     <service id="session.handler.native_file" class="Symfony\Component\HttpFoundation\Session\Storage\Handler\StrictSessionHandler">
       <argument type="service">
         <service class="Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeFileSessionHandler">
-          <argument>D:/web/var/cache/dev/sessions</argument>
+          <argument>D:\web\var\cache\dev/sessions</argument>
         </service>
       </argument>
     </service>
@@ -4781,10 +4792,10 @@
     <service id="validator.mapping.cache_warmer" class="Symfony\Bundle\FrameworkBundle\CacheWarmer\ValidatorCacheWarmer">
       <tag name="kernel.cache_warmer"/>
       <argument type="service" id="validator.builder"/>
-      <argument>D:/web/var/cache/dev/validation.php</argument>
+      <argument>D:\web\var\cache\dev/validation.php</argument>
     </service>
     <service id="validator.mapping.cache.adapter" class="Symfony\Component\Cache\Adapter\PhpArrayAdapter" constructor="create">
-      <argument>D:/web/var/cache/dev/validation.php</argument>
+      <argument>D:\web\var\cache\dev/validation.php</argument>
       <argument type="service" id="cache.validator"/>
     </service>
     <service id="validator.validator_factory" class="Symfony\Component\Validator\ContainerConstraintValidatorFactory">
@@ -5449,7 +5460,7 @@
       </call>
     </service>
     <service id="profiler.storage" class="Symfony\Component\HttpKernel\Profiler\FileProfilerStorage">
-      <argument>file:D:/web/var/cache/dev/profiler</argument>
+      <argument>file:D:\web\var\cache\dev/profiler</argument>
     </service>
     <service id="profiler_listener" class="Symfony\Component\HttpKernel\EventListener\ProfilerListener">
       <tag name="kernel.event_subscriber"/>
@@ -5514,7 +5525,7 @@
       <tag name="monolog.logger" channel="profiler"/>
       <tag name="data_collector" template="@WebProfiler/Collector/logger.html.twig" id="logger" priority="300"/>
       <argument type="service" id="monolog.logger.profiler" on-invalid="ignore"/>
-      <argument>D:/web/var/cache/dev/App_KernelDevDebugContainer</argument>
+      <argument>D:\web\var\cache\dev/App_KernelDevDebugContainer</argument>
       <argument type="service" id=".virtual_request_stack" on-invalid="ignore"/>
     </service>
     <service id="data_collector.time" class="Symfony\Component\HttpKernel\DataCollector\TimeDataCollector">
@@ -6110,7 +6121,7 @@
         <argument type="service" id=".doctrine.orm.default_metadata_driver"/>
       </call>
       <call method="setProxyDir">
-        <argument>D:/web/var/cache/dev/doctrine/orm/Proxies</argument>
+        <argument>D:\web\var\cache\dev/doctrine/orm/Proxies</argument>
       </call>
       <call method="setProxyNamespace">
         <argument>Proxies</argument>
@@ -6530,7 +6541,7 @@
       <argument type="service" id="twig.loader.native_filesystem"/>
       <argument type="collection">
         <argument key="autoescape">name</argument>
-        <argument key="cache">D:/web/var/cache/dev/twig</argument>
+        <argument key="cache">D:\web\var\cache\dev/twig</argument>
         <argument key="charset">UTF-8</argument>
         <argument key="debug">true</argument>
         <argument key="strict_variables">true</argument>
@@ -8528,6 +8539,9 @@
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\AdminCourseReportsController" class="App\Controller\AdminCourseReportsController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\AdminCourseReportsController" class="App\Controller\AdminCourseReportsController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\AdminCourseReportsController" class="App\Controller\AdminCourseReportsController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\AdminCoursesController" class="App\Controller\AdminCoursesController" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\AdminCoursesController" class="App\Controller\AdminCoursesController" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Controller\AdminCoursesController" class="App\Controller\AdminCoursesController" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\AdminDashboardController" class="App\Controller\AdminDashboardController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\AdminDashboardController" class="App\Controller\AdminDashboardController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\AdminDashboardController" class="App\Controller\AdminDashboardController" autowire="true" autoconfigure="true" abstract="true"/>
@@ -9448,10 +9462,13 @@
         <argument key="em" type="service_closure" id="doctrine.orm.default_entity_manager"/>
       </argument>
     </service>
-    <service id=".service_locator.H5sI1nz" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".errored.S0NraJl" class="App\Controller\ImageGenerationService">
+      <tag name="container.error" message="Cannot determine controller argument for &quot;App\Controller\ForumController::generateImage()&quot;: the $imageGenerator argument is type-hinted with the non-existent class or interface: &quot;App\Controller\ImageGenerationService&quot;. Did you forget to add a use statement?"/>
+    </service>
+    <service id=".service_locator.CDGeBKw" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
-        <argument key="imageGenerator" type="service_closure" id="App\Service\ImageGenerationService"/>
+        <argument key="imageGenerator" type="service_closure" id=".errored.S0NraJl"/>
       </argument>
     </service>
     <service id=".service_locator.m8EDxAh" class="Symfony\Component\DependencyInjection\ServiceLocator">
@@ -9606,7 +9623,7 @@
         <argument key="tacheRepository" type="service_closure" id="App\Repository\TacheRepository"/>
       </argument>
     </service>
-    <service id=".service_locator.mOysAvW" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.N3GNCKU" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="App\Controller\ActivitesController::apiAdd" type="service_closure" id=".service_locator.Rd84jSm"/>
@@ -9689,7 +9706,7 @@
         <argument key="App\Controller\ForumController::editCategorie" type="service_closure" id=".service_locator.9kKwU2t"/>
         <argument key="App\Controller\ForumController::editComment" type="service_closure" id=".service_locator.9kKwU2t"/>
         <argument key="App\Controller\ForumController::editPost" type="service_closure" id=".service_locator.P3uOD4s"/>
-        <argument key="App\Controller\ForumController::generateImage" type="service_closure" id=".service_locator.H5sI1nz"/>
+        <argument key="App\Controller\ForumController::generateImage" type="service_closure" id=".service_locator.CDGeBKw"/>
         <argument key="App\Controller\ForumController::index" type="service_closure" id=".service_locator.9kKwU2t"/>
         <argument key="App\Controller\ForumController::newCategorie" type="service_closure" id=".service_locator.9kKwU2t"/>
         <argument key="App\Controller\ForumController::newComment" type="service_closure" id=".service_locator.QFzwCKh"/>
@@ -9826,7 +9843,7 @@
         <argument key="App\Controller\ForumController:editCategorie" type="service_closure" id=".service_locator.9kKwU2t"/>
         <argument key="App\Controller\ForumController:editComment" type="service_closure" id=".service_locator.9kKwU2t"/>
         <argument key="App\Controller\ForumController:editPost" type="service_closure" id=".service_locator.P3uOD4s"/>
-        <argument key="App\Controller\ForumController:generateImage" type="service_closure" id=".service_locator.H5sI1nz"/>
+        <argument key="App\Controller\ForumController:generateImage" type="service_closure" id=".service_locator.CDGeBKw"/>
         <argument key="App\Controller\ForumController:index" type="service_closure" id=".service_locator.9kKwU2t"/>
         <argument key="App\Controller\ForumController:newCategorie" type="service_closure" id=".service_locator.9kKwU2t"/>
         <argument key="App\Controller\ForumController:newComment" type="service_closure" id=".service_locator.QFzwCKh"/>
@@ -10633,6 +10650,12 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.O2p6Lk7" method="withContext"/>
     </service>
+    <service id=".service_locator.O2p6Lk7.App\Controller\AdminCoursesController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\AdminCoursesController"/>
+      <argument>App\Controller\AdminCoursesController</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.O2p6Lk7" method="withContext"/>
+    </service>
     <service id=".service_locator.O2p6Lk7.App\Controller\AdminDashboardController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\AdminDashboardController"/>
       <argument>App\Controller\AdminDashboardController</argument>
@@ -11073,6 +11096,7 @@
           <argument>App\Kernel</argument>
           <argument>App\Controller\ActivitesController</argument>
           <argument>App\Controller\AdminCourseReportsController</argument>
+          <argument>App\Controller\AdminCoursesController</argument>
           <argument>App\Controller\AdminDashboardController</argument>
           <argument>App\Controller\AdminDemandeController</argument>
           <argument>App\Controller\AdminEvenementController</argument>
@@ -12300,7 +12324,7 @@
     <service id="cache.app.recorder_inner" class="Symfony\Component\Cache\Adapter\FilesystemAdapter">
       <argument>YnZ15YEgQU</argument>
       <argument>0</argument>
-      <argument>D:/web/var/cache/dev/pools/app</argument>
+      <argument>D:\web\var\cache\dev/pools/app</argument>
       <argument type="service" id="cache.default_marshaller" on-invalid="ignore"/>
       <call method="setLogger">
         <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
@@ -12310,7 +12334,7 @@
       <argument>y3O68hhatQ</argument>
       <argument>0</argument>
       <argument>%container.build_id%</argument>
-      <argument>D:/web/var/cache/dev/pools/system</argument>
+      <argument>D:\web\var\cache\dev/pools/system</argument>
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
     </service>
@@ -12318,7 +12342,7 @@
       <argument>vqQP3gUb-z</argument>
       <argument>0</argument>
       <argument>%container.build_id%</argument>
-      <argument>D:/web/var/cache/dev/pools/system</argument>
+      <argument>D:\web\var\cache\dev/pools/system</argument>
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
     </service>
@@ -12326,7 +12350,7 @@
       <argument>5aX-ZOivBi</argument>
       <argument>0</argument>
       <argument>%container.build_id%</argument>
-      <argument>D:/web/var/cache/dev/pools/system</argument>
+      <argument>D:\web\var\cache\dev/pools/system</argument>
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
     </service>
@@ -12334,7 +12358,7 @@
       <argument>yhX30j7aut</argument>
       <argument>0</argument>
       <argument>%container.build_id%</argument>
-      <argument>D:/web/var/cache/dev/pools/system</argument>
+      <argument>D:\web\var\cache\dev/pools/system</argument>
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
     </service>
@@ -12342,7 +12366,7 @@
       <argument>F0W8PCUC9n</argument>
       <argument>0</argument>
       <argument>%container.build_id%</argument>
-      <argument>D:/web/var/cache/dev/pools/system</argument>
+      <argument>D:\web\var\cache\dev/pools/system</argument>
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
     </service>
@@ -12350,14 +12374,14 @@
       <argument>KSTpahHvQZ</argument>
       <argument>0</argument>
       <argument>%container.build_id%</argument>
-      <argument>D:/web/var/cache/dev/pools/system</argument>
+      <argument>D:\web\var\cache\dev/pools/system</argument>
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
     </service>
     <service id="cache.messenger.restart_workers_signal.recorder_inner" class="Symfony\Component\Cache\Adapter\FilesystemAdapter">
       <argument>PP1VmSIi9o</argument>
       <argument>0</argument>
-      <argument>D:/web/var/cache/dev/pools/app</argument>
+      <argument>D:\web\var\cache\dev/pools/app</argument>
       <argument type="service" id="cache.default_marshaller" on-invalid="ignore"/>
       <call method="setLogger">
         <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
@@ -12367,7 +12391,7 @@
       <argument>M3o2UsFEAk</argument>
       <argument>0</argument>
       <argument>%container.build_id%</argument>
-      <argument>D:/web/var/cache/dev/pools/system</argument>
+      <argument>D:\web\var\cache\dev/pools/system</argument>
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
     </service>
@@ -12377,7 +12401,7 @@
       <argument>RixGLpsWYr</argument>
       <argument>0</argument>
       <argument>%container.build_id%</argument>
-      <argument>D:/web/var/cache/dev/pools/system</argument>
+      <argument>D:\web\var\cache\dev/pools/system</argument>
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
     </service>
@@ -12385,7 +12409,7 @@
       <argument>rjM-T8DQhg</argument>
       <argument>0</argument>
       <argument>%container.build_id%</argument>
-      <argument>D:/web/var/cache/dev/pools/system</argument>
+      <argument>D:\web\var\cache\dev/pools/system</argument>
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
     </service>
@@ -12393,7 +12417,7 @@
       <argument>XhuyuPuTUN</argument>
       <argument>0</argument>
       <argument>%container.build_id%</argument>
-      <argument>D:/web/var/cache/dev/pools/system</argument>
+      <argument>D:\web\var\cache\dev/pools/system</argument>
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
     </service>
@@ -12611,7 +12635,7 @@
     <service id="Symfony\UX\Chartjs\Builder\ChartBuilderInterface" alias="chartjs.builder"/>
     <service id="container.env_var_processors_locator" alias=".service_locator.w7.f4fT" public="true"/>
     <service id="twig.loader.filesystem" alias="twig.loader.native_filesystem"/>
-    <service id="argument_resolver.controller_locator" alias=".service_locator.mOysAvW"/>
+    <service id="argument_resolver.controller_locator" alias=".service_locator.N3GNCKU"/>
     <service id="doctrine.id_generator_locator" alias=".service_locator.KLVvNIq"/>
     <service id="twig.loader" alias="twig.loader.native_filesystem"/>
     <service id=".Psr\Log\LoggerInterface $request.logger" alias="monolog.logger.request"/>
@@ -12675,7 +12699,7 @@
     <service id=".service_locator.L4eGOP_" alias=".service_locator.YU062BO"/>
     <service id=".service_locator..ECHu9G" alias=".service_locator.0kfqJtX"/>
     <service id=".service_locator.hJ0Dj6t" alias=".service_locator.uyB3tlS"/>
-    <service id=".service_locator.ABNvl1Y" alias=".service_locator.mOysAvW"/>
+    <service id=".service_locator.Qf3OTog" alias=".service_locator.N3GNCKU"/>
     <service id=".service_locator.BFrsqsn" alias=".service_locator.F9PKc.7"/>
     <service id=".service_locator.k10pkrx" alias=".service_locator.umK6c0x"/>
     <service id=".service_locator.XtmiKbi" alias=".service_locator.MfxSDRP"/>
@@ -12745,7 +12769,6 @@
     <service id=".service_locator.Upy_HSa" alias=".service_locator.KzUmWl9"/>
     <service id=".service_locator.vqRoGRv" alias=".service_locator.yqE9B.3"/>
     <service id=".service_locator.gaTSUXr" alias=".service_locator.9kKwU2t"/>
-    <service id=".service_locator.tTHR5zQ" alias=".service_locator.H5sI1nz"/>
     <service id=".service_locator.danwHqY" alias=".service_locator.m8EDxAh"/>
     <service id=".service_locator.zBxd2ex" alias=".service_locator.e82AYDp"/>
     <service id=".service_locator.SoFxSjl" alias=".service_locator.uURT18R"/>
