@@ -670,7 +670,7 @@
       <tag name="controller.service_arguments"/>
       <tag name="container.service_subscriber"/>
       <argument type="service" id="doctrine.dbal.default_connection"/>
-      <argument type="service" id="App\Service\ImageGen"/>
+      <argument type="service" id="App\Service\ImageGenerationService"/>
       <call method="setContainer">
         <argument type="service" id=".service_locator.O2p6Lk7.App\Controller\LibraryControllers\CoursesController"/>
       </call>

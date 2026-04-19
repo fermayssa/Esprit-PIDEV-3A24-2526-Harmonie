@@ -2,7 +2,7 @@
 
 namespace App\Controller\LibraryControllers;
 
-use App\Service\ImageGen;
+use App\Service\ImageGenerationService as ImageGen;
 use Doctrine\DBAL\Connection;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
