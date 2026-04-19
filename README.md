@@ -118,59 +118,6 @@ templates/forum/
 
 ---
 
-## ⚙️ Configuration requise
-
-### Variables d'environnement `.env`
-
-```env
-# Groq API — Résumé IA + Analyse sentiment
-GROQ_API_KEY=gsk_xxxxxxxxxxxxxxxxxxxxxxxxxxxx
-
-# HuggingFace — Génération d'image
-HUGGINGFACE_API_KEY=hf_xxxxxxxxxxxxxxxxxxxx
-```
-
-### Services `config/services.yaml`
-
-```yaml
-services:
-    App\Service\SummaryService:
-        arguments:
-            $apiKey: '%env(GROQ_API_KEY)%'
-
-    App\Service\SentimentService:
-        arguments:
-            $apiKey: '%env(GROQ_API_KEY)%'
-
-    App\Service\ImageGenerationService:
-        arguments:
-            $apiKey: '%env(HUGGINGFACE_API_KEY)%'
-```
-
----
-
-## 🛠️ Installation & lancement
-
-```bash
-# 1. Cloner et se placer sur la branche
-git checkout GESTION-FORUM
-
-# 2. Installer les dépendances
-composer install
-
-# 3. Configurer la base de données
-php bin/console doctrine:database:create
-php bin/console doctrine:migrations:migrate
-
-# 4. Vider le cache
-php bin/console cache:clear
-
-# 5. Lancer le serveur
-symfony server:start
-```
-
----
-
 ## 🔗 Routes principales
 
 | Méthode | Route | Description |
