@@ -97,3 +97,17 @@ d4a7a8,::1,GET,http://localhost:8000/api/messaging/unread-count,1776628338,,200,
 8aa5d1,::1,GET,http://localhost:8000/api/messaging/mercure-token,1776628363,,200,request
 8340bc,::1,POST,http://localhost:8000/courses/30/report,1776628363,,200,request
 18dec1,::1,GET,http://localhost:8000/api/messaging/unread-count,1776628374,,200,request
+6d3714,::1,POST,http://localhost:8000/logout,1776628394,,302,request
+30a636,::1,GET,http://localhost:8000/login,1776628394,,200,request
+d48fed,::1,POST,http://localhost:8000/login,1776628405,,302,request
+cdb936,::1,GET,http://localhost:8000/,1776628406,,302,request
+b4fbe5,::1,GET,http://localhost:8000/admin,1776628406,,200,request
+21276e,::1,GET,http://localhost:8000/admin/course-reports,1776628413,,200,request
+29c760,::1,GET,http://localhost:8000/admin/course-reports?q=pyth&status=all,1776628449,,200,request
+c2facc,::1,GET,http://localhost:8000/admin/course-reports?q=pyth&status=pending,1776628463,,200,request
+ca860c,::1,GET,http://localhost:8000/admin/course-reports?q=pyth&status=all,1776628465,,200,request
+893b96,::1,GET,http://localhost:8000/admin/course-reports?q=pyth&status=all,1776629046,,200,request
+70cac0,::1,POST,http://localhost:8000/admin/course-reports/dismiss/2,1776629074,,200,request
+928e4e,::1,GET,http://localhost:8000/admin/course-reports?q=pyth&status=all,1776629074,,200,request
+751a19,::1,GET,http://localhost:8000/admin/course-reports?q=&status=all,1776629083,,200,request
+4473c4,::1,GET,http://localhost:8000/admin/courses,1776629086,,200,request

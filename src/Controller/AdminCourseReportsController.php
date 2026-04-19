@@ -27,53 +27,59 @@ class AdminCourseReportsController extends AbstractController
             $where[]  = 'cr.status = ?';
             $params[] = $status;
         }
-
         if ($search !== '') {
             $where[]  = '(c.title LIKE ? OR reporter.user_email LIKE ?)';
             $params[] = '%' . $search . '%';
             $params[] = '%' . $search . '%';
         }
 
-        $sql = '
-            SELECT
-                cr.id,
-                cr.course_id,
-                cr.reporter_id,
-                cr.reason,
-                cr.details,
-                cr.status,
-                cr.created_at,
-                c.title            AS course_title,
-                c.is_published     AS course_is_published,
-                c.userid              AS course_owner_id,
-                owner.user_email      AS owner_email,
-                reporter.user_email   AS reporter_email,
-                (SELECT COUNT(*) FROM course_reports x WHERE x.course_id = cr.course_id) AS total_reports
-            FROM course_reports cr
-            JOIN courses c              ON c.id = cr.course_id
-            LEFT JOIN `user` owner    ON owner.user_id = c.userid
-            LEFT JOIN `user` reporter ON reporter.user_id = cr.reporter_id
-        ';
+        $sql = 'SELECT'
+            . ' cr.id, cr.course_id, cr.reporter_id, cr.reason, cr.details, cr.status, cr.created_at,'
+            . ' c.title AS course_title, c.is_published AS course_is_published, c.userid AS course_owner_id,'
+            . ' owner.user_email AS owner_email,'
+            . ' reporter.user_email AS reporter_email'
+            . ' FROM course_reports cr'
+            . ' JOIN courses c ON c.id = cr.course_id'
+            . ' LEFT JOIN user owner ON owner.user_id = c.userid'
+            . ' LEFT JOIN user reporter ON reporter.user_id = cr.reporter_id';
 
         if ($where) {
             $sql .= ' WHERE ' . implode(' AND ', $where);
         }
+        $sql .= ' ORDER BY cr.course_id ASC, cr.created_at DESC';
 
-        $sql .= ' ORDER BY cr.created_at DESC';
+        $rows = $this->db->fetchAllAssociative($sql, $params);
 
-        $reports = $this->db->fetchAllAssociative($sql, $params);
+        // Group rows by course_id
+        $grouped = [];
+        foreach ($rows as $row) {
+            $cid = $row['course_id'];
+            if (!isset($grouped[$cid])) {
+                $grouped[$cid] = [
+                    'course_id'          => $cid,
+                    'course_title'       => $row['course_title'],
+                    'course_is_published'=> $row['course_is_published'],
+                    'owner_email'        => $row['owner_email'],
+                    'reports'            => [],
+                ];
+            }
+            $grouped[$cid]['reports'][] = $row;
+        }
 
-        $stats = $this->db->fetchAssociative('
-            SELECT
-                COUNT(*)                                              AS total,
-                SUM(status = \'pending\')                             AS pending,
-                SUM(status = \'reviewed\')                            AS reviewed,
-                SUM(status = \'dismissed\')                           AS dismissed
-            FROM course_reports
-        ');
+        // Compute worst status per group (pending > reviewed > dismissed)
+        $priority = ['pending' => 0, 'reviewed' => 1, 'dismissed' => 2];
+        foreach ($grouped as &$group) {
+            usort($group['reports'], fn($a, $b) => ($priority[$a['status']] ?? 9) - ($priority[$b['status']] ?? 9));
+            $group['worst_status'] = $group['reports'][0]['status'] ?? 'dismissed';
+        }
+        unset($group);
+
+        $stats = $this->db->fetchAssociative(
+            "SELECT COUNT(*) AS total, SUM(status='pending') AS pending, SUM(status='reviewed') AS reviewed, SUM(status='dismissed') AS dismissed FROM course_reports"
+        );
 
         return $this->render('admin/library/course-reports.html.twig', [
-            'reports'       => $reports,
+            'grouped'       => array_values($grouped),
             'stats'         => $stats,
             'currentStatus' => $status,
             'search'        => $search,
@@ -87,17 +93,14 @@ class AdminCourseReportsController extends AbstractController
             'UPDATE courses SET is_published = 0, admin_locked = 1 WHERE id = ?',
             [$courseId]
         );
-
         if ($affected === 0) {
             return $this->json(['message' => 'Course not found.'], 404);
         }
-
         $this->db->executeStatement(
             "UPDATE course_reports SET status = 'reviewed' WHERE course_id = ? AND status = 'pending'",
             [$courseId]
         );
-
-        $this->addFlash('success', 'Course unpublished and locked. The owner cannot republish it.');
+        $this->addFlash('success', 'Cours dépublié et verrouillé.');
         return $this->json(['ok' => true]);
     }
 
@@ -108,11 +111,9 @@ class AdminCourseReportsController extends AbstractController
             "UPDATE course_reports SET status = 'dismissed' WHERE id = ?",
             [$reportId]
         );
-
         if ($affected === 0) {
             return $this->json(['message' => 'Report not found.'], 404);
         }
-
         return $this->json(['ok' => true]);
     }
 
@@ -123,12 +124,10 @@ class AdminCourseReportsController extends AbstractController
             'UPDATE courses SET is_published = 1, admin_locked = 0 WHERE id = ?',
             [$courseId]
         );
-
         if ($affected === 0) {
             return $this->json(['message' => 'Course not found.'], 404);
         }
-
-        $this->addFlash('success', 'Course restored and republished successfully.');
+        $this->addFlash('success', 'Cours restauré et republié.');
         return $this->json(['ok' => true]);
     }
 }
