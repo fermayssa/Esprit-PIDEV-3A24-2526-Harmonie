@@ -13,7 +13,7 @@ class MiddlewareConfig
     private $id;
     private $arguments;
     private $_usedProperties = [];
-    
+
     /**
      * @default null
      * @param ParamConfigurator|mixed $value
@@ -23,10 +23,10 @@ class MiddlewareConfig
     {
         $this->_usedProperties['id'] = true;
         $this->id = $value;
-    
+
         return $this;
     }
-    
+
     /**
      * @param ParamConfigurator|list<ParamConfigurator|mixed> $value
      *
@@ -36,29 +36,29 @@ class MiddlewareConfig
     {
         $this->_usedProperties['arguments'] = true;
         $this->arguments = $value;
-    
+
         return $this;
     }
-    
-    public function __construct(array $config = [])
+
+    public function __construct(array $value = [])
     {
-        if (array_key_exists('id', $config)) {
+        if (array_key_exists('id', $value)) {
             $this->_usedProperties['id'] = true;
-            $this->id = $config['id'];
-            unset($config['id']);
+            $this->id = $value['id'];
+            unset($value['id']);
         }
-    
-        if (array_key_exists('arguments', $config)) {
+
+        if (array_key_exists('arguments', $value)) {
             $this->_usedProperties['arguments'] = true;
-            $this->arguments = $config['arguments'];
-            unset($config['arguments']);
+            $this->arguments = $value['arguments'];
+            unset($value['arguments']);
         }
-    
-        if ($config) {
-            throw new InvalidConfigurationException(sprintf('The following keys are not supported by "%s": ', __CLASS__).implode(', ', array_keys($config)));
+
+        if ([] !== $value) {
+            throw new InvalidConfigurationException(sprintf('The following keys are not supported by "%s": ', __CLASS__).implode(', ', array_keys($value)));
         }
     }
-    
+
     public function toArray(): array
     {
         $output = [];
@@ -68,7 +68,7 @@ class MiddlewareConfig
         if (isset($this->_usedProperties['arguments'])) {
             $output['arguments'] = $this->arguments;
         }
-    
+
         return $output;
     }
 

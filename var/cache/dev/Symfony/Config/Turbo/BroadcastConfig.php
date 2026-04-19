@@ -16,7 +16,7 @@ class BroadcastConfig
     private $entityTemplatePrefixes;
     private $doctrineOrm;
     private $_usedProperties = [];
-    
+
     /**
      * @default true
      * @param ParamConfigurator|bool $value
@@ -26,10 +26,10 @@ class BroadcastConfig
     {
         $this->_usedProperties['enabled'] = true;
         $this->enabled = $value;
-    
+
         return $this;
     }
-    
+
     /**
      * @param ParamConfigurator|list<ParamConfigurator|mixed> $value
      *
@@ -39,62 +39,51 @@ class BroadcastConfig
     {
         $this->_usedProperties['entityTemplatePrefixes'] = true;
         $this->entityTemplatePrefixes = $value;
-    
+
         return $this;
     }
-    
+
     /**
-     * @template TValue of array|bool
-     * @param TValue $value
      * Enable the Doctrine ORM integration
      * @default {"enabled":true}
-     * @return \Symfony\Config\Turbo\Broadcast\DoctrineOrmConfig|$this
-     * @psalm-return (TValue is array ? \Symfony\Config\Turbo\Broadcast\DoctrineOrmConfig : static)
-     */
-    public function doctrineOrm(array|bool $value = []): \Symfony\Config\Turbo\Broadcast\DoctrineOrmConfig|static
+    */
+    public function doctrineOrm(array $value = []): \Symfony\Config\Turbo\Broadcast\DoctrineOrmConfig
     {
-        if (!\is_array($value)) {
-            $this->_usedProperties['doctrineOrm'] = true;
-            $this->doctrineOrm = $value;
-    
-            return $this;
-        }
-    
-        if (!$this->doctrineOrm instanceof \Symfony\Config\Turbo\Broadcast\DoctrineOrmConfig) {
+        if (null === $this->doctrineOrm) {
             $this->_usedProperties['doctrineOrm'] = true;
             $this->doctrineOrm = new \Symfony\Config\Turbo\Broadcast\DoctrineOrmConfig($value);
         } elseif (0 < \func_num_args()) {
             throw new InvalidConfigurationException('The node created by "doctrineOrm()" has already been initialized. You cannot pass values the second time you call doctrineOrm().');
         }
-    
+
         return $this->doctrineOrm;
     }
-    
-    public function __construct(array $config = [])
+
+    public function __construct(array $value = [])
     {
-        if (array_key_exists('enabled', $config)) {
+        if (array_key_exists('enabled', $value)) {
             $this->_usedProperties['enabled'] = true;
-            $this->enabled = $config['enabled'];
-            unset($config['enabled']);
+            $this->enabled = $value['enabled'];
+            unset($value['enabled']);
         }
-    
-        if (array_key_exists('entity_template_prefixes', $config)) {
+
+        if (array_key_exists('entity_template_prefixes', $value)) {
             $this->_usedProperties['entityTemplatePrefixes'] = true;
-            $this->entityTemplatePrefixes = $config['entity_template_prefixes'];
-            unset($config['entity_template_prefixes']);
+            $this->entityTemplatePrefixes = $value['entity_template_prefixes'];
+            unset($value['entity_template_prefixes']);
         }
-    
-        if (array_key_exists('doctrine_orm', $config)) {
+
+        if (array_key_exists('doctrine_orm', $value)) {
             $this->_usedProperties['doctrineOrm'] = true;
-            $this->doctrineOrm = \is_array($config['doctrine_orm']) ? new \Symfony\Config\Turbo\Broadcast\DoctrineOrmConfig($config['doctrine_orm']) : $config['doctrine_orm'];
-            unset($config['doctrine_orm']);
+            $this->doctrineOrm = new \Symfony\Config\Turbo\Broadcast\DoctrineOrmConfig($value['doctrine_orm']);
+            unset($value['doctrine_orm']);
         }
-    
-        if ($config) {
-            throw new InvalidConfigurationException(sprintf('The following keys are not supported by "%s": ', __CLASS__).implode(', ', array_keys($config)));
+
+        if ([] !== $value) {
+            throw new InvalidConfigurationException(sprintf('The following keys are not supported by "%s": ', __CLASS__).implode(', ', array_keys($value)));
         }
     }
-    
+
     public function toArray(): array
     {
         $output = [];
@@ -105,9 +94,9 @@ class BroadcastConfig
             $output['entity_template_prefixes'] = $this->entityTemplatePrefixes;
         }
         if (isset($this->_usedProperties['doctrineOrm'])) {
-            $output['doctrine_orm'] = $this->doctrineOrm instanceof \Symfony\Config\Turbo\Broadcast\DoctrineOrmConfig ? $this->doctrineOrm->toArray() : $this->doctrineOrm;
+            $output['doctrine_orm'] = $this->doctrineOrm->toArray();
         }
-    
+
         return $output;
     }
 

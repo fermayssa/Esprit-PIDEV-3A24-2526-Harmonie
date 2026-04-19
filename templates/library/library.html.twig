@@ -146,6 +146,72 @@
         .course-list-title { font-family: var(--font-head); font-size: 14px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .course-list-subject { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
 
+        /* ── RECOMMENDED COURSES ────────────────────────────── */
+        .recommended-section {
+            margin-bottom: 32px;
+        }
+        .recommended-header {
+            display: flex; align-items: center; gap: 12px; margin-bottom: 16px;
+        }
+        .recommended-icon {
+            width: 32px; height: 32px; border-radius: var(--r-md);
+            background: var(--purple-pale); display: grid; place-items: center;
+            font-size: 16px; flex-shrink: 0;
+        }
+        .recommended-title {
+            font-family: var(--font-head); font-weight: 700; font-size: 18px;
+            color: var(--text); margin: 0;
+        }
+        .recommended-subtitle {
+            font-size: 13px; color: var(--text-muted); margin: 0;
+        }
+        .recommended-scroll-container {
+            position: relative; overflow: hidden;
+        }
+        .recommended-courses {
+            display: flex; gap: 16px; overflow-x: auto; padding: 4px 0 12px;
+            scrollbar-width: thin; scrollbar-color: var(--purple-soft) transparent;
+        }
+        .recommended-courses::-webkit-scrollbar {
+            height: 6px;
+        }
+        .recommended-courses::-webkit-scrollbar-track {
+            background: var(--purple-ghost); border-radius: 3px;
+        }
+        .recommended-courses::-webkit-scrollbar-thumb {
+            background: var(--purple-soft); border-radius: 3px;
+        }
+        .recommended-courses::-webkit-scrollbar-thumb:hover {
+            background: var(--purple);
+        }
+        .recommended-course-card {
+            flex: 0 0 220px; background: var(--white); border: 1px solid var(--border);
+            border-radius: var(--r-lg); overflow: hidden; box-shadow: var(--sh-sm);
+            cursor: pointer; transition: box-shadow var(--t), transform var(--t);
+        }
+        .recommended-course-card:hover {
+            box-shadow: var(--sh-md); transform: translateY(-2px);
+        }
+        .recommended-course-image {
+            width: 100%; height: 120px; object-fit: cover; display: block;
+        }
+        .recommended-course-placeholder {
+            width: 100%; height: 120px; background: var(--purple-ghost);
+            display: grid; place-items: center; font-size: 2rem;
+        }
+        .recommended-course-body {
+            padding: 12px 14px 16px;
+        }
+        .recommended-course-title {
+            font-family: var(--font-head); font-size: 13px; font-weight: 700;
+            color: var(--text); margin-bottom: 4px; line-height: 1.3;
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .recommended-course-subject {
+            font-size: 11px; color: var(--text-muted);
+        }
+
         /* ── EMPTY STATE ────────────────────────────────────── */
         .empty-state {
             grid-column: 1/-1; display: flex; flex-direction: column; align-items: center;
@@ -272,6 +338,41 @@
             </div>
         </div>
 
+
+        {# ── RECOMMENDED COURSES ─────────────────────────────────────── #}
+        {% if recommendedCourses is not empty %}
+            <section class="recommended-section">
+                <div class="recommended-header">
+                    <div class="recommended-icon" aria-hidden="true">✨</div>
+                    <div>
+                        <h2 class="recommended-title">Recommended for You</h2>
+                        <p class="recommended-subtitle">Based on your course subjects</p>
+                    </div>
+                </div>
+                <div class="recommended-scroll-container">
+                    <div class="recommended-courses">
+                        {% for course in recommendedCourses %}
+                            <article class="recommended-course-card"
+                                     data-id="{{ course.id }}"
+                                     data-href="{{ path('app_courses_detail', {id: course.id}) }}"
+                                     tabindex="0" role="button" aria-label="Open {{ course.title }}">
+                                {% if course.coverImagePath %}
+                                    <img class="recommended-course-image" src="/covers/{{ course.coverImagePath }}"
+                                         alt="{{ course.title }}" width="220" height="120" loading="lazy">
+                                {% else %}
+                                    <div class="recommended-course-placeholder" aria-hidden="true">🎓</div>
+                                {% endif %}
+                                <div class="recommended-course-body">
+                                    <p class="recommended-course-title">{{ course.title }}</p>
+                                    {% if course.subjectName %}<p class="recommended-course-subject">{{ course.subjectName }}</p>{% endif %}
+                                </div>
+                            </article>
+                        {% endfor %}
+                    </div>
+                </div>
+            </section>
+        {% endif %}
+
         {# ── GRID VIEW ───────────────────────────────────────────────── #}
         <div class="courses-grid" id="gridView" aria-label="Library grid">
             {% if courses is not empty %}
@@ -351,7 +452,7 @@
             gridViewBtn.addEventListener('click', () => setView(true));
             listViewBtn.addEventListener('click', () => setView(false));
 
-            document.querySelectorAll('.course-card, .course-list-item').forEach(el => {
+            document.querySelectorAll('.course-card, .course-list-item, .recommended-course-card').forEach(el => {
                 el.addEventListener('click', () => window.location.href = el.dataset.href);
                 el.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); el.click(); } });
             });

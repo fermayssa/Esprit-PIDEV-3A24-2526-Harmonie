@@ -13,7 +13,7 @@ class PredisConfig
     private $id;
     private $host;
     private $_usedProperties = [];
-    
+
     /**
      * @default null
      * @param ParamConfigurator|mixed $value
@@ -23,10 +23,10 @@ class PredisConfig
     {
         $this->_usedProperties['id'] = true;
         $this->id = $value;
-    
+
         return $this;
     }
-    
+
     /**
      * @default null
      * @param ParamConfigurator|mixed $value
@@ -36,29 +36,29 @@ class PredisConfig
     {
         $this->_usedProperties['host'] = true;
         $this->host = $value;
-    
+
         return $this;
     }
-    
-    public function __construct(array $config = [])
+
+    public function __construct(array $value = [])
     {
-        if (array_key_exists('id', $config)) {
+        if (array_key_exists('id', $value)) {
             $this->_usedProperties['id'] = true;
-            $this->id = $config['id'];
-            unset($config['id']);
+            $this->id = $value['id'];
+            unset($value['id']);
         }
-    
-        if (array_key_exists('host', $config)) {
+
+        if (array_key_exists('host', $value)) {
             $this->_usedProperties['host'] = true;
-            $this->host = $config['host'];
-            unset($config['host']);
+            $this->host = $value['host'];
+            unset($value['host']);
         }
-    
-        if ($config) {
-            throw new InvalidConfigurationException(sprintf('The following keys are not supported by "%s": ', __CLASS__).implode(', ', array_keys($config)));
+
+        if ([] !== $value) {
+            throw new InvalidConfigurationException(sprintf('The following keys are not supported by "%s": ', __CLASS__).implode(', ', array_keys($value)));
         }
     }
-    
+
     public function toArray(): array
     {
         $output = [];
@@ -68,7 +68,7 @@ class PredisConfig
         if (isset($this->_usedProperties['host'])) {
             $output['host'] = $this->host;
         }
-    
+
         return $output;
     }
 

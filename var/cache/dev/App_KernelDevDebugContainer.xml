@@ -25,6 +25,7 @@
       <parameter key="SecurityBundle">Symfony\Bundle\SecurityBundle\SecurityBundle</parameter>
       <parameter key="MonologBundle">Symfony\Bundle\MonologBundle\MonologBundle</parameter>
       <parameter key="MakerBundle">Symfony\Bundle\MakerBundle\MakerBundle</parameter>
+      <parameter key="KnpSnappyBundle">Knp\Bundle\SnappyBundle\KnpSnappyBundle</parameter>
     </parameter>
     <parameter key="kernel.bundles_metadata" type="collection">
       <parameter key="FrameworkBundle" type="collection">
@@ -74,6 +75,10 @@
       <parameter key="MakerBundle" type="collection">
         <parameter key="path">D:\web\vendor\symfony\maker-bundle</parameter>
         <parameter key="namespace">Symfony\Bundle\MakerBundle</parameter>
+      </parameter>
+      <parameter key="KnpSnappyBundle" type="collection">
+        <parameter key="path">D:/web/vendor/knplabs/knp-snappy-bundle/src</parameter>
+        <parameter key="namespace">Knp\Bundle\SnappyBundle</parameter>
       </parameter>
     </parameter>
     <parameter key="kernel.charset">UTF-8</parameter>
@@ -253,6 +258,12 @@
         </parameter>
       </parameter>
     </parameter>
+    <parameter key="knp_snappy.pdf.binary">"C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe"</parameter>
+    <parameter key="knp_snappy.pdf.options" type="collection"/>
+    <parameter key="knp_snappy.pdf.env" type="collection"/>
+    <parameter key="knp_snappy.image.binary">"C:\Program Files\wkhtmltopdf\bin\wkhtmltoimage.exe"</parameter>
+    <parameter key="knp_snappy.image.options" type="collection"/>
+    <parameter key="knp_snappy.image.env" type="collection"/>
     <parameter key="data_collector.templates" type="collection">
       <parameter key="data_collector.request" type="collection">
         <parameter>request</parameter>
@@ -490,6 +501,7 @@
     <service id="App\Controller\LibraryController" class="App\Controller\LibraryController" public="true" autowire="true" autoconfigure="true">
       <tag name="controller.service_arguments"/>
       <tag name="container.service_subscriber"/>
+      <argument type="service" id="doctrine.dbal.default_connection"/>
       <call method="setContainer">
         <argument type="service" id=".service_locator.O2p6Lk7.App\Controller\LibraryController"/>
       </call>
@@ -498,6 +510,8 @@
       <tag name="controller.service_arguments"/>
       <tag name="container.service_subscriber"/>
       <argument type="service" id="doctrine.dbal.default_connection"/>
+      <argument type="service" id="App\Service\LibraryServices\SuggestionsService"/>
+      <argument type="service" id="Knp\Snappy\Pdf"/>
       <call method="setContainer">
         <argument type="service" id=".service_locator.O2p6Lk7.App\Controller\LibraryControllers\CourseDetailsController"/>
       </call>
@@ -509,14 +523,6 @@
       <argument type="service" id="App\Service\ImageGenerationService"/>
       <call method="setContainer">
         <argument type="service" id=".service_locator.O2p6Lk7.App\Controller\LibraryControllers\CoursesController"/>
-      </call>
-    </service>
-    <service id="App\Controller\LibraryControllers\LibraryController" class="App\Controller\LibraryControllers\LibraryController" public="true" autowire="true" autoconfigure="true">
-      <tag name="controller.service_arguments"/>
-      <tag name="container.service_subscriber"/>
-      <argument type="service" id="doctrine.dbal.default_connection"/>
-      <call method="setContainer">
-        <argument type="service" id=".service_locator.O2p6Lk7.App\Controller\LibraryControllers\LibraryController"/>
       </call>
     </service>
     <service id="App\Controller\MeditationController" class="App\Controller\MeditationController" public="true" autowire="true" autoconfigure="true">
@@ -755,6 +761,7 @@
     <service id="App\Service\ImageGenerationService" class="App\Service\ImageGenerationService" autowire="true" autoconfigure="true">
       <argument type="service" id=".debug.http_client"/>
     </service>
+    <service id="App\Service\LibraryServices\SuggestionsService" class="App\Service\LibraryServices\SuggestionsService" autowire="true" autoconfigure="true"/>
     <service id="App\Service\SuspicionScoreService" class="App\Service\SuspicionScoreService" autowire="true" autoconfigure="true"/>
     <service id="argument_metadata_factory" class="Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadataFactory"/>
     <service id="argument_resolver.backed_enum_resolver" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\BackedEnumValueResolver">
@@ -2751,6 +2758,7 @@
           <argument>D:\web\vendor\symfony\security-bundle/translations</argument>
           <argument>D:\web\vendor\symfony\monolog-bundle\src/translations</argument>
           <argument>D:\web\vendor\symfony\maker-bundle/translations</argument>
+          <argument>D:/web/vendor/knplabs/knp-snappy-bundle/src/translations</argument>
         </argument>
         <argument key="cache_vary" type="collection">
           <argument key="scanned_directories" type="collection">
@@ -2770,6 +2778,7 @@
             <argument>D:\web\vendor\symfony\security-bundle/translations</argument>
             <argument>D:\web\vendor\symfony\monolog-bundle\src/translations</argument>
             <argument>D:\web\vendor\symfony\maker-bundle/translations</argument>
+            <argument>D:/web/vendor/knplabs/knp-snappy-bundle/src/translations</argument>
           </argument>
         </argument>
       </argument>
@@ -7802,6 +7811,24 @@
       <argument type="service" id="maker.file_manager"/>
       <argument type="service" id="maker.generator"/>
     </service>
+    <service id="Knp\Snappy\Pdf" class="Knp\Snappy\Pdf" public="true" autowire="true">
+      <tag name="monolog.logger" channel="snappy"/>
+      <argument>"C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe"</argument>
+      <argument type="collection"/>
+      <argument type="collection"/>
+      <call method="setLogger">
+        <argument type="service" id="monolog.logger.snappy"/>
+      </call>
+    </service>
+    <service id="Knp\Snappy\Image" class="Knp\Snappy\Image" public="true" autowire="true">
+      <tag name="monolog.logger" channel="snappy"/>
+      <argument>"C:\Program Files\wkhtmltopdf\bin\wkhtmltoimage.exe"</argument>
+      <argument type="collection"/>
+      <argument type="collection"/>
+      <call method="setLogger">
+        <argument type="service" id="monolog.logger.snappy"/>
+      </call>
+    </service>
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\ActivitesController" class="App\Controller\ActivitesController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\ActivitesController" class="App\Controller\ActivitesController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\ActivitesController" class="App\Controller\ActivitesController" autowire="true" autoconfigure="true" abstract="true"/>
@@ -7862,9 +7889,6 @@
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\LibraryControllers\CoursesController" class="App\Controller\LibraryControllers\CoursesController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\LibraryControllers\CoursesController" class="App\Controller\LibraryControllers\CoursesController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\LibraryControllers\CoursesController" class="App\Controller\LibraryControllers\CoursesController" autowire="true" autoconfigure="true" abstract="true"/>
-    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\LibraryControllers\LibraryController" class="App\Controller\LibraryControllers\LibraryController" autowire="true" abstract="true"/>
-    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\LibraryControllers\LibraryController" class="App\Controller\LibraryControllers\LibraryController" autowire="true" abstract="true"/>
-    <service id=".abstract.instanceof.App\Controller\LibraryControllers\LibraryController" class="App\Controller\LibraryControllers\LibraryController" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\MeditationController" class="App\Controller\MeditationController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\MeditationController" class="App\Controller\MeditationController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\MeditationController" class="App\Controller\MeditationController" autowire="true" autoconfigure="true" abstract="true"/>
@@ -9408,6 +9432,17 @@
       </call>
       <configurator service="debug.debug_logger_configurator" method="pushDebugLogger"/>
     </service>
+    <service id="monolog.logger.snappy" class="Monolog\Logger">
+      <tag name="monolog.channel_logger"/>
+      <argument>snappy</argument>
+      <call method="pushHandler">
+        <argument type="service" id="monolog.handler.console"/>
+      </call>
+      <call method="pushHandler">
+        <argument type="service" id="monolog.handler.main"/>
+      </call>
+      <configurator service="debug.debug_logger_configurator" method="pushDebugLogger"/>
+    </service>
     <service id="monolog.logger.deprecation" class="Monolog\Logger" public="true">
       <tag name="monolog.channel_logger"/>
       <argument>deprecation</argument>
@@ -9708,12 +9743,6 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.O2p6Lk7" method="withContext"/>
     </service>
-    <service id=".service_locator.O2p6Lk7.App\Controller\LibraryControllers\LibraryController" class="Symfony\Component\DependencyInjection\ServiceLocator">
-      <tag name="container.service_locator_context" id="App\Controller\LibraryControllers\LibraryController"/>
-      <argument>App\Controller\LibraryControllers\LibraryController</argument>
-      <argument type="service" id="service_container"/>
-      <factory service=".service_locator.O2p6Lk7" method="withContext"/>
-    </service>
     <service id=".service_locator.O2p6Lk7.App\Controller\MeditationController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\MeditationController"/>
       <argument>App\Controller\MeditationController</argument>
@@ -9968,7 +9997,6 @@
           <argument>App\Controller\LibraryController</argument>
           <argument>App\Controller\LibraryControllers\CourseDetailsController</argument>
           <argument>App\Controller\LibraryControllers\CoursesController</argument>
-          <argument>App\Controller\LibraryControllers\LibraryController</argument>
           <argument>App\Controller\MeditationController</argument>
           <argument>App\Controller\MockUserController</argument>
           <argument>App\Controller\NutritionController</argument>
@@ -11382,6 +11410,8 @@
     <service id="Symfony\Component\Security\Core\User\UserCheckerInterface" alias="security.user_checker"/>
     <service id="logger" alias="monolog.logger"/>
     <service id="Psr\Log\LoggerInterface" alias="monolog.logger"/>
+    <service id="knp_snappy.pdf" alias="Knp\Snappy\Pdf" public="true"/>
+    <service id="knp_snappy.image" alias="Knp\Snappy\Image" public="true"/>
     <service id="container.env_var_processors_locator" alias=".service_locator.w7.f4fT" public="true"/>
     <service id="twig.loader.filesystem" alias="twig.loader.native_filesystem"/>
     <service id="argument_resolver.controller_locator" alias=".service_locator.YtreP4v"/>
@@ -11417,6 +11447,8 @@
     <service id="Psr\Log\LoggerInterface $debugLogger" alias="monolog.logger.debug"/>
     <service id=".Psr\Log\LoggerInterface $security.logger" alias="monolog.logger.security"/>
     <service id="Psr\Log\LoggerInterface $securityLogger" alias="monolog.logger.security"/>
+    <service id=".Psr\Log\LoggerInterface $snappy.logger" alias="monolog.logger.snappy"/>
+    <service id="Psr\Log\LoggerInterface $snappyLogger" alias="monolog.logger.snappy"/>
     <service id=".Psr\Log\LoggerInterface $deprecation.logger" alias="monolog.logger.deprecation"/>
     <service id="Psr\Log\LoggerInterface $deprecationLogger" alias="monolog.logger.deprecation"/>
     <service id=".service_locator.80edgLI" alias="messenger.receiver_locator"/>

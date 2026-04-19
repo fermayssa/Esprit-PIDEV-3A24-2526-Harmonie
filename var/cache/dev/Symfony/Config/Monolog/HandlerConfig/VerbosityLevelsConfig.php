@@ -16,7 +16,7 @@ class VerbosityLevelsConfig
     private $vERBOSITYVERYVERBOSE;
     private $vERBOSITYDEBUG;
     private $_usedProperties = [];
-    
+
     /**
      * @default 'ERROR'
      * @param ParamConfigurator|mixed $value
@@ -26,10 +26,10 @@ class VerbosityLevelsConfig
     {
         $this->_usedProperties['vERBOSITYQUIET'] = true;
         $this->vERBOSITYQUIET = $value;
-    
+
         return $this;
     }
-    
+
     /**
      * @default 'WARNING'
      * @param ParamConfigurator|mixed $value
@@ -39,10 +39,10 @@ class VerbosityLevelsConfig
     {
         $this->_usedProperties['vERBOSITYNORMAL'] = true;
         $this->vERBOSITYNORMAL = $value;
-    
+
         return $this;
     }
-    
+
     /**
      * @default 'NOTICE'
      * @param ParamConfigurator|mixed $value
@@ -52,10 +52,10 @@ class VerbosityLevelsConfig
     {
         $this->_usedProperties['vERBOSITYVERBOSE'] = true;
         $this->vERBOSITYVERBOSE = $value;
-    
+
         return $this;
     }
-    
+
     /**
      * @default 'INFO'
      * @param ParamConfigurator|mixed $value
@@ -65,10 +65,10 @@ class VerbosityLevelsConfig
     {
         $this->_usedProperties['vERBOSITYVERYVERBOSE'] = true;
         $this->vERBOSITYVERYVERBOSE = $value;
-    
+
         return $this;
     }
-    
+
     /**
      * @default 'DEBUG'
      * @param ParamConfigurator|mixed $value
@@ -78,47 +78,47 @@ class VerbosityLevelsConfig
     {
         $this->_usedProperties['vERBOSITYDEBUG'] = true;
         $this->vERBOSITYDEBUG = $value;
-    
+
         return $this;
     }
-    
-    public function __construct(array $config = [])
+
+    public function __construct(array $value = [])
     {
-        if (array_key_exists('VERBOSITY_QUIET', $config)) {
+        if (array_key_exists('VERBOSITY_QUIET', $value)) {
             $this->_usedProperties['vERBOSITYQUIET'] = true;
-            $this->vERBOSITYQUIET = $config['VERBOSITY_QUIET'];
-            unset($config['VERBOSITY_QUIET']);
+            $this->vERBOSITYQUIET = $value['VERBOSITY_QUIET'];
+            unset($value['VERBOSITY_QUIET']);
         }
-    
-        if (array_key_exists('VERBOSITY_NORMAL', $config)) {
+
+        if (array_key_exists('VERBOSITY_NORMAL', $value)) {
             $this->_usedProperties['vERBOSITYNORMAL'] = true;
-            $this->vERBOSITYNORMAL = $config['VERBOSITY_NORMAL'];
-            unset($config['VERBOSITY_NORMAL']);
+            $this->vERBOSITYNORMAL = $value['VERBOSITY_NORMAL'];
+            unset($value['VERBOSITY_NORMAL']);
         }
-    
-        if (array_key_exists('VERBOSITY_VERBOSE', $config)) {
+
+        if (array_key_exists('VERBOSITY_VERBOSE', $value)) {
             $this->_usedProperties['vERBOSITYVERBOSE'] = true;
-            $this->vERBOSITYVERBOSE = $config['VERBOSITY_VERBOSE'];
-            unset($config['VERBOSITY_VERBOSE']);
+            $this->vERBOSITYVERBOSE = $value['VERBOSITY_VERBOSE'];
+            unset($value['VERBOSITY_VERBOSE']);
         }
-    
-        if (array_key_exists('VERBOSITY_VERY_VERBOSE', $config)) {
+
+        if (array_key_exists('VERBOSITY_VERY_VERBOSE', $value)) {
             $this->_usedProperties['vERBOSITYVERYVERBOSE'] = true;
-            $this->vERBOSITYVERYVERBOSE = $config['VERBOSITY_VERY_VERBOSE'];
-            unset($config['VERBOSITY_VERY_VERBOSE']);
+            $this->vERBOSITYVERYVERBOSE = $value['VERBOSITY_VERY_VERBOSE'];
+            unset($value['VERBOSITY_VERY_VERBOSE']);
         }
-    
-        if (array_key_exists('VERBOSITY_DEBUG', $config)) {
+
+        if (array_key_exists('VERBOSITY_DEBUG', $value)) {
             $this->_usedProperties['vERBOSITYDEBUG'] = true;
-            $this->vERBOSITYDEBUG = $config['VERBOSITY_DEBUG'];
-            unset($config['VERBOSITY_DEBUG']);
+            $this->vERBOSITYDEBUG = $value['VERBOSITY_DEBUG'];
+            unset($value['VERBOSITY_DEBUG']);
         }
-    
-        if ($config) {
-            throw new InvalidConfigurationException(sprintf('The following keys are not supported by "%s": ', __CLASS__).implode(', ', array_keys($config)));
+
+        if ([] !== $value) {
+            throw new InvalidConfigurationException(sprintf('The following keys are not supported by "%s": ', __CLASS__).implode(', ', array_keys($value)));
         }
     }
-    
+
     public function toArray(): array
     {
         $output = [];
@@ -137,7 +137,7 @@ class VerbosityLevelsConfig
         if (isset($this->_usedProperties['vERBOSITYDEBUG'])) {
             $output['VERBOSITY_DEBUG'] = $this->vERBOSITYDEBUG;
         }
-    
+
         return $output;
     }
 

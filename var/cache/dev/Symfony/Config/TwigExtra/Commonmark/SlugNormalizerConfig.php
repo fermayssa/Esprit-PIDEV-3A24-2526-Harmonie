@@ -14,7 +14,7 @@ class SlugNormalizerConfig
     private $maxLength;
     private $unique;
     private $_usedProperties = [];
-    
+
     /**
      * @default null
      * @param ParamConfigurator|mixed $value
@@ -25,10 +25,10 @@ class SlugNormalizerConfig
     {
         $this->_usedProperties['instance'] = true;
         $this->instance = $value;
-    
+
         return $this;
     }
-    
+
     /**
      * @default 255
      * @param ParamConfigurator|int $value
@@ -38,10 +38,10 @@ class SlugNormalizerConfig
     {
         $this->_usedProperties['maxLength'] = true;
         $this->maxLength = $value;
-    
+
         return $this;
     }
-    
+
     /**
      * @default null
      * @param ParamConfigurator|mixed $value
@@ -52,35 +52,35 @@ class SlugNormalizerConfig
     {
         $this->_usedProperties['unique'] = true;
         $this->unique = $value;
-    
+
         return $this;
     }
-    
-    public function __construct(array $config = [])
+
+    public function __construct(array $value = [])
     {
-        if (array_key_exists('instance', $config)) {
+        if (array_key_exists('instance', $value)) {
             $this->_usedProperties['instance'] = true;
-            $this->instance = $config['instance'];
-            unset($config['instance']);
+            $this->instance = $value['instance'];
+            unset($value['instance']);
         }
-    
-        if (array_key_exists('max_length', $config)) {
+
+        if (array_key_exists('max_length', $value)) {
             $this->_usedProperties['maxLength'] = true;
-            $this->maxLength = $config['max_length'];
-            unset($config['max_length']);
+            $this->maxLength = $value['max_length'];
+            unset($value['max_length']);
         }
-    
-        if (array_key_exists('unique', $config)) {
+
+        if (array_key_exists('unique', $value)) {
             $this->_usedProperties['unique'] = true;
-            $this->unique = $config['unique'];
-            unset($config['unique']);
+            $this->unique = $value['unique'];
+            unset($value['unique']);
         }
-    
-        if ($config) {
-            throw new InvalidConfigurationException(sprintf('The following keys are not supported by "%s": ', __CLASS__).implode(', ', array_keys($config)));
+
+        if ([] !== $value) {
+            throw new InvalidConfigurationException(sprintf('The following keys are not supported by "%s": ', __CLASS__).implode(', ', array_keys($value)));
         }
     }
-    
+
     public function toArray(): array
     {
         $output = [];
@@ -93,7 +93,7 @@ class SlugNormalizerConfig
         if (isset($this->_usedProperties['unique'])) {
             $output['unique'] = $this->unique;
         }
-    
+
         return $output;
     }
 

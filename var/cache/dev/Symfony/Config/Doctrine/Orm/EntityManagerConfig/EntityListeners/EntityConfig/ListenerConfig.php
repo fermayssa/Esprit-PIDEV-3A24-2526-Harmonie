@@ -13,34 +13,34 @@ class ListenerConfig
 {
     private $events;
     private $_usedProperties = [];
-    
+
     public function event(array $value = []): \Symfony\Config\Doctrine\Orm\EntityManagerConfig\EntityListeners\EntityConfig\ListenerConfig\EventConfig
     {
         $this->_usedProperties['events'] = true;
-    
+
         return $this->events[] = new \Symfony\Config\Doctrine\Orm\EntityManagerConfig\EntityListeners\EntityConfig\ListenerConfig\EventConfig($value);
     }
-    
-    public function __construct(array $config = [])
+
+    public function __construct(array $value = [])
     {
-        if (array_key_exists('events', $config)) {
+        if (array_key_exists('events', $value)) {
             $this->_usedProperties['events'] = true;
-            $this->events = array_map(fn ($v) => new \Symfony\Config\Doctrine\Orm\EntityManagerConfig\EntityListeners\EntityConfig\ListenerConfig\EventConfig($v), $config['events']);
-            unset($config['events']);
+            $this->events = array_map(fn ($v) => new \Symfony\Config\Doctrine\Orm\EntityManagerConfig\EntityListeners\EntityConfig\ListenerConfig\EventConfig($v), $value['events']);
+            unset($value['events']);
         }
-    
-        if ($config) {
-            throw new InvalidConfigurationException(sprintf('The following keys are not supported by "%s": ', __CLASS__).implode(', ', array_keys($config)));
+
+        if ([] !== $value) {
+            throw new InvalidConfigurationException(sprintf('The following keys are not supported by "%s": ', __CLASS__).implode(', ', array_keys($value)));
         }
     }
-    
+
     public function toArray(): array
     {
         $output = [];
         if (isset($this->_usedProperties['events'])) {
             $output['events'] = array_map(fn ($v) => $v->toArray(), $this->events);
         }
-    
+
         return $output;
     }
 

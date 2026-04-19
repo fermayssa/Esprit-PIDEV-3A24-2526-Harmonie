@@ -2,6 +2,9 @@
 
 namespace App\Controller\LibraryControllers;
 
+use App\Service\LibraryServices\SuggestionsService;
+use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
+use Knp\Snappy\Pdf;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,7 +17,11 @@ use Doctrine\DBAL\ParameterType;
 #[Route('/courses/{id}', name: 'app_courses_detail', requirements: ['id' => '\d+'])]
 class CourseDetailsController extends AbstractController
 {
-    public function __construct(private Connection $db) {}
+    public function __construct(
+        private Connection         $db,
+        private SuggestionsService $suggestionsService,
+        private Pdf                $snappy
+    ) {}
 
     private function getCurrentUserId(): ?int
     {
@@ -285,8 +292,7 @@ class CourseDetailsController extends AbstractController
     }
 
     // ── EXPORT NOTE AS PDF ────────────────────────────────────────────────────
-    // Reads the JSON rich-text, renders each paragraph with alignment,
-    // and streams a PDF back to the browser — mirrors exportNoteToPdf() from Java.
+    // Uses KnpSnappyBundle to render the note as HTML and convert it to PDF.
     #[Route('/note/{fileId}/export-pdf', name: '_note_export_pdf', requirements: ['fileId' => '\d+'], methods: ['GET'])]
     public function exportNotePdf(int $id, int $fileId): Response
     {
@@ -299,198 +305,23 @@ class CourseDetailsController extends AbstractController
         $data = is_resource($row['filedata']) ? stream_get_contents($row['filedata']) : $row['filedata'];
         $doc  = json_decode($data, true);
 
-        // Fallback: wrap plain text
+        // Fallback: wrap plain text as paragraph structure
         if (!isset($doc['paragraphs'])) {
             $lines = explode("\n", str_replace(["\r\n", "\r"], "\n", $data));
             $doc   = ['paragraphs' => array_map(fn($l) => ['text' => $l, 'align' => 'left', 'font' => 'Inter', 'size' => 14], $lines)];
         }
 
         $baseName = preg_replace('/\.(rtfx|txt|md)$/i', '', $row['originalname'] ?? 'note');
-        $pdf      = $this->buildPdf($doc['paragraphs'], $baseName);
 
-        $response = new Response($pdf);
-        $response->headers->set('Content-Type', 'application/pdf');
-        $response->headers->set(
-            'Content-Disposition',
-            $response->headers->makeDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $baseName . '.pdf')
+        $html = $this->renderView('library/note-pdf.html.twig', [
+            'title'      => $baseName,
+            'paragraphs' => $doc['paragraphs'],
+        ]);
+
+        return new PdfResponse(
+            $this->snappy->getOutputFromHtml($html),
+            $baseName . '.pdf'
         );
-        return $response;
-    }
-
-    // ── PDF BUILDER ───────────────────────────────────────────────────────────
-    // Pure-PHP PDF generator — no dependencies needed.
-    // Mirrors the Java exportNoteToPdf() paragraph-by-paragraph approach.
-    private function buildPdf(array $paragraphs, string $title): string
-    {
-        // ── PDF constants
-        $pageW   = 595.28; // A4 width  in points
-        $pageH   = 841.89; // A4 height in points
-        $margin  = 50.0;
-        $leading = 16.0;   // line height
-        $usableW = $pageW - 2 * $margin;
-        $fontSize = 12.0;
-        $charsPerLine = (int) ($usableW / ($fontSize * 0.5)); // rough estimate
-
-        // ── Build content lines with alignment metadata
-        $lines = []; // each: ['text' => '', 'align' => 'left']
-        foreach ($paragraphs as $para) {
-            $text  = $para['text']  ?? '';
-            $align = $para['align'] ?? 'left';
-            // Word-wrap
-            $wrapped = $this->wordWrap($text, $charsPerLine);
-            if (empty($wrapped)) $wrapped = [''];
-            foreach ($wrapped as $line) {
-                $lines[] = ['text' => $line, 'align' => $align];
-            }
-        }
-
-        // ── Partition into pages
-        $yStart       = $pageH - $margin;
-        $yMin         = $margin + $leading;
-        $linesPerPage = (int) (($yStart - $yMin) / $leading);
-        $pages        = array_chunk($lines, max(1, $linesPerPage));
-        if (empty($pages)) $pages = [[]];
-
-        // ── Assemble raw PDF
-        $objects  = [];
-        $offsets  = [];
-        $objCount = 0;
-
-        $addObj = function (string $content) use (&$objects, &$objCount): int {
-            $objCount++;
-            $objects[$objCount] = $content;
-            return $objCount;
-        };
-
-        // Object 1: catalog (filled in after we know page tree id)
-        // Object 2: page tree (filled after pages)
-        // Object 3: font
-        $fontId = $addObj("<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>");
-
-        // Build page content streams
-        $pageIds    = [];
-        $contentIds = [];
-
-        foreach ($pages as $pageLines) {
-            $stream  = "BT\n";
-            $stream .= "/F1 {$fontSize} Tf\n";
-            $y       = $yStart - $leading;
-
-            foreach ($pageLines as $lineData) {
-                $text  = $lineData['text'];
-                $align = $lineData['align'] ?? 'left';
-
-                // Sanitize: keep only latin-1 printable chars
-                $text = preg_replace('/[^\x20-\x7E]/', ' ', $text);
-                $text = str_replace(['\\', '(', ')'], ['\\\\', '\\(', '\\)'], $text);
-
-                // Approximate text width for alignment
-                $textW = strlen($lineData['text']) * $fontSize * 0.5;
-                $x     = $margin;
-                if ($align === 'center') {
-                    $x = $margin + max(0, ($usableW - $textW) / 2);
-                } elseif ($align === 'right') {
-                    $x = $margin + max(0, $usableW - $textW);
-                }
-
-                $stream .= sprintf("%.2f %.2f Td\n", $x - $margin, $y - ($yStart - $leading));
-                // Reset to absolute position using Tm (text matrix)
-                $stream  = "BT\n/F1 {$fontSize} Tf\n"; // rebuild per line for position control
-                // Use a simpler approach: one BT/ET per line
-                break; // rebuild below
-            }
-
-            // Rebuild with proper per-line positioning
-            $stream = "";
-            $y      = $yStart - $leading;
-            foreach ($pageLines as $lineData) {
-                $text  = $lineData['text'];
-                $align = $lineData['align'] ?? 'left';
-                $text  = preg_replace('/[^\x20-\x7E]/', ' ', $text);
-                $text  = str_replace(['\\', '(', ')'], ['\\\\', '\\(', '\\)'], $text);
-
-                $textW = strlen($lineData['text']) * $fontSize * 0.5;
-                $x     = $margin;
-                if ($align === 'center') $x = $margin + max(0.0, ($usableW - $textW) / 2.0);
-                elseif ($align === 'right') $x = $margin + max(0.0, $usableW - $textW);
-
-                $stream .= sprintf(
-                    "BT /F1 %.1f Tf %.2f %.2f Td (%s) Tj ET\n",
-                    $fontSize,
-                    $x,
-                    $y,
-                    $text
-                );
-                $y -= $leading;
-            }
-
-            $streamLen    = strlen($stream);
-            $contentId    = $addObj("<< /Length {$streamLen} >>\nstream\n{$stream}\nendstream");
-            $contentIds[] = $contentId;
-
-            $pageId    = $addObj(''); // placeholder, filled after we know page tree id
-            $pageIds[] = $pageId;
-        }
-
-        // Object: page tree
-        $pageTreeId = $addObj(''); // placeholder
-        $kidRefs    = implode(' ', array_map(fn($pid) => "{$pid} 0 R", $pageIds));
-
-        // Fill page objects now we know pageTreeId
-        foreach ($pageIds as $i => $pageId) {
-            $contentId = $contentIds[$i];
-            $objects[$pageId] = "<< /Type /Page /Parent {$pageTreeId} 0 R "
-                . "/MediaBox [0 0 {$pageW} {$pageH}] "
-                . "/Resources << /Font << /F1 {$fontId} 0 R >> >> "
-                . "/Contents {$contentId} 0 R >>";
-        }
-
-        $pageCount = count($pageIds);
-        $objects[$pageTreeId] = "<< /Type /Pages /Kids [{$kidRefs}] /Count {$pageCount} >>";
-
-        // Catalog
-        $catalogId = $addObj("<< /Type /Catalog /Pages {$pageTreeId} 0 R >>");
-
-        // ── Serialize
-        $body    = "%PDF-1.4\n";
-        $offsets = [];
-        for ($i = 1; $i <= $objCount; $i++) {
-            $offsets[$i] = strlen($body);
-            $body .= "{$i} 0 obj\n{$objects[$i]}\nendobj\n";
-        }
-
-        // xref
-        $xrefOffset = strlen($body);
-        $body .= "xref\n0 " . ($objCount + 1) . "\n";
-        $body .= "0000000000 65535 f \n";
-        for ($i = 1; $i <= $objCount; $i++) {
-            $body .= sprintf("%010d 00000 n \n", $offsets[$i]);
-        }
-
-        $body .= "trailer\n<< /Size " . ($objCount + 1) . " /Root {$catalogId} 0 R >>\n";
-        $body .= "startxref\n{$xrefOffset}\n%%EOF";
-
-        return $body;
-    }
-
-    // ── WORD WRAP ─────────────────────────────────────────────────────────────
-    private function wordWrap(string $text, int $maxChars): array
-    {
-        if ($text === '') return [''];
-        $words   = explode(' ', $text);
-        $lines   = [];
-        $current = '';
-        foreach ($words as $word) {
-            $test = $current === '' ? $word : $current . ' ' . $word;
-            if (strlen($test) > $maxChars && $current !== '') {
-                $lines[] = $current;
-                $current = $word;
-            } else {
-                $current = $test;
-            }
-        }
-        if ($current !== '') $lines[] = $current;
-        return $lines ?: [''];
     }
 
     // ── RENAME FILE ───────────────────────────────────────────────────────────
@@ -633,5 +464,29 @@ class CourseDetailsController extends AbstractController
         );
 
         return $this->json(['ok' => true]);
+    }
+
+    // ── SUGGESTIONS — Open Library + YouTube ──────────────────────────────────
+    #[Route('/suggestions', name: '_suggestions', methods: ['GET'])]
+    public function suggestions(int $id): JsonResponse
+    {
+        $course = $this->db->fetchAssociative(
+            'SELECT c.title, s.name AS subject_name
+             FROM courses c
+             LEFT JOIN subject s ON s.id = c.subjectid
+             WHERE c.id = ?',
+            [$id]
+        );
+
+        if (!$course) return $this->json(['books' => [], 'videos' => []]);
+
+        $query = !empty($course['subject_name'])
+            ? $course['subject_name']
+            : $course['title'];
+
+        return $this->json([
+            'books'  => $this->suggestionsService->fetchBooks($query, 10),
+            'videos' => $this->suggestionsService->fetchVideos($query, 10),
+        ]);
     }
 }

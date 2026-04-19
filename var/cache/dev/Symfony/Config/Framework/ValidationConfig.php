@@ -16,16 +16,16 @@ class ValidationConfig
 {
     private $enabled;
     private $cache;
+    private $enableAnnotations;
     private $enableAttributes;
     private $staticMethod;
     private $translationDomain;
     private $emailValidationMode;
     private $mapping;
     private $notCompromisedPassword;
-    private $disableTranslation;
     private $autoMapping;
     private $_usedProperties = [];
-    
+
     /**
      * @default true
      * @param ParamConfigurator|bool $value
@@ -35,24 +35,36 @@ class ValidationConfig
     {
         $this->_usedProperties['enabled'] = true;
         $this->enabled = $value;
-    
+
         return $this;
     }
-    
+
     /**
      * @default null
      * @param ParamConfigurator|mixed $value
-     * @deprecated Since symfony/framework-bundle 7.3: Setting the "framework.validation.cache" configuration option is deprecated. It will be removed in version 8.0.
      * @return $this
      */
     public function cache($value): static
     {
         $this->_usedProperties['cache'] = true;
         $this->cache = $value;
-    
+
         return $this;
     }
-    
+
+    /**
+     * @default null
+     * @param ParamConfigurator|bool $value
+     * @return $this
+     */
+    public function enableAnnotations($value): static
+    {
+        $this->_usedProperties['enableAnnotations'] = true;
+        $this->enableAnnotations = $value;
+
+        return $this;
+    }
+
     /**
      * @default true
      * @param ParamConfigurator|bool $value
@@ -62,23 +74,23 @@ class ValidationConfig
     {
         $this->_usedProperties['enableAttributes'] = true;
         $this->enableAttributes = $value;
-    
+
         return $this;
     }
-    
+
     /**
-     * @param ParamConfigurator|list<ParamConfigurator|mixed>|string $value
+     * @param ParamConfigurator|list<ParamConfigurator|mixed> $value
      *
      * @return $this
      */
-    public function staticMethod(ParamConfigurator|string|array $value): static
+    public function staticMethod(ParamConfigurator|array $value): static
     {
         $this->_usedProperties['staticMethod'] = true;
         $this->staticMethod = $value;
-    
+
         return $this;
     }
-    
+
     /**
      * @default 'validators'
      * @param ParamConfigurator|mixed $value
@@ -88,12 +100,12 @@ class ValidationConfig
     {
         $this->_usedProperties['translationDomain'] = true;
         $this->translationDomain = $value;
-    
+
         return $this;
     }
-    
+
     /**
-     * @default 'html5'
+     * @default null
      * @param ParamConfigurator|'html5'|'html5-allow-no-tld'|'strict'|'loose' $value
      * @return $this
      */
@@ -101,13 +113,13 @@ class ValidationConfig
     {
         $this->_usedProperties['emailValidationMode'] = true;
         $this->emailValidationMode = $value;
-    
+
         return $this;
     }
-    
+
     /**
      * @default {"paths":[]}
-     */
+    */
     public function mapping(array $value = []): \Symfony\Config\Framework\Validation\MappingConfig
     {
         if (null === $this->mapping) {
@@ -116,54 +128,30 @@ class ValidationConfig
         } elseif (0 < \func_num_args()) {
             throw new InvalidConfigurationException('The node created by "mapping()" has already been initialized. You cannot pass values the second time you call mapping().');
         }
-    
+
         return $this->mapping;
     }
-    
+
     /**
-     * @template TValue of array|bool
-     * @param TValue $value
      * @default {"enabled":true,"endpoint":null}
-     * @return \Symfony\Config\Framework\Validation\NotCompromisedPasswordConfig|$this
-     * @psalm-return (TValue is array ? \Symfony\Config\Framework\Validation\NotCompromisedPasswordConfig : static)
-     */
-    public function notCompromisedPassword(array|bool $value = []): \Symfony\Config\Framework\Validation\NotCompromisedPasswordConfig|static
+    */
+    public function notCompromisedPassword(array $value = []): \Symfony\Config\Framework\Validation\NotCompromisedPasswordConfig
     {
-        if (!\is_array($value)) {
-            $this->_usedProperties['notCompromisedPassword'] = true;
-            $this->notCompromisedPassword = $value;
-    
-            return $this;
-        }
-    
-        if (!$this->notCompromisedPassword instanceof \Symfony\Config\Framework\Validation\NotCompromisedPasswordConfig) {
+        if (null === $this->notCompromisedPassword) {
             $this->_usedProperties['notCompromisedPassword'] = true;
             $this->notCompromisedPassword = new \Symfony\Config\Framework\Validation\NotCompromisedPasswordConfig($value);
         } elseif (0 < \func_num_args()) {
             throw new InvalidConfigurationException('The node created by "notCompromisedPassword()" has already been initialized. You cannot pass values the second time you call notCompromisedPassword().');
         }
-    
+
         return $this->notCompromisedPassword;
     }
-    
-    /**
-     * @default false
-     * @param ParamConfigurator|bool $value
-     * @return $this
-     */
-    public function disableTranslation($value): static
-    {
-        $this->_usedProperties['disableTranslation'] = true;
-        $this->disableTranslation = $value;
-    
-        return $this;
-    }
-    
+
     /**
      * A collection of namespaces for which auto-mapping will be enabled by default, or null to opt-in with the EnableAutoMapping constraint.
      * @example []
      * @example ["validator.property_info_loader"]
-     */
+    */
     public function autoMapping(string $namespace, array $value = []): \Symfony\Config\Framework\Validation\AutoMappingConfig
     {
         if (!isset($this->autoMapping[$namespace])) {
@@ -172,77 +160,77 @@ class ValidationConfig
         } elseif (1 < \func_num_args()) {
             throw new InvalidConfigurationException('The node created by "autoMapping()" has already been initialized. You cannot pass values the second time you call autoMapping().');
         }
-    
+
         return $this->autoMapping[$namespace];
     }
-    
-    public function __construct(array $config = [])
+
+    public function __construct(array $value = [])
     {
-        if (array_key_exists('enabled', $config)) {
+        if (array_key_exists('enabled', $value)) {
             $this->_usedProperties['enabled'] = true;
-            $this->enabled = $config['enabled'];
-            unset($config['enabled']);
+            $this->enabled = $value['enabled'];
+            unset($value['enabled']);
         }
-    
-        if (array_key_exists('cache', $config)) {
+
+        if (array_key_exists('cache', $value)) {
             $this->_usedProperties['cache'] = true;
-            $this->cache = $config['cache'];
-            unset($config['cache']);
+            $this->cache = $value['cache'];
+            unset($value['cache']);
         }
-    
-        if (array_key_exists('enable_attributes', $config)) {
+
+        if (array_key_exists('enable_annotations', $value)) {
+            $this->_usedProperties['enableAnnotations'] = true;
+            $this->enableAnnotations = $value['enable_annotations'];
+            unset($value['enable_annotations']);
+        }
+
+        if (array_key_exists('enable_attributes', $value)) {
             $this->_usedProperties['enableAttributes'] = true;
-            $this->enableAttributes = $config['enable_attributes'];
-            unset($config['enable_attributes']);
+            $this->enableAttributes = $value['enable_attributes'];
+            unset($value['enable_attributes']);
         }
-    
-        if (array_key_exists('static_method', $config)) {
+
+        if (array_key_exists('static_method', $value)) {
             $this->_usedProperties['staticMethod'] = true;
-            $this->staticMethod = $config['static_method'];
-            unset($config['static_method']);
+            $this->staticMethod = $value['static_method'];
+            unset($value['static_method']);
         }
-    
-        if (array_key_exists('translation_domain', $config)) {
+
+        if (array_key_exists('translation_domain', $value)) {
             $this->_usedProperties['translationDomain'] = true;
-            $this->translationDomain = $config['translation_domain'];
-            unset($config['translation_domain']);
+            $this->translationDomain = $value['translation_domain'];
+            unset($value['translation_domain']);
         }
-    
-        if (array_key_exists('email_validation_mode', $config)) {
+
+        if (array_key_exists('email_validation_mode', $value)) {
             $this->_usedProperties['emailValidationMode'] = true;
-            $this->emailValidationMode = $config['email_validation_mode'];
-            unset($config['email_validation_mode']);
+            $this->emailValidationMode = $value['email_validation_mode'];
+            unset($value['email_validation_mode']);
         }
-    
-        if (array_key_exists('mapping', $config)) {
+
+        if (array_key_exists('mapping', $value)) {
             $this->_usedProperties['mapping'] = true;
-            $this->mapping = new \Symfony\Config\Framework\Validation\MappingConfig($config['mapping']);
-            unset($config['mapping']);
+            $this->mapping = new \Symfony\Config\Framework\Validation\MappingConfig($value['mapping']);
+            unset($value['mapping']);
         }
-    
-        if (array_key_exists('not_compromised_password', $config)) {
+
+        if (array_key_exists('not_compromised_password', $value)) {
             $this->_usedProperties['notCompromisedPassword'] = true;
-            $this->notCompromisedPassword = \is_array($config['not_compromised_password']) ? new \Symfony\Config\Framework\Validation\NotCompromisedPasswordConfig($config['not_compromised_password']) : $config['not_compromised_password'];
-            unset($config['not_compromised_password']);
+            $this->notCompromisedPassword = new \Symfony\Config\Framework\Validation\NotCompromisedPasswordConfig($value['not_compromised_password']);
+            unset($value['not_compromised_password']);
         }
-    
-        if (array_key_exists('disable_translation', $config)) {
-            $this->_usedProperties['disableTranslation'] = true;
-            $this->disableTranslation = $config['disable_translation'];
-            unset($config['disable_translation']);
-        }
-    
-        if (array_key_exists('auto_mapping', $config)) {
+
+        if (array_key_exists('auto_mapping', $value)) {
             $this->_usedProperties['autoMapping'] = true;
-            $this->autoMapping = array_map(fn ($v) => new \Symfony\Config\Framework\Validation\AutoMappingConfig($v), $config['auto_mapping']);
-            unset($config['auto_mapping']);
+            $this->autoMapping = array_map(fn ($v) => \is_array($v) ? new \Symfony\Config\Framework\Validation\AutoMappingConfig($v) : $v, $value['auto_mapping']);
+            unset($value['auto_mapping']);
         }
-    
-        if ($config) {
-            throw new InvalidConfigurationException(sprintf('The following keys are not supported by "%s": ', __CLASS__).implode(', ', array_keys($config)));
+
+        if ([] !== $value) {
+            throw new InvalidConfigurationException(sprintf('The following keys are not supported by "%s": ', __CLASS__).implode(', ', array_keys($value)));
         }
     }
-    
+
     public function toArray(): array
     {
         $output = [];
@@ -251,6 +239,9 @@ class ValidationConfig
         }
         if (isset($this->_usedProperties['cache'])) {
             $output['cache'] = $this->cache;
+        }
+        if (isset($this->_usedProperties['enableAnnotations'])) {
+            $output['enable_annotations'] = $this->enableAnnotations;
         }
         if (isset($this->_usedProperties['enableAttributes'])) {
             $output['enable_attributes'] = $this->enableAttributes;
@@ -268,15 +259,12 @@ class ValidationConfig
             $output['mapping'] = $this->mapping->toArray();
         }
         if (isset($this->_usedProperties['notCompromisedPassword'])) {
-            $output['not_compromised_password'] = $this->notCompromisedPassword instanceof \Symfony\Config\Framework\Validation\NotCompromisedPasswordConfig ? $this->notCompromisedPassword->toArray() : $this->notCompromisedPassword;
-        }
-        if (isset($this->_usedProperties['disableTranslation'])) {
-            $output['disable_translation'] = $this->disableTranslation;
+            $output['not_compromised_password'] = $this->notCompromisedPassword->toArray();
         }
         if (isset($this->_usedProperties['autoMapping'])) {
-            $output['auto_mapping'] = array_map(fn ($v) => $v->toArray(), $this->autoMapping);
+            $output['auto_mapping'] = array_map(fn ($v) => $v instanceof \Symfony\Config\Framework\Validation\AutoMappingConfig ? $v->toArray() : $v, $this->autoMapping);
         }
-    
+
         return $output;
     }
 

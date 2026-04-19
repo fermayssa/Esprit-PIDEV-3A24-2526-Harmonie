@@ -21,7 +21,7 @@ class RetryFailedConfig
     private $maxDelay;
     private $jitter;
     private $_usedProperties = [];
-    
+
     /**
      * @default false
      * @param ParamConfigurator|bool $value
@@ -31,12 +31,12 @@ class RetryFailedConfig
     {
         $this->_usedProperties['enabled'] = true;
         $this->enabled = $value;
-    
+
         return $this;
     }
-    
+
     /**
-     * service id to override the retry strategy.
+     * service id to override the retry strategy
      * @default null
      * @param ParamConfigurator|mixed $value
      * @return $this
@@ -45,13 +45,13 @@ class RetryFailedConfig
     {
         $this->_usedProperties['retryStrategy'] = true;
         $this->retryStrategy = $value;
-    
+
         return $this;
     }
-    
+
     /**
-     * A list of HTTP status code that triggers a retry.
-     */
+     * A list of HTTP status code that triggers a retry
+    */
     public function httpCode(string $code, array $value = []): \Symfony\Config\Framework\HttpClient\DefaultOptions\RetryFailed\HttpCodeConfig
     {
         if (!isset($this->httpCodes[$code])) {
@@ -60,10 +60,10 @@ class RetryFailedConfig
         } elseif (1 < \func_num_args()) {
             throw new InvalidConfigurationException('The node created by "httpCode()" has already been initialized. You cannot pass values the second time you call httpCode().');
         }
-    
+
         return $this->httpCodes[$code];
     }
-    
+
     /**
      * @default 3
      * @param ParamConfigurator|int $value
@@ -73,12 +73,12 @@ class RetryFailedConfig
     {
         $this->_usedProperties['maxRetries'] = true;
         $this->maxRetries = $value;
-    
+
         return $this;
     }
-    
+
     /**
-     * Time in ms to delay (or the initial value when multiplier is used).
+     * Time in ms to delay (or the initial value when multiplier is used)
      * @default 1000
      * @param ParamConfigurator|int $value
      * @return $this
@@ -87,12 +87,12 @@ class RetryFailedConfig
     {
         $this->_usedProperties['delay'] = true;
         $this->delay = $value;
-    
+
         return $this;
     }
-    
+
     /**
-     * If greater than 1, delay will grow exponentially for each retry: delay * (multiple ^ retries).
+     * If greater than 1, delay will grow exponentially for each retry: delay * (multiple ^ retries)
      * @default 2
      * @param ParamConfigurator|float $value
      * @return $this
@@ -101,12 +101,12 @@ class RetryFailedConfig
     {
         $this->_usedProperties['multiplier'] = true;
         $this->multiplier = $value;
-    
+
         return $this;
     }
-    
+
     /**
-     * Max time in ms that a retry should ever be delayed (0 = infinite).
+     * Max time in ms that a retry should ever be delayed (0 = infinite)
      * @default 0
      * @param ParamConfigurator|int $value
      * @return $this
@@ -115,12 +115,12 @@ class RetryFailedConfig
     {
         $this->_usedProperties['maxDelay'] = true;
         $this->maxDelay = $value;
-    
+
         return $this;
     }
-    
+
     /**
-     * Randomness in percent (between 0 and 1) to apply to the delay.
+     * Randomness in percent (between 0 and 1) to apply to the delay
      * @default 0.1
      * @param ParamConfigurator|float $value
      * @return $this
@@ -129,65 +129,65 @@ class RetryFailedConfig
     {
         $this->_usedProperties['jitter'] = true;
         $this->jitter = $value;
-    
+
         return $this;
     }
-    
-    public function __construct(array $config = [])
+
+    public function __construct(array $value = [])
     {
-        if (array_key_exists('enabled', $config)) {
+        if (array_key_exists('enabled', $value)) {
             $this->_usedProperties['enabled'] = true;
-            $this->enabled = $config['enabled'];
-            unset($config['enabled']);
+            $this->enabled = $value['enabled'];
+            unset($value['enabled']);
         }
-    
-        if (array_key_exists('retry_strategy', $config)) {
+
+        if (array_key_exists('retry_strategy', $value)) {
             $this->_usedProperties['retryStrategy'] = true;
-            $this->retryStrategy = $config['retry_strategy'];
-            unset($config['retry_strategy']);
+            $this->retryStrategy = $value['retry_strategy'];
+            unset($value['retry_strategy']);
         }
-    
-        if (array_key_exists('http_codes', $config)) {
+
+        if (array_key_exists('http_codes', $value)) {
             $this->_usedProperties['httpCodes'] = true;
-            $this->httpCodes = array_map(fn ($v) => \is_array($v) ? new \Symfony\Config\Framework\HttpClient\DefaultOptions\RetryFailed\HttpCodeConfig($v) : $v, $config['http_codes']);
-            unset($config['http_codes']);
+            $this->httpCodes = array_map(fn ($v) => \is_array($v) ? new \Symfony\Config\Framework\HttpClient\DefaultOptions\RetryFailed\HttpCodeConfig($v) : $v, $value['http_codes']);
+            unset($value['http_codes']);
         }
-    
-        if (array_key_exists('max_retries', $config)) {
+
+        if (array_key_exists('max_retries', $value)) {
             $this->_usedProperties['maxRetries'] = true;
-            $this->maxRetries = $config['max_retries'];
-            unset($config['max_retries']);
+            $this->maxRetries = $value['max_retries'];
+            unset($value['max_retries']);
         }
-    
-        if (array_key_exists('delay', $config)) {
+
+        if (array_key_exists('delay', $value)) {
             $this->_usedProperties['delay'] = true;
-            $this->delay = $config['delay'];
-            unset($config['delay']);
+            $this->delay = $value['delay'];
+            unset($value['delay']);
         }
-    
-        if (array_key_exists('multiplier', $config)) {
+
+        if (array_key_exists('multiplier', $value)) {
             $this->_usedProperties['multiplier'] = true;
-            $this->multiplier = $config['multiplier'];
-            unset($config['multiplier']);
+            $this->multiplier = $value['multiplier'];
+            unset($value['multiplier']);
         }
-    
-        if (array_key_exists('max_delay', $config)) {
+
+        if (array_key_exists('max_delay', $value)) {
             $this->_usedProperties['maxDelay'] = true;
-            $this->maxDelay = $config['max_delay'];
-            unset($config['max_delay']);
+            $this->maxDelay = $value['max_delay'];
+            unset($value['max_delay']);
         }
-    
-        if (array_key_exists('jitter', $config)) {
+
+        if (array_key_exists('jitter', $value)) {
             $this->_usedProperties['jitter'] = true;
-            $this->jitter = $config['jitter'];
-            unset($config['jitter']);
+            $this->jitter = $value['jitter'];
+            unset($value['jitter']);
         }
-    
-        if ($config) {
-            throw new InvalidConfigurationException(sprintf('The following keys are not supported by "%s": ', __CLASS__).implode(', ', array_keys($config)));
+
+        if ([] !== $value) {
+            throw new InvalidConfigurationException(sprintf('The following keys are not supported by "%s": ', __CLASS__).implode(', ', array_keys($value)));
         }
     }
-    
+
     public function toArray(): array
     {
         $output = [];
@@ -215,7 +215,7 @@ class RetryFailedConfig
         if (isset($this->_usedProperties['jitter'])) {
             $output['jitter'] = $this->jitter;
         }
-    
+
         return $output;
     }
 

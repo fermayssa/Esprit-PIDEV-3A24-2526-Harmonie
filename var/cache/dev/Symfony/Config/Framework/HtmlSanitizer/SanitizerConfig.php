@@ -29,7 +29,7 @@ class SanitizerConfig
     private $withoutAttributeSanitizers;
     private $maxInputLength;
     private $_usedProperties = [];
-    
+
     /**
      * Allows "safe" elements and attributes.
      * @default false
@@ -40,10 +40,10 @@ class SanitizerConfig
     {
         $this->_usedProperties['allowSafeElements'] = true;
         $this->allowSafeElements = $value;
-    
+
         return $this;
     }
-    
+
     /**
      * Allows all static elements and attributes from the W3C Sanitizer API standard.
      * @default false
@@ -54,10 +54,10 @@ class SanitizerConfig
     {
         $this->_usedProperties['allowStaticElements'] = true;
         $this->allowStaticElements = $value;
-    
+
         return $this;
     }
-    
+
     /**
      * @return $this
      */
@@ -65,10 +65,10 @@ class SanitizerConfig
     {
         $this->_usedProperties['allowElements'] = true;
         $this->allowElements[$name] = $value;
-    
+
         return $this;
     }
-    
+
     /**
      * @param ParamConfigurator|list<ParamConfigurator|mixed>|string $value
      *
@@ -78,10 +78,10 @@ class SanitizerConfig
     {
         $this->_usedProperties['blockElements'] = true;
         $this->blockElements = $value;
-    
+
         return $this;
     }
-    
+
     /**
      * @param ParamConfigurator|list<ParamConfigurator|mixed>|string $value
      *
@@ -91,10 +91,10 @@ class SanitizerConfig
     {
         $this->_usedProperties['dropElements'] = true;
         $this->dropElements = $value;
-    
+
         return $this;
     }
-    
+
     /**
      * @return $this
      */
@@ -102,10 +102,10 @@ class SanitizerConfig
     {
         $this->_usedProperties['allowAttributes'] = true;
         $this->allowAttributes[$name] = $value;
-    
+
         return $this;
     }
-    
+
     /**
      * @return $this
      */
@@ -113,10 +113,10 @@ class SanitizerConfig
     {
         $this->_usedProperties['dropAttributes'] = true;
         $this->dropAttributes[$name] = $value;
-    
+
         return $this;
     }
-    
+
     /**
      * @return $this
      */
@@ -124,10 +124,10 @@ class SanitizerConfig
     {
         $this->_usedProperties['forceAttributes'] = true;
         $this->forceAttributes[$name] = $value;
-    
+
         return $this;
     }
-    
+
     /**
      * Transforms URLs using the HTTP scheme to use the HTTPS scheme instead.
      * @default false
@@ -138,36 +138,38 @@ class SanitizerConfig
     {
         $this->_usedProperties['forceHttpsUrls'] = true;
         $this->forceHttpsUrls = $value;
-    
+
         return $this;
     }
-    
+
     /**
-     * @param ParamConfigurator|list<ParamConfigurator|mixed>|string $value
+     * @param ParamConfigurator|list<ParamConfigurator|mixed> $value
      *
      * @return $this
      */
-    public function allowedLinkSchemes(ParamConfigurator|string|array $value): static
+    public function allowedLinkSchemes(ParamConfigurator|array $value): static
     {
         $this->_usedProperties['allowedLinkSchemes'] = true;
         $this->allowedLinkSchemes = $value;
-    
+
         return $this;
     }
-    
+
     /**
-     * @param ParamConfigurator|list<ParamConfigurator|mixed>|string $value
+     * Allows only a given list of hosts to be used in links href attributes.
+     * @default null
+     * @param ParamConfigurator|mixed $value
      *
      * @return $this
      */
-    public function allowedLinkHosts(ParamConfigurator|string|array $value): static
+    public function allowedLinkHosts(mixed $value = NULL): static
     {
         $this->_usedProperties['allowedLinkHosts'] = true;
         $this->allowedLinkHosts = $value;
-    
+
         return $this;
     }
-    
+
     /**
      * Allows relative URLs to be used in links href attributes.
      * @default false
@@ -178,36 +180,38 @@ class SanitizerConfig
     {
         $this->_usedProperties['allowRelativeLinks'] = true;
         $this->allowRelativeLinks = $value;
-    
+
         return $this;
     }
-    
+
     /**
-     * @param ParamConfigurator|list<ParamConfigurator|mixed>|string $value
+     * @param ParamConfigurator|list<ParamConfigurator|mixed> $value
      *
      * @return $this
      */
-    public function allowedMediaSchemes(ParamConfigurator|string|array $value): static
+    public function allowedMediaSchemes(ParamConfigurator|array $value): static
     {
         $this->_usedProperties['allowedMediaSchemes'] = true;
         $this->allowedMediaSchemes = $value;
-    
+
         return $this;
     }
-    
+
     /**
-     * @param ParamConfigurator|list<ParamConfigurator|mixed>|string $value
+     * Allows only a given list of hosts to be used in media source attributes (img, audio, video, ...).
+     * @default null
+     * @param ParamConfigurator|mixed $value
      *
      * @return $this
      */
-    public function allowedMediaHosts(ParamConfigurator|string|array $value): static
+    public function allowedMediaHosts(mixed $value = NULL): static
     {
         $this->_usedProperties['allowedMediaHosts'] = true;
         $this->allowedMediaHosts = $value;
-    
+
         return $this;
     }
-    
+
     /**
      * Allows relative URLs to be used in media source attributes (img, audio, video, ...).
      * @default false
@@ -218,36 +222,36 @@ class SanitizerConfig
     {
         $this->_usedProperties['allowRelativeMedias'] = true;
         $this->allowRelativeMedias = $value;
-    
+
         return $this;
     }
-    
+
     /**
-     * @param ParamConfigurator|list<ParamConfigurator|mixed>|string $value
+     * @param ParamConfigurator|list<ParamConfigurator|mixed> $value
      *
      * @return $this
      */
-    public function withAttributeSanitizers(ParamConfigurator|string|array $value): static
+    public function withAttributeSanitizers(ParamConfigurator|array $value): static
     {
         $this->_usedProperties['withAttributeSanitizers'] = true;
         $this->withAttributeSanitizers = $value;
-    
+
         return $this;
     }
-    
+
     /**
-     * @param ParamConfigurator|list<ParamConfigurator|mixed>|string $value
+     * @param ParamConfigurator|list<ParamConfigurator|mixed> $value
      *
      * @return $this
      */
-    public function withoutAttributeSanitizers(ParamConfigurator|string|array $value): static
+    public function withoutAttributeSanitizers(ParamConfigurator|array $value): static
     {
         $this->_usedProperties['withoutAttributeSanitizers'] = true;
         $this->withoutAttributeSanitizers = $value;
-    
+
         return $this;
     }
-    
+
     /**
      * The maximum length allowed for the sanitized input.
      * @default 0
@@ -258,125 +262,125 @@ class SanitizerConfig
     {
         $this->_usedProperties['maxInputLength'] = true;
         $this->maxInputLength = $value;
-    
+
         return $this;
     }
-    
-    public function __construct(array $config = [])
+
+    public function __construct(array $value = [])
     {
-        if (array_key_exists('allow_safe_elements', $config)) {
+        if (array_key_exists('allow_safe_elements', $value)) {
             $this->_usedProperties['allowSafeElements'] = true;
-            $this->allowSafeElements = $config['allow_safe_elements'];
-            unset($config['allow_safe_elements']);
+            $this->allowSafeElements = $value['allow_safe_elements'];
+            unset($value['allow_safe_elements']);
         }
-    
-        if (array_key_exists('allow_static_elements', $config)) {
+
+        if (array_key_exists('allow_static_elements', $value)) {
             $this->_usedProperties['allowStaticElements'] = true;
-            $this->allowStaticElements = $config['allow_static_elements'];
-            unset($config['allow_static_elements']);
+            $this->allowStaticElements = $value['allow_static_elements'];
+            unset($value['allow_static_elements']);
         }
-    
-        if (array_key_exists('allow_elements', $config)) {
+
+        if (array_key_exists('allow_elements', $value)) {
             $this->_usedProperties['allowElements'] = true;
-            $this->allowElements = $config['allow_elements'];
-            unset($config['allow_elements']);
+            $this->allowElements = $value['allow_elements'];
+            unset($value['allow_elements']);
         }
-    
-        if (array_key_exists('block_elements', $config)) {
+
+        if (array_key_exists('block_elements', $value)) {
             $this->_usedProperties['blockElements'] = true;
-            $this->blockElements = $config['block_elements'];
-            unset($config['block_elements']);
+            $this->blockElements = $value['block_elements'];
+            unset($value['block_elements']);
         }
-    
-        if (array_key_exists('drop_elements', $config)) {
+
+        if (array_key_exists('drop_elements', $value)) {
             $this->_usedProperties['dropElements'] = true;
-            $this->dropElements = $config['drop_elements'];
-            unset($config['drop_elements']);
+            $this->dropElements = $value['drop_elements'];
+            unset($value['drop_elements']);
         }
-    
-        if (array_key_exists('allow_attributes', $config)) {
+
+        if (array_key_exists('allow_attributes', $value)) {
             $this->_usedProperties['allowAttributes'] = true;
-            $this->allowAttributes = $config['allow_attributes'];
-            unset($config['allow_attributes']);
+            $this->allowAttributes = $value['allow_attributes'];
+            unset($value['allow_attributes']);
         }
-    
-        if (array_key_exists('drop_attributes', $config)) {
+
+        if (array_key_exists('drop_attributes', $value)) {
             $this->_usedProperties['dropAttributes'] = true;
-            $this->dropAttributes = $config['drop_attributes'];
-            unset($config['drop_attributes']);
+            $this->dropAttributes = $value['drop_attributes'];
+            unset($value['drop_attributes']);
         }
-    
-        if (array_key_exists('force_attributes', $config)) {
+
+        if (array_key_exists('force_attributes', $value)) {
             $this->_usedProperties['forceAttributes'] = true;
-            $this->forceAttributes = $config['force_attributes'];
-            unset($config['force_attributes']);
+            $this->forceAttributes = $value['force_attributes'];
+            unset($value['force_attributes']);
         }
-    
-        if (array_key_exists('force_https_urls', $config)) {
+
+        if (array_key_exists('force_https_urls', $value)) {
             $this->_usedProperties['forceHttpsUrls'] = true;
-            $this->forceHttpsUrls = $config['force_https_urls'];
-            unset($config['force_https_urls']);
+            $this->forceHttpsUrls = $value['force_https_urls'];
+            unset($value['force_https_urls']);
         }
-    
-        if (array_key_exists('allowed_link_schemes', $config)) {
+
+        if (array_key_exists('allowed_link_schemes', $value)) {
             $this->_usedProperties['allowedLinkSchemes'] = true;
-            $this->allowedLinkSchemes = $config['allowed_link_schemes'];
-            unset($config['allowed_link_schemes']);
+            $this->allowedLinkSchemes = $value['allowed_link_schemes'];
+            unset($value['allowed_link_schemes']);
         }
-    
-        if (array_key_exists('allowed_link_hosts', $config)) {
+
+        if (array_key_exists('allowed_link_hosts', $value)) {
             $this->_usedProperties['allowedLinkHosts'] = true;
-            $this->allowedLinkHosts = $config['allowed_link_hosts'];
-            unset($config['allowed_link_hosts']);
+            $this->allowedLinkHosts = $value['allowed_link_hosts'];
+            unset($value['allowed_link_hosts']);
         }
-    
-        if (array_key_exists('allow_relative_links', $config)) {
+
+        if (array_key_exists('allow_relative_links', $value)) {
             $this->_usedProperties['allowRelativeLinks'] = true;
-            $this->allowRelativeLinks = $config['allow_relative_links'];
-            unset($config['allow_relative_links']);
+            $this->allowRelativeLinks = $value['allow_relative_links'];
+            unset($value['allow_relative_links']);
         }
-    
-        if (array_key_exists('allowed_media_schemes', $config)) {
+
+        if (array_key_exists('allowed_media_schemes', $value)) {
             $this->_usedProperties['allowedMediaSchemes'] = true;
-            $this->allowedMediaSchemes = $config['allowed_media_schemes'];
-            unset($config['allowed_media_schemes']);
+            $this->allowedMediaSchemes = $value['allowed_media_schemes'];
+            unset($value['allowed_media_schemes']);
         }
-    
-        if (array_key_exists('allowed_media_hosts', $config)) {
+
+        if (array_key_exists('allowed_media_hosts', $value)) {
             $this->_usedProperties['allowedMediaHosts'] = true;
-            $this->allowedMediaHosts = $config['allowed_media_hosts'];
-            unset($config['allowed_media_hosts']);
+            $this->allowedMediaHosts = $value['allowed_media_hosts'];
+            unset($value['allowed_media_hosts']);
         }
-    
-        if (array_key_exists('allow_relative_medias', $config)) {
+
+        if (array_key_exists('allow_relative_medias', $value)) {
             $this->_usedProperties['allowRelativeMedias'] = true;
-            $this->allowRelativeMedias = $config['allow_relative_medias'];
-            unset($config['allow_relative_medias']);
+            $this->allowRelativeMedias = $value['allow_relative_medias'];
+            unset($value['allow_relative_medias']);
         }
-    
-        if (array_key_exists('with_attribute_sanitizers', $config)) {
+
+        if (array_key_exists('with_attribute_sanitizers', $value)) {
             $this->_usedProperties['withAttributeSanitizers'] = true;
-            $this->withAttributeSanitizers = $config['with_attribute_sanitizers'];
-            unset($config['with_attribute_sanitizers']);
+            $this->withAttributeSanitizers = $value['with_attribute_sanitizers'];
+            unset($value['with_attribute_sanitizers']);
         }
-    
-        if (array_key_exists('without_attribute_sanitizers', $config)) {
+
+        if (array_key_exists('without_attribute_sanitizers', $value)) {
             $this->_usedProperties['withoutAttributeSanitizers'] = true;
-            $this->withoutAttributeSanitizers = $config['without_attribute_sanitizers'];
-            unset($config['without_attribute_sanitizers']);
+            $this->withoutAttributeSanitizers = $value['without_attribute_sanitizers'];
+            unset($value['without_attribute_sanitizers']);
         }
-    
-        if (array_key_exists('max_input_length', $config)) {
+
+        if (array_key_exists('max_input_length', $value)) {
             $this->_usedProperties['maxInputLength'] = true;
-            $this->maxInputLength = $config['max_input_length'];
-            unset($config['max_input_length']);
+            $this->maxInputLength = $value['max_input_length'];
+            unset($value['max_input_length']);
         }
-    
-        if ($config) {
-            throw new InvalidConfigurationException(sprintf('The following keys are not supported by "%s": ', __CLASS__).implode(', ', array_keys($config)));
+
+        if ([] !== $value) {
+            throw new InvalidConfigurationException(sprintf('The following keys are not supported by "%s": ', __CLASS__).implode(', ', array_keys($value)));
         }
     }
-    
+
     public function toArray(): array
     {
         $output = [];
@@ -434,7 +438,7 @@ class SanitizerConfig
         if (isset($this->_usedProperties['maxInputLength'])) {
             $output['max_input_length'] = $this->maxInputLength;
         }
-    
+
         return $output;
     }
 

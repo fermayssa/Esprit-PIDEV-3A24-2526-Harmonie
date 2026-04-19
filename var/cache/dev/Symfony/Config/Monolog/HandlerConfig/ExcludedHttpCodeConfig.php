@@ -13,7 +13,7 @@ class ExcludedHttpCodeConfig
     private $code;
     private $urls;
     private $_usedProperties = [];
-    
+
     /**
      * @default null
      * @param ParamConfigurator|mixed $value
@@ -23,10 +23,10 @@ class ExcludedHttpCodeConfig
     {
         $this->_usedProperties['code'] = true;
         $this->code = $value;
-    
+
         return $this;
     }
-    
+
     /**
      * @param ParamConfigurator|list<ParamConfigurator|mixed> $value
      *
@@ -36,29 +36,29 @@ class ExcludedHttpCodeConfig
     {
         $this->_usedProperties['urls'] = true;
         $this->urls = $value;
-    
+
         return $this;
     }
-    
-    public function __construct(array $config = [])
+
+    public function __construct(array $value = [])
     {
-        if (array_key_exists('code', $config)) {
+        if (array_key_exists('code', $value)) {
             $this->_usedProperties['code'] = true;
-            $this->code = $config['code'];
-            unset($config['code']);
+            $this->code = $value['code'];
+            unset($value['code']);
         }
-    
-        if (array_key_exists('urls', $config)) {
+
+        if (array_key_exists('urls', $value)) {
             $this->_usedProperties['urls'] = true;
-            $this->urls = $config['urls'];
-            unset($config['urls']);
+            $this->urls = $value['urls'];
+            unset($value['urls']);
         }
-    
-        if ($config) {
-            throw new InvalidConfigurationException(sprintf('The following keys are not supported by "%s": ', __CLASS__).implode(', ', array_keys($config)));
+
+        if ([] !== $value) {
+            throw new InvalidConfigurationException(sprintf('The following keys are not supported by "%s": ', __CLASS__).implode(', ', array_keys($value)));
         }
     }
-    
+
     public function toArray(): array
     {
         $output = [];
@@ -68,7 +68,7 @@ class ExcludedHttpCodeConfig
         if (isset($this->_usedProperties['urls'])) {
             $output['urls'] = $this->urls;
         }
-    
+
         return $output;
     }
 

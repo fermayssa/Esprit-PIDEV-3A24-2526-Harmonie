@@ -223,6 +223,11 @@ class ComposerStaticInitd98bd09117ca527cc5140ad21a61849a
             'Matrix\\' => 7,
             'Masterminds\\' => 12,
         ),
+        'K' => 
+        array (
+            'Knp\\Snappy\\' => 11,
+            'Knp\\Bundle\\SnappyBundle\\' => 24,
+        ),
         'F' => 
         array (
             'FontLib\\' => 8,
@@ -267,8 +272,8 @@ class ComposerStaticInitd98bd09117ca527cc5140ad21a61849a
         'phpDocumentor\\Reflection\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpdocumentor/reflection-common/src',
-            1 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
-            2 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
+            1 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
+            2 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
         ),
         'ZipStream\\' => 
         array (
@@ -629,6 +634,14 @@ class ComposerStaticInitd98bd09117ca527cc5140ad21a61849a
         'Masterminds\\' => 
         array (
             0 => __DIR__ . '/..' . '/masterminds/html5/src',
+        ),
+        'Knp\\Snappy\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/knplabs/knp-snappy/src/Knp/Snappy',
+        ),
+        'Knp\\Bundle\\SnappyBundle\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/knplabs/knp-snappy-bundle/src',
         ),
         'FontLib\\' => 
         array (

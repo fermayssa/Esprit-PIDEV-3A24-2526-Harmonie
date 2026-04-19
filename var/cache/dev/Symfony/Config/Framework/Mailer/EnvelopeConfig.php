@@ -12,9 +12,8 @@ class EnvelopeConfig
 {
     private $sender;
     private $recipients;
-    private $allowedRecipients;
     private $_usedProperties = [];
-    
+
     /**
      * @default null
      * @param ParamConfigurator|mixed $value
@@ -24,61 +23,42 @@ class EnvelopeConfig
     {
         $this->_usedProperties['sender'] = true;
         $this->sender = $value;
-    
+
         return $this;
     }
-    
+
     /**
-     * @param ParamConfigurator|list<ParamConfigurator|mixed>|string $value
+     * @param ParamConfigurator|list<ParamConfigurator|mixed> $value
      *
      * @return $this
      */
-    public function recipients(ParamConfigurator|string|array $value): static
+    public function recipients(ParamConfigurator|array $value): static
     {
         $this->_usedProperties['recipients'] = true;
         $this->recipients = $value;
-    
+
         return $this;
     }
-    
-    /**
-     * @param ParamConfigurator|list<ParamConfigurator|mixed>|string $value
-     *
-     * @return $this
-     */
-    public function allowedRecipients(ParamConfigurator|string|array $value): static
+
+    public function __construct(array $value = [])
     {
-        $this->_usedProperties['allowedRecipients'] = true;
-        $this->allowedRecipients = $value;
-    
-        return $this;
-    }
-    
-    public function __construct(array $config = [])
-    {
-        if (array_key_exists('sender', $config)) {
+        if (array_key_exists('sender', $value)) {
             $this->_usedProperties['sender'] = true;
-            $this->sender = $config['sender'];
-            unset($config['sender']);
+            $this->sender = $value['sender'];
+            unset($value['sender']);
         }
-    
-        if (array_key_exists('recipients', $config)) {
+
+        if (array_key_exists('recipients', $value)) {
             $this->_usedProperties['recipients'] = true;
-            $this->recipients = $config['recipients'];
-            unset($config['recipients']);
+            $this->recipients = $value['recipients'];
+            unset($value['recipients']);
         }
-    
-        if (array_key_exists('allowed_recipients', $config)) {
-            $this->_usedProperties['allowedRecipients'] = true;
-            $this->allowedRecipients = $config['allowed_recipients'];
-            unset($config['allowed_recipients']);
-        }
-    
-        if ($config) {
-            throw new InvalidConfigurationException(sprintf('The following keys are not supported by "%s": ', __CLASS__).implode(', ', array_keys($config)));
+
+        if ([] !== $value) {
+            throw new InvalidConfigurationException(sprintf('The following keys are not supported by "%s": ', __CLASS__).implode(', ', array_keys($value)));
         }
     }
-    
+
     public function toArray(): array
     {
         $output = [];
@@ -88,10 +68,7 @@ class EnvelopeConfig
         if (isset($this->_usedProperties['recipients'])) {
             $output['recipients'] = $this->recipients;
         }
-        if (isset($this->_usedProperties['allowedRecipients'])) {
-            $output['allowed_recipients'] = $this->allowedRecipients;
-        }
-    
+
         return $output;
     }
 

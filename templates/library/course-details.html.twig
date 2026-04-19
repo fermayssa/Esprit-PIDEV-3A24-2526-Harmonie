@@ -466,6 +466,158 @@
         .publish-row {
             transition: background .2s, border-color .2s, color .2s;
         }
+
+        /* ── SUGGESTIONS ────────────────────────────────────────────────── */
+        .suggestions-section {
+            padding: 0 32px 48px;
+        }
+        .suggestions-section-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--color-text, #111);
+            margin: 0 0 14px;
+        }
+        .suggestions-scroll-wrapper {
+            overflow-x: auto;
+            padding-bottom: 8px;
+        }
+        .suggestions-scroll-wrapper::-webkit-scrollbar { height: 4px; }
+        .suggestions-scroll-wrapper::-webkit-scrollbar-thumb { background: var(--color-border, #e5e7eb); border-radius: 4px; }
+        .suggestions-row {
+            display: flex;
+            gap: 14px;
+            width: max-content;
+        }
+        .suggestion-card {
+            border-radius: 12px;
+            border: 1px solid var(--color-border, #e5e7eb);
+            background: var(--color-surface, #fff);
+            overflow: hidden;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            transition: box-shadow .15s, transform .15s;
+            flex-shrink: 0;
+        }
+        .suggestion-card:hover {
+            box-shadow: 0 4px 16px rgba(0,0,0,.10);
+            transform: translateY(-2px);
+        }
+        .suggestion-card-thumb {
+            background: var(--color-surface-subtle, #f3f4f6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            overflow: hidden;
+            position: relative;
+        }
+        .suggestion-card-thumb img {
+            width: 100%; height: 100%;
+            object-fit: cover; display: block;
+        }
+        .suggestion-card-body {
+            padding: 8px 10px 10px;
+        }
+        .suggestion-card-title {
+            font-size: 11.5px;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: var(--color-text, #111);
+        }
+        .suggestion-card-sub {
+            font-size: 10.5px;
+            color: var(--color-text-muted, #6b7280);
+            margin-top: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .suggestion-play-overlay {
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+            background: rgba(0,0,0,.45);
+            border-radius: 50%;
+            width: 42px; height: 42px;
+            display: flex; align-items: center; justify-content: center;
+            color: #fff;
+            pointer-events: none;
+        }
+        .suggestions-sub-section { margin-bottom: 32px; }
+
+        /* ── VIDEO PLAYER MODAL ─────────────────────────────────────────── */
+        .video-modal-backdrop {
+            position: fixed; inset: 0; z-index: 700;
+            background: rgba(0,0,0,.75); backdrop-filter: blur(6px);
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; pointer-events: none; transition: opacity .2s ease;
+        }
+        .video-modal-backdrop.open { opacity: 1; pointer-events: all; }
+
+        .video-modal {
+            background: #000;
+            border-radius: 14px;
+            box-shadow: 0 32px 80px rgba(0,0,0,.55);
+            width: min(94vw, 900px);
+            overflow: hidden;
+            transform: translateY(22px) scale(.97);
+            transition: transform .2s ease;
+            display: flex; flex-direction: column;
+        }
+        .video-modal-backdrop.open .video-modal { transform: translateY(0) scale(1); }
+
+        .video-modal-header {
+            display: flex; align-items: flex-start; justify-content: space-between;
+            gap: 12px; padding: 14px 16px 10px;
+            background: #111;
+        }
+        .video-modal-header-info { min-width: 0; }
+        .video-modal-title {
+            font-size: 14px; font-weight: 600; color: #fff;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+            margin: 0 0 2px;
+        }
+        .video-modal-channel {
+            font-size: 12px; color: #9ca3af; margin: 0;
+        }
+        .video-modal-close {
+            flex-shrink: 0; background: rgba(255,255,255,.1);
+            border: none; border-radius: 8px; color: #fff;
+            width: 30px; height: 30px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 18px; line-height: 1;
+            transition: background .14s;
+        }
+        .video-modal-close:hover { background: rgba(255,255,255,.22); }
+
+        .video-modal-player {
+            position: relative; width: 100%; padding-top: 56.25%; /* 16:9 */
+            background: #000;
+        }
+        .video-modal-player iframe {
+            position: absolute; inset: 0;
+            width: 100%; height: 100%;
+            border: none;
+        }
+
+        .video-modal-footer {
+            display: flex; justify-content: flex-end;
+            padding: 10px 16px; background: #111; gap: 8px;
+        }
+        .video-modal-yt-link {
+            display: inline-flex; align-items: center; gap: 6px;
+            font-size: 12px; color: #9ca3af; text-decoration: none;
+            padding: 5px 10px; border-radius: 7px;
+            border: 1px solid rgba(255,255,255,.12);
+            transition: color .13s, border-color .13s, background .13s;
+        }
+        .video-modal-yt-link:hover {
+            color: #fff; border-color: rgba(255,255,255,.3);
+            background: rgba(255,255,255,.07);
+        }
     </style>
 {% endblock %}
 
@@ -655,6 +807,54 @@
         </div>
 
     </main>
+
+    {# ── SUGGESTIONS — Open Library + YouTube ─────────────────────────── #}
+    <section class="suggestions-section" id="suggestionsSection" style="display:none;">
+
+        <div class="suggestions-sub-section" id="booksSection" style="display:none;">
+            <h2 class="suggestions-section-title">📚 Related Books</h2>
+            <div class="suggestions-scroll-wrapper">
+                <div class="suggestions-row" id="booksContainer"></div>
+            </div>
+        </div>
+
+        <div class="suggestions-sub-section" id="videosSection" style="display:none;">
+            <h2 class="suggestions-section-title">▶ Related Videos</h2>
+            <div class="suggestions-scroll-wrapper">
+                <div class="suggestions-row" id="videosContainer"></div>
+            </div>
+        </div>
+
+    </section>
+
+    {# ── YOUTUBE VIDEO PLAYER MODAL ───────────────────────────────── #}
+    <div class="video-modal-backdrop" id="videoModal" role="dialog" aria-modal="true" aria-labelledby="videoModalTitle">
+        <div class="video-modal">
+            <div class="video-modal-header">
+                <div class="video-modal-header-info">
+                    <p class="video-modal-title" id="videoModalTitle"></p>
+                    <p class="video-modal-channel" id="videoModalChannel"></p>
+                </div>
+                <button class="video-modal-close" id="videoModalClose" type="button" aria-label="Close video">✕</button>
+            </div>
+            <div class="video-modal-player">
+                <iframe id="videoModalIframe"
+                        src=""
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen
+                        title="YouTube video player"></iframe>
+            </div>
+            <div class="video-modal-footer">
+                <a id="videoModalYtLink" class="video-modal-yt-link" href="#" target="_blank" rel="noopener noreferrer">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                        <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-2.75 4.83 4.83 0 0 1-3.77 2.75C7.1 6.69 4 9.79 4 14c0 5 4 8 8 8s8-3 8-8c0-4.21-3.1-7.31-7.81-7.31H12z"/>
+                        <path d="M10 15l5-3-5-3v6z"/>
+                    </svg>
+                    Watch on YouTube
+                </a>
+            </div>
+        </div>
+    </div>
 
     {# ── FILE PREVIEW MODAL ───────────────────────────────────────── #}
     <div class="preview-modal-backdrop" id="previewModal" role="dialog" aria-modal="true" aria-labelledby="previewTitle">
@@ -1448,6 +1648,7 @@
                 closeModal('confirmModal');
                 closeModal2('previewModal');
                 closeReportModal();
+                if (videoModal && videoModal.classList.contains('open')) closeVideoModal();
                 if (noteModal.classList.contains('open')) {
                     if (noteDirty && !confirm('Unsaved changes — close anyway?')) return;
                     closeNoteModal();
@@ -1529,6 +1730,108 @@
             // Close report modal on backdrop click or Escape
             if (reportModal) {
                 reportModal.addEventListener('click', e => { if (e.target === reportModal) closeReportModal(); });
+            }
+
+            // ── SUGGESTIONS — Open Library + YouTube ─────────────────────────
+            (function loadSuggestions() {
+                fetch(`/courses/${COURSE_ID}/suggestions`)
+                    .then(r => r.json())
+                    .then(({ books, videos }) => {
+                        const section = document.getElementById('suggestionsSection');
+
+                        if (books && books.length) {
+                            const container = document.getElementById('booksContainer');
+                            books.forEach(b => container.appendChild(makeBookCard(b)));
+                            document.getElementById('booksSection').style.display = '';
+                            section.style.display = '';
+                        }
+
+                        if (videos && videos.length) {
+                            const container = document.getElementById('videosContainer');
+                            videos.forEach(v => container.appendChild(makeVideoCard(v)));
+                            document.getElementById('videosSection').style.display = '';
+                            section.style.display = '';
+                        }
+                    })
+                    .catch(() => {}); // silently fail — suggestions are non-critical
+            })();
+
+            function makeBookCard(b) {
+                const a = document.createElement('a');
+                a.href = b.openLibUrl || 'https://openlibrary.org';
+                a.target = '_blank'; a.rel = 'noopener noreferrer';
+                a.className = 'suggestion-card';
+                a.style.width = '160px';
+                a.innerHTML = `
+                    <div class="suggestion-card-thumb" style="width:160px;height:220px;">
+                        ${b.coverUrl
+                    ? `<img src="${esc(b.coverUrl)}" alt="${esc(b.title)}" loading="lazy">`
+                    : '📖'}
+                    </div>
+                    <div class="suggestion-card-body" style="max-width:160px;">
+                        <div class="suggestion-card-title">${esc(b.title)}</div>
+                        ${b.author ? `<div class="suggestion-card-sub">${esc(b.author)}</div>` : ''}
+                    </div>`;
+                return a;
+            }
+
+            function makeVideoCard(v) {
+                const card = document.createElement('div');
+                card.className = 'suggestion-card';
+                card.style.width = '240px';
+                card.style.cursor = 'pointer';
+                card.setAttribute('role', 'button');
+                card.setAttribute('tabindex', '0');
+                card.setAttribute('aria-label', 'Play: ' + (v.title || 'video'));
+                card.innerHTML = `
+                    <div class="suggestion-card-thumb" style="width:240px;height:135px;">
+                        ${v.thumbnailUrl
+                    ? `<img src="${esc(v.thumbnailUrl)}" alt="${esc(v.title)}" loading="lazy">`
+                    : '▶'}
+                        <span class="suggestion-play-overlay">▶</span>
+                    </div>
+                    <div class="suggestion-card-body" style="max-width:240px;">
+                        <div class="suggestion-card-title">${esc(v.title)}</div>
+                        ${v.channelName ? `<div class="suggestion-card-sub">${esc(v.channelName)}</div>` : ''}
+                    </div>`;
+                card.addEventListener('click', () => openVideoModal(v));
+                card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openVideoModal(v); } });
+                return card;
+            }
+
+            // ── VIDEO MODAL ──────────────────────────────────────────────────
+            const videoModal       = document.getElementById('videoModal');
+            const videoModalIframe = document.getElementById('videoModalIframe');
+            const videoModalTitle  = document.getElementById('videoModalTitle');
+            const videoModalChan   = document.getElementById('videoModalChannel');
+            const videoModalYtLink = document.getElementById('videoModalYtLink');
+            const videoModalClose  = document.getElementById('videoModalClose');
+
+            function openVideoModal(v) {
+                // Extract video ID from URL and build embed URL
+                const match = (v.videoUrl || '').match(/[?&]v=([^&#]+)/);
+                const videoId = match ? match[1] : null;
+                if (!videoId) { window.open(v.videoUrl, '_blank', 'noopener'); return; }
+
+                videoModalIframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
+                videoModalTitle.textContent  = v.title || '';
+                videoModalChan.textContent   = v.channelName || '';
+                videoModalYtLink.href        = v.videoUrl;
+                videoModal.classList.add('open');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeVideoModal() {
+                videoModal.classList.remove('open');
+                videoModalIframe.src = ''; // stop playback
+                document.body.style.overflow = '';
+            }
+
+            if (videoModalClose) videoModalClose.addEventListener('click', closeVideoModal);
+            if (videoModal) videoModal.addEventListener('click', e => { if (e.target === videoModal) closeVideoModal(); });
+
+            function esc(str) {
+                return (str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
             }
 
         })();

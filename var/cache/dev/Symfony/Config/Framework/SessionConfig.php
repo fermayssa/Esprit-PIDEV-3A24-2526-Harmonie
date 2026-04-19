@@ -29,7 +29,7 @@ class SessionConfig
     private $sidLength;
     private $sidBitsPerCharacter;
     private $_usedProperties = [];
-    
+
     /**
      * @default false
      * @param ParamConfigurator|bool $value
@@ -39,10 +39,10 @@ class SessionConfig
     {
         $this->_usedProperties['enabled'] = true;
         $this->enabled = $value;
-    
+
         return $this;
     }
-    
+
     /**
      * @default 'session.storage.factory.native'
      * @param ParamConfigurator|mixed $value
@@ -52,12 +52,11 @@ class SessionConfig
     {
         $this->_usedProperties['storageFactoryId'] = true;
         $this->storageFactoryId = $value;
-    
+
         return $this;
     }
-    
+
     /**
-     * Defaults to using the native session handler, or to the native *file* session handler if "save_path" is not null.
      * @default null
      * @param ParamConfigurator|mixed $value
      * @return $this
@@ -66,10 +65,10 @@ class SessionConfig
     {
         $this->_usedProperties['handlerId'] = true;
         $this->handlerId = $value;
-    
+
         return $this;
     }
-    
+
     /**
      * @default null
      * @param ParamConfigurator|mixed $value
@@ -79,10 +78,10 @@ class SessionConfig
     {
         $this->_usedProperties['name'] = true;
         $this->name = $value;
-    
+
         return $this;
     }
-    
+
     /**
      * @default null
      * @param ParamConfigurator|mixed $value
@@ -92,10 +91,10 @@ class SessionConfig
     {
         $this->_usedProperties['cookieLifetime'] = true;
         $this->cookieLifetime = $value;
-    
+
         return $this;
     }
-    
+
     /**
      * @default null
      * @param ParamConfigurator|mixed $value
@@ -105,10 +104,10 @@ class SessionConfig
     {
         $this->_usedProperties['cookiePath'] = true;
         $this->cookiePath = $value;
-    
+
         return $this;
     }
-    
+
     /**
      * @default null
      * @param ParamConfigurator|mixed $value
@@ -118,12 +117,12 @@ class SessionConfig
     {
         $this->_usedProperties['cookieDomain'] = true;
         $this->cookieDomain = $value;
-    
+
         return $this;
     }
-    
+
     /**
-     * @default 'auto'
+     * @default null
      * @param ParamConfigurator|true|false|'auto' $value
      * @return $this
      */
@@ -131,10 +130,10 @@ class SessionConfig
     {
         $this->_usedProperties['cookieSecure'] = true;
         $this->cookieSecure = $value;
-    
+
         return $this;
     }
-    
+
     /**
      * @default true
      * @param ParamConfigurator|bool $value
@@ -144,12 +143,12 @@ class SessionConfig
     {
         $this->_usedProperties['cookieHttponly'] = true;
         $this->cookieHttponly = $value;
-    
+
         return $this;
     }
-    
+
     /**
-     * @default 'lax'
+     * @default null
      * @param ParamConfigurator|NULL|'lax'|'strict'|'none' $value
      * @return $this
      */
@@ -157,10 +156,10 @@ class SessionConfig
     {
         $this->_usedProperties['cookieSamesite'] = true;
         $this->cookieSamesite = $value;
-    
+
         return $this;
     }
-    
+
     /**
      * @default null
      * @param ParamConfigurator|bool $value
@@ -170,10 +169,10 @@ class SessionConfig
     {
         $this->_usedProperties['useCookies'] = true;
         $this->useCookies = $value;
-    
+
         return $this;
     }
-    
+
     /**
      * @default null
      * @param ParamConfigurator|mixed $value
@@ -183,12 +182,12 @@ class SessionConfig
     {
         $this->_usedProperties['gcDivisor'] = true;
         $this->gcDivisor = $value;
-    
+
         return $this;
     }
-    
+
     /**
-     * @default null
+     * @default 1
      * @param ParamConfigurator|mixed $value
      * @return $this
      */
@@ -196,10 +195,10 @@ class SessionConfig
     {
         $this->_usedProperties['gcProbability'] = true;
         $this->gcProbability = $value;
-    
+
         return $this;
     }
-    
+
     /**
      * @default null
      * @param ParamConfigurator|mixed $value
@@ -209,12 +208,11 @@ class SessionConfig
     {
         $this->_usedProperties['gcMaxlifetime'] = true;
         $this->gcMaxlifetime = $value;
-    
+
         return $this;
     }
-    
+
     /**
-     * Defaults to "%kernel.cache_dir%/sessions" if the "handler_id" option is not null.
      * @default null
      * @param ParamConfigurator|mixed $value
      * @return $this
@@ -223,12 +221,12 @@ class SessionConfig
     {
         $this->_usedProperties['savePath'] = true;
         $this->savePath = $value;
-    
+
         return $this;
     }
-    
+
     /**
-     * Seconds to wait between 2 session metadata updates.
+     * seconds to wait between 2 session metadata updates
      * @default 0
      * @param ParamConfigurator|int $value
      * @return $this
@@ -237,153 +235,151 @@ class SessionConfig
     {
         $this->_usedProperties['metadataUpdateThreshold'] = true;
         $this->metadataUpdateThreshold = $value;
-    
+
         return $this;
     }
-    
+
     /**
      * @default null
      * @param ParamConfigurator|int $value
-     * @deprecated Since symfony/framework-bundle 7.2: Setting the "framework.session.sid_length" configuration option is deprecated. It will be removed in version 8.0. No alternative is provided as PHP 8.4 has deprecated the related option.
      * @return $this
      */
     public function sidLength($value): static
     {
         $this->_usedProperties['sidLength'] = true;
         $this->sidLength = $value;
-    
+
         return $this;
     }
-    
+
     /**
      * @default null
      * @param ParamConfigurator|int $value
-     * @deprecated Since symfony/framework-bundle 7.2: Setting the "framework.session.sid_bits_per_character" configuration option is deprecated. It will be removed in version 8.0. No alternative is provided as PHP 8.4 has deprecated the related option.
      * @return $this
      */
     public function sidBitsPerCharacter($value): static
     {
         $this->_usedProperties['sidBitsPerCharacter'] = true;
         $this->sidBitsPerCharacter = $value;
-    
+
         return $this;
     }
-    
-    public function __construct(array $config = [])
+
+    public function __construct(array $value = [])
     {
-        if (array_key_exists('enabled', $config)) {
+        if (array_key_exists('enabled', $value)) {
             $this->_usedProperties['enabled'] = true;
-            $this->enabled = $config['enabled'];
-            unset($config['enabled']);
+            $this->enabled = $value['enabled'];
+            unset($value['enabled']);
         }
-    
-        if (array_key_exists('storage_factory_id', $config)) {
+
+        if (array_key_exists('storage_factory_id', $value)) {
             $this->_usedProperties['storageFactoryId'] = true;
-            $this->storageFactoryId = $config['storage_factory_id'];
-            unset($config['storage_factory_id']);
+            $this->storageFactoryId = $value['storage_factory_id'];
+            unset($value['storage_factory_id']);
         }
-    
-        if (array_key_exists('handler_id', $config)) {
+
+        if (array_key_exists('handler_id', $value)) {
             $this->_usedProperties['handlerId'] = true;
-            $this->handlerId = $config['handler_id'];
-            unset($config['handler_id']);
+            $this->handlerId = $value['handler_id'];
+            unset($value['handler_id']);
         }
-    
-        if (array_key_exists('name', $config)) {
+
+        if (array_key_exists('name', $value)) {
             $this->_usedProperties['name'] = true;
-            $this->name = $config['name'];
-            unset($config['name']);
+            $this->name = $value['name'];
+            unset($value['name']);
         }
-    
-        if (array_key_exists('cookie_lifetime', $config)) {
+
+        if (array_key_exists('cookie_lifetime', $value)) {
             $this->_usedProperties['cookieLifetime'] = true;
-            $this->cookieLifetime = $config['cookie_lifetime'];
-            unset($config['cookie_lifetime']);
+            $this->cookieLifetime = $value['cookie_lifetime'];
+            unset($value['cookie_lifetime']);
         }
-    
-        if (array_key_exists('cookie_path', $config)) {
+
+        if (array_key_exists('cookie_path', $value)) {
             $this->_usedProperties['cookiePath'] = true;
-            $this->cookiePath = $config['cookie_path'];
-            unset($config['cookie_path']);
+            $this->cookiePath = $value['cookie_path'];
+            unset($value['cookie_path']);
         }
-    
-        if (array_key_exists('cookie_domain', $config)) {
+
+        if (array_key_exists('cookie_domain', $value)) {
             $this->_usedProperties['cookieDomain'] = true;
-            $this->cookieDomain = $config['cookie_domain'];
-            unset($config['cookie_domain']);
+            $this->cookieDomain = $value['cookie_domain'];
+            unset($value['cookie_domain']);
         }
-    
-        if (array_key_exists('cookie_secure', $config)) {
+
+        if (array_key_exists('cookie_secure', $value)) {
             $this->_usedProperties['cookieSecure'] = true;
-            $this->cookieSecure = $config['cookie_secure'];
-            unset($config['cookie_secure']);
+            $this->cookieSecure = $value['cookie_secure'];
+            unset($value['cookie_secure']);
         }
-    
-        if (array_key_exists('cookie_httponly', $config)) {
+
+        if (array_key_exists('cookie_httponly', $value)) {
             $this->_usedProperties['cookieHttponly'] = true;
-            $this->cookieHttponly = $config['cookie_httponly'];
-            unset($config['cookie_httponly']);
+            $this->cookieHttponly = $value['cookie_httponly'];
+            unset($value['cookie_httponly']);
         }
-    
-        if (array_key_exists('cookie_samesite', $config)) {
+
+        if (array_key_exists('cookie_samesite', $value)) {
             $this->_usedProperties['cookieSamesite'] = true;
-            $this->cookieSamesite = $config['cookie_samesite'];
-            unset($config['cookie_samesite']);
+            $this->cookieSamesite = $value['cookie_samesite'];
+            unset($value['cookie_samesite']);
         }
-    
-        if (array_key_exists('use_cookies', $config)) {
+
+        if (array_key_exists('use_cookies', $value)) {
             $this->_usedProperties['useCookies'] = true;
-            $this->useCookies = $config['use_cookies'];
-            unset($config['use_cookies']);
+            $this->useCookies = $value['use_cookies'];
+            unset($value['use_cookies']);
         }
-    
-        if (array_key_exists('gc_divisor', $config)) {
+
+        if (array_key_exists('gc_divisor', $value)) {
             $this->_usedProperties['gcDivisor'] = true;
-            $this->gcDivisor = $config['gc_divisor'];
-            unset($config['gc_divisor']);
+            $this->gcDivisor = $value['gc_divisor'];
+            unset($value['gc_divisor']);
         }
-    
-        if (array_key_exists('gc_probability', $config)) {
+
+        if (array_key_exists('gc_probability', $value)) {
             $this->_usedProperties['gcProbability'] = true;
-            $this->gcProbability = $config['gc_probability'];
-            unset($config['gc_probability']);
+            $this->gcProbability = $value['gc_probability'];
+            unset($value['gc_probability']);
         }
-    
-        if (array_key_exists('gc_maxlifetime', $config)) {
+
+        if (array_key_exists('gc_maxlifetime', $value)) {
             $this->_usedProperties['gcMaxlifetime'] = true;
-            $this->gcMaxlifetime = $config['gc_maxlifetime'];
-            unset($config['gc_maxlifetime']);
+            $this->gcMaxlifetime = $value['gc_maxlifetime'];
+            unset($value['gc_maxlifetime']);
         }
-    
-        if (array_key_exists('save_path', $config)) {
+
+        if (array_key_exists('save_path', $value)) {
             $this->_usedProperties['savePath'] = true;
-            $this->savePath = $config['save_path'];
-            unset($config['save_path']);
+            $this->savePath = $value['save_path'];
+            unset($value['save_path']);
         }
-    
-        if (array_key_exists('metadata_update_threshold', $config)) {
+
+        if (array_key_exists('metadata_update_threshold', $value)) {
             $this->_usedProperties['metadataUpdateThreshold'] = true;
-            $this->metadataUpdateThreshold = $config['metadata_update_threshold'];
-            unset($config['metadata_update_threshold']);
+            $this->metadataUpdateThreshold = $value['metadata_update_threshold'];
+            unset($value['metadata_update_threshold']);
         }
-    
-        if (array_key_exists('sid_length', $config)) {
+
+        if (array_key_exists('sid_length', $value)) {
             $this->_usedProperties['sidLength'] = true;
-            $this->sidLength = $config['sid_length'];
-            unset($config['sid_length']);
+            $this->sidLength = $value['sid_length'];
+            unset($value['sid_length']);
         }
-    
-        if (array_key_exists('sid_bits_per_character', $config)) {
+
+        if (array_key_exists('sid_bits_per_character', $value)) {
             $this->_usedProperties['sidBitsPerCharacter'] = true;
-            $this->sidBitsPerCharacter = $config['sid_bits_per_character'];
-            unset($config['sid_bits_per_character']);
+            $this->sidBitsPerCharacter = $value['sid_bits_per_character'];
+            unset($value['sid_bits_per_character']);
         }
-    
-        if ($config) {
-            throw new InvalidConfigurationException(sprintf('The following keys are not supported by "%s": ', __CLASS__).implode(', ', array_keys($config)));
+
+        if ([] !== $value) {
+            throw new InvalidConfigurationException(sprintf('The following keys are not supported by "%s": ', __CLASS__).implode(', ', array_keys($value)));
         }
     }
-    
+
     public function toArray(): array
     {
         $output = [];
@@ -441,7 +437,7 @@ class SessionConfig
         if (isset($this->_usedProperties['sidBitsPerCharacter'])) {
             $output['sid_bits_per_character'] = $this->sidBitsPerCharacter;
         }
-    
+
         return $output;
     }
 
