@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://symfony.com/schema/dic/services https://symfony.com/schema/dic/services/services-1.0.xsd">
   <parameters>
-    <parameter key="kernel.project_dir">D:\web</parameter>
+    <parameter key="kernel.project_dir">/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio</parameter>
     <parameter key="kernel.environment">dev</parameter>
     <parameter key="kernel.runtime_environment">%env(default:kernel.environment:APP_RUNTIME_ENV)%</parameter>
     <parameter key="kernel.runtime_mode">%env(query_string:default:container.runtime_mode:APP_RUNTIME_MODE)%</parameter>
@@ -9,9 +9,9 @@
     <parameter key="kernel.runtime_mode.cli">%env(not:default:kernel.runtime_mode.web:)%</parameter>
     <parameter key="kernel.runtime_mode.worker">%env(bool:default::key:worker:default:kernel.runtime_mode:)%</parameter>
     <parameter key="kernel.debug">true</parameter>
-    <parameter key="kernel.build_dir">D:\web\var\cache\dev</parameter>
-    <parameter key="kernel.cache_dir">D:\web\var\cache\dev</parameter>
-    <parameter key="kernel.logs_dir">D:\web\var\log</parameter>
+    <parameter key="kernel.build_dir">/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/var/cache/dev</parameter>
+    <parameter key="kernel.cache_dir">/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/var/cache/dev</parameter>
+    <parameter key="kernel.logs_dir">/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/var/log</parameter>
     <parameter key="kernel.bundles" type="collection">
       <parameter key="FrameworkBundle">Symfony\Bundle\FrameworkBundle\FrameworkBundle</parameter>
       <parameter key="DoctrineBundle">Doctrine\Bundle\DoctrineBundle\DoctrineBundle</parameter>
@@ -33,77 +33,77 @@
     </parameter>
     <parameter key="kernel.bundles_metadata" type="collection">
       <parameter key="FrameworkBundle" type="collection">
-        <parameter key="path">D:\web\vendor\symfony\framework-bundle</parameter>
+        <parameter key="path">/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/framework-bundle</parameter>
         <parameter key="namespace">Symfony\Bundle\FrameworkBundle</parameter>
       </parameter>
       <parameter key="DoctrineBundle" type="collection">
-        <parameter key="path">D:\web\vendor\doctrine\doctrine-bundle</parameter>
+        <parameter key="path">/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/doctrine/doctrine-bundle</parameter>
         <parameter key="namespace">Doctrine\Bundle\DoctrineBundle</parameter>
       </parameter>
       <parameter key="DoctrineMigrationsBundle" type="collection">
-        <parameter key="path">D:\web\vendor\doctrine\doctrine-migrations-bundle</parameter>
+        <parameter key="path">/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/doctrine/doctrine-migrations-bundle</parameter>
         <parameter key="namespace">Doctrine\Bundle\MigrationsBundle</parameter>
       </parameter>
       <parameter key="DebugBundle" type="collection">
-        <parameter key="path">D:\web\vendor\symfony\debug-bundle</parameter>
+        <parameter key="path">/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/debug-bundle</parameter>
         <parameter key="namespace">Symfony\Bundle\DebugBundle</parameter>
       </parameter>
       <parameter key="TwigBundle" type="collection">
-        <parameter key="path">D:\web\vendor\symfony\twig-bundle</parameter>
+        <parameter key="path">/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/twig-bundle</parameter>
         <parameter key="namespace">Symfony\Bundle\TwigBundle</parameter>
       </parameter>
       <parameter key="WebProfilerBundle" type="collection">
-        <parameter key="path">D:\web\vendor\symfony\web-profiler-bundle</parameter>
+        <parameter key="path">/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/web-profiler-bundle</parameter>
         <parameter key="namespace">Symfony\Bundle\WebProfilerBundle</parameter>
       </parameter>
       <parameter key="StimulusBundle" type="collection">
-        <parameter key="path">D:\web\vendor\symfony\stimulus-bundle</parameter>
+        <parameter key="path">/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/stimulus-bundle</parameter>
         <parameter key="namespace">Symfony\UX\StimulusBundle</parameter>
       </parameter>
       <parameter key="TurboBundle" type="collection">
-        <parameter key="path">D:\web\vendor\symfony\ux-turbo</parameter>
+        <parameter key="path">/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/ux-turbo</parameter>
         <parameter key="namespace">Symfony\UX\Turbo</parameter>
       </parameter>
       <parameter key="TwigExtraBundle" type="collection">
-        <parameter key="path">D:\web\vendor\twig\extra-bundle</parameter>
+        <parameter key="path">/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/twig/extra-bundle</parameter>
         <parameter key="namespace">Twig\Extra\TwigExtraBundle</parameter>
       </parameter>
       <parameter key="SecurityBundle" type="collection">
-        <parameter key="path">D:\web\vendor\symfony\security-bundle</parameter>
+        <parameter key="path">/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/security-bundle</parameter>
         <parameter key="namespace">Symfony\Bundle\SecurityBundle</parameter>
       </parameter>
       <parameter key="MonologBundle" type="collection">
-        <parameter key="path">D:\web\vendor\symfony\monolog-bundle\src</parameter>
+        <parameter key="path">/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/monolog-bundle/src</parameter>
         <parameter key="namespace">Symfony\Bundle\MonologBundle</parameter>
       </parameter>
       <parameter key="MakerBundle" type="collection">
-        <parameter key="path">D:\web\vendor\symfony\maker-bundle</parameter>
+        <parameter key="path">/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/maker-bundle</parameter>
         <parameter key="namespace">Symfony\Bundle\MakerBundle</parameter>
       </parameter>
       <parameter key="MercureBundle" type="collection">
-        <parameter key="path">D:\web\vendor\symfony\mercure-bundle\src</parameter>
+        <parameter key="path">/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/mercure-bundle/src</parameter>
         <parameter key="namespace">Symfony\Bundle\MercureBundle</parameter>
       </parameter>
       <parameter key="KnpUOAuth2ClientBundle" type="collection">
-        <parameter key="path">D:\web\vendor\knpuniversity\oauth2-client-bundle\src</parameter>
+        <parameter key="path">/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/knpuniversity/oauth2-client-bundle/src</parameter>
         <parameter key="namespace">KnpU\OAuth2ClientBundle</parameter>
       </parameter>
       <parameter key="KnpSnappyBundle" type="collection">
-        <parameter key="path">D:/web/vendor/knplabs/knp-snappy-bundle/src</parameter>
+        <parameter key="path">/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/knplabs/knp-snappy-bundle/src</parameter>
         <parameter key="namespace">Knp\Bundle\SnappyBundle</parameter>
       </parameter>
       <parameter key="KnpPaginatorBundle" type="collection">
-        <parameter key="path">D:\web\vendor\knplabs\knp-paginator-bundle</parameter>
+        <parameter key="path">/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/knplabs/knp-paginator-bundle</parameter>
         <parameter key="namespace">Knp\Bundle\PaginatorBundle</parameter>
       </parameter>
       <parameter key="ChartjsBundle" type="collection">
-        <parameter key="path">D:\web\vendor\symfony\ux-chartjs</parameter>
+        <parameter key="path">/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/ux-chartjs</parameter>
         <parameter key="namespace">Symfony\UX\Chartjs</parameter>
       </parameter>
     </parameter>
     <parameter key="kernel.charset">UTF-8</parameter>
     <parameter key="kernel.container_class">App_KernelDevDebugContainer</parameter>
-    <parameter key="posts_images_directory">D:\web/public/uploads/posts</parameter>
+    <parameter key="posts_images_directory">/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/public/uploads/posts</parameter>
     <parameter key="event_dispatcher.event_aliases" type="collection">
       <parameter key="Symfony\Component\Console\Event\ConsoleCommandEvent">console.command</parameter>
       <parameter key="Symfony\Component\Console\Event\ConsoleErrorEvent">console.error</parameter>
@@ -139,18 +139,18 @@
     <parameter key="asset.request_context.base_path">null</parameter>
     <parameter key="asset.request_context.secure">null</parameter>
     <parameter key="translator.logging">false</parameter>
-    <parameter key="translator.default_path">D:\web/translations</parameter>
+    <parameter key="translator.default_path">/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/translations</parameter>
     <parameter key="debug.error_handler.throw_at">-1</parameter>
-    <parameter key="debug.container.dump">D:\web\var\cache\dev/App_KernelDevDebugContainer.xml</parameter>
+    <parameter key="debug.container.dump">/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/var/cache/dev/App_KernelDevDebugContainer.xml</parameter>
     <parameter key="router.request_context.host">localhost</parameter>
     <parameter key="router.request_context.scheme">http</parameter>
     <parameter key="router.request_context.base_url"></parameter>
     <parameter key="router.resource">kernel::loadRoutes</parameter>
-    <parameter key="router.cache_dir">D:\web\var\cache\dev</parameter>
+    <parameter key="router.cache_dir">/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/var/cache/dev</parameter>
     <parameter key="request_listener.http_port">80</parameter>
     <parameter key="request_listener.https_port">443</parameter>
-    <parameter key="serializer.mapping.cache.file">D:\web\var\cache\dev/serialization.php</parameter>
-    <parameter key="cache.prefix.seed">_D:\web.App_KernelDevDebugContainer</parameter>
+    <parameter key="serializer.mapping.cache.file">/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/var/cache/dev/serialization.php</parameter>
+    <parameter key="cache.prefix.seed">_/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio.App_KernelDevDebugContainer</parameter>
     <parameter key="session.metadata.storage_key">_sf2_meta</parameter>
     <parameter key="session.storage.options" type="collection">
       <parameter key="cache_limiter" type="string">0</parameter>
@@ -158,15 +158,15 @@
       <parameter key="gc_probability">1</parameter>
     </parameter>
     <parameter key="session.metadata.cookie_lifetime">null</parameter>
-    <parameter key="session.save_path">D:\web\var\cache\dev/sessions</parameter>
+    <parameter key="session.save_path">/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/var/cache/dev/sessions</parameter>
     <parameter key="session.metadata.update_threshold">0</parameter>
     <parameter key="form.type_extension.csrf.enabled">true</parameter>
     <parameter key="form.type_extension.csrf.field_name">_token</parameter>
-    <parameter key="validator.mapping.cache.file">D:\web\var\cache\dev/validation.php</parameter>
+    <parameter key="validator.mapping.cache.file">/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/var/cache/dev/validation.php</parameter>
     <parameter key="validator.translation_domain">validators</parameter>
     <parameter key="profiler_listener.only_exceptions">false</parameter>
     <parameter key="profiler_listener.only_main_requests">false</parameter>
-    <parameter key="profiler.storage.dsn">file:D:\web\var\cache\dev/profiler</parameter>
+    <parameter key="profiler.storage.dsn">file:/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/var/cache/dev/profiler</parameter>
     <parameter key="doctrine.dbal.configuration.class">Doctrine\DBAL\Configuration</parameter>
     <parameter key="doctrine.data_collector.class">Doctrine\Bundle\DoctrineBundle\DataCollector\DoctrineDataCollector</parameter>
     <parameter key="doctrine.dbal.connection.event_manager.class">Symfony\Bridge\Doctrine\ContainerAwareEventManager</parameter>
@@ -233,7 +233,7 @@
     <parameter key="doctrine.orm.auto_generate_proxy_classes">true</parameter>
     <parameter key="doctrine.orm.enable_lazy_ghost_objects">true</parameter>
     <parameter key="doctrine.orm.enable_native_lazy_objects">false</parameter>
-    <parameter key="doctrine.orm.proxy_dir">D:\web\var\cache\dev/doctrine/orm/Proxies</parameter>
+    <parameter key="doctrine.orm.proxy_dir">/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/var/cache/dev/doctrine/orm/Proxies</parameter>
     <parameter key="doctrine.orm.proxy_namespace">Proxies</parameter>
     <parameter key="doctrine.migrations.preferred_em">null</parameter>
     <parameter key="doctrine.migrations.preferred_connection">null</parameter>
@@ -242,7 +242,7 @@
       <parameter>form_div_layout.html.twig</parameter>
       <parameter>bootstrap_4_layout.html.twig</parameter>
     </parameter>
-    <parameter key="twig.default_path">D:\web/templates</parameter>
+    <parameter key="twig.default_path">/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/templates</parameter>
     <parameter key="web_profiler.debug_toolbar.intercept_redirects">false</parameter>
     <parameter key="web_profiler.debug_toolbar.mode">2</parameter>
     <parameter key="security.role_hierarchy.roles" type="collection">
@@ -670,7 +670,7 @@
       <tag name="controller.service_arguments"/>
       <tag name="container.service_subscriber"/>
       <argument type="service" id="doctrine.dbal.default_connection"/>
-      <argument type="service" id="App\Service\ImageGen"/>
+      <argument type="service" id="App\Service\ImageGenerationService"/>
       <call method="setContainer">
         <argument type="service" id=".service_locator.O2p6Lk7.App\Controller\LibraryControllers\CoursesController"/>
       </call>
@@ -944,6 +944,12 @@
       <argument type="service" id="router.default"/>
       <argument type="service" id="App\Repository\UserRepository"/>
     </service>
+    <service id="App\Security\GoogleLoginAuthenticator" class="App\Security\GoogleLoginAuthenticator" autowire="true" autoconfigure="true">
+      <argument type="service" id="knpu.oauth2.registry"/>
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
+      <argument type="service" id="router.default"/>
+      <argument type="service" id="App\Repository\UserRepository"/>
+    </service>
     <service id="App\Service\CaptchaService" class="App\Service\CaptchaService" autowire="true" autoconfigure="true"/>
     <service id="App\Service\Domain\PlanningDomainService" class="App\Service\Domain\PlanningDomainService" autowire="true" autoconfigure="true">
       <argument type="service" id="doctrine.orm.default_entity_manager"/>
@@ -967,7 +973,7 @@
     <service id="App\Service\Github\GithubIssueService" class="App\Service\Github\GithubIssueService" autowire="true" autoconfigure="true">
       <argument type="service" id=".debug.http_client"/>
       <argument type="service" id="monolog.logger"/>
-      <argument>D:\web</argument>
+      <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio</argument>
       <argument>%env(GITHUB_TOKEN)%</argument>
       <argument>%env(GITHUB_REPO)%</argument>
       <argument>main</argument>
@@ -1145,7 +1151,7 @@
       </argument>
     </service>
     <service id="http_cache.store" class="Symfony\Component\HttpKernel\HttpCache\Store">
-      <argument>D:\web\var\cache\dev/http_cache</argument>
+      <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/var/cache/dev/http_cache</argument>
     </service>
     <service id="url_helper" class="Symfony\Component\HttpFoundation\UrlHelper">
       <argument type="service" id="request_stack"/>
@@ -1155,7 +1161,7 @@
       <tag name="container.no_preload"/>
       <argument type="tagged_iterator" tag="kernel.cache_warmer"/>
       <argument>true</argument>
-      <argument>D:\web\var\cache\dev/App_KernelDevDebugContainerDeprecations.log</argument>
+      <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/var/cache/dev/App_KernelDevDebugContainerDeprecations.log</argument>
     </service>
     <service id="cache_clearer" class="Symfony\Component\HttpKernel\CacheClearer\ChainCacheClearer">
       <argument type="tagged_iterator" tag="kernel.cache_clearer"/>
@@ -1417,7 +1423,7 @@
       </argument>
       <argument>UTF-8</argument>
       <argument type="service" id="debug.file_link_formatter" on-invalid="null"/>
-      <argument>D:\web</argument>
+      <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio</argument>
       <argument type="service">
         <service>
           <argument type="service" id="request_stack"/>
@@ -1453,7 +1459,7 @@
       <tag name="console.command"/>
       <tag name="container.no_preload"/>
       <argument type="service" id="filesystem"/>
-      <argument>D:\web</argument>
+      <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio</argument>
       <call method="setName">
         <argument>assets:install</argument>
       </call>
@@ -1643,7 +1649,7 @@
       <tag name="console.command"/>
       <tag name="container.no_preload"/>
       <argument>dev</argument>
-      <argument>D:\web</argument>
+      <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio</argument>
       <call method="setName">
         <argument>debug:dotenv</argument>
       </call>
@@ -1881,17 +1887,17 @@
       <argument type="service" id="translator.data_collector"/>
       <argument type="service" id="translation.reader"/>
       <argument type="service" id="translation.extractor"/>
-      <argument>D:\web/translations</argument>
-      <argument>D:\web/templates</argument>
+      <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/translations</argument>
+      <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/templates</argument>
       <argument type="collection">
-        <argument>D:\web\vendor\symfony\validator/Resources/translations</argument>
-        <argument>D:\web\vendor\symfony\form/Resources/translations</argument>
-        <argument>D:\web\vendor\symfony\security-core/Resources/translations</argument>
-        <argument>D:\web\vendor\knplabs\knp-paginator-bundle/translations</argument>
+        <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/validator/Resources/translations</argument>
+        <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/form/Resources/translations</argument>
+        <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/security-core/Resources/translations</argument>
+        <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/knplabs/knp-paginator-bundle/translations</argument>
       </argument>
       <argument type="collection">
-        <argument>D:\web\vendor\symfony\twig-bridge/Resources/views/Email</argument>
-        <argument>D:\web\vendor\symfony\twig-bridge/Resources/views/Form</argument>
+        <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/twig-bridge/Resources/views/Email</argument>
+        <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/twig-bridge/Resources/views/Form</argument>
       </argument>
       <argument type="collection"/>
       <call method="setName">
@@ -1908,17 +1914,17 @@
       <argument type="service" id="translation.reader"/>
       <argument type="service" id="translation.extractor"/>
       <argument>en</argument>
-      <argument>D:\web/translations</argument>
-      <argument>D:\web/templates</argument>
+      <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/translations</argument>
+      <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/templates</argument>
       <argument type="collection">
-        <argument>D:\web\vendor\symfony\validator/Resources/translations</argument>
-        <argument>D:\web\vendor\symfony\form/Resources/translations</argument>
-        <argument>D:\web\vendor\symfony\security-core/Resources/translations</argument>
-        <argument>D:\web\vendor\knplabs\knp-paginator-bundle/translations</argument>
+        <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/validator/Resources/translations</argument>
+        <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/form/Resources/translations</argument>
+        <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/security-core/Resources/translations</argument>
+        <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/knplabs/knp-paginator-bundle/translations</argument>
       </argument>
       <argument type="collection">
-        <argument>D:\web\vendor\symfony\twig-bridge/Resources/views/Email</argument>
-        <argument>D:\web\vendor\symfony\twig-bridge/Resources/views/Form</argument>
+        <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/twig-bridge/Resources/views/Email</argument>
+        <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/twig-bridge/Resources/views/Form</argument>
       </argument>
       <argument type="collection"/>
       <call method="setName">
@@ -2176,7 +2182,7 @@
       <argument></argument>
       <argument>0</argument>
       <argument>%container.build_id%</argument>
-      <argument>D:\web\var\cache\dev/pools/system</argument>
+      <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/var/cache/dev/pools/system</argument>
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
     </service>
@@ -2195,7 +2201,7 @@
       <tag name="monolog.logger" channel="cache"/>
       <argument></argument>
       <argument>0</argument>
-      <argument>D:\web\var\cache\dev/pools/app</argument>
+      <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/var/cache/dev/pools/app</argument>
       <argument type="service" id="cache.default_marshaller" on-invalid="ignore"/>
       <call method="setLogger">
         <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
@@ -2366,17 +2372,17 @@
     <service id="asset_mapper.cached_mapped_asset_factory" class="Symfony\Component\AssetMapper\Factory\CachedMappedAssetFactory">
       <tag name="container.decorator" id="asset_mapper.mapped_asset_factory" inner="asset_mapper.cached_mapped_asset_factory.inner"/>
       <argument type="service" id="asset_mapper.cached_mapped_asset_factory.inner"/>
-      <argument>D:\web\var\cache\dev/asset_mapper</argument>
+      <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/var/cache/dev/asset_mapper</argument>
       <argument>true</argument>
     </service>
     <service id="asset_mapper.repository" class="Symfony\Component\AssetMapper\AssetMapperRepository">
       <argument type="collection">
-        <argument key="D:\web\vendor\symfony\ux-chartjs\src\DependencyInjection/../../assets/dist">@symfony/ux-chartjs</argument>
-        <argument key="D:\web\vendor\symfony\ux-turbo\src\DependencyInjection/../../assets/dist">@symfony/ux-turbo</argument>
-        <argument key="D:\web\vendor\symfony\stimulus-bundle\src\DependencyInjection/../../assets/dist">@symfony/stimulus-bundle</argument>
+        <argument key="/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/ux-chartjs/src/DependencyInjection/../../assets/dist">@symfony/ux-chartjs</argument>
+        <argument key="/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/ux-turbo/src/DependencyInjection/../../assets/dist">@symfony/ux-turbo</argument>
+        <argument key="/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/stimulus-bundle/src/DependencyInjection/../../assets/dist">@symfony/stimulus-bundle</argument>
         <argument key="assets/"></argument>
       </argument>
-      <argument>D:\web</argument>
+      <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio</argument>
       <argument type="collection">
         <argument>#^(?=[^\.]).*\.d\.ts$#</argument>
         <argument>#^(?=[^\.]).*/(?=[^\.])controllers\.json$#</argument>
@@ -2389,10 +2395,10 @@
       <argument>/assets/</argument>
     </service>
     <service id="asset_mapper.local_public_assets_filesystem" class="Symfony\Component\AssetMapper\Path\LocalPublicAssetsFilesystem">
-      <argument>D:\web/public</argument>
+      <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/public</argument>
     </service>
     <service id="asset_mapper.compiled_asset_mapper_config_reader" class="Symfony\Component\AssetMapper\CompiledAssetMapperConfigReader">
-      <argument>D:\web/public/assets</argument>
+      <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/public/assets</argument>
     </service>
     <service id="asset_mapper.asset_package" class="Symfony\Component\AssetMapper\MapperAwareAssetPackage">
       <tag name="container.decorator" id="assets._default_package" inner="asset_mapper.asset_package.inner"/>
@@ -2416,7 +2422,7 @@
       <argument type="service" id="asset_mapper"/>
       <argument type="service" id="asset_mapper.importmap.generator"/>
       <argument type="service" id="asset_mapper.local_public_assets_filesystem"/>
-      <argument>D:\web</argument>
+      <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio</argument>
       <argument>true</argument>
       <argument type="service" id="debug.event_dispatcher" on-invalid="null"/>
       <call method="setName">
@@ -2431,7 +2437,7 @@
       <tag name="container.no_preload"/>
       <argument type="service" id="asset_mapper"/>
       <argument type="service" id="asset_mapper.repository"/>
-      <argument>D:\web</argument>
+      <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio</argument>
       <call method="setName">
         <argument>debug:asset-map</argument>
       </call>
@@ -2460,7 +2466,7 @@
       <argument type="service" id="monolog.logger.asset_mapper"/>
     </service>
     <service id="asset_mapper.importmap.config_reader" class="Symfony\Component\AssetMapper\ImportMap\ImportMapConfigReader">
-      <argument>D:\web/importmap.php</argument>
+      <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/importmap.php</argument>
       <argument type="service" id="asset_mapper.importmap.remote_package_storage"/>
     </service>
     <service id="asset_mapper.importmap.manager" class="Symfony\Component\AssetMapper\ImportMap\ImportMapManager">
@@ -2475,7 +2481,7 @@
       <argument type="service" id="asset_mapper.importmap.config_reader"/>
     </service>
     <service id="asset_mapper.importmap.remote_package_storage" class="Symfony\Component\AssetMapper\ImportMap\RemotePackageStorage">
-      <argument>D:\web/assets/vendor</argument>
+      <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/assets/vendor</argument>
     </service>
     <service id="asset_mapper.importmap.remote_package_downloader" class="Symfony\Component\AssetMapper\ImportMap\RemotePackageDownloader">
       <argument type="service" id="asset_mapper.importmap.remote_package_storage"/>
@@ -2546,7 +2552,7 @@
       <tag name="console.command"/>
       <tag name="container.no_preload"/>
       <argument type="service" id="asset_mapper.importmap.remote_package_downloader"/>
-      <argument>D:\web</argument>
+      <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio</argument>
       <call method="setName">
         <argument>importmap:install</argument>
       </call>
@@ -2737,375 +2743,375 @@
         </argument>
       </argument>
       <argument type="collection">
-        <argument key="cache_dir">D:\web\var\cache\dev/translations</argument>
+        <argument key="cache_dir">/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/var/cache/dev/translations</argument>
         <argument key="debug">true</argument>
         <argument key="resource_files" type="collection">
           <argument key="af" type="collection">
-            <argument>D:\web\vendor\symfony\validator/Resources/translations\validators.af.xlf</argument>
-            <argument>D:\web\vendor\symfony\form/Resources/translations\validators.af.xlf</argument>
-            <argument>D:\web\vendor\symfony\security-core/Resources/translations\security.af.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/validator/Resources/translations/validators.af.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/form/Resources/translations/validators.af.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/security-core/Resources/translations/security.af.xlf</argument>
           </argument>
           <argument key="ar" type="collection">
-            <argument>D:\web\vendor\symfony\validator/Resources/translations\validators.ar.xlf</argument>
-            <argument>D:\web\vendor\symfony\form/Resources/translations\validators.ar.xlf</argument>
-            <argument>D:\web\vendor\symfony\security-core/Resources/translations\security.ar.xlf</argument>
-            <argument>D:\web\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.ar.xliff</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/validator/Resources/translations/validators.ar.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/form/Resources/translations/validators.ar.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/security-core/Resources/translations/security.ar.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/knplabs/knp-paginator-bundle/translations/KnpPaginatorBundle.ar.xliff</argument>
           </argument>
           <argument key="az" type="collection">
-            <argument>D:\web\vendor\symfony\validator/Resources/translations\validators.az.xlf</argument>
-            <argument>D:\web\vendor\symfony\form/Resources/translations\validators.az.xlf</argument>
-            <argument>D:\web\vendor\symfony\security-core/Resources/translations\security.az.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/validator/Resources/translations/validators.az.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/form/Resources/translations/validators.az.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/security-core/Resources/translations/security.az.xlf</argument>
           </argument>
           <argument key="be" type="collection">
-            <argument>D:\web\vendor\symfony\validator/Resources/translations\validators.be.xlf</argument>
-            <argument>D:\web\vendor\symfony\form/Resources/translations\validators.be.xlf</argument>
-            <argument>D:\web\vendor\symfony\security-core/Resources/translations\security.be.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/validator/Resources/translations/validators.be.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/form/Resources/translations/validators.be.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/security-core/Resources/translations/security.be.xlf</argument>
           </argument>
           <argument key="bg" type="collection">
-            <argument>D:\web\vendor\symfony\validator/Resources/translations\validators.bg.xlf</argument>
-            <argument>D:\web\vendor\symfony\form/Resources/translations\validators.bg.xlf</argument>
-            <argument>D:\web\vendor\symfony\security-core/Resources/translations\security.bg.xlf</argument>
-            <argument>D:\web\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.bg.xliff</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/validator/Resources/translations/validators.bg.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/form/Resources/translations/validators.bg.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/security-core/Resources/translations/security.bg.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/knplabs/knp-paginator-bundle/translations/KnpPaginatorBundle.bg.xliff</argument>
           </argument>
           <argument key="bs" type="collection">
-            <argument>D:\web\vendor\symfony\validator/Resources/translations\validators.bs.xlf</argument>
-            <argument>D:\web\vendor\symfony\form/Resources/translations\validators.bs.xlf</argument>
-            <argument>D:\web\vendor\symfony\security-core/Resources/translations\security.bs.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/validator/Resources/translations/validators.bs.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/form/Resources/translations/validators.bs.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/security-core/Resources/translations/security.bs.xlf</argument>
           </argument>
           <argument key="ca" type="collection">
-            <argument>D:\web\vendor\symfony\validator/Resources/translations\validators.ca.xlf</argument>
-            <argument>D:\web\vendor\symfony\form/Resources/translations\validators.ca.xlf</argument>
-            <argument>D:\web\vendor\symfony\security-core/Resources/translations\security.ca.xlf</argument>
-            <argument>D:\web\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.ca.xliff</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/validator/Resources/translations/validators.ca.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/form/Resources/translations/validators.ca.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/security-core/Resources/translations/security.ca.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/knplabs/knp-paginator-bundle/translations/KnpPaginatorBundle.ca.xliff</argument>
           </argument>
           <argument key="cs" type="collection">
-            <argument>D:\web\vendor\symfony\validator/Resources/translations\validators.cs.xlf</argument>
-            <argument>D:\web\vendor\symfony\form/Resources/translations\validators.cs.xlf</argument>
-            <argument>D:\web\vendor\symfony\security-core/Resources/translations\security.cs.xlf</argument>
-            <argument>D:\web\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.cs.xliff</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/validator/Resources/translations/validators.cs.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/form/Resources/translations/validators.cs.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/security-core/Resources/translations/security.cs.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/knplabs/knp-paginator-bundle/translations/KnpPaginatorBundle.cs.xliff</argument>
           </argument>
           <argument key="cy" type="collection">
-            <argument>D:\web\vendor\symfony\validator/Resources/translations\validators.cy.xlf</argument>
-            <argument>D:\web\vendor\symfony\form/Resources/translations\validators.cy.xlf</argument>
-            <argument>D:\web\vendor\symfony\security-core/Resources/translations\security.cy.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/validator/Resources/translations/validators.cy.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/form/Resources/translations/validators.cy.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/security-core/Resources/translations/security.cy.xlf</argument>
           </argument>
           <argument key="da" type="collection">
-            <argument>D:\web\vendor\symfony\validator/Resources/translations\validators.da.xlf</argument>
-            <argument>D:\web\vendor\symfony\form/Resources/translations\validators.da.xlf</argument>
-            <argument>D:\web\vendor\symfony\security-core/Resources/translations\security.da.xlf</argument>
-            <argument>D:\web\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.da.xliff</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/validator/Resources/translations/validators.da.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/form/Resources/translations/validators.da.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/security-core/Resources/translations/security.da.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/knplabs/knp-paginator-bundle/translations/KnpPaginatorBundle.da.xliff</argument>
           </argument>
           <argument key="de" type="collection">
-            <argument>D:\web\vendor\symfony\validator/Resources/translations\validators.de.xlf</argument>
-            <argument>D:\web\vendor\symfony\form/Resources/translations\validators.de.xlf</argument>
-            <argument>D:\web\vendor\symfony\security-core/Resources/translations\security.de.xlf</argument>
-            <argument>D:\web\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.de.xliff</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/validator/Resources/translations/validators.de.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/form/Resources/translations/validators.de.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/security-core/Resources/translations/security.de.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/knplabs/knp-paginator-bundle/translations/KnpPaginatorBundle.de.xliff</argument>
           </argument>
           <argument key="el" type="collection">
-            <argument>D:\web\vendor\symfony\validator/Resources/translations\validators.el.xlf</argument>
-            <argument>D:\web\vendor\symfony\form/Resources/translations\validators.el.xlf</argument>
-            <argument>D:\web\vendor\symfony\security-core/Resources/translations\security.el.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/validator/Resources/translations/validators.el.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/form/Resources/translations/validators.el.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/security-core/Resources/translations/security.el.xlf</argument>
           </argument>
           <argument key="en" type="collection">
-            <argument>D:\web\vendor\symfony\validator/Resources/translations\validators.en.xlf</argument>
-            <argument>D:\web\vendor\symfony\form/Resources/translations\validators.en.xlf</argument>
-            <argument>D:\web\vendor\symfony\security-core/Resources/translations\security.en.xlf</argument>
-            <argument>D:\web\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.en.xliff</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/validator/Resources/translations/validators.en.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/form/Resources/translations/validators.en.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/security-core/Resources/translations/security.en.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/knplabs/knp-paginator-bundle/translations/KnpPaginatorBundle.en.xliff</argument>
           </argument>
           <argument key="es" type="collection">
-            <argument>D:\web\vendor\symfony\validator/Resources/translations\validators.es.xlf</argument>
-            <argument>D:\web\vendor\symfony\form/Resources/translations\validators.es.xlf</argument>
-            <argument>D:\web\vendor\symfony\security-core/Resources/translations\security.es.xlf</argument>
-            <argument>D:\web\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.es.xliff</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/validator/Resources/translations/validators.es.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/form/Resources/translations/validators.es.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/security-core/Resources/translations/security.es.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/knplabs/knp-paginator-bundle/translations/KnpPaginatorBundle.es.xliff</argument>
           </argument>
           <argument key="et" type="collection">
-            <argument>D:\web\vendor\symfony\validator/Resources/translations\validators.et.xlf</argument>
-            <argument>D:\web\vendor\symfony\form/Resources/translations\validators.et.xlf</argument>
-            <argument>D:\web\vendor\symfony\security-core/Resources/translations\security.et.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/validator/Resources/translations/validators.et.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/form/Resources/translations/validators.et.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/security-core/Resources/translations/security.et.xlf</argument>
           </argument>
           <argument key="eu" type="collection">
-            <argument>D:\web\vendor\symfony\validator/Resources/translations\validators.eu.xlf</argument>
-            <argument>D:\web\vendor\symfony\form/Resources/translations\validators.eu.xlf</argument>
-            <argument>D:\web\vendor\symfony\security-core/Resources/translations\security.eu.xlf</argument>
-            <argument>D:\web\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.eu.xliff</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/validator/Resources/translations/validators.eu.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/form/Resources/translations/validators.eu.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/security-core/Resources/translations/security.eu.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/knplabs/knp-paginator-bundle/translations/KnpPaginatorBundle.eu.xliff</argument>
           </argument>
           <argument key="fa" type="collection">
-            <argument>D:\web\vendor\symfony\validator/Resources/translations\validators.fa.xlf</argument>
-            <argument>D:\web\vendor\symfony\form/Resources/translations\validators.fa.xlf</argument>
-            <argument>D:\web\vendor\symfony\security-core/Resources/translations\security.fa.xlf</argument>
-            <argument>D:\web\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.fa.xliff</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/validator/Resources/translations/validators.fa.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/form/Resources/translations/validators.fa.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/security-core/Resources/translations/security.fa.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/knplabs/knp-paginator-bundle/translations/KnpPaginatorBundle.fa.xliff</argument>
           </argument>
           <argument key="fi" type="collection">
-            <argument>D:\web\vendor\symfony\validator/Resources/translations\validators.fi.xlf</argument>
-            <argument>D:\web\vendor\symfony\form/Resources/translations\validators.fi.xlf</argument>
-            <argument>D:\web\vendor\symfony\security-core/Resources/translations\security.fi.xlf</argument>
-            <argument>D:\web\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.fi.xliff</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/validator/Resources/translations/validators.fi.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/form/Resources/translations/validators.fi.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/security-core/Resources/translations/security.fi.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/knplabs/knp-paginator-bundle/translations/KnpPaginatorBundle.fi.xliff</argument>
           </argument>
           <argument key="fr" type="collection">
-            <argument>D:\web\vendor\symfony\validator/Resources/translations\validators.fr.xlf</argument>
-            <argument>D:\web\vendor\symfony\form/Resources/translations\validators.fr.xlf</argument>
-            <argument>D:\web\vendor\symfony\security-core/Resources/translations\security.fr.xlf</argument>
-            <argument>D:\web\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.fr.xliff</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/validator/Resources/translations/validators.fr.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/form/Resources/translations/validators.fr.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/security-core/Resources/translations/security.fr.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/knplabs/knp-paginator-bundle/translations/KnpPaginatorBundle.fr.xliff</argument>
           </argument>
           <argument key="gl" type="collection">
-            <argument>D:\web\vendor\symfony\validator/Resources/translations\validators.gl.xlf</argument>
-            <argument>D:\web\vendor\symfony\form/Resources/translations\validators.gl.xlf</argument>
-            <argument>D:\web\vendor\symfony\security-core/Resources/translations\security.gl.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/validator/Resources/translations/validators.gl.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/form/Resources/translations/validators.gl.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/security-core/Resources/translations/security.gl.xlf</argument>
           </argument>
           <argument key="he" type="collection">
-            <argument>D:\web\vendor\symfony\validator/Resources/translations\validators.he.xlf</argument>
-            <argument>D:\web\vendor\symfony\form/Resources/translations\validators.he.xlf</argument>
-            <argument>D:\web\vendor\symfony\security-core/Resources/translations\security.he.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/validator/Resources/translations/validators.he.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/form/Resources/translations/validators.he.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/security-core/Resources/translations/security.he.xlf</argument>
           </argument>
           <argument key="hr" type="collection">
-            <argument>D:\web\vendor\symfony\validator/Resources/translations\validators.hr.xlf</argument>
-            <argument>D:\web\vendor\symfony\form/Resources/translations\validators.hr.xlf</argument>
-            <argument>D:\web\vendor\symfony\security-core/Resources/translations\security.hr.xlf</argument>
-            <argument>D:\web\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.hr.xliff</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/validator/Resources/translations/validators.hr.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/form/Resources/translations/validators.hr.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/security-core/Resources/translations/security.hr.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/knplabs/knp-paginator-bundle/translations/KnpPaginatorBundle.hr.xliff</argument>
           </argument>
           <argument key="hu" type="collection">
-            <argument>D:\web\vendor\symfony\validator/Resources/translations\validators.hu.xlf</argument>
-            <argument>D:\web\vendor\symfony\form/Resources/translations\validators.hu.xlf</argument>
-            <argument>D:\web\vendor\symfony\security-core/Resources/translations\security.hu.xlf</argument>
-            <argument>D:\web\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.hu.xliff</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/validator/Resources/translations/validators.hu.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/form/Resources/translations/validators.hu.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/security-core/Resources/translations/security.hu.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/knplabs/knp-paginator-bundle/translations/KnpPaginatorBundle.hu.xliff</argument>
           </argument>
           <argument key="hy" type="collection">
-            <argument>D:\web\vendor\symfony\validator/Resources/translations\validators.hy.xlf</argument>
-            <argument>D:\web\vendor\symfony\form/Resources/translations\validators.hy.xlf</argument>
-            <argument>D:\web\vendor\symfony\security-core/Resources/translations\security.hy.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/validator/Resources/translations/validators.hy.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/form/Resources/translations/validators.hy.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/security-core/Resources/translations/security.hy.xlf</argument>
           </argument>
           <argument key="id" type="collection">
-            <argument>D:\web\vendor\symfony\validator/Resources/translations\validators.id.xlf</argument>
-            <argument>D:\web\vendor\symfony\form/Resources/translations\validators.id.xlf</argument>
-            <argument>D:\web\vendor\symfony\security-core/Resources/translations\security.id.xlf</argument>
-            <argument>D:\web\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.id.xliff</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/validator/Resources/translations/validators.id.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/form/Resources/translations/validators.id.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/security-core/Resources/translations/security.id.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/knplabs/knp-paginator-bundle/translations/KnpPaginatorBundle.id.xliff</argument>
           </argument>
           <argument key="it" type="collection">
-            <argument>D:\web\vendor\symfony\validator/Resources/translations\validators.it.xlf</argument>
-            <argument>D:\web\vendor\symfony\form/Resources/translations\validators.it.xlf</argument>
-            <argument>D:\web\vendor\symfony\security-core/Resources/translations\security.it.xlf</argument>
-            <argument>D:\web\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.it.xliff</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/validator/Resources/translations/validators.it.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/form/Resources/translations/validators.it.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/security-core/Resources/translations/security.it.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/knplabs/knp-paginator-bundle/translations/KnpPaginatorBundle.it.xliff</argument>
           </argument>
           <argument key="ja" type="collection">
-            <argument>D:\web\vendor\symfony\validator/Resources/translations\validators.ja.xlf</argument>
-            <argument>D:\web\vendor\symfony\form/Resources/translations\validators.ja.xlf</argument>
-            <argument>D:\web\vendor\symfony\security-core/Resources/translations\security.ja.xlf</argument>
-            <argument>D:\web\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.ja.xliff</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/validator/Resources/translations/validators.ja.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/form/Resources/translations/validators.ja.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/security-core/Resources/translations/security.ja.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/knplabs/knp-paginator-bundle/translations/KnpPaginatorBundle.ja.xliff</argument>
           </argument>
           <argument key="lb" type="collection">
-            <argument>D:\web\vendor\symfony\validator/Resources/translations\validators.lb.xlf</argument>
-            <argument>D:\web\vendor\symfony\form/Resources/translations\validators.lb.xlf</argument>
-            <argument>D:\web\vendor\symfony\security-core/Resources/translations\security.lb.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/validator/Resources/translations/validators.lb.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/form/Resources/translations/validators.lb.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/security-core/Resources/translations/security.lb.xlf</argument>
           </argument>
           <argument key="lt" type="collection">
-            <argument>D:\web\vendor\symfony\validator/Resources/translations\validators.lt.xlf</argument>
-            <argument>D:\web\vendor\symfony\form/Resources/translations\validators.lt.xlf</argument>
-            <argument>D:\web\vendor\symfony\security-core/Resources/translations\security.lt.xlf</argument>
-            <argument>D:\web\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.lt.xliff</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/validator/Resources/translations/validators.lt.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/form/Resources/translations/validators.lt.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/security-core/Resources/translations/security.lt.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/knplabs/knp-paginator-bundle/translations/KnpPaginatorBundle.lt.xliff</argument>
           </argument>
           <argument key="lv" type="collection">
-            <argument>D:\web\vendor\symfony\validator/Resources/translations\validators.lv.xlf</argument>
-            <argument>D:\web\vendor\symfony\form/Resources/translations\validators.lv.xlf</argument>
-            <argument>D:\web\vendor\symfony\security-core/Resources/translations\security.lv.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/validator/Resources/translations/validators.lv.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/form/Resources/translations/validators.lv.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/security-core/Resources/translations/security.lv.xlf</argument>
           </argument>
           <argument key="mk" type="collection">
-            <argument>D:\web\vendor\symfony\validator/Resources/translations\validators.mk.xlf</argument>
-            <argument>D:\web\vendor\symfony\form/Resources/translations\validators.mk.xlf</argument>
-            <argument>D:\web\vendor\symfony\security-core/Resources/translations\security.mk.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/validator/Resources/translations/validators.mk.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/form/Resources/translations/validators.mk.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/security-core/Resources/translations/security.mk.xlf</argument>
           </argument>
           <argument key="mn" type="collection">
-            <argument>D:\web\vendor\symfony\validator/Resources/translations\validators.mn.xlf</argument>
-            <argument>D:\web\vendor\symfony\form/Resources/translations\validators.mn.xlf</argument>
-            <argument>D:\web\vendor\symfony\security-core/Resources/translations\security.mn.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/validator/Resources/translations/validators.mn.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/form/Resources/translations/validators.mn.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/security-core/Resources/translations/security.mn.xlf</argument>
           </argument>
           <argument key="my" type="collection">
-            <argument>D:\web\vendor\symfony\validator/Resources/translations\validators.my.xlf</argument>
-            <argument>D:\web\vendor\symfony\form/Resources/translations\validators.my.xlf</argument>
-            <argument>D:\web\vendor\symfony\security-core/Resources/translations\security.my.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/validator/Resources/translations/validators.my.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/form/Resources/translations/validators.my.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/security-core/Resources/translations/security.my.xlf</argument>
           </argument>
           <argument key="nb" type="collection">
-            <argument>D:\web\vendor\symfony\validator/Resources/translations\validators.nb.xlf</argument>
-            <argument>D:\web\vendor\symfony\form/Resources/translations\validators.nb.xlf</argument>
-            <argument>D:\web\vendor\symfony\security-core/Resources/translations\security.nb.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/validator/Resources/translations/validators.nb.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/form/Resources/translations/validators.nb.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/security-core/Resources/translations/security.nb.xlf</argument>
           </argument>
           <argument key="nl" type="collection">
-            <argument>D:\web\vendor\symfony\validator/Resources/translations\validators.nl.xlf</argument>
-            <argument>D:\web\vendor\symfony\form/Resources/translations\validators.nl.xlf</argument>
-            <argument>D:\web\vendor\symfony\security-core/Resources/translations\security.nl.xlf</argument>
-            <argument>D:\web\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.nl.xliff</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/validator/Resources/translations/validators.nl.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/form/Resources/translations/validators.nl.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/security-core/Resources/translations/security.nl.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/knplabs/knp-paginator-bundle/translations/KnpPaginatorBundle.nl.xliff</argument>
           </argument>
           <argument key="nn" type="collection">
-            <argument>D:\web\vendor\symfony\validator/Resources/translations\validators.nn.xlf</argument>
-            <argument>D:\web\vendor\symfony\form/Resources/translations\validators.nn.xlf</argument>
-            <argument>D:\web\vendor\symfony\security-core/Resources/translations\security.nn.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/validator/Resources/translations/validators.nn.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/form/Resources/translations/validators.nn.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/security-core/Resources/translations/security.nn.xlf</argument>
           </argument>
           <argument key="no" type="collection">
-            <argument>D:\web\vendor\symfony\validator/Resources/translations\validators.no.xlf</argument>
-            <argument>D:\web\vendor\symfony\form/Resources/translations\validators.no.xlf</argument>
-            <argument>D:\web\vendor\symfony\security-core/Resources/translations\security.no.xlf</argument>
-            <argument>D:\web\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.no.xliff</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/validator/Resources/translations/validators.no.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/form/Resources/translations/validators.no.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/security-core/Resources/translations/security.no.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/knplabs/knp-paginator-bundle/translations/KnpPaginatorBundle.no.xliff</argument>
           </argument>
           <argument key="pl" type="collection">
-            <argument>D:\web\vendor\symfony\validator/Resources/translations\validators.pl.xlf</argument>
-            <argument>D:\web\vendor\symfony\form/Resources/translations\validators.pl.xlf</argument>
-            <argument>D:\web\vendor\symfony\security-core/Resources/translations\security.pl.xlf</argument>
-            <argument>D:\web\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.pl.xliff</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/validator/Resources/translations/validators.pl.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/form/Resources/translations/validators.pl.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/security-core/Resources/translations/security.pl.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/knplabs/knp-paginator-bundle/translations/KnpPaginatorBundle.pl.xliff</argument>
           </argument>
           <argument key="pt" type="collection">
-            <argument>D:\web\vendor\symfony\validator/Resources/translations\validators.pt.xlf</argument>
-            <argument>D:\web\vendor\symfony\form/Resources/translations\validators.pt.xlf</argument>
-            <argument>D:\web\vendor\symfony\security-core/Resources/translations\security.pt.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/validator/Resources/translations/validators.pt.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/form/Resources/translations/validators.pt.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/security-core/Resources/translations/security.pt.xlf</argument>
           </argument>
           <argument key="pt_BR" type="collection">
-            <argument>D:\web\vendor\symfony\validator/Resources/translations\validators.pt_BR.xlf</argument>
-            <argument>D:\web\vendor\symfony\form/Resources/translations\validators.pt_BR.xlf</argument>
-            <argument>D:\web\vendor\symfony\security-core/Resources/translations\security.pt_BR.xlf</argument>
-            <argument>D:\web\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.pt_BR.xliff</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/validator/Resources/translations/validators.pt_BR.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/form/Resources/translations/validators.pt_BR.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/security-core/Resources/translations/security.pt_BR.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/knplabs/knp-paginator-bundle/translations/KnpPaginatorBundle.pt_BR.xliff</argument>
           </argument>
           <argument key="ro" type="collection">
-            <argument>D:\web\vendor\symfony\validator/Resources/translations\validators.ro.xlf</argument>
-            <argument>D:\web\vendor\symfony\form/Resources/translations\validators.ro.xlf</argument>
-            <argument>D:\web\vendor\symfony\security-core/Resources/translations\security.ro.xlf</argument>
-            <argument>D:\web\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.ro.xliff</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/validator/Resources/translations/validators.ro.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/form/Resources/translations/validators.ro.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/security-core/Resources/translations/security.ro.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/knplabs/knp-paginator-bundle/translations/KnpPaginatorBundle.ro.xliff</argument>
           </argument>
           <argument key="ru" type="collection">
-            <argument>D:\web\vendor\symfony\validator/Resources/translations\validators.ru.xlf</argument>
-            <argument>D:\web\vendor\symfony\form/Resources/translations\validators.ru.xlf</argument>
-            <argument>D:\web\vendor\symfony\security-core/Resources/translations\security.ru.xlf</argument>
-            <argument>D:\web\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.ru.xliff</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/validator/Resources/translations/validators.ru.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/form/Resources/translations/validators.ru.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/security-core/Resources/translations/security.ru.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/knplabs/knp-paginator-bundle/translations/KnpPaginatorBundle.ru.xliff</argument>
           </argument>
           <argument key="sk" type="collection">
-            <argument>D:\web\vendor\symfony\validator/Resources/translations\validators.sk.xlf</argument>
-            <argument>D:\web\vendor\symfony\form/Resources/translations\validators.sk.xlf</argument>
-            <argument>D:\web\vendor\symfony\security-core/Resources/translations\security.sk.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/validator/Resources/translations/validators.sk.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/form/Resources/translations/validators.sk.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/security-core/Resources/translations/security.sk.xlf</argument>
           </argument>
           <argument key="sl" type="collection">
-            <argument>D:\web\vendor\symfony\validator/Resources/translations\validators.sl.xlf</argument>
-            <argument>D:\web\vendor\symfony\form/Resources/translations\validators.sl.xlf</argument>
-            <argument>D:\web\vendor\symfony\security-core/Resources/translations\security.sl.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/validator/Resources/translations/validators.sl.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/form/Resources/translations/validators.sl.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/security-core/Resources/translations/security.sl.xlf</argument>
           </argument>
           <argument key="sq" type="collection">
-            <argument>D:\web\vendor\symfony\validator/Resources/translations\validators.sq.xlf</argument>
-            <argument>D:\web\vendor\symfony\form/Resources/translations\validators.sq.xlf</argument>
-            <argument>D:\web\vendor\symfony\security-core/Resources/translations\security.sq.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/validator/Resources/translations/validators.sq.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/form/Resources/translations/validators.sq.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/security-core/Resources/translations/security.sq.xlf</argument>
           </argument>
           <argument key="sr_Cyrl" type="collection">
-            <argument>D:\web\vendor\symfony\validator/Resources/translations\validators.sr_Cyrl.xlf</argument>
-            <argument>D:\web\vendor\symfony\form/Resources/translations\validators.sr_Cyrl.xlf</argument>
-            <argument>D:\web\vendor\symfony\security-core/Resources/translations\security.sr_Cyrl.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/validator/Resources/translations/validators.sr_Cyrl.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/form/Resources/translations/validators.sr_Cyrl.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/security-core/Resources/translations/security.sr_Cyrl.xlf</argument>
           </argument>
           <argument key="sr_Latn" type="collection">
-            <argument>D:\web\vendor\symfony\validator/Resources/translations\validators.sr_Latn.xlf</argument>
-            <argument>D:\web\vendor\symfony\form/Resources/translations\validators.sr_Latn.xlf</argument>
-            <argument>D:\web\vendor\symfony\security-core/Resources/translations\security.sr_Latn.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/validator/Resources/translations/validators.sr_Latn.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/form/Resources/translations/validators.sr_Latn.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/security-core/Resources/translations/security.sr_Latn.xlf</argument>
           </argument>
           <argument key="sv" type="collection">
-            <argument>D:\web\vendor\symfony\validator/Resources/translations\validators.sv.xlf</argument>
-            <argument>D:\web\vendor\symfony\form/Resources/translations\validators.sv.xlf</argument>
-            <argument>D:\web\vendor\symfony\security-core/Resources/translations\security.sv.xlf</argument>
-            <argument>D:\web\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.sv.xliff</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/validator/Resources/translations/validators.sv.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/form/Resources/translations/validators.sv.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/security-core/Resources/translations/security.sv.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/knplabs/knp-paginator-bundle/translations/KnpPaginatorBundle.sv.xliff</argument>
           </argument>
           <argument key="th" type="collection">
-            <argument>D:\web\vendor\symfony\validator/Resources/translations\validators.th.xlf</argument>
-            <argument>D:\web\vendor\symfony\form/Resources/translations\validators.th.xlf</argument>
-            <argument>D:\web\vendor\symfony\security-core/Resources/translations\security.th.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/validator/Resources/translations/validators.th.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/form/Resources/translations/validators.th.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/security-core/Resources/translations/security.th.xlf</argument>
           </argument>
           <argument key="tl" type="collection">
-            <argument>D:\web\vendor\symfony\validator/Resources/translations\validators.tl.xlf</argument>
-            <argument>D:\web\vendor\symfony\form/Resources/translations\validators.tl.xlf</argument>
-            <argument>D:\web\vendor\symfony\security-core/Resources/translations\security.tl.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/validator/Resources/translations/validators.tl.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/form/Resources/translations/validators.tl.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/security-core/Resources/translations/security.tl.xlf</argument>
           </argument>
           <argument key="tr" type="collection">
-            <argument>D:\web\vendor\symfony\validator/Resources/translations\validators.tr.xlf</argument>
-            <argument>D:\web\vendor\symfony\form/Resources/translations\validators.tr.xlf</argument>
-            <argument>D:\web\vendor\symfony\security-core/Resources/translations\security.tr.xlf</argument>
-            <argument>D:\web\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.tr.xliff</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/validator/Resources/translations/validators.tr.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/form/Resources/translations/validators.tr.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/security-core/Resources/translations/security.tr.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/knplabs/knp-paginator-bundle/translations/KnpPaginatorBundle.tr.xliff</argument>
           </argument>
           <argument key="uk" type="collection">
-            <argument>D:\web\vendor\symfony\validator/Resources/translations\validators.uk.xlf</argument>
-            <argument>D:\web\vendor\symfony\form/Resources/translations\validators.uk.xlf</argument>
-            <argument>D:\web\vendor\symfony\security-core/Resources/translations\security.uk.xlf</argument>
-            <argument>D:\web\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.uk.xliff</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/validator/Resources/translations/validators.uk.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/form/Resources/translations/validators.uk.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/security-core/Resources/translations/security.uk.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/knplabs/knp-paginator-bundle/translations/KnpPaginatorBundle.uk.xliff</argument>
           </argument>
           <argument key="ur" type="collection">
-            <argument>D:\web\vendor\symfony\validator/Resources/translations\validators.ur.xlf</argument>
-            <argument>D:\web\vendor\symfony\form/Resources/translations\validators.ur.xlf</argument>
-            <argument>D:\web\vendor\symfony\security-core/Resources/translations\security.ur.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/validator/Resources/translations/validators.ur.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/form/Resources/translations/validators.ur.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/security-core/Resources/translations/security.ur.xlf</argument>
           </argument>
           <argument key="uz" type="collection">
-            <argument>D:\web\vendor\symfony\validator/Resources/translations\validators.uz.xlf</argument>
-            <argument>D:\web\vendor\symfony\form/Resources/translations\validators.uz.xlf</argument>
-            <argument>D:\web\vendor\symfony\security-core/Resources/translations\security.uz.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/validator/Resources/translations/validators.uz.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/form/Resources/translations/validators.uz.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/security-core/Resources/translations/security.uz.xlf</argument>
           </argument>
           <argument key="vi" type="collection">
-            <argument>D:\web\vendor\symfony\validator/Resources/translations\validators.vi.xlf</argument>
-            <argument>D:\web\vendor\symfony\form/Resources/translations\validators.vi.xlf</argument>
-            <argument>D:\web\vendor\symfony\security-core/Resources/translations\security.vi.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/validator/Resources/translations/validators.vi.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/form/Resources/translations/validators.vi.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/security-core/Resources/translations/security.vi.xlf</argument>
           </argument>
           <argument key="zh_CN" type="collection">
-            <argument>D:\web\vendor\symfony\validator/Resources/translations\validators.zh_CN.xlf</argument>
-            <argument>D:\web\vendor\symfony\form/Resources/translations\validators.zh_CN.xlf</argument>
-            <argument>D:\web\vendor\symfony\security-core/Resources/translations\security.zh_CN.xlf</argument>
-            <argument>D:\web\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.zh_CN.xliff</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/validator/Resources/translations/validators.zh_CN.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/form/Resources/translations/validators.zh_CN.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/security-core/Resources/translations/security.zh_CN.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/knplabs/knp-paginator-bundle/translations/KnpPaginatorBundle.zh_CN.xliff</argument>
           </argument>
           <argument key="zh_TW" type="collection">
-            <argument>D:\web\vendor\symfony\validator/Resources/translations\validators.zh_TW.xlf</argument>
-            <argument>D:\web\vendor\symfony\form/Resources/translations\validators.zh_TW.xlf</argument>
-            <argument>D:\web\vendor\symfony\security-core/Resources/translations\security.zh_TW.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/validator/Resources/translations/validators.zh_TW.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/form/Resources/translations/validators.zh_TW.xlf</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/security-core/Resources/translations/security.zh_TW.xlf</argument>
           </argument>
           <argument key="ky" type="collection">
-            <argument>D:\web\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.ky.xliff</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/knplabs/knp-paginator-bundle/translations/KnpPaginatorBundle.ky.xliff</argument>
           </argument>
           <argument key="sw" type="collection">
-            <argument>D:\web\vendor\knplabs\knp-paginator-bundle/translations\KnpPaginatorBundle.sw.xliff</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/knplabs/knp-paginator-bundle/translations/KnpPaginatorBundle.sw.xliff</argument>
           </argument>
         </argument>
         <argument key="scanned_directories" type="collection">
-          <argument>D:\web\vendor\symfony\validator/Resources/translations</argument>
-          <argument>D:\web\vendor\symfony\form/Resources/translations</argument>
-          <argument>D:\web\vendor\symfony\security-core/Resources/translations</argument>
-          <argument>D:\web\vendor\knplabs\knp-paginator-bundle/translations</argument>
-          <argument>D:\web/translations</argument>
-          <argument>D:\web\vendor\symfony\framework-bundle/translations</argument>
-          <argument>D:\web\vendor\doctrine\doctrine-bundle/translations</argument>
-          <argument>D:\web\vendor\doctrine\doctrine-migrations-bundle/translations</argument>
-          <argument>D:\web\vendor\symfony\debug-bundle/translations</argument>
-          <argument>D:\web\vendor\symfony\twig-bundle/translations</argument>
-          <argument>D:\web\vendor\symfony\web-profiler-bundle/translations</argument>
-          <argument>D:\web\vendor\symfony\stimulus-bundle/translations</argument>
-          <argument>D:\web\vendor\symfony\ux-turbo/translations</argument>
-          <argument>D:\web\vendor\twig\extra-bundle/translations</argument>
-          <argument>D:\web\vendor\symfony\security-bundle/translations</argument>
-          <argument>D:\web\vendor\symfony\monolog-bundle\src/translations</argument>
-          <argument>D:\web\vendor\symfony\maker-bundle/translations</argument>
-          <argument>D:\web\vendor\symfony\mercure-bundle\src/translations</argument>
-          <argument>D:\web\vendor\knpuniversity\oauth2-client-bundle\src/translations</argument>
-          <argument>D:/web/vendor/knplabs/knp-snappy-bundle/src/translations</argument>
-          <argument>D:\web\vendor\symfony\ux-chartjs/translations</argument>
+          <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/validator/Resources/translations</argument>
+          <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/form/Resources/translations</argument>
+          <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/security-core/Resources/translations</argument>
+          <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/knplabs/knp-paginator-bundle/translations</argument>
+          <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/translations</argument>
+          <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/framework-bundle/translations</argument>
+          <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/doctrine/doctrine-bundle/translations</argument>
+          <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/doctrine/doctrine-migrations-bundle/translations</argument>
+          <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/debug-bundle/translations</argument>
+          <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/twig-bundle/translations</argument>
+          <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/web-profiler-bundle/translations</argument>
+          <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/stimulus-bundle/translations</argument>
+          <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/ux-turbo/translations</argument>
+          <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/twig/extra-bundle/translations</argument>
+          <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/security-bundle/translations</argument>
+          <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/monolog-bundle/src/translations</argument>
+          <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/maker-bundle/translations</argument>
+          <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/mercure-bundle/src/translations</argument>
+          <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/knpuniversity/oauth2-client-bundle/src/translations</argument>
+          <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/knplabs/knp-snappy-bundle/src/translations</argument>
+          <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/ux-chartjs/translations</argument>
         </argument>
         <argument key="cache_vary" type="collection">
           <argument key="scanned_directories" type="collection">
-            <argument>D:\web\vendor\symfony\validator/Resources/translations</argument>
-            <argument>D:\web\vendor\symfony\form/Resources/translations</argument>
-            <argument>D:\web\vendor\symfony\security-core/Resources/translations</argument>
-            <argument>D:\web\vendor\knplabs\knp-paginator-bundle/translations</argument>
+            <argument>vendor/symfony/validator/Resources/translations</argument>
+            <argument>vendor/symfony/form/Resources/translations</argument>
+            <argument>vendor/symfony/security-core/Resources/translations</argument>
+            <argument>vendor/knplabs/knp-paginator-bundle/translations</argument>
             <argument>translations</argument>
-            <argument>D:\web\vendor\symfony\framework-bundle/translations</argument>
-            <argument>D:\web\vendor\doctrine\doctrine-bundle/translations</argument>
-            <argument>D:\web\vendor\doctrine\doctrine-migrations-bundle/translations</argument>
-            <argument>D:\web\vendor\symfony\debug-bundle/translations</argument>
-            <argument>D:\web\vendor\symfony\twig-bundle/translations</argument>
-            <argument>D:\web\vendor\symfony\web-profiler-bundle/translations</argument>
-            <argument>D:\web\vendor\symfony\stimulus-bundle/translations</argument>
-            <argument>D:\web\vendor\symfony\ux-turbo/translations</argument>
-            <argument>D:\web\vendor\twig\extra-bundle/translations</argument>
-            <argument>D:\web\vendor\symfony\security-bundle/translations</argument>
-            <argument>D:\web\vendor\symfony\monolog-bundle\src/translations</argument>
-            <argument>D:\web\vendor\symfony\maker-bundle/translations</argument>
-            <argument>D:\web\vendor\symfony\mercure-bundle\src/translations</argument>
-            <argument>D:\web\vendor\knpuniversity\oauth2-client-bundle\src/translations</argument>
-            <argument>D:/web/vendor/knplabs/knp-snappy-bundle/src/translations</argument>
-            <argument>D:\web\vendor\symfony\ux-chartjs/translations</argument>
+            <argument>vendor/symfony/framework-bundle/translations</argument>
+            <argument>vendor/doctrine/doctrine-bundle/translations</argument>
+            <argument>vendor/doctrine/doctrine-migrations-bundle/translations</argument>
+            <argument>vendor/symfony/debug-bundle/translations</argument>
+            <argument>vendor/symfony/twig-bundle/translations</argument>
+            <argument>vendor/symfony/web-profiler-bundle/translations</argument>
+            <argument>vendor/symfony/stimulus-bundle/translations</argument>
+            <argument>vendor/symfony/ux-turbo/translations</argument>
+            <argument>vendor/twig/extra-bundle/translations</argument>
+            <argument>vendor/symfony/security-bundle/translations</argument>
+            <argument>vendor/symfony/monolog-bundle/src/translations</argument>
+            <argument>vendor/symfony/maker-bundle/translations</argument>
+            <argument>vendor/symfony/mercure-bundle/src/translations</argument>
+            <argument>vendor/knpuniversity/oauth2-client-bundle/src/translations</argument>
+            <argument>vendor/knplabs/knp-snappy-bundle/src/translations</argument>
+            <argument>vendor/symfony/ux-chartjs/translations</argument>
           </argument>
         </argument>
       </argument>
@@ -3436,7 +3442,7 @@
     <service id="debug.file_link_formatter" class="Symfony\Component\ErrorHandler\ErrorRenderer\FileLinkFormatter">
       <argument>%env(default::SYMFONY_IDE)%</argument>
       <argument type="service" id="request_stack" on-invalid="ignore"/>
-      <argument>D:\web</argument>
+      <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio</argument>
       <argument type="service_closure" id="debug.file_link_formatter.url_format"/>
     </service>
     <service id="debug.stopwatch" class="Symfony\Component\Stopwatch\Stopwatch" public="true">
@@ -3836,6 +3842,14 @@
           <argument>onMessageFailed</argument>
         </argument>
         <argument>-100</argument>
+      </call>
+      <call method="addListener">
+        <argument>Symfony\Component\Messenger\Event\WorkerRunningEvent</argument>
+        <argument type="collection">
+          <argument type="service_closure" id="messenger.listener.dispatch_pcntl_signal_listener"/>
+          <argument>onWorkerRunning</argument>
+        </argument>
+        <argument>100</argument>
       </call>
       <call method="addListener">
         <argument>Symfony\Component\Messenger\Event\WorkerStartedEvent</argument>
@@ -4266,7 +4280,7 @@
       <argument type="service" id=".service_locator.bN.V_Nq.router.default"/>
       <argument>kernel::loadRoutes</argument>
       <argument type="collection">
-        <argument key="cache_dir">D:\web\var\cache\dev</argument>
+        <argument key="cache_dir">/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/var/cache/dev</argument>
         <argument key="debug">true</argument>
         <argument key="generator_class">Symfony\Component\Routing\Generator\CompiledUrlGenerator</argument>
         <argument key="generator_dumper_class">Symfony\Component\Routing\Generator\Dumper\CompiledUrlGeneratorDumper</argument>
@@ -4315,7 +4329,7 @@
       <argument type="service" id="request_stack"/>
       <argument type="service" id="router.request_context" on-invalid="ignore"/>
       <argument type="service" id="monolog.logger.request" on-invalid="ignore"/>
-      <argument>D:\web</argument>
+      <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio</argument>
       <argument>true</argument>
     </service>
     <service id="Symfony\Bundle\FrameworkBundle\Controller\RedirectController" class="Symfony\Bundle\FrameworkBundle\Controller\RedirectController" public="true">
@@ -4343,7 +4357,7 @@
     </service>
     <service id="secrets.vault" class="Symfony\Bundle\FrameworkBundle\Secrets\SodiumVault">
       <tag name="container.env_var_loader"/>
-      <argument>D:\web/config/secrets/%env(default:kernel.environment:APP_RUNTIME_ENV)%</argument>
+      <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/config/secrets/%env(default:kernel.environment:APP_RUNTIME_ENV)%</argument>
       <argument type="service" id="secrets.decryption_key" on-invalid="ignore"/>
     </service>
     <service id="secrets.decryption_key" class="Symfony\Component\String\LazyString" constructor="fromCallable">
@@ -4351,7 +4365,7 @@
       <argument>base64:default::SYMFONY_DECRYPTION_SECRET</argument>
     </service>
     <service id="secrets.local_vault" class="Symfony\Bundle\FrameworkBundle\Secrets\DotenvVault">
-      <argument>D:\web/.env.dev.local</argument>
+      <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/.env.dev.local</argument>
     </service>
     <service id="serializer.mapping.class_discriminator_resolver" class="Symfony\Component\Serializer\Mapping\ClassDiscriminatorFromClassMetadata">
       <argument type="service" id="serializer.mapping.class_metadata_factory"/>
@@ -4445,10 +4459,10 @@
           </service>
         </argument>
       </argument>
-      <argument>D:\web\var\cache\dev/serialization.php</argument>
+      <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/var/cache/dev/serialization.php</argument>
     </service>
     <service id="serializer.mapping.cache.symfony" class="Psr\Cache\CacheItemPoolInterface">
-      <argument>D:\web\var\cache\dev/serialization.php</argument>
+      <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/var/cache/dev/serialization.php</argument>
       <argument type="service" id="cache.serializer"/>
       <factory class="Symfony\Component\Cache\Adapter\PhpArrayAdapter" method="create"/>
     </service>
@@ -4586,7 +4600,7 @@
       <argument>false</argument>
     </service>
     <service id="session.storage.factory.mock_file" class="Symfony\Component\HttpFoundation\Session\Storage\MockFileSessionStorageFactory">
-      <argument>D:\web\var\cache\dev/sessions</argument>
+      <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/var/cache/dev/sessions</argument>
       <argument>MOCKSESSID</argument>
       <argument type="service">
         <service class="Symfony\Component\HttpFoundation\Session\Storage\MetadataBag">
@@ -4604,7 +4618,7 @@
     <service id="session.handler.native_file" class="Symfony\Component\HttpFoundation\Session\Storage\Handler\StrictSessionHandler">
       <argument type="service">
         <service class="Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeFileSessionHandler">
-          <argument>D:\web\var\cache\dev/sessions</argument>
+          <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/var/cache/dev/sessions</argument>
         </service>
       </argument>
     </service>
@@ -4767,7 +4781,7 @@
       </call>
       <call method="addXmlMappings">
         <argument type="collection">
-          <argument>D:\web\vendor\symfony\form/Resources/config/validation.xml</argument>
+          <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/form/Resources/config/validation.xml</argument>
         </argument>
       </call>
       <call method="enableAttributeMapping">
@@ -4792,10 +4806,10 @@
     <service id="validator.mapping.cache_warmer" class="Symfony\Bundle\FrameworkBundle\CacheWarmer\ValidatorCacheWarmer">
       <tag name="kernel.cache_warmer"/>
       <argument type="service" id="validator.builder"/>
-      <argument>D:\web\var\cache\dev/validation.php</argument>
+      <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/var/cache/dev/validation.php</argument>
     </service>
     <service id="validator.mapping.cache.adapter" class="Symfony\Component\Cache\Adapter\PhpArrayAdapter" constructor="create">
-      <argument>D:\web\var\cache\dev/validation.php</argument>
+      <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/var/cache/dev/validation.php</argument>
       <argument type="service" id="cache.validator"/>
     </service>
     <service id="validator.validator_factory" class="Symfony\Component\Validator\ContainerConstraintValidatorFactory">
@@ -5460,7 +5474,7 @@
       </call>
     </service>
     <service id="profiler.storage" class="Symfony\Component\HttpKernel\Profiler\FileProfilerStorage">
-      <argument>file:D:\web\var\cache\dev/profiler</argument>
+      <argument>file:/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/var/cache/dev/profiler</argument>
     </service>
     <service id="profiler_listener" class="Symfony\Component\HttpKernel\EventListener\ProfilerListener">
       <tag name="kernel.event_subscriber"/>
@@ -5525,7 +5539,7 @@
       <tag name="monolog.logger" channel="profiler"/>
       <tag name="data_collector" template="@WebProfiler/Collector/logger.html.twig" id="logger" priority="300"/>
       <argument type="service" id="monolog.logger.profiler" on-invalid="ignore"/>
-      <argument>D:\web\var\cache\dev/App_KernelDevDebugContainer</argument>
+      <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/var/cache/dev/App_KernelDevDebugContainer</argument>
       <argument type="service" id=".virtual_request_stack" on-invalid="ignore"/>
     </service>
     <service id="data_collector.time" class="Symfony\Component\HttpKernel\DataCollector\TimeDataCollector">
@@ -6121,7 +6135,7 @@
         <argument type="service" id=".doctrine.orm.default_metadata_driver"/>
       </call>
       <call method="setProxyDir">
-        <argument>D:\web\var\cache\dev/doctrine/orm/Proxies</argument>
+        <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/var/cache/dev/doctrine/orm/Proxies</argument>
       </call>
       <call method="setProxyNamespace">
         <argument>Proxies</argument>
@@ -6156,13 +6170,16 @@
       <call method="setIdentityGenerationPreferences">
         <argument type="collection"/>
       </call>
+      <call method="enableNativeLazyObjects">
+        <argument>false</argument>
+      </call>
       <call method="setRepositoryFactory">
         <argument type="service" id="doctrine.orm.container_repository_factory"/>
       </call>
     </service>
     <service id="doctrine.orm.default_attribute_metadata_driver" class="Doctrine\ORM\Mapping\Driver\AttributeDriver">
       <argument type="collection">
-        <argument>D:\web\src\Entity</argument>
+        <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/src/Entity</argument>
       </argument>
       <argument>true</argument>
     </service>
@@ -6226,7 +6243,7 @@
     <service id="doctrine.migrations.configuration" class="Doctrine\Migrations\Configuration\Configuration">
       <call method="addMigrationsDirectory">
         <argument>DoctrineMigrations</argument>
-        <argument>D:\web/migrations</argument>
+        <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/migrations</argument>
       </call>
       <call method="setAllOrNothing">
         <argument>false</argument>
@@ -6453,7 +6470,7 @@
         <argument key="source" type="service">
           <service class="Symfony\Component\VarDumper\Dumper\ContextProvider\SourceContextProvider">
             <argument>UTF-8</argument>
-            <argument>D:\web</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio</argument>
             <argument type="service" id="debug.file_link_formatter" on-invalid="null"/>
           </service>
         </argument>
@@ -6475,7 +6492,7 @@
         <argument key="source" type="service">
           <service class="Symfony\Component\VarDumper\Dumper\ContextProvider\SourceContextProvider">
             <argument>UTF-8</argument>
-            <argument>D:\web</argument>
+            <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio</argument>
             <argument type="service" id="debug.file_link_formatter" on-invalid="null"/>
           </service>
         </argument>
@@ -6541,7 +6558,7 @@
       <argument type="service" id="twig.loader.native_filesystem"/>
       <argument type="collection">
         <argument key="autoescape">name</argument>
-        <argument key="cache">D:\web\var\cache\dev/twig</argument>
+        <argument key="cache">/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/var/cache/dev/twig</argument>
         <argument key="charset">UTF-8</argument>
         <argument key="debug">true</argument>
         <argument key="strict_variables">true</argument>
@@ -6677,10 +6694,10 @@
     <service id="twig.template_iterator" class="Symfony\Bundle\TwigBundle\TemplateIterator">
       <argument type="service" id="kernel"/>
       <argument type="collection">
-        <argument key="D:\web\vendor\symfony\twig-bridge/Resources/views/Email">email</argument>
-        <argument key="D:\web\vendor\symfony\twig-bridge/Resources/views/Form">null</argument>
+        <argument key="/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/twig-bridge/Resources/views/Email">email</argument>
+        <argument key="/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/twig-bridge/Resources/views/Form">null</argument>
       </argument>
-      <argument>D:\web/templates</argument>
+      <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/templates</argument>
       <argument type="collection">
         <argument>*.twig</argument>
       </argument>
@@ -6694,92 +6711,92 @@
     <service id="twig.loader.native_filesystem" class="Twig\Loader\FilesystemLoader">
       <tag name="twig.loader"/>
       <argument type="collection"/>
-      <argument>D:\web</argument>
+      <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio</argument>
       <call method="addPath">
-        <argument>D:\web\vendor\doctrine\doctrine-bundle/templates</argument>
+        <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/doctrine/doctrine-bundle/templates</argument>
         <argument>Doctrine</argument>
       </call>
       <call method="addPath">
-        <argument>D:\web\vendor\doctrine\doctrine-bundle/templates</argument>
+        <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/doctrine/doctrine-bundle/templates</argument>
         <argument>!Doctrine</argument>
       </call>
       <call method="addPath">
-        <argument>D:\web\vendor\doctrine\doctrine-migrations-bundle/templates</argument>
+        <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/doctrine/doctrine-migrations-bundle/templates</argument>
         <argument>DoctrineMigrations</argument>
       </call>
       <call method="addPath">
-        <argument>D:\web\vendor\doctrine\doctrine-migrations-bundle/templates</argument>
+        <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/doctrine/doctrine-migrations-bundle/templates</argument>
         <argument>!DoctrineMigrations</argument>
       </call>
       <call method="addPath">
-        <argument>D:\web\vendor\symfony\debug-bundle/Resources/views</argument>
+        <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/debug-bundle/Resources/views</argument>
         <argument>Debug</argument>
       </call>
       <call method="addPath">
-        <argument>D:\web\vendor\symfony\debug-bundle/Resources/views</argument>
+        <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/debug-bundle/Resources/views</argument>
         <argument>!Debug</argument>
       </call>
       <call method="addPath">
-        <argument>D:\web\vendor\symfony\web-profiler-bundle/Resources/views</argument>
+        <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/web-profiler-bundle/Resources/views</argument>
         <argument>WebProfiler</argument>
       </call>
       <call method="addPath">
-        <argument>D:\web\vendor\symfony\web-profiler-bundle/Resources/views</argument>
+        <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/web-profiler-bundle/Resources/views</argument>
         <argument>!WebProfiler</argument>
       </call>
       <call method="addPath">
-        <argument>D:\web\vendor\symfony\ux-turbo/templates</argument>
+        <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/ux-turbo/templates</argument>
         <argument>Turbo</argument>
       </call>
       <call method="addPath">
-        <argument>D:\web\vendor\symfony\ux-turbo/templates</argument>
+        <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/ux-turbo/templates</argument>
         <argument>!Turbo</argument>
       </call>
       <call method="addPath">
-        <argument>D:\web\vendor\symfony\security-bundle/Resources/views</argument>
+        <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/security-bundle/Resources/views</argument>
         <argument>Security</argument>
       </call>
       <call method="addPath">
-        <argument>D:\web\vendor\symfony\security-bundle/Resources/views</argument>
+        <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/security-bundle/Resources/views</argument>
         <argument>!Security</argument>
       </call>
       <call method="addPath">
-        <argument>D:\web\vendor\symfony\maker-bundle/templates</argument>
+        <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/maker-bundle/templates</argument>
         <argument>Maker</argument>
       </call>
       <call method="addPath">
-        <argument>D:\web\vendor\symfony\maker-bundle/templates</argument>
+        <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/maker-bundle/templates</argument>
         <argument>!Maker</argument>
       </call>
       <call method="addPath">
-        <argument>D:\web\vendor\symfony\mercure-bundle\src/Resources/views</argument>
+        <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/mercure-bundle/src/Resources/views</argument>
         <argument>Mercure</argument>
       </call>
       <call method="addPath">
-        <argument>D:\web\vendor\symfony\mercure-bundle\src/Resources/views</argument>
+        <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/mercure-bundle/src/Resources/views</argument>
         <argument>!Mercure</argument>
       </call>
       <call method="addPath">
-        <argument>D:\web\vendor\knplabs\knp-paginator-bundle/templates</argument>
+        <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/knplabs/knp-paginator-bundle/templates</argument>
         <argument>KnpPaginator</argument>
       </call>
       <call method="addPath">
-        <argument>D:\web\vendor\knplabs\knp-paginator-bundle/templates</argument>
+        <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/knplabs/knp-paginator-bundle/templates</argument>
         <argument>!KnpPaginator</argument>
       </call>
       <call method="addPath">
-        <argument>D:\web/templates</argument>
+        <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/templates</argument>
       </call>
       <call method="addPath">
-        <argument>D:\web\vendor\symfony\twig-bridge/Resources/views/Email</argument>
+        <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/twig-bridge/Resources/views/Email</argument>
         <argument>email</argument>
       </call>
       <call method="addPath">
-        <argument>D:\web\vendor\symfony\twig-bridge/Resources/views/Email</argument>
+        <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/twig-bridge/Resources/views/Email</argument>
         <argument>!email</argument>
       </call>
       <call method="addPath">
-        <argument>D:\web\vendor\symfony\twig-bridge/Resources/views/Form</argument>
+        <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/vendor/symfony/twig-bridge/Resources/views/Form</argument>
       </call>
     </service>
     <service id="twig.loader.chain" class="Twig\Loader\ChainLoader"/>
@@ -6805,7 +6822,7 @@
     <service id="twig.extension.code" class="Symfony\Bridge\Twig\Extension\CodeExtension">
       <tag name="twig.extension"/>
       <argument type="service" id="debug.file_link_formatter" on-invalid="ignore"/>
-      <argument>D:\web</argument>
+      <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio</argument>
       <argument>UTF-8</argument>
     </service>
     <service id="twig.extension.routing" class="Symfony\Bridge\Twig\Extension\RoutingExtension">
@@ -6898,9 +6915,9 @@
       <tag name="console.command"/>
       <tag name="container.no_preload"/>
       <argument type="service" id="twig"/>
-      <argument>D:\web</argument>
+      <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio</argument>
       <argument>%kernel.bundles_metadata%</argument>
-      <argument>D:\web/templates</argument>
+      <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/templates</argument>
       <argument type="service" id="debug.file_link_formatter" on-invalid="null"/>
       <call method="setName">
         <argument>debug:twig</argument>
@@ -6945,7 +6962,7 @@
       <argument type="service" id="twig"/>
       <argument>%data_collector.templates%</argument>
       <argument type="service" id="web_profiler.csp.handler"/>
-      <argument>D:\web</argument>
+      <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio</argument>
     </service>
     <service id="web_profiler.controller.router" class="Symfony\Bundle\WebProfilerBundle\Controller\RouterController" public="true">
       <argument type="service" id="profiler" on-invalid="null"/>
@@ -7004,7 +7021,7 @@
       <argument type="service" id="stimulus.helper"/>
     </service>
     <service id="stimulus.asset_mapper.ux_package_reader" class="Symfony\UX\StimulusBundle\Ux\UxPackageReader">
-      <argument>D:\web</argument>
+      <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio</argument>
     </service>
     <service id="stimulus.ux_controllers_twig_extension" class="Symfony\UX\StimulusBundle\Twig\UxControllersTwigExtension">
       <tag name="twig.extension"/>
@@ -7014,15 +7031,15 @@
       <argument type="service" id="stimulus.asset_mapper.controllers_map_generator"/>
       <argument type="service" id="asset_mapper"/>
       <argument type="service" id="stimulus.asset_mapper.ux_package_reader"/>
-      <argument>D:\web</argument>
+      <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio</argument>
     </service>
     <service id="stimulus.asset_mapper.controllers_map_generator" class="Symfony\UX\StimulusBundle\AssetMapper\ControllersMapGenerator">
       <argument type="service" id="asset_mapper"/>
       <argument type="service" id="stimulus.asset_mapper.ux_package_reader"/>
       <argument type="collection">
-        <argument>D:\web/assets/controllers</argument>
+        <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/assets/controllers</argument>
       </argument>
-      <argument>D:\web/assets/controllers.json</argument>
+      <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/assets/controllers.json</argument>
       <argument type="service" id="stimulus.asset_mapper.auto_import_locator" on-invalid="null"/>
     </service>
     <service id="stimulus.asset_mapper.auto_import_locator" class="Symfony\UX\StimulusBundle\AssetMapper\AutoImportLocator">
@@ -8105,7 +8122,7 @@
     <service id="monolog.processor.psr_log_message" class="Monolog\Processor\PsrLogMessageProcessor"/>
     <service id="monolog.handler.main" class="Monolog\Handler\StreamHandler">
       <tag name="kernel.reset" method="reset"/>
-      <argument>D:\web\var\log/dev.log</argument>
+      <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/var/log/dev.log</argument>
       <argument>debug</argument>
       <argument>true</argument>
       <argument>null</argument>
@@ -8128,8 +8145,8 @@
       <argument type="service" id="filesystem"/>
       <argument type="service" id="maker.autoloader_util"/>
       <argument type="service" id="maker.file_link_formatter"/>
-      <argument>D:\web</argument>
-      <argument>D:\web/templates</argument>
+      <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio</argument>
+      <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/templates</argument>
     </service>
     <service id="maker.autoloader_finder" class="Symfony\Bundle\MakerBundle\Util\ComposerAutoloaderFinder">
       <argument>App</argument>
@@ -8306,7 +8323,7 @@
     </service>
     <service id="maker.maker.make_migration" class="Symfony\Bundle\MakerBundle\Maker\MakeMigration">
       <tag name="maker.command"/>
-      <argument>D:\web</argument>
+      <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio</argument>
       <argument type="service" id="maker.file_link_formatter"/>
     </service>
     <service id="maker.maker.make_stimulus_controller" class="Symfony\Bundle\MakerBundle\Maker\MakeStimulusController">
@@ -11074,7 +11091,7 @@
     <service id="asset_mapper.cached_mapped_asset_factory.inner" class="Symfony\Component\AssetMapper\Factory\MappedAssetFactory">
       <argument type="service" id="asset_mapper.public_assets_path_resolver"/>
       <argument type="service" id="asset_mapper_compiler"/>
-      <argument>D:\web/assets/vendor</argument>
+      <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/assets/vendor</argument>
     </service>
     <service id="asset_mapper.asset_package.inner" class="Symfony\Component\Asset\PathPackage">
       <argument></argument>
@@ -12322,102 +12339,102 @@
       </argument>
     </service>
     <service id="cache.app.recorder_inner" class="Symfony\Component\Cache\Adapter\FilesystemAdapter">
-      <argument>YnZ15YEgQU</argument>
+      <argument>cDYtSO8jSc</argument>
       <argument>0</argument>
-      <argument>D:\web\var\cache\dev/pools/app</argument>
+      <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/var/cache/dev/pools/app</argument>
       <argument type="service" id="cache.default_marshaller" on-invalid="ignore"/>
       <call method="setLogger">
         <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       </call>
     </service>
     <service id="cache.system.recorder_inner" class="Symfony\Component\Cache\Adapter\AdapterInterface">
-      <argument>y3O68hhatQ</argument>
+      <argument>X7hPLwiZ3r</argument>
       <argument>0</argument>
       <argument>%container.build_id%</argument>
-      <argument>D:\web\var\cache\dev/pools/system</argument>
+      <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/var/cache/dev/pools/system</argument>
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
     </service>
     <service id="cache.validator.recorder_inner" class="Symfony\Component\Cache\Adapter\AdapterInterface">
-      <argument>vqQP3gUb-z</argument>
+      <argument>zJdOlgfjU3</argument>
       <argument>0</argument>
       <argument>%container.build_id%</argument>
-      <argument>D:\web\var\cache\dev/pools/system</argument>
+      <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/var/cache/dev/pools/system</argument>
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
     </service>
     <service id="cache.serializer.recorder_inner" class="Symfony\Component\Cache\Adapter\AdapterInterface">
-      <argument>5aX-ZOivBi</argument>
+      <argument>0sJFBpXd9e</argument>
       <argument>0</argument>
       <argument>%container.build_id%</argument>
-      <argument>D:\web\var\cache\dev/pools/system</argument>
+      <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/var/cache/dev/pools/system</argument>
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
     </service>
     <service id="cache.annotations.recorder_inner" class="Symfony\Component\Cache\Adapter\AdapterInterface">
-      <argument>yhX30j7aut</argument>
+      <argument>kOaH3tXIww</argument>
       <argument>0</argument>
       <argument>%container.build_id%</argument>
-      <argument>D:\web\var\cache\dev/pools/system</argument>
+      <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/var/cache/dev/pools/system</argument>
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
     </service>
     <service id="cache.property_info.recorder_inner" class="Symfony\Component\Cache\Adapter\AdapterInterface">
-      <argument>F0W8PCUC9n</argument>
+      <argument>COUVNYF9sg</argument>
       <argument>0</argument>
       <argument>%container.build_id%</argument>
-      <argument>D:\web\var\cache\dev/pools/system</argument>
+      <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/var/cache/dev/pools/system</argument>
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
     </service>
     <service id="cache.asset_mapper.recorder_inner" class="Symfony\Component\Cache\Adapter\AdapterInterface">
-      <argument>KSTpahHvQZ</argument>
+      <argument>1x0RPzjmBQ</argument>
       <argument>0</argument>
       <argument>%container.build_id%</argument>
-      <argument>D:\web\var\cache\dev/pools/system</argument>
+      <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/var/cache/dev/pools/system</argument>
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
     </service>
     <service id="cache.messenger.restart_workers_signal.recorder_inner" class="Symfony\Component\Cache\Adapter\FilesystemAdapter">
-      <argument>PP1VmSIi9o</argument>
+      <argument>2QOC2Vvt+t</argument>
       <argument>0</argument>
-      <argument>D:\web\var\cache\dev/pools/app</argument>
+      <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/var/cache/dev/pools/app</argument>
       <argument type="service" id="cache.default_marshaller" on-invalid="ignore"/>
       <call method="setLogger">
         <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       </call>
     </service>
     <service id="cache.validator_expression_language.recorder_inner" class="Symfony\Component\Cache\Adapter\AdapterInterface">
-      <argument>M3o2UsFEAk</argument>
+      <argument>E5+vlyvhb2</argument>
       <argument>0</argument>
       <argument>%container.build_id%</argument>
-      <argument>D:\web\var\cache\dev/pools/system</argument>
+      <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/var/cache/dev/pools/system</argument>
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
     </service>
     <service id="cache.doctrine.orm.default.result.recorder_inner" class="Symfony\Component\Cache\Adapter\ArrayAdapter"/>
     <service id="cache.doctrine.orm.default.query.recorder_inner" class="Symfony\Component\Cache\Adapter\ArrayAdapter"/>
     <service id="cache.security_expression_language.recorder_inner" class="Symfony\Component\Cache\Adapter\AdapterInterface">
-      <argument>RixGLpsWYr</argument>
+      <argument>5hkw8ikSw-</argument>
       <argument>0</argument>
       <argument>%container.build_id%</argument>
-      <argument>D:\web\var\cache\dev/pools/system</argument>
+      <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/var/cache/dev/pools/system</argument>
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
     </service>
     <service id="cache.security_is_granted_attribute_expression_language.recorder_inner" class="Symfony\Component\Cache\Adapter\AdapterInterface">
-      <argument>rjM-T8DQhg</argument>
+      <argument>ItiOuuILWC</argument>
       <argument>0</argument>
       <argument>%container.build_id%</argument>
-      <argument>D:\web\var\cache\dev/pools/system</argument>
+      <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/var/cache/dev/pools/system</argument>
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
     </service>
     <service id="cache.security_token_verifier.recorder_inner" class="Symfony\Component\Cache\Adapter\AdapterInterface">
-      <argument>XhuyuPuTUN</argument>
+      <argument>5SZ3n61ASf</argument>
       <argument>0</argument>
       <argument>%container.build_id%</argument>
-      <argument>D:\web\var\cache\dev/pools/system</argument>
+      <argument>/Users/rayen/Downloads/Esprit-PIDEV-3A24-2526-Harmonie-Biblio/var/cache/dev/pools/system</argument>
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
     </service>
