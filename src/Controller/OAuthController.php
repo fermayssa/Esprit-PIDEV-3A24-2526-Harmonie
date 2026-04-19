@@ -16,13 +16,8 @@ class OAuthController extends AbstractController
     public function connectGoogle(ClientRegistry $clientRegistry): RedirectResponse
     {
         return $clientRegistry
-            ->getClient('google_login')
-            // Scopes du client login (séparé du client Calendar)
-            ->redirect([
-                'openid',
-                'email',
-                'profile',
-            ], []);
+            ->getClient('google')
+            ->redirect(['email', 'profile'], []);
     }
 
     #[Route('/connect/google/check', name: 'connect_google_check')]
@@ -38,7 +33,7 @@ class OAuthController extends AbstractController
     {
         return $clientRegistry
             ->getClient('facebook')
-            ->redirect(['public_profile', 'email'], []);
+            ->redirect(['public_profile'], []);
     }
 
     #[Route('/connect/facebook/check', name: 'connect_facebook_check')]

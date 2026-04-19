@@ -2,7 +2,7 @@
 
 namespace App\Controller\LibraryControllers;
 
-use App\Service\ImageGenerationService;
+use App\Service\ImageGen;
 use Doctrine\DBAL\Connection;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -39,8 +39,8 @@ class CoursesController extends AbstractController
     ];
 
     public function __construct(
-        private readonly Connection             $db,
-        private readonly ImageGenerationService $imageGenerationService,
+        private readonly Connection $db,
+        private readonly ImageGen   $imageGenerationService,
     ) {}
 
     private function getMockUserId(): int

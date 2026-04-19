@@ -19,8 +19,6 @@ class GoogleCalendarController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
 
-        // Le service utilise GOOGLE_CLIENT_ID / GOOGLE_CLIENT_SECRET
-        // (mêmes credentials que le login Google via KnpU OAuth2).
         $authUrl = $googleService->getAuthUrl();
         if ('#' === $authUrl || '' === $authUrl) {
             $this->addFlash('error', 'Google Calendar non configuré (bibliothèque manquante ou identifiants OAuth absents).');

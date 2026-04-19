@@ -37,8 +37,6 @@ class GoogleAuthenticator extends OAuth2Authenticator
 
     public function authenticate(Request $request): Passport
     {
-        // Client KnpU "google" partagé avec la configuration OAuth globale
-        // (credentials uniques définies dans .env).
         $client = $this->clientRegistry->getClient('google');
         $accessToken = $this->fetchAccessToken($client);
 

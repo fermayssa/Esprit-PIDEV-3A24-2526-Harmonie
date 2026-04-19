@@ -148,20 +148,20 @@
             </a>
             <div class="sidebar-section" style="margin-top:8px;">Forum</div>
             <a href="{{ path('back_dashboard') }}"
-             class="sidebar-link {{ app.request.attributes.get('_route') == 'back_dashboard' ? 'active' }}">
+               class="sidebar-link {{ app.request.attributes.get('_route') == 'back_dashboard' ? 'active' }}">
                 <span class="s-icon">🏠</span> Forum
             </a>
             <a href="{{ path('back_categories') }}"
-                class="sidebar-link {{ app.request.attributes.get('_route') starts with 'back_categor' ? 'active' }}">
+               class="sidebar-link {{ app.request.attributes.get('_route') starts with 'back_categor' ? 'active' }}">
                 <span class="s-icon">🗂️</span> Catégories
             </a>
-            
+
             <a href="{{ path('back_posts') }}"
-                class="sidebar-link {{ app.request.attributes.get('_route') == 'back_posts' ? 'active' }}">
+               class="sidebar-link {{ app.request.attributes.get('_route') == 'back_posts' ? 'active' }}">
                 <span class="s-icon">📝</span> Posts
             </a>
             <a href="{{ path('back_commentaires') }}"
-            class="sidebar-link {{ app.request.attributes.get('_route') == 'back_commentaires' ? 'active' }}">
+               class="sidebar-link {{ app.request.attributes.get('_route') == 'back_commentaires' ? 'active' }}">
                 <span class="s-icon">💬</span> Commentaires
             </a>
 
@@ -173,6 +173,14 @@
             </a>
             <a href="{{ path('admin_nutrition_index') }}" class="sidebar-link {% if app.request.attributes.get('_route') starts with 'admin_nutrition' %}active{% endif %}">
                 <span class="s-icon">🥗</span> Gestion Nutrition
+            </a>
+
+            <div class="sidebar-section" style="margin-top:8px;">Cours</div>
+            <a href="{{ path('admin_courses_index') }}" class="sidebar-link {% if app.request.attributes.get('_route') starts with 'admin_courses_index' %}active{% endif %}">
+                <span class="s-icon">📚</span> Tous les cours
+            </a>
+            <a href="{{ path('admin_course_reports_index') }}" class="sidebar-link {% if app.request.attributes.get('_route') starts with 'admin_course_reports' %}active{% endif %}">
+                <span class="s-icon">🚩</span> Cours signalés
             </a>
 
             <div class="sidebar-section" style="margin-top:8px;">Planning</div>
