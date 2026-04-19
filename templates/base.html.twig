@@ -55,5 +55,8 @@ html,body{font-family:var(--font-body);background:var(--purple-ghost);color:var(
     <body data-turbo="false">
         {% block body %}{% endblock %}
         {% block body_javascripts %}{% endblock %}
+        {% if app.user %}
+            {% include 'messaging/bubble.html.twig' %}
+        {% endif %}
     </body>
 </html>

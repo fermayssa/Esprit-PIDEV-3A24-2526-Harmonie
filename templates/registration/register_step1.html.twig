@@ -58,10 +58,18 @@
         .form-error::before{content:'⚠';}
         .form-hint{font-size:11px;color:var(--text-muted);margin-top:4px}
 
-        /* Password strength */
+        /* ── Password strength ──────────────────────── */
         .pwd-strength{margin-top:8px}
-        .pwd-bars{display:flex;gap:4px;margin-bottom:6px}
+        .pwd-bars{display:flex;gap:4px;margin-bottom:4px}
         .pwd-bar{height:4px;flex:1;border-radius:4px;background:#eee;transition:background .3s}
+
+        /* ← NOUVEAU : label texte de force */
+        .strength-label{
+            font-size:12px;font-weight:700;min-height:18px;
+            margin-bottom:6px;transition:color .2s;
+            display:flex;align-items:center;gap:5px;
+        }
+
         .pwd-rules{display:grid;grid-template-columns:1fr 1fr;gap:3px}
         .pwd-rule{font-size:11px;color:var(--text-muted);display:flex;align-items:center;gap:5px;transition:color .2s}
         .pwd-rule.ok{color:var(--green)}
@@ -146,6 +154,8 @@
                 <div class="form-group">
                     {{ form_label(form.plainPassword.first) }}<span class="req"> *</span>
                     {{ form_widget(form.plainPassword.first, {'attr': {'id': 'pwd'}}) }}
+
+                    {# ── Indicateur de force du mot de passe ── #}
                     <div class="pwd-strength" id="pwdStrength">
                         <div class="pwd-bars">
                             <div class="pwd-bar" id="bar1"></div>
@@ -153,6 +163,8 @@
                             <div class="pwd-bar" id="bar3"></div>
                             <div class="pwd-bar" id="bar4"></div>
                         </div>
+                        {# ← NOUVEAU : affiche "Faible / Moyen / Fort / Très fort" #}
+                        <div class="strength-label" id="strengthLabel"></div>
                         <div class="pwd-rules">
                             <div class="pwd-rule" id="r-len">8 caractères min</div>
                             <div class="pwd-rule" id="r-maj">1 majuscule</div>
@@ -160,6 +172,7 @@
                             <div class="pwd-rule" id="r-sym">1 symbole</div>
                         </div>
                     </div>
+
                     {% if form_errors(form.plainPassword.first) %}
                         <div class="form-error">{{ form_errors(form.plainPassword.first) }}</div>
                     {% endif %}
@@ -192,77 +205,91 @@
             </div>
         </div>
     </div>
+<!-- ...existing code... -->
+<script>
+(function () {
+    function initStep1PasswordStrength() {
+        const form = document.getElementById('step1Form');
+        if (!form) return;
 
-    <script>
-        // ── Validation temps réel ──────────────────────────────────────────────────
-        function validate(input, errorEl, rules) {
-            const val = input.value.trim();
-            for (const [test, msg] of rules) {
-                if (!test(val)) {
-                    errorEl.textContent = msg;
-                    errorEl.style.display = 'flex';
-                    input.classList.add('is-invalid');
-                    input.classList.remove('is-valid');
-                    return false;
-                }
-            }
-            errorEl.style.display = 'none';
-            input.classList.remove('is-invalid');
-            input.classList.add('is-valid');
-            return true;
-        }
+        // Évite double binding si Turbo recharge la page
+        if (form.dataset.pwdInit === '1') return;
+        form.dataset.pwdInit = '1';
 
-        const nom    = document.getElementById('nom');
-        const prenom = document.getElementById('prenom');
-        const email  = document.getElementById('email');
-        const pwd    = document.getElementById('pwd');
-        const pwd2   = document.getElementById('pwd2');
+        // Sélecteurs robustes (id custom OU id/name Symfony)
+        const pwd = form.querySelector('#pwd, input[name$="[plainPassword][first]"]');
+        const pwd2 = form.querySelector('#pwd2, input[name$="[plainPassword][second]"]');
+        const labelEl = document.getElementById('strengthLabel');
+        const bars = ['bar1', 'bar2', 'bar3', 'bar4'].map(id => document.getElementById(id));
 
-        nom.addEventListener('blur', () => validate(nom, document.getElementById('nom-error'), [
-            [v => v.length >= 4, 'Le nom doit contenir au moins 4 caractères.'],
-            [v => /^[a-zA-ZÀ-ÿ\s\-]+$/.test(v), 'Le nom ne peut contenir que des lettres.'],
-        ]));
+        if (!pwd || bars.some(b => !b)) return;
 
-        prenom.addEventListener('blur', () => validate(prenom, document.getElementById('prenom-error'), [
-            [v => v.length >= 4, 'Le prénom doit contenir au moins 4 caractères.'],
-            [v => /^[a-zA-ZÀ-ÿ\s\-]+$/.test(v), 'Le prénom ne peut contenir que des lettres.'],
-        ]));
-
-        email.addEventListener('blur', () => validate(email, document.getElementById('email-error'), [
-            [v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v), 'Format email invalide (ex: user@domain.com).'],
-        ]));
-
-        // ── Password strength ──────────────────────────────────────────────────────
         const rules = {
             len: v => v.length >= 8,
             maj: v => /[A-Z]/.test(v),
             num: v => /\d/.test(v),
-            sym: v => /[\W_]/.test(v),
+            sym: v => /[^A-Za-z0-9]/.test(v)
         };
-        const colors = ['#EF4444','#F59E0B','#10B981','#6A5ACD'];
 
-        pwd.addEventListener('input', () => {
-            const v = pwd.value;
-            const score = Object.values(rules).filter(r => r(v)).length;
-            ['bar1','bar2','bar3','bar4'].forEach((id, i) => {
-                document.getElementById(id).style.background = i < score ? colors[score-1] : '#eee';
-            });
-            Object.entries(rules).forEach(([key, fn]) => {
-                document.getElementById('r-' + key).classList.toggle('ok', fn(v));
-            });
-        });
+        function getLevel(score) {
+            // 1-2: faible (rouge), 3: moyen (orange), 4: fort (vert)
+            if (score <= 0) return { text: '', color: '' };
+            if (score <= 2) return { text: '🔴 Faible', color: '#EF4444' };
+            if (score === 3) return { text: '🟠 Moyen', color: '#F59E0B' };
+            return { text: '🟢 Fort', color: '#10B981' };
+        }
 
-        pwd2.addEventListener('blur', () => {
-            const err = document.getElementById('pwd2-error');
-            if (pwd2.value !== pwd.value) {
-                err.textContent = 'Les mots de passe ne correspondent pas.';
-                err.style.display = 'flex';
-                pwd2.classList.add('is-invalid');
-            } else {
-                err.style.display = 'none';
-                pwd2.classList.remove('is-invalid');
-                pwd2.classList.add('is-valid');
+        function updateStrength() {
+            const v = pwd.value || '';
+            const score = Object.values(rules).filter(fn => fn(v)).length;
+            const level = getLevel(score);
+
+            bars.forEach((bar, i) => {
+                bar.style.background = i < score ? (level.color || '#eee') : '#eee';
+            });
+
+            if (labelEl) {
+                labelEl.textContent = level.text;
+                labelEl.style.color = level.color;
             }
+
+            Object.entries(rules).forEach(([key, fn]) => {
+                const el = document.getElementById('r-' + key);
+                if (el) el.classList.toggle('ok', fn(v));
+            });
+        }
+
+        // Événements temps réel
+        ['input', 'keyup', 'change', 'paste'].forEach(evt => {
+            pwd.addEventListener(evt, updateStrength, { passive: true });
         });
-    </script>
+
+        // Init (utile si autofill)
+        updateStrength();
+        setTimeout(updateStrength, 50);
+
+        if (pwd2) {
+            pwd2.addEventListener('input', () => {
+                const err = document.getElementById('pwd2-error');
+                if (!err) return;
+                if (pwd2.value !== pwd.value) {
+                    err.textContent = 'Les mots de passe ne correspondent pas.';
+                    err.style.display = 'flex';
+                    pwd2.classList.add('is-invalid');
+                    pwd2.classList.remove('is-valid');
+                } else {
+                    err.style.display = 'none';
+                    pwd2.classList.remove('is-invalid');
+                    pwd2.classList.add('is-valid');
+                }
+            });
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', initStep1PasswordStrength);
+    document.addEventListener('turbo:load', initStep1PasswordStrength);
+})();
+</script>
+<!-- ...existing code... -->
+    
 {% endblock %}

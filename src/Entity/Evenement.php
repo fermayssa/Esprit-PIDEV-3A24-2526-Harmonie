@@ -58,9 +58,12 @@ class Evenement
     private ?string $statutDemandeSalle = null;
 
     /** Type normalisé : cours, reunion, loisir, autre (colonne event_type). */
-    #[Assert\NotBlank(message: 'Choisissez un type d’événement.')]
+    #[Assert\NotBlank(message: "Choisissez un type d'événement.")]
     #[ORM\Column(name: 'event_type', length: 20, nullable: true)]
     private ?string $eventType = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $googleEventId = null;
 
     /** presentiel | en_ligne */
     #[Assert\NotBlank(message: 'Indiquez le mode de lieu.')]
@@ -69,6 +72,12 @@ class Evenement
 
     #[ORM\Column(name: 'lieu_adresse', length: 255, nullable: true)]
     private ?string $lieuAdresse = null;
+
+    #[ORM\Column(name: 'reminder_minutes', options: ['default' => 15])]
+    private int $reminderMinutes = 15;
+
+    #[ORM\Column(name: 'reminder_sent', options: ['default' => false])]
+    private bool $reminderSent = false;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(name: 'proprietaire_id', referencedColumnName: 'user_id', nullable: true, onDelete: 'SET NULL')]
@@ -268,6 +277,47 @@ class Evenement
         return $this;
     }
 
+    public function getGoogleEventId(): ?string
+    {
+        return $this->googleEventId;
+    }
+
+    public function setGoogleEventId(?string $googleEventId): static
+    {
+        $this->googleEventId = $googleEventId;
+
+        return $this;
+    }
+
+    public function getReminderMinutes(): int
+    {
+        return $this->reminderMinutes;
+    }
+
+    public function setReminderMinutes(int $reminderMinutes): static
+    {
+        $this->reminderMinutes = $reminderMinutes;
+
+        return $this;
+    }
+
+    public function isReminderSent(): bool
+    {
+        return $this->reminderSent;
+    }
+
+    public function getReminderSent(): bool
+    {
+        return $this->reminderSent;
+    }
+
+    public function setReminderSent(bool $reminderSent): static
+    {
+        $this->reminderSent = $reminderSent;
+
+        return $this;
+    }
+
     public function getProprietaire(): ?User
     {
         return $this->proprietaire;
@@ -311,7 +361,7 @@ class Evenement
         }
         $addr = $this->lieuAdresse ? trim($this->lieuAdresse) : '';
         if ('' === $addr && null === $this->salle) {
-            $context->buildViolation('En présentiel, indiquez où se déroule l’événement ou choisissez une salle Esprit.')
+            $context->buildViolation("En présentiel, indiquez où se déroule l'événement ou choisissez une salle Esprit.")
                 ->atPath('lieuAdresse')
                 ->addViolation();
         }

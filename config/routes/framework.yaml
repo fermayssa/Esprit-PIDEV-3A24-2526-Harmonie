@@ -1,2 +1,4 @@
-# Error handling is now automatic in Symfony 6.4
-# The @FrameworkBundle/Resources/config/routing/errors.php resource no longer exists
+when@dev:
+    _errors:
+        resource: '@FrameworkBundle/Resources/config/routing/errors.xml'
+        prefix: /_error

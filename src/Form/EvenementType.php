@@ -8,6 +8,7 @@ use App\Entity\User;
 use App\Repository\SalleRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -60,7 +61,7 @@ class EvenementType extends AbstractType
             ])
             ->add('lieuType', ChoiceType::class, [
                 'label' => 'Mode',
-                'required' => true,
+                'required' => false,
                 'choices' => [
                     'Présentiel' => 'presentiel',
                     'En ligne' => 'en_ligne',
@@ -89,6 +90,24 @@ class EvenementType extends AbstractType
                         ->setParameter('d', true)
                         ->orderBy('s.nom', 'ASC');
                 },
+            ])
+            ->add('rappelActif', CheckboxType::class, [
+                'label'    => 'Activer le rappel Telegram',
+                'required' => false,
+            ])
+            ->add('reminderMinutes', ChoiceType::class, [
+                'label'   => 'Rappel avant l\'événement',
+                'required' => false,
+                'choices' => [
+                    '5 minutes'  => 5,
+                    '10 minutes' => 10,
+                    '15 minutes' => 15,
+                    '30 minutes' => 30,
+                    '1 heure'    => 60,
+                    '2 heures'   => 120,
+                    '1 jour'     => 1440,
+                ],
+                'attr' => ['class' => 'form-control'],
             ]);
 
         if ($options['admin_mode']) {
@@ -108,25 +127,17 @@ class EvenementType extends AbstractType
             'attr' => ['class' => 'btn btn-primary'],
         ]);
 
-        // Nettoyer les données avant validation
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event): void {
             $data = $event->getData();
             if (!\is_array($data)) {
                 return;
             }
 
-            // Si "En ligne", nettoyer les champs d'adresse et de salle
             if (($data['lieuType'] ?? '') === 'en_ligne') {
                 $data['salle'] = null;
                 $data['lieuAdresse'] = null;
-            }
-            // Si "Présentiel" avec une salle sélectionnée, nettoyer l'adresse
-            elseif (($data['lieuType'] ?? '') === 'presentiel' && !empty($data['salle'])) {
+            } elseif (($data['lieuType'] ?? '') === 'presentiel' && !empty($data['salle'])) {
                 $data['lieuAdresse'] = null;
-            }
-            // Si "Présentiel" sans salle, garder l'adresse
-            elseif (($data['lieuType'] ?? '') === 'presentiel' && empty($data['salle'])) {
-                // L'adresse reste telle quelle
             }
 
             $event->setData($data);

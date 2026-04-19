@@ -1,0 +1,20 @@
+knpu_oauth2_client:
+    clients:
+        # ── Google ──────────────────────────────────────────────────────────
+        google:
+            type: google
+            client_id: '%env(GOOGLE_CLIENT_ID)%'
+            client_secret: '%env(GOOGLE_CLIENT_SECRET)%'
+            redirect_route: connect_google_check
+            redirect_params: {}
+            # Scopes demandés : email + profil (inclus par défaut avec openid)
+            # use_state: true (activé par défaut pour la sécurité CSRF)
+
+        # ── Facebook ─────────────────────────────────────────────────────────
+        facebook:
+            type: facebook
+            client_id: '%env(FACEBOOK_CLIENT_ID)%'
+            client_secret: '%env(FACEBOOK_CLIENT_SECRET)%'
+            redirect_route: connect_facebook_check
+            redirect_params: {}
+            graph_api_version: 'v20.0'

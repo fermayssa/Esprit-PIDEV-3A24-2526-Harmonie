@@ -40,9 +40,16 @@ class JournalHumeur
     )]
     private string $contenu = '';
 
+    #[ORM\Column(name: 'is_read_by_admin', type: Types::BOOLEAN, options: ['default' => false])]
+    private bool $isReadByAdmin = false;
+
+    #[ORM\Column(name: 'created_at', type: Types::DATETIME_IMMUTABLE)]
+    private \DateTimeImmutable $createdAt;
+
     public function __construct()
     {
         $this->dateJournal = new \DateTime();
+        $this->createdAt   = new \DateTimeImmutable();
     }
 
     public function getId(): ?int { return $this->id; }
@@ -67,4 +74,9 @@ class JournalHumeur
 
     public function getContenu(): ?string { return $this->contenu; }
     public function setContenu(?string $contenu): self { $this->contenu = $contenu ?? ''; return $this; }
+
+    public function isReadByAdmin(): bool { return $this->isReadByAdmin; }
+    public function setIsReadByAdmin(bool $v): self { $this->isReadByAdmin = $v; return $this; }
+
+    public function getCreatedAt(): \DateTimeImmutable { return $this->createdAt; }
 }

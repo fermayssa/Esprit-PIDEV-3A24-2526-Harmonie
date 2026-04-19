@@ -7,6 +7,7 @@ use App\Entity\SessionMeditation;
 use App\Form\ConseilType;
 use App\Form\SessionMeditationType;
 use App\Repository\SessionMeditationRepository;
+use App\Service\GroqService;
 use Doctrine\ORM\EntityManagerInterface;
 use Dompdf\Dompdf;
 use Dompdf\Options;
@@ -24,6 +25,7 @@ class AdminMeditationController extends AbstractController
     public function __construct(
         private readonly SessionMeditationRepository $repo,
         private readonly EntityManagerInterface      $em,
+        private readonly GroqService                 $groq,
     ) {}
 
     #[Route('', name: 'admin_meditation_index', methods: ['GET'])]
@@ -63,12 +65,29 @@ class AdminMeditationController extends AbstractController
     public function new(Request $request): Response
     {
         $session = new SessionMeditation();
-        $form = $this->createForm(SessionMeditationType::class, $session);
+        $form    = $this->createForm(SessionMeditationType::class, $session);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $session->setUser($this->getUser());
             $this->em->persist($session);
+
+            $aiConseilsJson = $request->request->get('ai_conseils', '');
+            if ($aiConseilsJson !== '') {
+                $aiConseils = json_decode($aiConseilsJson, true);
+                if (is_array($aiConseils)) {
+                    foreach ($aiConseils as $contenu) {
+                        $contenu = trim((string) $contenu);
+                        if (strlen($contenu) >= 5) {
+                            $conseil = new Conseil();
+                            $conseil->setSession($session);
+                            $conseil->setContenu($contenu);
+                            $this->em->persist($conseil);
+                        }
+                    }
+                }
+            }
+
             $this->em->flush();
 
             $this->addFlash('success', 'Session de méditation créée avec succès.');
@@ -117,7 +136,76 @@ class AdminMeditationController extends AbstractController
         return $this->redirectToRoute('admin_meditation_index');
     }
 
-    // ── Conseil routes ───────────────────────────────────────────────
+    #[Route('/generate', name: 'admin_meditation_generate', methods: ['POST'])]
+    public function generate(Request $request): JsonResponse
+    {
+        $theme = trim((string) $request->request->get('theme', ''));
+        if ($theme === '') {
+            return $this->json(['error' => 'Le thème est requis.'], 400);
+        }
+
+        try {
+            return $this->json($this->groq->generateMeditation($theme));
+        } catch (\Throwable $e) {
+            return $this->json(['error' => 'Erreur IA : ' . $e->getMessage()], 500);
+        }
+    }
+
+    #[Route('/{id}/regenerate-conseils', name: 'admin_meditation_regenerate_conseils', methods: ['POST'], requirements: ['id' => '\d+'])]
+    public function regenerateConseils(SessionMeditation $session): JsonResponse
+    {
+        try {
+            $existing    = implode(' | ', $session->getConseils()->map(fn($c) => $c->getContenu())->toArray());
+            $newConseils = $this->groq->generateConseils($session->getTheme(), $existing);
+
+            foreach ($session->getConseils() as $old) {
+                $this->em->remove($old);
+            }
+            $this->em->flush();
+
+            foreach ($newConseils as $contenu) {
+                if (strlen(trim($contenu)) >= 5) {
+                    $conseil = new Conseil();
+                    $conseil->setSession($session);
+                    $conseil->setContenu($contenu);
+                    $this->em->persist($conseil);
+                }
+            }
+            $this->em->flush();
+
+            $saved = $session->getConseils()->map(fn($c) => [
+                'id'      => $c->getId(),
+                'contenu' => $c->getContenu(),
+            ])->toArray();
+
+            return $this->json(['conseils' => array_values($saved)]);
+        } catch (\Throwable $e) {
+            return $this->json(['error' => 'Erreur IA : ' . $e->getMessage()], 500);
+        }
+    }
+
+    #[Route('/{id}/regenerate-session', name: 'admin_meditation_regenerate_session', methods: ['POST'], requirements: ['id' => '\d+'])]
+    public function regenerateSession(SessionMeditation $session): JsonResponse
+    {
+        try {
+            $data = $this->groq->generateMeditation($session->getTheme());
+
+            if (!empty($data['auteur']))   $session->setAuteur($data['auteur']);
+            if (!empty($data['duree']))    $session->setDuree($data['duree']);
+            if (!empty($data['audioUrl'])) $session->setAudioUrl($data['audioUrl']);
+
+            $this->em->flush();
+
+            return $this->json([
+                'auteur'      => $session->getAuteur(),
+                'duree'       => $session->getDuree(),
+                'audioUrl'    => $session->getAudioUrl(),
+                'searchQuery' => $data['searchQuery'] ?? '',
+            ]);
+        } catch (\Throwable $e) {
+            return $this->json(['error' => 'Erreur IA : ' . $e->getMessage()], 500);
+        }
+    }
 
     #[Route('/{id}/conseil/new', name: 'admin_conseil_new', methods: ['GET', 'POST'], requirements: ['id' => '\d+'])]
     public function newConseil(SessionMeditation $session, Request $request): Response
@@ -176,14 +264,11 @@ class AdminMeditationController extends AbstractController
         return $this->redirectToRoute('admin_meditation_show', ['id' => $sessionId]);
     }
 
-    // ── PDF Export ─────────���─────────────────────────────────────────
-
     #[Route('/pdf', name: 'admin_meditation_pdf_list', methods: ['GET'])]
     public function pdfList(): Response
     {
         $sessions = $this->repo->searchAndSort();
-
-        $html = $this->renderView('meditation/admin/pdf_list.html.twig', compact('sessions'));
+        $html     = $this->renderView('meditation/admin/pdf_list.html.twig', compact('sessions'));
 
         $options = new Options();
         $options->set('defaultFont', 'Helvetica');

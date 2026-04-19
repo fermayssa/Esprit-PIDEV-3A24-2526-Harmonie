@@ -136,4 +136,16 @@
     } else {
         scan();
     }
+
+    // Re-scan après chargement AJAX du formulaire (panel new/edit)
+    document.addEventListener('harmony:evenement-form-mounted', function (e) {
+        var root = e.detail && e.detail.root;
+        if (root) {
+            root.querySelectorAll('form.evenement-form').forEach(function (form) {
+                bindForm(form);
+            });
+        } else {
+            scan();
+        }
+    });
 })();

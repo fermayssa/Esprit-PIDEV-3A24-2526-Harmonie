@@ -3,6 +3,7 @@ namespace App\Entity;
 
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert; 
 
 #[ORM\Entity]
 #[ORM\Table(name: "post")]
@@ -14,9 +15,16 @@ class Post
     private ?int $idPost = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "Le titre est obligatoire.")]
+    #[Assert\Length(
+    min: 3, minMessage: "Le titre doit contenir au moins {{ limit }} caractères.",
+    max: 150, maxMessage: "Le titre ne peut pas dépasser {{ limit }} caractères."
+    )]
     private ?string $titre = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Assert\NotBlank(message: "Le contenu est obligatoire.")]
+    #[Assert\Length(min: 10, minMessage: "Le contenu doit contenir au moins {{ limit }} caractères.")]
     private ?string $contenu = null;
 
     #[ORM\Column(name: "date_creation", type: Types::DATETIME_MUTABLE)]

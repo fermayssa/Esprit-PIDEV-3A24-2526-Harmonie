@@ -3,6 +3,7 @@ namespace App\Entity;
 
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity]
 #[ORM\Table(name: "commentaire")]
@@ -14,6 +15,8 @@ class Commentaire
     private ?int $idCommentaire = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Assert\NotBlank(message: "Le commentaire est obligatoire.")]
+    #[Assert\Length(min: 3, minMessage: "Le commentaire doit contenir au moins {{ limit }} caractères.")]
     private ?string $contenu = null;
 
     #[ORM\Column(name: "date_commentaire", type: Types::DATETIME_MUTABLE)]
@@ -27,7 +30,13 @@ class Commentaire
 
     public function getIdCommentaire(): ?int { return $this->idCommentaire; }
     public function getContenu(): ?string { return $this->contenu; }
-    public function setContenu(string $contenu): static { $this->contenu = $contenu; return $this; }
+    
+    public function setContenu(?string $contenu): static 
+{ 
+    $this->contenu = $contenu; 
+    return $this; 
+}
+    
     public function getDateCommentaire(): ?\DateTimeInterface { return $this->dateCommentaire; }
     public function setDateCommentaire(\DateTimeInterface $d): static { $this->dateCommentaire = $d; return $this; }
     public function getIdPost(): ?int { return $this->idPost; }

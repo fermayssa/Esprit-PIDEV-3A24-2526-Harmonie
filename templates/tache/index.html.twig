@@ -172,15 +172,78 @@
      data-edit-url-template="{{ path('app_tache_edit', { id: 888888888 })|e('html_attr') }}">
     <div class="kan-top">
         <p class="kan-advice"><strong>Conseil du jour :</strong> {{ advice }}</p>
-        <details class="kan-export-wrap">
-            <summary class="kan-export-summary">Exporter ▾</summary>
-            <div class="kan-export-menu">
-                <a href="#" class="js-kanban-export-pdf" data-type="pdf">Exporter en PDF</a>
-                <a href="#" class="js-kanban-export-excel" data-type="excel">Exporter en Excel</a>
-                <a href="{{ path('app_tache_export_csv') }}">Télécharger CSV (legacy)</a>
-            </div>
-        </details>
+        <div style="display:flex;align-items:center;gap:8px;">
+            <button onclick="document.getElementById('githubModal').style.display='flex'"
+                    style="display:inline-flex;align-items:center;gap:7px;padding:7px 14px;background:#fff;border:1.5px solid #333;border-radius:20px;font-size:12.5px;font-weight:600;color:#333;cursor:pointer;transition:background .15s;"
+                    onmouseover="this.style.background='#f6f8fa'" onmouseout="this.style.background='#fff'">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12"/></svg>
+                GitHub Sync
+            </button>
+            <details class="kan-export-wrap">
+                <summary class="kan-export-summary">Exporter ▾</summary>
+                <div class="kan-export-menu">
+                    <a href="#" class="js-kanban-export-pdf" data-type="pdf">Exporter en PDF</a>
+                    <a href="#" class="js-kanban-export-excel" data-type="excel">Exporter en Excel</a>
+                    <a href="{{ path('app_tache_export_csv') }}">Télécharger CSV (legacy)</a>
+                </div>
+            </details>
+        </div>
     </div>
+
+    {# ── GitHub Settings Modal ── #}
+    <div id="githubModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:9999;align-items:center;justify-content:center;">
+        <div style="background:#fff;border-radius:20px;padding:28px;width:420px;max-width:90vw;box-shadow:0 20px 60px rgba(0,0,0,.25);">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+                <h3 style="margin:0;font-family:'Syne',sans-serif;font-size:17px;font-weight:700;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:middle;margin-right:6px;"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12"/></svg>
+                    GitHub Issues Sync
+                </h3>
+                <button onclick="document.getElementById('githubModal').style.display='none'" style="background:none;border:none;font-size:20px;cursor:pointer;color:#888;">✕</button>
+            </div>
+            <p style="font-size:13px;color:#666;margin:0 0 18px;">Chaque tâche créée/modifiée sera synchronisée avec vos GitHub Issues.</p>
+            <div style="margin-bottom:12px;">
+                <label style="display:block;font-size:11px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;">Personal Access Token</label>
+                <input id="gh-token" type="password" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx"
+                       style="width:100%;padding:9px 12px;border:1.5px solid #e0e0e0;border-radius:10px;font-size:13.5px;outline:none;box-sizing:border-box;">
+            </div>
+            <div style="margin-bottom:12px;">
+                <label style="display:block;font-size:11px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;">Dépôt (owner/repo)</label>
+                <input id="gh-repo" type="text" placeholder="monuser/mon-projet"
+                       style="width:100%;padding:9px 12px;border:1.5px solid #e0e0e0;border-radius:10px;font-size:13.5px;outline:none;box-sizing:border-box;">
+            </div>
+            <div id="gh-status" style="font-size:12.5px;color:#666;min-height:18px;margin-bottom:14px;"></div>
+            <div style="display:flex;gap:10px;">
+                <button onclick="githubSave()" style="flex:1;padding:10px;background:linear-gradient(135deg,#333,#111);color:#fff;border:none;border-radius:10px;font-weight:700;font-size:14px;cursor:pointer;">💾 Sauvegarder</button>
+                <button onclick="githubSyncDoing()" style="padding:10px 14px;background:#fff;border:1.5px solid #333;border-radius:10px;font-size:13px;cursor:pointer;">🔄 Re-sync EN COURS</button>
+            </div>
+        </div>
+    </div>
+    <script>
+    (function(){
+        fetch('/api/github/settings').then(r=>r.json()).then(d=>{
+            if(d.token) document.getElementById('gh-token').value = d.token;
+            if(d.repo)  document.getElementById('gh-repo').value  = d.repo;
+        }).catch(()=>{});
+        window.githubSave = function(){
+            var token = document.getElementById('gh-token').value.trim();
+            var repo  = document.getElementById('gh-repo').value.trim();
+            // Strip full GitHub URL → keep only owner/repo
+            repo = repo.replace(/^https?:\/\/github\.com\//, '').replace(/\/tree\/.*$/, '').replace(/\/$/, '');
+            var st    = document.getElementById('gh-status');
+            st.textContent = 'Sauvegarde…';
+            fetch('/api/github/settings',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({token,repo})})
+            .then(r=>r.json()).then(()=>{ st.style.color='#34a853'; st.textContent='✅ Sauvegardé !'; setTimeout(()=>st.textContent='',3000); })
+            .catch(()=>{ st.style.color='#b91c1c'; st.textContent='❌ Erreur réseau'; });
+        };
+        window.githubSyncDoing = function(){
+            var st = document.getElementById('gh-status');
+            st.textContent = 'Synchronisation…';
+            fetch('/api/github/settings/sync-doing',{method:'POST'})
+            .then(r=>r.json()).then(d=>{ st.style.color='#34a853'; st.textContent='✅ '+(d.synced||0)+' tâche(s) synchronisée(s)'; })
+            .catch(()=>{ st.style.color='#b91c1c'; st.textContent='❌ Erreur'; });
+        };
+    })();
+    </script>
 
     <div class="kan-board" id="kan-board-root">
         <div class="kan-col" data-statut="A_FAIRE">

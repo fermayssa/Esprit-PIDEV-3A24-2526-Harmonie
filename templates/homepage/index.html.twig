@@ -499,13 +499,14 @@
             <a href="{{ path('app_logout') }}" class="logout-btn" style="text-decoration:none;">🚪 Déconnexion</a>
 
             <div class="profile-wrap">
-                <div class="avatar" id="avatarBtn">
+                <div class="avatar" id="avatarBtn" ondblclick="window.location='{{ path('app_profile_settings') }}'">
                     {{ app.user ? app.user.firstName|first|upper : 'E' }}
                 </div>
                 <div class="profile-dropdown" id="profileDropdown">
                     <div class="pd-name">{{ app.user ? app.user.firstName ~ ' ' ~ app.user.lastName : 'Étudiant' }}</div>
                     <div class="pd-email">{{ app.user ? app.user.email : 'email@exemple.com' }}</div>
                     <div class="pd-divider"></div>
+                    <a href="{{ path('app_profile_settings') }}" style="font-size:13px;color:#6A5ACD;text-decoration:none;font-weight:500;">⚙ Paramètres du profil</a>
                     <div class="pd-hint">Double-clic pour modifier</div>
                 </div>
             </div>

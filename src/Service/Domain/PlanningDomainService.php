@@ -12,6 +12,10 @@ use App\Entity\User;
 use App\Repository\CalendrierRepository;
 use App\Repository\DemandeReservationRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Service\Github\GithubIssueService;
+use App\Service\Kanban\KanbanRealtimeNotifier;
+use App\Service\GoogleCalendarService;
+use App\Service\Telegram\TelegramNotifier;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 final class PlanningDomainService
@@ -23,6 +27,10 @@ final class PlanningDomainService
         private readonly ValidatorInterface $validator,
         private readonly DemandeReservationRepository $demandeReservationRepository,
         private readonly CalendrierRepository $calendrierRepository,
+        private readonly GoogleCalendarService $googleCalendarService,
+        private readonly GithubIssueService $githubIssueService,
+        private readonly KanbanRealtimeNotifier $kanbanRealtimeNotifier,
+        private readonly TelegramNotifier $telegramNotifier,
     ) {
     }
 
@@ -40,7 +48,7 @@ final class PlanningDomainService
     {
         $salle = $seance->getSalle();
         if ($salle && !$salle->isDisponible()) {
-            throw new \DomainException('La salle choisie n’est pas disponible.');
+            throw new \DomainException("La salle choisie n'est pas disponible.");
         }
         if ($seance->getNombreParticipants() < 0) {
             throw new \DomainException('Le nombre de participants ne peut pas être négatif.');
@@ -51,6 +59,10 @@ final class PlanningDomainService
 
     public function saveEvenement(Evenement $evenement, ?User $demandeur = null): void
     {
+        $isCreate = null === $evenement->getId();
+        if (!$isCreate) {
+            $evenement->setReminderSent(false);
+        }
         $debut = $evenement->getDateDebut();
         $fin = $evenement->getDateFin();
         if ($debut && $fin && $fin < $debut) {
@@ -61,6 +73,11 @@ final class PlanningDomainService
         $this->validateEntity($evenement);
         $this->entityManager->persist($evenement);
         $this->entityManager->flush();
+
+        if ($reserver = ($demandeur ?? $evenement->getProprietaire())) {
+            $this->googleCalendarService->syncEventToGoogle($evenement);
+            $this->entityManager->flush();
+        }
 
         $reserver = $demandeur ?? $evenement->getProprietaire();
         if ($reserver instanceof User
@@ -83,6 +100,12 @@ final class PlanningDomainService
                 $this->entityManager->persist($d);
                 $this->entityManager->flush();
             }
+        }
+
+        if ($isCreate) {
+            $this->telegramNotifier->notifyEventCreated($evenement);
+        } else {
+            $this->telegramNotifier->notifyEventUpdated($evenement);
         }
     }
 
@@ -111,9 +134,40 @@ final class PlanningDomainService
 
     public function saveTache(Tache $tache): void
     {
+        $isCreate = null === $tache->getId();
+        $oldStatus = null;
+        if (!$isCreate) {
+            $original = $this->entityManager->getUnitOfWork()->getOriginalEntityData($tache);
+            $oldStatus = isset($original['statutTache']) ? (string) $original['statutTache'] : null;
+        }
+
         $this->normalizeTacheCalendrier($tache);
         $this->validateEntity($tache);
+
+        try {
+            $this->githubIssueService->syncTask($tache);
+        } catch (\RuntimeException $e) {
+            throw new \DomainException($e->getMessage(), 0, $e);
+        }
+
         $this->persistAndFlush($tache);
+        $this->kanbanRealtimeNotifier->dispatch('task.updated', [
+            'id' => $tache->getId(),
+            'statut' => $tache->getStatutTache(),
+        ]);
+
+        $newStatus = (string) $tache->getStatutTache();
+        if ($isCreate) {
+            $this->telegramNotifier->notifyTaskCreated($tache);
+        } elseif (null !== $oldStatus && $oldStatus !== $newStatus) {
+            if ('TERMINEE' === strtoupper($newStatus)) {
+                $this->telegramNotifier->notifyTaskDone($tache);
+            } else {
+                $this->telegramNotifier->notifyTaskMoved($tache, $oldStatus, $newStatus);
+            }
+        } else {
+            $this->telegramNotifier->notifyTaskUpdated($tache);
+        }
     }
 
     public function saveCalendrier(Calendrier $calendrier): void
@@ -138,12 +192,27 @@ final class PlanningDomainService
 
     public function removeEvenement(Evenement $evenement): void
     {
+        $title = (string) ($evenement->getTitre() ?? 'Événement');
+        $startAt = $evenement->getDateDebut();
+        $this->googleCalendarService->deleteEventFromGoogle($evenement);
         $this->removeAndFlush($evenement);
+        $this->telegramNotifier->notifyEventDeleted($title, $startAt);
     }
 
     public function removeTache(Tache $tache): void
     {
+        $title = (string) ($tache->getNom() ?? 'Tâche');
+        try {
+            $this->githubIssueService->closeTaskIssueAsCancelled($tache);
+        } catch (\RuntimeException $e) {
+            throw new \DomainException($e->getMessage(), 0, $e);
+        }
+
         $this->removeAndFlush($tache);
+        $this->kanbanRealtimeNotifier->dispatch('task.deleted', [
+            'id' => $tache->getId(),
+        ]);
+        $this->telegramNotifier->notifyTaskDeleted($title);
     }
 
     public function removeCalendrier(Calendrier $calendrier): void
@@ -160,7 +229,7 @@ final class PlanningDomainService
     {
         $cal = $this->calendrierRepository->findPrimary();
         if (null === $cal) {
-            throw new \DomainException('Aucun calendrier n’est configuré. Contactez un administrateur.');
+            throw new \DomainException("Aucun calendrier n'est configuré. Contactez un administrateur.");
         }
         $tache->setCalendrier($cal);
     }

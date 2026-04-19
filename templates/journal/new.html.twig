@@ -95,6 +95,24 @@
     <div class="container">
         <a href="{{ path('journal') }}" class="back-link">← Retour au journal</a>
 
+        {# ── Speech-to-Text recorder ── #}
+        <div class="form-card" style="margin-bottom:20px;">
+            <h2 style="margin-bottom:16px;">🎙 Dicter une entrée</h2>
+            <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px;">Parlez, l'IA transcrit et remplit le formulaire automatiquement.</p>
+
+            <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+                <button type="button" id="recordBtn" class="btn-submit" style="background:#E05252;border-color:#E05252;">
+                    🔴 Démarrer l'enregistrement
+                </button>
+                <span id="recordStatus" style="font-size:13px;color:var(--text-muted);"></span>
+            </div>
+
+            <div id="sttResult" style="display:none;margin-top:16px;padding:14px;background:var(--purple-pale);border-radius:10px;">
+                <div style="font-size:12px;color:var(--text-muted);margin-bottom:6px;">Transcription :</div>
+                <div id="sttText" style="font-size:13px;color:var(--text);line-height:1.6;"></div>
+            </div>
+        </div>
+
         <div class="form-card">
             <h2>📝 Nouvelle entrée</h2>
 
@@ -132,5 +150,122 @@
         const drop = document.getElementById('profileDropdown');
         btn.addEventListener('click', e => { e.stopPropagation(); drop.classList.toggle('open'); });
         document.addEventListener('click', () => drop.classList.remove('open'));
+    </script>
+
+    <script>
+    (function(){
+        const recordBtn    = document.getElementById('recordBtn');
+        const recordStatus = document.getElementById('recordStatus');
+        const sttResult    = document.getElementById('sttResult');
+        const sttText      = document.getElementById('sttText');
+
+        // Map humeur string to select option value
+        const humeurMap = {
+            'TRES_BIEN': 'TRES_BIEN',
+            'BIEN':      'BIEN',
+            'NEUTRE':    'NEUTRE',
+            'MAL':       'MAL',
+            'TRES_MAL':  'TRES_MAL',
+        };
+
+        let mediaRecorder = null;
+        let chunks = [];
+        let recording = false;
+
+        // Check if getUserMedia is available (requires HTTPS or localhost)
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+            recordBtn.disabled = true;
+            recordBtn.style.opacity = '0.5';
+            recordStatus.textContent = '⚠️ Microphone non disponible (le site doit être en HTTPS ou localhost).';
+        }
+
+        recordBtn.addEventListener('click', async () => {
+            if (!recording) {
+                // Start recording
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+
+                    // Pick a supported MIME type
+                    const mimeType = MediaRecorder.isTypeSupported('audio/webm;codecs=opus')
+                        ? 'audio/webm;codecs=opus'
+                        : MediaRecorder.isTypeSupported('audio/webm')
+                            ? 'audio/webm'
+                            : '';
+
+                    mediaRecorder = mimeType
+                        ? new MediaRecorder(stream, { mimeType })
+                        : new MediaRecorder(stream);
+
+                    chunks = [];
+                    mediaRecorder.ondataavailable = e => { if (e.data.size > 0) chunks.push(e.data); };
+                    mediaRecorder.onstop = sendAudio;
+                    mediaRecorder.start(100); // collect chunks every 100ms
+                    recording = true;
+                    recordBtn.textContent = '⏹ Arrêter et transcrire';
+                    recordBtn.style.background = '#4B3B9E';
+                    recordStatus.textContent = '⏺ Enregistrement en cours...';
+                } catch(err) {
+                    if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
+                        recordStatus.textContent = '❌ Permission microphone refusée. Autorisez le micro dans les paramètres du navigateur.';
+                    } else if (err.name === 'NotFoundError') {
+                        recordStatus.textContent = '❌ Aucun microphone détecté.';
+                    } else {
+                        recordStatus.textContent = '❌ Erreur : ' + err.message;
+                    }
+                }
+            } else {
+                // Stop recording
+                mediaRecorder.stop();
+                mediaRecorder.stream.getTracks().forEach(t => t.stop());
+                recording = false;
+                recordBtn.textContent = '🔴 Démarrer l\'enregistrement';
+                recordBtn.style.background = '#E05252';
+                recordStatus.textContent = '⏳ Transcription en cours...';
+            }
+        });
+
+        async function sendAudio() {
+            const blob = new Blob(chunks, { type: 'audio/webm' });
+            const fd = new FormData();
+            fd.append('audio', blob, 'recording.webm');
+
+            try {
+                const res = await fetch('{{ path("journal_transcribe") }}', {
+                    method: 'POST',
+                    body: fd,
+                });
+                const data = await res.json();
+
+                if (data.error) {
+                    recordStatus.textContent = '❌ ' + data.error;
+                    return;
+                }
+
+                recordStatus.textContent = '✅ Transcription terminée !';
+
+                // Show transcription
+                sttResult.style.display = 'block';
+                sttText.textContent = data.transcription;
+
+                // Auto-fill the form
+                const dateField = document.querySelector('[name*="dateJournal"]');
+                if (dateField && data.date) dateField.value = data.date;
+
+                const humeurField = document.querySelector('[name*="humeur"]');
+                if (humeurField && data.humeur) {
+                    // Try to match the option value
+                    Array.from(humeurField.options).forEach(opt => {
+                        if (opt.value === data.humeur) humeurField.value = opt.value;
+                    });
+                }
+
+                const contenuField = document.querySelector('[name*="contenu"]');
+                if (contenuField && data.contenu) contenuField.value = data.contenu;
+
+            } catch(err) {
+                recordStatus.textContent = '❌ Erreur réseau : ' + err.message;
+            }
+        }
+    })();
     </script>
 {% endblock %}

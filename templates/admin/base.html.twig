@@ -96,6 +96,17 @@
 
         @keyframes fadeUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
         .fade { animation: fadeUp .35s ease both; }
+
+        .notif-badge {
+            background: #E05252; color: #fff;
+            border-radius: 10px; font-size: 10px; font-weight: 700;
+            padding: 2px 6px; margin-left: auto;
+            animation: badgePulse 2s ease-in-out infinite;
+        }
+        @keyframes badgePulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50%       { opacity: .7; transform: scale(1.1); }
+        }
     </style>
     {% block stylesheets %}{% endblock %}
 </head>
@@ -126,15 +137,35 @@
             <a href="{{ path('admin_meditation_index') }}" class="sidebar-link {% if 'admin_meditation' in app.request.attributes.get('_route') or 'admin_conseil' in app.request.attributes.get('_route') %}active{% endif %}">
                 <span class="s-icon">🧘</span> Sessions
             </a>
+
+            <div class="sidebar-section" style="margin-top:8px;">Journal Intime</div>
+            {% set _unread = unread_journal_count() %}
+            <a href="{{ path('admin_journal_index') }}" class="sidebar-link {% if 'admin_journal' in app.request.attributes.get('_route') %}active{% endif %}">
+                <span class="s-icon">📔</span> Journal Intime
+                {% if _unread > 0 %}
+                    <span class="notif-badge">{{ _unread }}</span>
+                {% endif %}
+            </a>
             <div class="sidebar-section" style="margin-top:8px;">Forum</div>
             <a href="{{ path('back_dashboard') }}"
-               class="sidebar-link {{ app.request.attributes.get('_route') == 'back_dashboard' ? 'active' }}">
-                <span class="s-icon">🏠</span> Back Forum
+             class="sidebar-link {{ app.request.attributes.get('_route') == 'back_dashboard' ? 'active' }}">
+                <span class="s-icon">🏠</span> Forum
             </a>
             <a href="{{ path('back_categories') }}"
-               class="sidebar-link {{ app.request.attributes.get('_route') starts with 'back_categor' ? 'active' }}">
+                class="sidebar-link {{ app.request.attributes.get('_route') starts with 'back_categor' ? 'active' }}">
                 <span class="s-icon">🗂️</span> Catégories
             </a>
+            
+            <a href="{{ path('back_posts') }}"
+                class="sidebar-link {{ app.request.attributes.get('_route') == 'back_posts' ? 'active' }}">
+                <span class="s-icon">📝</span> Posts
+            </a>
+            <a href="{{ path('back_commentaires') }}"
+            class="sidebar-link {{ app.request.attributes.get('_route') == 'back_commentaires' ? 'active' }}">
+                <span class="s-icon">💬</span> Commentaires
+            </a>
+
+
 
             <div class="sidebar-section" style="margin-top:8px;">Sport & Nutrition</div>
             <a href="{{ path('admin_sport_index') }}" class="sidebar-link {% if app.request.attributes.get('_route') starts with 'admin_sport' %}active{% endif %}">
@@ -142,11 +173,6 @@
             </a>
             <a href="{{ path('admin_nutrition_index') }}" class="sidebar-link {% if app.request.attributes.get('_route') starts with 'admin_nutrition' %}active{% endif %}">
                 <span class="s-icon">🥗</span> Gestion Nutrition
-            </a>
-
-            <div class="sidebar-section" style="margin-top:8px;">Cours</div>
-            <a href="{{ path('admin_course_reports_index') }}" class="sidebar-link {% if app.request.attributes.get('_route') starts with 'admin_course_reports' %}active{% endif %}">
-                <span class="s-icon">🚩</span> Cours signalés
             </a>
 
             <div class="sidebar-section" style="margin-top:8px;">Planning</div>
