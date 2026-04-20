@@ -20,7 +20,7 @@ security:
             provider: app_user_provider
 
             custom_authenticators:
-                - App\Security\GoogleAuthenticator
+                - App\Security\GoogleLoginAuthenticator
                 - App\Security\FacebookAuthenticator
 
             form_login:

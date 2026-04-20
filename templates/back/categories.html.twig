@@ -86,7 +86,7 @@ tr:hover td { background:#FAFAFE; }
 <div class="page-header">
     <span style="font-size:24px">🗂️</span>
     <h1>Catégories du Forum</h1>
-    <a href="{{ path('forum_categorie_new') }}" class="btn-add">➕ Nouvelle catégorie</a>
+    <a href="{{ path('back_categorie_new') }}" class="btn-add">➕ Nouvelle catégorie</a>
 </div>
 
 <div class="kpi-mini">
@@ -127,7 +127,7 @@ tr:hover td { background:#FAFAFE; }
         <div style="text-align:center;padding:56px;color:#9590B8">
             <div style="font-size:48px;margin-bottom:12px">🗂️</div>
             <p style="font-size:14px;margin-bottom:16px">Aucune catégorie pour l'instant.</p>
-            <a href="{{ path('forum_categorie_new') }}" class="btn-add">➕ Créer la première</a>
+            <a href="{{ path('back_categorie_new') }}" class="btn-add">➕ Créer la première</a>
         </div>
     {% else %}
     <table>
@@ -152,7 +152,7 @@ tr:hover td { background:#FAFAFE; }
                 <td>
                     <div class="actions">
                         
-                        <a href="{{ path('forum_categorie_edit', {id: cat.idCategorie}) }}" class="btn-sm btn-edit">✏️ Modifier</a>
+                        <a href="{{ path('back_categorie_edit', {id: cat.idCategorie}) }}" class="btn-sm btn-edit">✏️ Modifier</a>
                         <form method="POST"
                               action="{{ path('back_categorie_delete', {id: cat.idCategorie}) }}"
                               onsubmit="return confirm('Supprimer « {{ cat.nomCategorie }} » ?')"

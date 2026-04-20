@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Categorie;
 use App\Entity\Post;
 use App\Entity\Commentaire;
+use App\Form\CategorieType;
 use App\Repository\CategorieRepository;
 use App\Repository\PostRepository;
 use App\Repository\CommentaireRepository;
@@ -63,6 +64,52 @@ class BackController extends AbstractController
             $this->addFlash('success', 'Catégorie supprimée avec succès.');
         }
         return $this->redirectToRoute('back_categories');
+    }
+
+    #[Route('/categories/new', name: 'categorie_new', methods: ['GET', 'POST'])]
+    public function newCategorie(Request $request, EntityManagerInterface $em): Response
+    {
+        $cat = new Categorie();
+        $form = $this->createForm(CategorieType::class, $cat, ['attr' => ['novalidate' => 'novalidate']]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $cat->setDateCreation(new \DateTime());
+            $em->persist($cat);
+            $em->flush();
+            $this->addFlash('success', 'Catégorie créée avec succès.');
+
+            return $this->redirectToRoute('back_categories');
+        }
+
+        return $this->render('back/categorie_form.html.twig', [
+            'form' => $form->createView(),
+            'cat' => null,
+        ]);
+    }
+
+    #[Route('/categories/{id}/edit', name: 'categorie_edit', methods: ['GET', 'POST'])]
+    public function editCategorie(int $id, Request $request, EntityManagerInterface $em): Response
+    {
+        $cat = $em->getRepository(Categorie::class)->find($id);
+        if (!$cat) {
+            throw $this->createNotFoundException();
+        }
+
+        $form = $this->createForm(CategorieType::class, $cat, ['attr' => ['novalidate' => 'novalidate']]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->flush();
+            $this->addFlash('success', 'Catégorie mise à jour avec succès.');
+
+            return $this->redirectToRoute('back_categories');
+        }
+
+        return $this->render('back/categorie_form.html.twig', [
+            'form' => $form->createView(),
+            'cat' => $cat,
+        ]);
     }
 
     // ─── POSTS ────────────────────────────────────────────────────────────────

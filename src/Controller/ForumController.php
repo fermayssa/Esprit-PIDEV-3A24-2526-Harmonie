@@ -30,7 +30,7 @@ class ForumController extends AbstractController
      #[Route('/forum/generate-image', name: 'forum_generate_image', methods: ['POST'])]
     public function generateImage(
         Request $request,
-        ImageGenerationService $imageGenerator
+        ImageGen $imageGenerator
     ): JsonResponse {
         $prompt = trim($request->request->get('prompt', ''));
         $style  = trim($request->request->get('style', ''));

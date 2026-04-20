@@ -1063,7 +1063,7 @@
     </service>
     <service id="argument_resolver.service" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver">
       <tag priority="-50" name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver">controller.argument_value_resolver</tag>
-      <argument type="service" id=".service_locator.N3GNCKU"/>
+      <argument type="service" id=".service_locator.CWxOjM."/>
     </service>
     <service id="argument_resolver.default" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver">
       <tag priority="-100" name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver">controller.argument_value_resolver</tag>
@@ -4177,7 +4177,7 @@
     </service>
     <service id="argument_resolver.not_tagged_controller" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\NotTaggedControllerValueResolver">
       <tag name="controller.argument_value_resolver" priority="-200"/>
-      <argument type="service" id=".service_locator.N3GNCKU"/>
+      <argument type="service" id=".service_locator.CWxOjM."/>
     </service>
     <service id="debug.log_processor" class="Symfony\Bridge\Monolog\Processor\DebugProcessor">
       <tag name="kernel.reset" method="reset"/>
@@ -7100,7 +7100,7 @@
       <argument type="service" id=".service_locator.e_.xxAP"/>
       <argument type="collection">
         <argument key="dev">null</argument>
-        <argument key="main" type="service" id=".service_locator.Pzdbp9P"/>
+        <argument key="main" type="service" id=".service_locator.ZaVZEBU"/>
       </argument>
     </service>
     <service id="security.user_value_resolver" class="Symfony\Component\Security\Http\Controller\UserValueResolver">
@@ -7648,7 +7648,7 @@
       <argument type="service" id=".service_locator._1SGciK"/>
       <argument type="collection">
         <argument key="main" type="collection">
-          <argument type="service" id="App\Security\GoogleAuthenticator"/>
+          <argument type="service" id="App\Security\GoogleLoginAuthenticator"/>
           <argument type="service" id="App\Security\FacebookAuthenticator"/>
           <argument type="service" id="security.authenticator.form_login.main"/>
           <argument type="service" id="security.authenticator.remember_me.main"/>
@@ -7711,7 +7711,7 @@
       <argument type="collection">
         <argument>form_login</argument>
         <argument>remember_me</argument>
-        <argument>App\Security\GoogleAuthenticator</argument>
+        <argument>App\Security\GoogleLoginAuthenticator</argument>
         <argument>App\Security\FacebookAuthenticator</argument>
       </argument>
       <argument>null</argument>
@@ -7932,7 +7932,7 @@
     <service id="security.authenticator.manager.main" class="Symfony\Component\Security\Http\Authentication\AuthenticatorManager">
       <tag name="monolog.logger" channel="security"/>
       <argument type="collection">
-        <argument type="service" id="App\Security\GoogleAuthenticator"/>
+        <argument type="service" id="App\Security\GoogleLoginAuthenticator"/>
         <argument type="service" id="App\Security\FacebookAuthenticator"/>
         <argument type="service" id="security.authenticator.form_login.main"/>
         <argument type="service" id="security.authenticator.remember_me.main"/>
@@ -7965,11 +7965,11 @@
       <argument type="service" id="monolog.logger.security" on-invalid="null"/>
       <argument>false</argument>
     </service>
-    <service id=".service_locator.Pzdbp9P" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.ZaVZEBU" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="App\Security\FacebookAuthenticator" type="service_closure" id="App\Security\FacebookAuthenticator"/>
-        <argument key="App\Security\GoogleAuthenticator" type="service_closure" id="App\Security\GoogleAuthenticator"/>
+        <argument key="App\Security\GoogleLoginAuthenticator" type="service_closure" id="App\Security\GoogleLoginAuthenticator"/>
         <argument key="security.authenticator.form_login.main" type="service_closure" id="security.authenticator.form_login.main"/>
         <argument key="security.authenticator.remember_me.main" type="service_closure" id="security.authenticator.remember_me.main"/>
       </argument>
@@ -8434,6 +8434,7 @@
       <argument type="service" id="service_container"/>
       <argument type="collection">
         <argument key="google">knpu.oauth2.client.google</argument>
+        <argument key="google_login">knpu.oauth2.client.google_login</argument>
         <argument key="facebook">knpu.oauth2.client.facebook</argument>
       </argument>
     </service>
@@ -8451,6 +8452,21 @@
     </service>
     <service id="knpu.oauth2.client.google" class="KnpU\OAuth2ClientBundle\Client\Provider\GoogleClient" public="true">
       <argument type="service" id="knpu.oauth2.provider.google"/>
+      <argument type="service" id="request_stack"/>
+    </service>
+    <service id="knpu.oauth2.provider.google_login" class="League\OAuth2\Client\Provider\Google">
+      <argument>League\OAuth2\Client\Provider\Google</argument>
+      <argument type="collection">
+        <argument key="clientId">%env(GOOGLE_LOGIN_CLIENT_ID)%</argument>
+        <argument key="clientSecret">%env(GOOGLE_LOGIN_CLIENT_SECRET)%</argument>
+      </argument>
+      <argument>connect_google_check</argument>
+      <argument type="collection"/>
+      <argument type="collection"/>
+      <factory service="knpu.oauth2.provider_factory" method="createProvider"/>
+    </service>
+    <service id="knpu.oauth2.client.google_login" class="KnpU\OAuth2ClientBundle\Client\Provider\GoogleClient" public="true">
+      <argument type="service" id="knpu.oauth2.provider.google_login"/>
       <argument type="service" id="request_stack"/>
     </service>
     <service id="knpu.oauth2.provider.facebook" class="League\OAuth2\Client\Provider\Facebook">
@@ -9417,6 +9433,12 @@
         <argument key="em" type="service_closure" id="doctrine.orm.default_entity_manager"/>
       </argument>
     </service>
+    <service id=".service_locator.9kKwU2t" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="em" type="service_closure" id="doctrine.orm.default_entity_manager"/>
+      </argument>
+    </service>
     <service id=".service_locator.BCeRRwl" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
@@ -9473,19 +9495,10 @@
         <argument key="userRepo" type="service_closure" id="App\Repository\UserRepository"/>
       </argument>
     </service>
-    <service id=".service_locator.9kKwU2t" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.ssokTHq" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
-        <argument key="em" type="service_closure" id="doctrine.orm.default_entity_manager"/>
-      </argument>
-    </service>
-    <service id=".errored.S0NraJl" class="App\Controller\ImageGenerationService">
-      <tag name="container.error" message="Cannot determine controller argument for &quot;App\Controller\ForumController::generateImage()&quot;: the $imageGenerator argument is type-hinted with the non-existent class or interface: &quot;App\Controller\ImageGenerationService&quot;. Did you forget to add a use statement?"/>
-    </service>
-    <service id=".service_locator.CDGeBKw" class="Symfony\Component\DependencyInjection\ServiceLocator">
-      <tag name="container.service_locator"/>
-      <argument type="collection">
-        <argument key="imageGenerator" type="service_closure" id=".errored.S0NraJl"/>
+        <argument key="imageGenerator" type="service_closure" id="App\Service\ImageGen"/>
       </argument>
     </service>
     <service id=".service_locator.m8EDxAh" class="Symfony\Component\DependencyInjection\ServiceLocator">
@@ -9640,7 +9653,7 @@
         <argument key="tacheRepository" type="service_closure" id="App\Repository\TacheRepository"/>
       </argument>
     </service>
-    <service id=".service_locator.N3GNCKU" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.CWxOjM." class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="App\Controller\ActivitesController::apiAdd" type="service_closure" id=".service_locator.Rd84jSm"/>
@@ -9703,6 +9716,8 @@
         <argument key="App\Controller\BackController::deleteCategorie" type="service_closure" id=".service_locator.FijMYEi"/>
         <argument key="App\Controller\BackController::deleteCommentaire" type="service_closure" id=".service_locator.zD1XOAY"/>
         <argument key="App\Controller\BackController::deletePost" type="service_closure" id=".service_locator.2HGpPIL"/>
+        <argument key="App\Controller\BackController::editCategorie" type="service_closure" id=".service_locator.9kKwU2t"/>
+        <argument key="App\Controller\BackController::newCategorie" type="service_closure" id=".service_locator.9kKwU2t"/>
         <argument key="App\Controller\BackController::posts" type="service_closure" id=".service_locator.BCeRRwl"/>
         <argument key="App\Controller\EvenementsController::delete" type="service_closure" id=".service_locator.9RfXQX1"/>
         <argument key="App\Controller\EvenementsController::edit" type="service_closure" id=".service_locator.9RfXQX1"/>
@@ -9723,7 +9738,7 @@
         <argument key="App\Controller\ForumController::editCategorie" type="service_closure" id=".service_locator.9kKwU2t"/>
         <argument key="App\Controller\ForumController::editComment" type="service_closure" id=".service_locator.9kKwU2t"/>
         <argument key="App\Controller\ForumController::editPost" type="service_closure" id=".service_locator.P3uOD4s"/>
-        <argument key="App\Controller\ForumController::generateImage" type="service_closure" id=".service_locator.CDGeBKw"/>
+        <argument key="App\Controller\ForumController::generateImage" type="service_closure" id=".service_locator.ssokTHq"/>
         <argument key="App\Controller\ForumController::index" type="service_closure" id=".service_locator.9kKwU2t"/>
         <argument key="App\Controller\ForumController::newCategorie" type="service_closure" id=".service_locator.9kKwU2t"/>
         <argument key="App\Controller\ForumController::newComment" type="service_closure" id=".service_locator.QFzwCKh"/>
@@ -9840,6 +9855,8 @@
         <argument key="App\Controller\BackController:deleteCategorie" type="service_closure" id=".service_locator.FijMYEi"/>
         <argument key="App\Controller\BackController:deleteCommentaire" type="service_closure" id=".service_locator.zD1XOAY"/>
         <argument key="App\Controller\BackController:deletePost" type="service_closure" id=".service_locator.2HGpPIL"/>
+        <argument key="App\Controller\BackController:editCategorie" type="service_closure" id=".service_locator.9kKwU2t"/>
+        <argument key="App\Controller\BackController:newCategorie" type="service_closure" id=".service_locator.9kKwU2t"/>
         <argument key="App\Controller\BackController:posts" type="service_closure" id=".service_locator.BCeRRwl"/>
         <argument key="App\Controller\EvenementsController:delete" type="service_closure" id=".service_locator.9RfXQX1"/>
         <argument key="App\Controller\EvenementsController:edit" type="service_closure" id=".service_locator.9RfXQX1"/>
@@ -9860,7 +9877,7 @@
         <argument key="App\Controller\ForumController:editCategorie" type="service_closure" id=".service_locator.9kKwU2t"/>
         <argument key="App\Controller\ForumController:editComment" type="service_closure" id=".service_locator.9kKwU2t"/>
         <argument key="App\Controller\ForumController:editPost" type="service_closure" id=".service_locator.P3uOD4s"/>
-        <argument key="App\Controller\ForumController:generateImage" type="service_closure" id=".service_locator.CDGeBKw"/>
+        <argument key="App\Controller\ForumController:generateImage" type="service_closure" id=".service_locator.ssokTHq"/>
         <argument key="App\Controller\ForumController:index" type="service_closure" id=".service_locator.9kKwU2t"/>
         <argument key="App\Controller\ForumController:newCategorie" type="service_closure" id=".service_locator.9kKwU2t"/>
         <argument key="App\Controller\ForumController:newComment" type="service_closure" id=".service_locator.QFzwCKh"/>
@@ -12652,7 +12669,7 @@
     <service id="Symfony\UX\Chartjs\Builder\ChartBuilderInterface" alias="chartjs.builder"/>
     <service id="container.env_var_processors_locator" alias=".service_locator.w7.f4fT" public="true"/>
     <service id="twig.loader.filesystem" alias="twig.loader.native_filesystem"/>
-    <service id="argument_resolver.controller_locator" alias=".service_locator.N3GNCKU"/>
+    <service id="argument_resolver.controller_locator" alias=".service_locator.CWxOjM."/>
     <service id="doctrine.id_generator_locator" alias=".service_locator.KLVvNIq"/>
     <service id="twig.loader" alias="twig.loader.native_filesystem"/>
     <service id=".Psr\Log\LoggerInterface $request.logger" alias="monolog.logger.request"/>
@@ -12692,7 +12709,7 @@
     <service id="turbo.mercure.stimulus_helper" alias="stimulus.helper"/>
     <service id=".service_locator.80edgLI" alias="messenger.receiver_locator"/>
     <service id=".service_locator.h8Jkkd2" alias="messenger.retry_strategy_locator"/>
-    <service id=".service_locator.8w91okw" alias=".service_locator.Pzdbp9P"/>
+    <service id=".service_locator.S4N7eLZ" alias=".service_locator.ZaVZEBU"/>
     <service id=".service_locator.bJ.4HC5" alias=".service_locator.w7.f4fT"/>
     <service id=".service_locator.5_Jlg_T" alias=".service_locator.02uYAM0"/>
     <service id=".service_locator.HuBQCkp" alias=".service_locator.Rd84jSm"/>
@@ -12716,7 +12733,7 @@
     <service id=".service_locator.L4eGOP_" alias=".service_locator.YU062BO"/>
     <service id=".service_locator..ECHu9G" alias=".service_locator.0kfqJtX"/>
     <service id=".service_locator.hJ0Dj6t" alias=".service_locator.uyB3tlS"/>
-    <service id=".service_locator.Qf3OTog" alias=".service_locator.N3GNCKU"/>
+    <service id=".service_locator.KY2t1Gk" alias=".service_locator.CWxOjM."/>
     <service id=".service_locator.BFrsqsn" alias=".service_locator.F9PKc.7"/>
     <service id=".service_locator.k10pkrx" alias=".service_locator.umK6c0x"/>
     <service id=".service_locator.XtmiKbi" alias=".service_locator.MfxSDRP"/>
@@ -12777,6 +12794,7 @@
     <service id=".service_locator.PbKpj.0" alias=".service_locator.lDPE1Vu"/>
     <service id=".service_locator.J7zjBc6" alias=".service_locator.fJV4zWt"/>
     <service id=".service_locator.tVzWD6s" alias=".service_locator.FijMYEi"/>
+    <service id=".service_locator.gaTSUXr" alias=".service_locator.9kKwU2t"/>
     <service id=".service_locator.sqkQsZL" alias=".service_locator.BCeRRwl"/>
     <service id=".service_locator.F3myJVt" alias=".service_locator.2HGpPIL"/>
     <service id=".service_locator.ab7VFZO" alias=".service_locator.e8kSatk"/>
@@ -12785,7 +12803,7 @@
     <service id=".service_locator.47R_1tg" alias=".service_locator.hNAs.vN"/>
     <service id=".service_locator.Upy_HSa" alias=".service_locator.KzUmWl9"/>
     <service id=".service_locator.vqRoGRv" alias=".service_locator.yqE9B.3"/>
-    <service id=".service_locator.gaTSUXr" alias=".service_locator.9kKwU2t"/>
+    <service id=".service_locator.NTl_DIn" alias=".service_locator.ssokTHq"/>
     <service id=".service_locator.danwHqY" alias=".service_locator.m8EDxAh"/>
     <service id=".service_locator.zBxd2ex" alias=".service_locator.e82AYDp"/>
     <service id=".service_locator.SoFxSjl" alias=".service_locator.uURT18R"/>

@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Activite;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 use App\Repository\ActiviteRepository;
 use App\Repository\ExerciceRepository;
 use App\Service\QrCodeService;
@@ -349,23 +351,20 @@ class ActivitesController extends AbstractController
         $wkhtmltopdfBinary = str_replace('/', DIRECTORY_SEPARATOR, $wkhtmltopdfBinary);
 
         if (empty($wkhtmltopdfBinary)) {
-            return $this->renderWkhtmlError(
-                'La variable WKHTMLTOPDF_PATH n\'est pas définie dans votre fichier .env.',
-                'Ajoutez : WKHTMLTOPDF_PATH=C:/PROGRA~1/wkhtmltopdf/bin/wkhtmltopdf.exe'
-            );
+            return $this->generateBilanWithDompdf($activiteRepo);
         }
 
         if (!file_exists($wkhtmltopdfBinary)) {
-            return $this->renderWkhtmlError(
-                'Le binaire wkhtmltopdf est introuvable à : ' . $wkhtmltopdfBinary,
-                "Solutions :\n"
-                . "1. Téléchargez wkhtmltopdf sur https://wkhtmltopdf.org/downloads.html\n"
-                . "2. Installez-le (ex: C:\\wkhtmltopdf)\n"
-                . "3. Dans .env, mettez le bon chemin :\n"
-                . "   WKHTMLTOPDF_PATH=C:/wkhtmltopdf/bin/wkhtmltopdf.exe\n"
-                . "4. Vérifiez avec cmd.exe : dir \"C:\\wkhtmltopdf\\bin\\\"\n"
-                . "5. Redémarrez le serveur Symfony après modification du .env"
-            );
+            return $this->generateBilanWithDompdf($activiteRepo);
+        }
+
+        // Sur macOS/Linux, un .exe (Windows) n'est pas exécutable nativement.
+        if (DIRECTORY_SEPARATOR === '/' && str_ends_with(strtolower($wkhtmltopdfBinary), '.exe')) {
+            return $this->generateBilanWithDompdf($activiteRepo);
+        }
+
+        if (!is_executable($wkhtmltopdfBinary)) {
+            return $this->generateBilanWithDompdf($activiteRepo);
         }
 
         // ── 2. Récupération des données de l'utilisateur ──────────────────
@@ -430,6 +429,55 @@ class ActivitesController extends AbstractController
         $filename = 'bilan-harmony-' . (new \DateTime())->format('Y-m-d') . '.pdf';
 
         return new Response($pdfContent, 200, [
+            'Content-Type'        => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+        ]);
+    }
+
+    /**
+     * Fallback PDF via Dompdf quand wkhtmltopdf n'est pas disponible.
+     */
+    private function generateBilanWithDompdf(ActiviteRepository $activiteRepo): Response
+    {
+        $userId  = $this->getUser()->getId();
+        $grouped = $activiteRepo->findByUserGroupedByDate($userId);
+        $stats   = [
+            'sessions' => count($grouped),
+            'minutes'  => $activiteRepo->sumMinutesByUser($userId),
+            'calories' => $activiteRepo->sumCaloriesByUser($userId),
+        ];
+
+        $groupedData = [];
+        foreach ($grouped as $date => $acts) {
+            $exs = [];
+            foreach ($acts as $a) {
+                $exs[] = $this->activiteToArray($a);
+            }
+            $groupedData[$date] = $exs;
+        }
+
+        $publicDir = $this->getParameter('kernel.project_dir') . '/public';
+
+        $html = $this->renderView('activites/bilan_pdf.html.twig', [
+            'grouped'    => $groupedData,
+            'stats'      => $stats,
+            'exportDate' => new \DateTime(),
+            'publicDir'  => $publicDir,
+        ]);
+
+        $options = new Options();
+        $options->set('isHtml5ParserEnabled', true);
+        $options->set('isRemoteEnabled', true);
+        $options->set('defaultFont', 'DejaVu Sans');
+
+        $dompdf = new Dompdf($options);
+        $dompdf->loadHtml($html, 'UTF-8');
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+
+        $filename = 'bilan-harmony-' . (new \DateTime())->format('Y-m-d') . '.pdf';
+
+        return new Response($dompdf->output(), 200, [
             'Content-Type'        => 'application/pdf',
             'Content-Disposition' => 'attachment; filename="' . $filename . '"',
         ]);

@@ -16,8 +16,8 @@ class OAuthController extends AbstractController
     public function connectGoogle(ClientRegistry $clientRegistry): RedirectResponse
     {
         return $clientRegistry
-            ->getClient('google')
-            ->redirect(['email', 'profile'], []);
+            ->getClient('google_login')
+            ->redirect(['openid', 'email', 'profile'], []);
     }
 
     #[Route('/connect/google/check', name: 'connect_google_check')]

@@ -386,7 +386,7 @@ body {
                   <td class="col-nom">
                     <div class="ex-nom-text">{{ ex.exercice_nom ?: 'Exercice' }}</div>
                     {% if ex.exercice_type %}
-                      <span class="ex-type-badge {{ bc }}">{{ ex.exercice_type|replace({'homme':'','_femme':'','':' '})|trim }}</span>
+                      <span class="ex-type-badge {{ bc }}">{{ ex.exercice_type|replace({'_femme':'','homme':'','_':' '})|trim }}</span>
                     {% endif %}
                   </td>
                   <td class="col-meta">
