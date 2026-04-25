@@ -1,0 +1,86 @@
+# config/services.yaml
+parameters:
+
+    posts_images_directory: '%kernel.project_dir%/public/uploads/posts'
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+
+    # makes classes in src/ available to be used as services
+    # this creates a service per class whose id is the fully-qualified class name
+    App\:
+        resource: '../src/'
+        exclude:
+            - '../src/DependencyInjection/'
+            - '../src/Entity/'
+            - '../src/Kernel.php'
+
+    # QrCodeService déclaré manuellement (stable avec Symfony 7.4)
+    App\Service\QrCodeService:
+        public: true
+
+    # ── Spoonacular API Service ────────────────────────────────────────────────
+    App\Service\SpoonacularService:
+        arguments:
+            $spoonacularApiKey: '%env(SPOONACULAR_API_KEY)%'
+
+    # ── YouTube Data API v3 Service ───────────────────────────────────────────
+    App\Service\YouTubeService:
+        arguments:
+            $youtubeApiKey: '%env(YOUTUBE_API_KEY)%'
+
+    # ── Google Gemini Vision API Service ─────────────────────────────────────
+    App\Service\GeminiVisionService:
+        arguments:
+            $geminiApiKey: '%env(GEMINI_API_KEY)%'
+
+    # ── Groq LLM Service (chat + STT) ────────────────────────────────────────
+    App\Service\GroqService:
+        arguments:
+            $groqApiKey:    '%env(GROQ_API_KEY)%'
+            $groqChatUrl:   '%env(GROQ_CHAT_URL)%'
+            $groqSttUrl:    '%env(GROQ_STT_URL)%'
+            $groqChatModel: '%env(GROQ_CHAT_MODEL)%'
+            $groqSttModel:  '%env(GROQ_STT_MODEL)%'
+
+    # ── Blessure & Récupération (nouveau module) ──────────────────────────────
+    # Utilise le même Groq pour les conseils de récupération des blessures sportives.
+    App\Service\BlessureService:
+        arguments:
+            $groqApiKey:    '%env(GROQ_API_KEY)%'
+            $groqChatUrl:   '%env(GROQ_CHAT_URL)%'
+            $groqChatModel: '%env(GROQ_CHAT_MODEL)%'
+
+    # ── Autres services ───────────────────────────────────────────────────────
+    App\Service\Github\GithubIssueService:
+        arguments:
+            $projectDir:    '%kernel.project_dir%'
+            $defaultToken:  '%env(GITHUB_TOKEN)%'
+            $defaultRepo:   '%env(GITHUB_REPO)%'
+            $defaultBranch: 'main'
+
+    App\Service\Telegram\TelegramNotifier:
+        arguments:
+            $botToken: '%env(TELEGRAM_BOT_TOKEN)%'
+            $chatId:   '%env(TELEGRAM_CHAT_ID)%'
+
+    App\Service\Telegram\EventReminderService:
+        arguments:
+            $botToken: '%env(TELEGRAM_BOT_TOKEN)%'
+
+    App\EventListener\TrustedHostListener:
+        tags:
+            - { name: kernel.event_subscriber }
+
+    # ── Résumé ────────────────────────────────────────────────────────────────
+    App\Service\SummaryService:
+        arguments:
+            $apiKey: '%env(GROQ_API_KEY)%'
+
+    # ── Sentiment ─────────────────────────────────────────────────────────────
+    App\Service\SentimentService:
+        arguments:
+            $apiKey: '%env(GROQ_API_KEY)%'
