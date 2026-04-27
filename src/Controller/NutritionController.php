@@ -136,20 +136,22 @@ class NutritionController extends AbstractController
             return new JsonResponse(['success' => false, 'message' => 'Données invalides.'], Response::HTTP_BAD_REQUEST);
         }
 
-        $calGoal  = max(1, (int) ($data['calGoal']  ?? 0));
-        $protGoal = max(1, (int) ($data['protGoal'] ?? 0));
-        $glucGoal = max(1, (int) ($data['glucGoal'] ?? 0));
-        $lipGoal  = max(1, (int) ($data['lipGoal']  ?? 0));
+        // CORRECTION PHPStan ligne 144 :
+        // On valide les valeurs AVANT d'appliquer max() pour que la comparaison <= 0 ait un sens.
+        $calGoalRaw  = (int) ($data['calGoal']  ?? 0);
+        $protGoalRaw = (int) ($data['protGoal'] ?? 0);
+        $glucGoalRaw = (int) ($data['glucGoal'] ?? 0);
+        $lipGoalRaw  = (int) ($data['lipGoal']  ?? 0);
 
-        if ($calGoal <= 0 || $protGoal <= 0 || $glucGoal <= 0 || $lipGoal <= 0) {
+        if ($calGoalRaw <= 0 || $protGoalRaw <= 0 || $glucGoalRaw <= 0 || $lipGoalRaw <= 0) {
             return new JsonResponse(['success' => false, 'message' => 'Tous les objectifs doivent être valides.'], Response::HTTP_BAD_REQUEST);
         }
 
         $request->getSession()->set('nutrition_goals', [
-            'cal'  => $calGoal,
-            'prot' => $protGoal,
-            'gluc' => $glucGoal,
-            'lip'  => $lipGoal,
+            'cal'  => $calGoalRaw,
+            'prot' => $protGoalRaw,
+            'gluc' => $glucGoalRaw,
+            'lip'  => $lipGoalRaw,
         ]);
 
         return new JsonResponse(['success' => true, 'message' => 'Objectifs enregistrés.']);
@@ -220,35 +222,8 @@ class NutritionController extends AbstractController
     }
 
     // ═══════════════════════════════════════════════════════════════════════
-    //  API : ANALYSE PHOTO DE REPAS — Google Gemini 1.5 Flash
+    //  API : ANALYSE PHOTO DE REPAS — Google Gemini Vision
     // ═══════════════════════════════════════════════════════════════════════
-
-    /**
-     * Analyse une photo de repas via Google Gemini 1.5 Flash Vision.
-     *
-     * Route : POST /nutrition/api/analyze-photo
-     *
-     * Corps JSON attendu :
-     * {
-     *   "image": "data:image/jpeg;base64,/9j/4AAQ...",
-     *   "repas": "Déjeuner"
-     * }
-     *
-     * Réponse :
-     * {
-     *   "success": true,
-     *   "analysis": {
-     *     "plats_detectes":       ["Pâtes bolognaise", "Salade"],
-     *     "calories_totales":     650,
-     *     "proteines_g":          35.0,
-     *     "glucides_g":           72.0,
-     *     "lipides_g":            18.0,
-     *     "score_equilibre":      7,
-     *     "suggestions":          ["Ajouter des légumes verts", ...],
-     *     "note_nutritionnelle":  "Repas bien équilibré..."
-     *   }
-     * }
-     */
     #[Route('/api/analyze-photo', name: 'nutrition_api_analyze_photo', methods: ['POST'])]
     public function apiAnalyzePhoto(
         Request $request,
@@ -264,18 +239,15 @@ class NutritionController extends AbstractController
         $mimeType = 'image/jpeg';
         $base64   = $imageRaw;
 
-        // Extraire mimeType + base64 pur depuis le data URI
         if (preg_match('/^data:(image\/[a-zA-Z0-9+\-]+);base64,(.+)$/s', $imageRaw, $matches)) {
             $mimeType = $matches[1];
             $base64   = $matches[2];
         }
 
-        // Limite de taille (~3 MB réel)
         if (strlen($base64) > 5_000_000) {
             return new JsonResponse(['success' => false, 'message' => 'Image trop volumineuse. Max 3 Mo.'], 400);
         }
 
-        // Formats acceptés
         if (!in_array(strtolower($mimeType), ['image/jpeg','image/jpg','image/png','image/webp','image/heic'])) {
             return new JsonResponse(['success' => false, 'message' => 'Format non supporté. Utilisez JPEG, PNG ou WebP.'], 400);
         }
@@ -417,7 +389,8 @@ class NutritionController extends AbstractController
             if (!$aliment) {
                 $aliment = new Aliment();
                 $aliment->setNomAliment($alimentName);
-                $aliment->setCaloriesPour100g(round(($calories * 100) / 300));
+                // CORRECTION PHPStan ligne 420 : round() retourne float → cast en int explicite
+                $aliment->setCaloriesPour100g((int) round(($calories * 100) / 300));
                 $aliment->setProteines((float)($data['proteines'] ?? 20));
                 $aliment->setGlucides((float) ($data['glucides']  ?? 50));
                 $aliment->setLipides((float)  ($data['lipides']   ?? 15));
@@ -613,6 +586,7 @@ class NutritionController extends AbstractController
 
     // ─── Helpers privés ─────────────────────────────────────────────
 
+    /** @return array<string, array{icon: string, color: string}> */
     private function repasTypes(): array
     {
         return [
@@ -623,6 +597,7 @@ class NutritionController extends AbstractController
         ];
     }
 
+    /** @param array<Consommation> $consommations */
     private function groupByRepas(array $consommations): array
     {
         $types = [
@@ -643,6 +618,7 @@ class NutritionController extends AbstractController
         return $types;
     }
 
+    /** @return array<string, mixed> */
     private function consToArray(Consommation $c): array
     {
         return [
