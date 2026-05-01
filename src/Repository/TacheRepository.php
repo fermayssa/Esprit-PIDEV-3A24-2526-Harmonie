@@ -22,6 +22,7 @@ class TacheRepository extends ServiceEntityRepository
     public function findAllOrderedForKanban(): array
     {
         return $this->createQueryBuilder('t')
+            ->leftJoin('t.calendrier', 'c')->addSelect('c')
             ->orderBy('t.deadline', 'ASC')
             ->addOrderBy('t.id', 'ASC')
             ->getQuery()

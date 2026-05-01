@@ -204,7 +204,7 @@ final class PlanningDomainService
 
     public function removeTache(Tache $tache): void
     {
-        $title = (string) ($tache->getNom() ?? 'Tâche');
+        $title = (string) $tache->getNom();
         try {
             $this->githubIssueService->closeTaskIssueAsCancelled($tache);
         } catch (\RuntimeException $e) {
