@@ -41,14 +41,22 @@ class ActiviteRepository extends ServiceEntityRepository
     public function findByUserGroupedByDate(int $userId): array
     {
         $activites = $this->findByUserOrderByDate($userId);
-        $grouped = [];
+        $grouped   = [];
+
         foreach ($activites as $activite) {
-            $date = $activite->getDateActivite()->format('Y-m-d');
+            // Fix PHPStan :46 — getDateActivite() retourne DateTimeInterface|null,
+            // on vérifie null avant d'appeler format()
+            $dateObj = $activite->getDateActivite();
+            if ($dateObj === null) {
+                continue;
+            }
+            $date = $dateObj->format('Y-m-d');
             if (!isset($grouped[$date])) {
                 $grouped[$date] = [];
             }
             $grouped[$date][] = $activite;
         }
+
         return $grouped;
     }
 
@@ -63,6 +71,7 @@ class ActiviteRepository extends ServiceEntityRepository
             ->setParameter('uid', $userId)
             ->getQuery()
             ->getSingleScalarResult();
+
         return (int) $result;
     }
 
@@ -77,6 +86,7 @@ class ActiviteRepository extends ServiceEntityRepository
             ->setParameter('uid', $userId)
             ->getQuery()
             ->getSingleScalarResult();
+
         return (int) $result;
     }
 
@@ -91,6 +101,7 @@ class ActiviteRepository extends ServiceEntityRepository
             ->setParameter('uid', $userId)
             ->getQuery()
             ->getSingleScalarResult();
+
         return (int) $result;
     }
 }
