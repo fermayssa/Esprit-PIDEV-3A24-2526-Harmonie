@@ -10,12 +10,10 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Table(name: 'activite')]
 class Activite
 {
-    // PHPStan ne voit pas l'affectation faite par Doctrine via réflexion ;
-    // l'annotation @phpstan-ignore supprime le faux positif property.unusedType.
-    /** @phpstan-ignore property.unusedType */
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(name: 'id_activite')]
+    /** @phpstan-ignore property.unusedType */
     private ?int $id = null;
 
     #[ORM\ManyToOne(targetEntity: Exercice::class)]

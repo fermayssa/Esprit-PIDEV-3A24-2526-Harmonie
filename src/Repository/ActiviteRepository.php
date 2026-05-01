@@ -6,6 +6,9 @@ use App\Entity\Activite;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
+/**
+ * @extends ServiceEntityRepository<Activite>
+ */
 class ActiviteRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
@@ -15,6 +18,8 @@ class ActiviteRepository extends ServiceEntityRepository
 
     /**
      * Get all activités for a given user, ordered by date DESC.
+     *
+     * @return Activite[]
      */
     public function findByUserOrderByDate(int $userId): array
     {
@@ -30,6 +35,8 @@ class ActiviteRepository extends ServiceEntityRepository
     /**
      * Get activités for a user grouped by date (sessions).
      * Returns an associative array keyed by date string.
+     *
+     * @return array<string, Activite[]>
      */
     public function findByUserGroupedByDate(int $userId): array
     {
